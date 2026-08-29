@@ -396,6 +396,7 @@ function initNavbar() {
   const navbar = document.getElementById('navbar');
   const toggle = document.getElementById('nav-toggle');
   const menu = document.getElementById('nav-menu');
+  if (!navbar || !toggle || !menu) return;
 
   // Scroll-based transparency
   window.addEventListener('scroll', () => {
@@ -439,20 +440,20 @@ function initNavbar() {
    ============================================================ */
 function initLoginModal() {
   const overlay = document.getElementById('login-overlay');
+  if (!overlay) return;
   const closeBtn = document.getElementById('login-close');
   const bgOverlay = document.getElementById('login-overlay-bg');
   const form = document.getElementById('login-form');
   const roleSelect = document.getElementById('role-select');
 
-  // Open modal triggers
+  // Direct navigation to login.html
   const openTriggers = ['btn-login-nav', 'btn-enter-nav', 'btn-enter-final'];
   openTriggers.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('click', (e) => {
-        e.preventDefault();
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        // Direct navigation to login page
+        window.location.href = 'login.html';
       });
     }
   });
@@ -482,17 +483,12 @@ function initLoginModal() {
   // Form submit (demo)
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const activeRole = roleSelect.querySelector('.login-card__role.active');
-    const role = activeRole ? activeRole.dataset.role : 'farmer';
     const submitBtn = document.getElementById('login-submit');
     submitBtn.textContent = 'Entering…';
     submitBtn.style.opacity = '0.7';
     setTimeout(() => {
-      alert(`Welcome to KrishiShetra! You would be redirected to the ${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard.`);
-      submitBtn.textContent = 'Enter KrishiShetra →';
-      submitBtn.style.opacity = '1';
-      closeModal();
-    }, 1200);
+      window.location.href = 'login.html';
+    }, 800);
   });
 }
 
@@ -500,6 +496,11 @@ function initLoginModal() {
    ANIMATED PRICE CHART (SVG)
    ============================================================ */
 function initChart() {
+  const chartLine = document.getElementById('chart-line');
+  const chartArea = document.getElementById('chart-area');
+  const chartForecast = document.getElementById('chart-forecast');
+  if (!chartLine || !chartArea || !chartForecast) return;
+
   // Generate realistic-looking price data
   const points = 30;
   const basePrice = 2500;
