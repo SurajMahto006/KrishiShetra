@@ -1235,13 +1235,56 @@
       return aliases.some(alias => alias.includes(q) || q.includes(alias));
     }
 
+    /**
+     * Safely updates text content of an element while preserving child icons/SVGs/elements.
+     */
+    setElementTextSafe(el, newText) {
+      if (!el || typeof newText !== 'string') return;
+
+      // Check if element has child elements like icons (i, svg, span)
+      const hasChildElements = el.children.length > 0;
+
+      if (!hasChildElements) {
+        el.textContent = newText;
+        return;
+      }
+
+      // If element has a dedicated .i18n-text span, update it directly
+      const dedicatedSpan = el.querySelector('.i18n-text');
+      if (dedicatedSpan) {
+        dedicatedSpan.textContent = newText;
+        return;
+      }
+
+      // Look for first text node to update
+      let textNodeFound = false;
+      for (let i = 0; i < el.childNodes.length; i++) {
+        const node = el.childNodes[i];
+        if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim().length > 0) {
+          node.nodeValue = (node.nodeValue.startsWith(' ') ? ' ' : '') + newText.trim() + (node.nodeValue.endsWith(' ') ? ' ' : '');
+          textNodeFound = true;
+          break;
+        }
+      }
+
+      if (!textNodeFound) {
+        // Create an i18n text wrapper so icons are preserved
+        const span = document.createElement('span');
+        span.className = 'i18n-text';
+        span.textContent = ' ' + newText;
+        el.appendChild(span);
+      }
+    }
+
     translatePage() {
-      // 1. Plain text replacement with [data-i18n]
+      // 1. Plain text replacement with [data-i18n] (Safe Icon Preservation)
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (key) {
           const text = this.t(key);
-          if (text) el.textContent = text;
+          if (text) {
+            this.setElementTextSafe(el, text);
+          }
         }
       });
 
@@ -1272,8 +1315,38 @@
         }
       });
 
-      if (window.lucide) {
-        window.lucide.createIcons();
+      // 5. Dynamic Select Options Translation
+      document.querySelectorAll('select').forEach(select => {
+        const isCropSelect = select.id.includes('crop');
+        const isMandiSelect = select.id.includes('location') || select.id.includes('mandi');
+
+        Array.from(select.options).forEach(opt => {
+          const val = opt.value;
+          if (val === 'all') {
+            if (isCropSelect) {
+              opt.textContent = this.currentLang === 'mr' ? 'सर्व पिके (१५)' : this.currentLang === 'hi' ? 'सभी फसलें (15)' : 'All Crops (15)';
+            } else if (isMandiSelect) {
+              opt.textContent = this.currentLang === 'mr' ? 'सर्व बाजार समित्या' : this.currentLang === 'hi' ? 'सभी मंडियां' : 'All Mandis';
+            }
+          } else if (isCropSelect && val) {
+            const translatedCrop = this.getCropName(val);
+            if (translatedCrop && translatedCrop !== val) {
+              opt.textContent = translatedCrop;
+            }
+          } else if (isMandiSelect && val) {
+            const translatedMandi = this.getMandiName(val);
+            if (translatedMandi && translatedMandi !== val) {
+              opt.textContent = translatedMandi;
+            }
+          }
+        });
+      });
+
+      // 6. Refresh Lucide Icons without flickering
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        try {
+          window.lucide.createIcons();
+        } catch(e) {}
       }
     }
   }
@@ -1282,6 +1355,13 @@
   window.KrishiI18n = new KrishiI18n();
   window.t = (key, fallback) => window.KrishiI18n.t(key, fallback);
   window.setLanguage = (lang) => window.KrishiI18n.setLanguage(lang);
+
+  // Sync language across multiple open browser tabs
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'krishi_lang' && e.newValue && e.newValue !== window.KrishiI18n.currentLang) {
+      window.KrishiI18n.setLanguage(e.newValue);
+    }
+  });
 
   document.addEventListener('DOMContentLoaded', () => {
     window.KrishiI18n.setLanguage(window.KrishiI18n.currentLang);

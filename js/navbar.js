@@ -206,3 +206,12 @@ function initGlobalSearch() {
     }
   });
 }
+
+// Global setLanguage handler
+window.setLanguage = function(lang) {
+  if (window.KrishiI18n) {
+    window.KrishiI18n.setLanguage(lang);
+  }
+  const langModal = document.getElementById('language-modal-overlay');
+  if (langModal) langModal.classList.remove('active');
+};

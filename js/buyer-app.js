@@ -15,10 +15,19 @@ let kycCurrentStep = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('hashchange', handleRouteUpdate);
+  window.addEventListener('krishi:language-change', () => {
+    handleRouteUpdate();
+  });
   initSearchDropdown();
   initNotificationPanel();
   handleRouteUpdate();
 });
+
+function setLanguage(lang) {
+  if (window.KrishiI18n) {
+    window.KrishiI18n.setLanguage(lang);
+  }
+}
 
 // ═══════════════════════════════════════════════
 // 2. ROUTER
