@@ -3,61 +3,313 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KrishiShetra — Login & Access Platform</title>
+  <title>KrishiShetra — Login & Access</title>
   <meta name="description" content="Access KrishiShetra AgriTech platform to discover live mandi prices, AI-driven crop forecasting, and verified buyer networks.">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Playfair Display + Plus Jakarta Sans + Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    /* Auth Form Specific Utilities */
-    .auth-tabs {
+    /* ============================================================
+       KRISHISHETRA AUTHENTICATION — SPLIT SCREEN PREMIUM DESIGN
+       ============================================================ */
+    :root {
+      --bg-cream: #F9F9F6;
+      --bg-ivory: #F5F4ED;
+      --bg-card: #FFFFFF;
+      --forest-dark: #12372A;
+      --forest-primary: #153E2D;
+      --forest-hover: #0F2D21;
+      --forest-light-tint: #EAF4EE;
+      --sage-green: #5B9A72;
+      --fresh-mint: #8FCB9B;
+      --warm-amber: #D6A84F;
+      --terracotta: #C96D5B;
+      --text-charcoal: #17221D;
+      --text-muted: #6F7F75;
+      --border-subtle: #E5E4DC;
+      --border-focus: #153E2D;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-cream);
+      color: var(--text-charcoal);
+      min-height: 100vh;
       display: flex;
-      background: #F5F8F6;
-      border: 1.5px solid #DCE6DF;
-      border-radius: var(--radius-md, 12px);
-      padding: 4px;
-      margin-bottom: 22px;
-      gap: 4px;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
-    .auth-tab-btn {
-      flex: 1;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: #6F7F75;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all var(--duration-fast, 0.2s) ease;
-      font-family: var(--font-body);
+
+    /* ── Split Screen Layout ── */
+    .auth-split-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      width: 100%;
     }
-    .auth-tab-btn.active {
+
+    /* ── Left Visual Column ── */
+    .auth-left-hero {
+      position: relative;
+      background: var(--forest-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 56px;
+      overflow: hidden;
+    }
+
+    .auth-left-hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .auth-left-hero__bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 35%;
+    }
+
+    .auth-left-hero__overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(180deg, rgba(18, 55, 42, 0.45) 0%, rgba(18, 55, 42, 0.25) 30%, rgba(18, 55, 42, 0.85) 75%, rgba(18, 55, 42, 0.98) 100%),
+                  linear-gradient(90deg, rgba(18, 55, 42, 0.4) 0%, transparent 60%);
+    }
+
+    /* Left Top Brand Pill */
+    .auth-brand-pill {
+      position: relative;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 8px 20px;
+      border-radius: 9999px;
+      text-decoration: none;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s ease;
+      width: fit-content;
+    }
+
+    .auth-brand-pill:hover {
+      transform: translateY(-2px);
       background: #FFFFFF;
-      color: #12372A;
-      box-shadow: 0 2px 8px rgba(18, 55, 42, 0.08);
     }
-    .auth-alert {
-      padding: 12px 16px;
-      border-radius: var(--radius-md, 12px);
+
+    .auth-brand-pill__icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #153E2D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8FCB9B;
+    }
+
+    .auth-brand-pill__text {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 700;
+      color: #12372A;
+    }
+
+    /* Left Bottom Content */
+    .auth-left-hero__content {
+      position: relative;
+      z-index: 10;
+      max-width: 520px;
+    }
+
+    .auth-left-hero__headline {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 3.8vw, 50px);
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.15;
+      margin-bottom: 18px;
+      letter-spacing: -0.01em;
+    }
+
+    .auth-left-hero__headline em {
+      font-style: italic;
+      color: #D6A84F;
+    }
+
+    .auth-left-hero__subtext {
+      font-size: 15.5px;
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.6;
+      margin-bottom: 28px;
+      font-weight: 300;
+    }
+
+    .auth-stat-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .auth-stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      background: rgba(18, 55, 42, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+      font-size: 13px;
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    .auth-stat-badge__dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #8FCB9B;
+      box-shadow: 0 0 8px #8FCB9B;
+    }
+
+    /* ── Right Content Column ── */
+    .auth-right-container {
+      background-color: var(--bg-cream);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 32px;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Top Language Dropdown */
+    .auth-top-actions {
+      position: absolute;
+      top: 28px;
+      right: 36px;
+      z-index: 20;
+    }
+
+    .auth-lang-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
       font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-charcoal);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
+    }
+
+    .auth-lang-btn:hover {
+      border-color: #5B9A72;
+      box-shadow: 0 4px 12px rgba(91, 154, 114, 0.12);
+    }
+
+    .auth-lang-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+      padding: 6px;
+      min-width: 140px;
+      display: none;
+      z-index: 50;
+    }
+
+    .auth-lang-menu.show {
+      display: block;
+    }
+
+    .auth-lang-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 8px 14px;
+      background: none;
+      border: none;
+      font-size: 13.5px;
+      color: var(--text-charcoal);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .auth-lang-item:hover, .auth-lang-item.active {
+      background: var(--forest-light-tint);
+      color: var(--forest-primary);
+      font-weight: 600;
+    }
+
+    /* ── Main Centered Card Container ── */
+    .auth-card {
+      width: 100%;
+      max-width: 480px;
+      background: #FFFFFF;
+      border-radius: 28px;
+      padding: 38px 36px 32px 36px;
+      box-shadow: 0 16px 40px rgba(18, 55, 42, 0.06), 0 2px 8px rgba(18, 55, 42, 0.02);
+      border: 1px solid rgba(229, 228, 220, 0.8);
+      position: relative;
+    }
+
+    .auth-card__title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--forest-dark);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .auth-card__subtitle {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* Alert Banner */
+    .auth-alert {
+      padding: 11px 15px;
+      border-radius: 12px;
+      font-size: 13px;
       font-weight: 500;
       margin-bottom: 18px;
       display: none;
-      line-height: 1.45;
+      line-height: 1.4;
     }
     .auth-alert--error {
       background: #FDF2F0;
-      color: #C96D5B;
+      color: var(--terracotta);
       border: 1px solid #F5C6CB;
     }
     .auth-alert--success {
@@ -65,355 +317,798 @@
       color: #2D5A3D;
       border: 1px solid #C3E6CB;
     }
-    .auth-text-box {
+
+    /* ── Role Selector Architecture ── */
+    .auth-role-section {
+      margin-bottom: 20px;
+    }
+
+    .auth-section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--forest-dark);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .auth-roles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .auth-role-btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 12px;
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      user-select: none;
+    }
+
+    .auth-role-btn:hover {
+      border-color: #5B9A72;
+      background: #FAFBF9;
+      transform: translateY(-1px);
+    }
+
+    .auth-role-btn.active {
+      border: 2px solid var(--forest-primary);
+      background-color: var(--forest-light-tint);
+      box-shadow: 0 4px 14px rgba(21, 62, 45, 0.08);
+    }
+
+    .auth-role-btn__check {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #17221D;
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-role-btn.active .auth-role-btn__check {
+      display: flex;
+    }
+
+    .auth-role-btn__icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      color: var(--forest-primary);
+    }
+
+    .auth-role-btn__title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-charcoal);
+      letter-spacing: 0.02em;
+    }
+
+    .auth-role-btn__subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Transport Full Width Button */
+    .auth-role-btn--full {
+      width: 100%;
+      flex-direction: row;
+      gap: 12px;
+      padding: 13px 16px;
+      border-radius: 16px;
+    }
+
+    .auth-role-btn--full .auth-role-btn__icon-wrap {
+      width: auto;
+      height: auto;
+      margin-bottom: 0;
+    }
+
+    .auth-role-btn--full .auth-role-btn__title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ── Form Inputs ── */
+    .auth-field-group {
+      margin-bottom: 18px;
+    }
+
+    .auth-field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+
+    .auth-field-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-charcoal);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .auth-forgot-btn {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--sage-green);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .auth-forgot-btn:hover {
+      text-decoration: underline;
+      color: var(--forest-primary);
+    }
+
+    .auth-input-wrapper {
+      position: relative;
       display: flex;
       align-items: center;
       background: #FFFFFF;
-      border: 1.5px solid #DCE6DF;
-      border-radius: var(--radius-md, 12px);
-      transition: all var(--duration-fast, 0.2s);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 14px;
+      transition: all 0.2s ease;
       overflow: hidden;
     }
-    .auth-text-box:focus-within {
-      border-color: #5B9A72;
-      box-shadow: 0 0 0 3px rgba(91, 154, 114, 0.2);
+
+    .auth-input-wrapper:focus-within {
+      border-color: var(--forest-primary);
+      box-shadow: 0 0 0 3px rgba(21, 62, 45, 0.12);
     }
-    .auth-text-box__input {
+
+    .auth-input-icon {
+      padding-left: 14px;
+      color: #8A9A90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-input {
       flex: 1;
-      padding: 14px 16px;
-      background: transparent;
+      width: 100%;
+      padding: 13px 14px;
       border: none;
-      color: #17221D;
-      font-size: 15px;
+      background: transparent;
+      font-size: 14px;
       font-weight: 500;
+      color: var(--text-charcoal);
       outline: none;
-      font-family: var(--font-body);
+      font-family: var(--font-sans);
     }
-    .auth-text-box__input::placeholder {
-      color: #6F7F75;
-      opacity: 0.7;
+
+    .auth-input::placeholder {
+      color: #9AA7A0;
       font-weight: 400;
     }
-    .auth-switch-prompt {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 14px;
-      color: #6F7F75;
-    }
-    .auth-switch-link {
-      color: #5B9A72;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
+
+    .auth-toggle-pwd {
       background: none;
       border: none;
-      padding: 0;
-      font-size: 14px;
+      padding: 12px 14px;
+      color: #8A9A90;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .auth-switch-link:hover {
+
+    .auth-toggle-pwd:hover {
+      color: var(--text-charcoal);
+    }
+
+    /* ── Primary Submit Button ── */
+    .auth-btn-submit {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--forest-primary);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      margin-top: 6px;
+      margin-bottom: 16px;
+      font-family: var(--font-sans);
+    }
+
+    .auth-btn-submit:hover {
+      background-color: var(--forest-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(21, 62, 45, 0.2);
+    }
+
+    .auth-btn-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── Dedicated FPO Popover Card ── */
+    .auth-fpo-popover {
+      position: absolute;
+      bottom: 24px;
+      right: -24px;
+      width: 250px;
+      background: #F8F7F2;
+      border: 1px solid rgba(18, 55, 42, 0.12);
+      border-radius: 20px;
+      padding: 18px 16px;
+      box-shadow: 0 14px 36px rgba(18, 55, 42, 0.14);
+      z-index: 30;
+      animation: popIn 0.3s ease-out;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .auth-fpo-popover__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .auth-fpo-popover__title {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--forest-dark);
+      letter-spacing: 0.05em;
+    }
+
+    .auth-fpo-popover__icon {
+      color: var(--forest-primary);
+      display: flex;
+    }
+
+    .auth-fpo-popover__label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-charcoal);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .auth-fpo-popover__box {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 4px 8px;
+      margin-bottom: 12px;
+    }
+
+    .auth-fpo-popover__box input {
+      width: 100%;
+      border: none;
+      outline: none;
+      padding: 6px 8px;
+      font-size: 12px;
+      background: transparent;
+      color: var(--text-charcoal);
+    }
+
+    .auth-fpo-popover__btn {
+      width: 100%;
+      padding: 9px 12px;
+      background: var(--forest-primary);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .auth-fpo-popover__btn:hover {
+      background: var(--forest-hover);
+    }
+
+    /* ── Switcher Link ── */
+    .auth-switch-text {
+      text-align: center;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+
+    .auth-switch-text button {
+      background: none;
+      border: none;
+      color: var(--forest-primary);
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0 4px;
+      font-size: 13.5px;
+    }
+
+    .auth-switch-text button:hover {
       text-decoration: underline;
-      color: #12372A;
+    }
+
+    /* ── Trust Signals ── */
+    .auth-trust-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin-bottom: 14px;
+    }
+
+    .auth-trust-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .auth-trust-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-charcoal);
+    }
+
+    .auth-trust-dot {
+      color: #BAC7BF;
+      font-size: 10px;
+    }
+
+    .auth-trust-subtext {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    /* ── Modal / OTP / Forgot Steps ── */
+    .auth-view {
+      display: none;
+    }
+
+    .auth-view.active {
+      display: block;
+    }
+
+    .auth-otp-boxes {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin: 18px 0;
+    }
+
+    .auth-otp-box {
+      width: 100%;
+      height: 48px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--forest-dark);
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .auth-otp-box:focus {
+      border-color: var(--forest-primary);
+      box-shadow: 0 0 0 3px rgba(21, 62, 45, 0.15);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .auth-split-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .auth-left-hero {
+        min-height: 380px;
+        padding: 36px 24px;
+      }
+      .auth-fpo-popover {
+        position: static;
+        width: 100%;
+        margin-top: 16px;
+      }
+      .auth-right-container {
+        padding: 32px 16px;
+      }
+      .auth-top-actions {
+        top: 16px;
+        right: 16px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- ════════════════════════════════════════
-       SPLIT-SCREEN AUTHENTICATION PAGE
-       ════════════════════════════════════════ -->
-  <div class="auth-wrapper">
-    
-    <!-- ── Left Visual Column (Desktop) ── -->
-    <aside class="auth-hero" aria-label="Visual Brand Story">
-      <div class="auth-hero__bg">
-        <img src="assets/images/hero-farm.jpg" alt="Indian farmers working in lush green terrace fields at golden sunrise" id="auth-hero-img">
-      </div>
-      <div class="auth-hero__overlay"></div>
+  <div class="auth-split-wrapper">
 
-      <!-- Top Brand Logo -->
-      <div class="auth-hero__top">
-        <a href="index.html" class="auth-hero__logo" title="Back to KrishiShetra Home">
-          <div class="auth-hero__logo-icon"><i data-lucide="sprout"></i></div>
-          <span class="auth-hero__logo-text">KrishiShetra</span>
-        </a>
+    <!-- ════════════════════════════════════════
+         LEFT VISUAL COLUMN (HERO)
+         ════════════════════════════════════════ -->
+    <aside class="auth-left-hero" aria-label="KrishiShetra Story">
+      <div class="auth-left-hero__bg">
+        <img src="assets/images/hero-farm.jpg" alt="Indian farmers harvesting in lush green fields at golden sunrise">
       </div>
+      <div class="auth-left-hero__overlay"></div>
 
-      <!-- Bottom Headline & Value Proposition -->
-      <div class="auth-hero__bottom">
-        <h1 class="auth-hero__headline" id="hero-headline">
+      <!-- Top Brand Pill -->
+      <a href="index.html" class="auth-brand-pill" title="Back to KrishiShetra Home">
+        <div class="auth-brand-pill__icon">
+          <i data-lucide="sprout" style="width: 18px; height: 18px;"></i>
+        </div>
+        <span class="auth-brand-pill__text">KrishiShetra</span>
+      </a>
+
+      <!-- Bottom Headline & Stats -->
+      <div class="auth-left-hero__content">
+        <h1 class="auth-left-hero__headline" id="hero-headline">
           Sell smarter.<br>
           Discover better<br>
           <em>markets.</em>
         </h1>
-        <p class="auth-hero__subtitle" id="hero-subtitle">
+        <p class="auth-left-hero__subtext" id="hero-subtext">
           Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and AI-powered mandi insights.
         </p>
 
-        <div class="auth-hero__badges">
-          <div class="auth-hero__badge-item">
-            <span class="auth-hero__badge-dot"></span>
+        <div class="auth-stat-badges">
+          <div class="auth-stat-badge">
+            <span class="auth-stat-badge__dot"></span>
             <span id="badge-farmers">50,000+ Active Farmers</span>
           </div>
-          <div class="auth-hero__badge-item">
-            <span class="auth-hero__badge-dot"></span>
+          <div class="auth-stat-badge">
+            <span class="auth-stat-badge__dot"></span>
             <span id="badge-mandis">120+ APMC Mandis</span>
           </div>
-          <div class="auth-hero__badge-item">
-            <span class="auth-hero__badge-dot"></span>
+          <div class="auth-stat-badge">
+            <span class="auth-stat-badge__dot"></span>
             <span id="badge-verified">100% Verified Buyers</span>
           </div>
         </div>
       </div>
     </aside>
 
-    <!-- ── Right Form Column ── -->
-    <main class="auth-content">
-      
-      <!-- Top Language Selector -->
-      <div class="auth-content__header-bar">
-        <div class="auth-lang-dropdown">
-          <button type="button" class="auth-lang-btn" id="lang-menu-btn" aria-haspopup="true" aria-expanded="false">
-            <i data-lucide="globe" style="width:15px;height:15px;"></i>
-            <span id="current-lang-text">English</span>
-            <span style="font-size: 10px; opacity: 0.7;">▼</span>
-          </button>
-          <div class="auth-lang-menu" id="lang-menu" role="menu">
-            <button type="button" class="auth-lang-menu__item active" data-lang="en">English</button>
-            <button type="button" class="auth-lang-menu__item" data-lang="hi">हिन्दी (Hindi)</button>
-            <button type="button" class="auth-lang-menu__item" data-lang="mr">मराठी (Marathi)</button>
-          </div>
+    <!-- ════════════════════════════════════════
+         RIGHT AUTHENTICATION CONTAINER
+         ════════════════════════════════════════ -->
+    <main class="auth-right-container">
+
+      <!-- Language Selector -->
+      <div class="auth-top-actions">
+        <button type="button" class="auth-lang-btn" id="btn-lang-toggle">
+          <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
+          <span id="current-lang-label">English</span>
+          <i data-lucide="chevron-down" style="width: 13px; height: 13px;"></i>
+        </button>
+        <div class="auth-lang-menu" id="lang-dropdown">
+          <button type="button" class="auth-lang-item active" data-lang="en">English</button>
+          <button type="button" class="auth-lang-item" data-lang="hi">हिन्दी (Hindi)</button>
+          <button type="button" class="auth-lang-item" data-lang="mr">मराठी (Marathi)</button>
         </div>
       </div>
 
-      <div class="auth-card-box">
-        
-        <!-- Header Text -->
-        <header class="auth-header">
-          <h2 class="auth-header__title" id="auth-title">Welcome back</h2>
-          <p class="auth-header__subtitle" id="auth-subtitle">Enter your credentials to access your account</p>
-        </header>
+      <!-- Main Form Card Box -->
+      <div class="auth-card">
 
-        <!-- Mode Toggle Tabs (Login / Register) -->
-        <div class="auth-tabs" id="auth-tabs-container">
-          <button type="button" class="auth-tab-btn active" id="tab-btn-login">Log In</button>
-          <button type="button" class="auth-tab-btn" id="tab-btn-register">Register</button>
-        </div>
+        <!-- ── VIEW 1: LOGIN FORM ── -->
+        <div class="auth-view active" id="view-login">
+          <h2 class="auth-card__title" id="login-title">Welcome back</h2>
+          <p class="auth-card__subtitle" id="login-subtitle">Enter your details to access your account</p>
 
-        <!-- ── TAB 1: LOGIN FORM ── -->
-        <form id="auth-login-form" class="auth-form" novalidate>
           <div id="login-alert" class="auth-alert"></div>
 
-          <!-- Email Input -->
-          <div class="auth-input-group">
-            <label class="auth-input-label" for="login-email" id="label-login-email">EMAIL ADDRESS</label>
-            <div class="auth-text-box">
-              <input 
-                type="email" 
-                id="login-email" 
-                class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
-                autocomplete="email" 
-                required
-              >
+          <form id="form-login" novalidate>
+
+            <!-- Role Selector -->
+            <div class="auth-role-section">
+              <label class="auth-section-label" id="label-role">I AM A...</label>
+              
+              <!-- Top Row: Farmer & Buyer -->
+              <div class="auth-roles-grid">
+                <div class="auth-role-btn active" data-role="farmer" tabindex="0" role="radio" aria-checked="true">
+                  <div class="auth-role-btn__check">✓</div>
+                  <div class="auth-role-btn__icon-wrap">
+                    <i data-lucide="tractor" style="width: 26px; height: 26px;"></i>
+                  </div>
+                  <span class="auth-role-btn__title" id="role-title-farmer">FARMER</span>
+                  <span class="auth-role-btn__subtitle" id="role-sub-farmer">Connect to markets</span>
+                </div>
+
+                <div class="auth-role-btn" data-role="buyer" tabindex="0" role="radio" aria-checked="false">
+                  <div class="auth-role-btn__check">✓</div>
+                  <div class="auth-role-btn__icon-wrap">
+                    <i data-lucide="store" style="width: 26px; height: 26px;"></i>
+                  </div>
+                  <span class="auth-role-btn__title" id="role-title-buyer">BUYER</span>
+                  <span class="auth-role-btn__subtitle" id="role-sub-buyer">Source products</span>
+                </div>
+              </div>
+
+              <!-- Middle Row: Transport -->
+              <div class="auth-role-btn auth-role-btn--full" data-role="transporter" tabindex="0" role="radio" aria-checked="false">
+                <div class="auth-role-btn__check">✓</div>
+                <div class="auth-role-btn__icon-wrap">
+                  <i data-lucide="truck" style="width: 22px; height: 22px;"></i>
+                </div>
+                <span class="auth-role-btn__title" id="role-title-transporter">TRANSPORT</span>
+              </div>
             </div>
+
+            <!-- Email Input -->
+            <div class="auth-field-group">
+              <label class="auth-field-label" for="input-login-email" id="label-email">EMAIL ADDRESS</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon"><i data-lucide="mail" style="width: 17px; height: 17px;"></i></span>
+                <input 
+                  type="email" 
+                  id="input-login-email" 
+                  class="auth-input" 
+                  placeholder="your.email@example.com" 
+                  autocomplete="email" 
+                  required
+                >
+              </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="auth-field-group">
+              <div class="auth-field-header">
+                <label class="auth-field-label" for="input-login-password" id="label-password">PASSWORD</label>
+                <button type="button" class="auth-forgot-btn" id="btn-goto-forgot">Forgot Password?</button>
+              </div>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon"><i data-lucide="lock" style="width: 17px; height: 17px;"></i></span>
+                <input 
+                  type="password" 
+                  id="input-login-password" 
+                  class="auth-input" 
+                  placeholder="••••••••" 
+                  autocomplete="current-password" 
+                  required
+                >
+                <button type="button" class="auth-toggle-pwd" id="btn-toggle-login-pwd" aria-label="Toggle password visibility">
+                  <i data-lucide="eye" id="eye-icon-login" style="width: 17px; height: 17px;"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="auth-btn-submit" id="btn-login-submit">
+              <span id="btn-login-text">Log In</span>
+              <span>→</span>
+            </button>
+
+            <!-- Switch to Register -->
+            <p class="auth-switch-text">
+              <span id="text-no-acc">Don't have an account?</span>
+              <button type="button" id="btn-goto-register">Create an account</button>
+            </p>
+
+          </form>
+
+          <!-- Dedicated FPO Popover Card -->
+          <div class="auth-fpo-popover" id="fpo-card">
+            <div class="auth-fpo-popover__header">
+              <span class="auth-fpo-popover__title">LOGIN AS FPO</span>
+              <span class="auth-fpo-popover__icon"><i data-lucide="building-2" style="width: 18px; height: 18px;"></i></span>
+            </div>
+            <label class="auth-fpo-popover__label">Organization ID</label>
+            <div class="auth-fpo-popover__box">
+              <span style="color:#8A9A90; display:flex; align-items:center;"><i data-lucide="building" style="width: 15px; height: 15px;"></i></span>
+              <input type="text" id="fpo-code-input" placeholder="Enter FPO ID or code">
+            </div>
+            <button type="button" class="auth-fpo-popover__btn" id="btn-fpo-direct">
+              <span>Verify & Log in</span>
+              <span>→</span>
+            </button>
           </div>
 
-          <!-- Password Input -->
-          <div class="auth-input-group">
-            <label class="auth-input-label" for="login-password" id="label-login-password">PASSWORD</label>
-            <div class="auth-text-box">
-              <input 
-                type="password" 
-                id="login-password" 
-                class="auth-text-box__input" 
-                placeholder="Enter your password" 
-                autocomplete="current-password" 
-                required
-              >
-            </div>
-          </div>
+        </div>
 
-          <!-- Login Action Button -->
-          <button type="submit" class="auth-btn-primary" id="btn-login">
-            <span id="btn-login-text">Log In</span>
-            <span class="auth-btn-arrow">→</span>
-          </button>
+        <!-- ── VIEW 2: REGISTRATION FORM ── -->
+        <div class="auth-view" id="view-register">
+          <h2 class="auth-card__title">Create Account</h2>
+          <p class="auth-card__subtitle">Join KrishiShetra and discover better market rates</p>
 
-          <p class="auth-switch-prompt">
-            <span id="text-no-account">Don't have an account?</span> 
-            <button type="button" class="auth-switch-link" id="link-to-register">Create an account</button>
-          </p>
-        </form>
-
-        <!-- ── TAB 2: REGISTRATION FORM ── -->
-        <form id="auth-register-form" class="auth-form" style="display: none;" novalidate>
           <div id="register-alert" class="auth-alert"></div>
 
-          <!-- Role Selector -->
-          <div class="auth-roles-group">
-            <label class="auth-roles-label" id="label-role">I AM A...</label>
-            <div class="auth-roles" role="radiogroup" aria-labelledby="label-role">
-              
-              <div class="auth-role-card active" data-role="farmer" tabindex="0" role="radio" aria-checked="true">
-                <span class="auth-role-card__icon"><i data-lucide="tractor"></i></span>
-                <span class="auth-role-card__name" id="role-name-farmer">Farmer</span>
-                <span class="auth-role-card__check">✓</span>
+          <form id="form-register" novalidate>
+            <!-- Full Name -->
+            <div class="auth-field-group">
+              <label class="auth-field-label" for="reg-name">FULL NAME</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon"><i data-lucide="user" style="width: 17px; height: 17px;"></i></span>
+                <input type="text" id="reg-name" class="auth-input" placeholder="Rajesh Patil" required>
               </div>
+            </div>
 
-              <div class="auth-role-card" data-role="fpo" tabindex="0" role="radio" aria-checked="false">
-                <span class="auth-role-card__icon"><i data-lucide="users"></i></span>
-                <span class="auth-role-card__name" id="role-name-fpo">FPO</span>
-                <span class="auth-role-card__check">✓</span>
+            <!-- Email -->
+            <div class="auth-field-group">
+              <label class="auth-field-label" for="reg-email">EMAIL ADDRESS</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon"><i data-lucide="mail" style="width: 17px; height: 17px;"></i></span>
+                <input type="email" id="reg-email" class="auth-input" placeholder="farmer@example.com" required>
               </div>
+            </div>
 
-              <div class="auth-role-card" data-role="buyer" tabindex="0" role="radio" aria-checked="false">
-                <span class="auth-role-card__icon"><i data-lucide="store"></i></span>
-                <span class="auth-role-card__name" id="role-name-buyer">Buyer</span>
-                <span class="auth-role-card__check">✓</span>
+            <!-- Phone -->
+            <div class="auth-field-group">
+              <label class="auth-field-label" for="reg-phone">MOBILE NUMBER</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon"><i data-lucide="phone" style="width: 17px; height: 17px;"></i></span>
+                <input type="tel" id="reg-phone" class="auth-input" placeholder="9876543210" maxlength="10" required>
               </div>
+            </div>
 
-              <div class="auth-role-card" data-role="transporter" tabindex="0" role="radio" aria-checked="false">
-                <span class="auth-role-card__icon"><i data-lucide="truck"></i></span>
-                <span class="auth-role-card__name" id="role-name-transporter">Transporter</span>
-                <span class="auth-role-card__check">✓</span>
+            <!-- Password -->
+            <div class="auth-field-group">
+              <label class="auth-field-label" for="reg-password">PASSWORD</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon"><i data-lucide="lock" style="width: 17px; height: 17px;"></i></span>
+                <input type="password" id="reg-password" class="auth-input" placeholder="Minimum 6 characters" required>
               </div>
-
             </div>
-          </div>
 
-          <!-- Full Name Input -->
-          <div class="auth-input-group">
-            <label class="auth-input-label" for="register-name" id="label-register-name">FULL NAME</label>
-            <div class="auth-text-box">
-              <input 
-                type="text" 
-                id="register-name" 
-                class="auth-text-box__input" 
-                placeholder="e.g. Rajesh Patil" 
-                autocomplete="name" 
-                required
-              >
-            </div>
-          </div>
+            <!-- Submit Register -->
+            <button type="submit" class="auth-btn-submit" id="btn-reg-submit">
+              <span>Register & Send OTP</span>
+              <span>→</span>
+            </button>
 
-          <!-- Email Input -->
-          <div class="auth-input-group">
-            <label class="auth-input-label" for="register-email" id="label-register-email">EMAIL ADDRESS</label>
-            <div class="auth-text-box">
-              <input 
-                type="email" 
-                id="register-email" 
-                class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
-                autocomplete="email" 
-                required
-              >
-            </div>
-          </div>
+            <!-- Switch to Login -->
+            <p class="auth-switch-text">
+              <span>Already have an account?</span>
+              <button type="button" id="btn-goto-login-from-reg">Log In</button>
+            </p>
+          </form>
+        </div>
 
-          <!-- Mobile Number Input -->
-          <div class="auth-input-group">
-            <label class="auth-input-label" for="register-phone" id="label-phone">MOBILE NUMBER</label>
-            <div class="auth-phone-box">
-              <div class="auth-phone-box__prefix">
-                <span>🇮🇳</span>
-                <span>+91</span>
-              </div>
-              <input 
-                type="tel" 
-                id="register-phone" 
-                class="auth-phone-box__input" 
-                placeholder="10-digit number" 
-                maxlength="10" 
-                inputmode="numeric" 
-                pattern="[0-9]{10}"
-                autocomplete="tel-national"
-              >
-            </div>
-          </div>
+        <!-- ── VIEW 3: OTP VERIFICATION ── -->
+        <div class="auth-view" id="view-otp">
+          <h2 class="auth-card__title">Verify Email</h2>
+          <p class="auth-card__subtitle">Enter the 6-digit OTP sent to your email inbox</p>
 
-          <!-- Password Input -->
-          <div class="auth-input-group">
-            <label class="auth-input-label" for="register-password" id="label-register-password">PASSWORD</label>
-            <div class="auth-text-box">
-              <input 
-                type="password" 
-                id="register-password" 
-                class="auth-text-box__input" 
-                placeholder="Minimum 6 characters" 
-                autocomplete="new-password" 
-                required
-              >
-            </div>
-          </div>
-
-          <!-- Register Action Button -->
-          <button type="submit" class="auth-btn-primary" id="btn-register">
-            <span id="btn-register-text">Register & Send OTP</span>
-            <span class="auth-btn-arrow">→</span>
-          </button>
-
-          <p class="auth-switch-prompt">
-            <span id="text-have-account">Already have an account?</span> 
-            <button type="button" class="auth-switch-link" id="link-to-login">Log In</button>
-          </p>
-        </form>
-
-        <!-- ── STEP 3: OTP VERIFICATION STEP (Hidden Initially) ── -->
-        <div class="auth-otp-step" id="otp-step-container">
           <div id="otp-alert" class="auth-alert"></div>
 
-          <div style="margin-bottom: 20px;">
-            <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT EMAIL OTP</label>
-            <div style="font-size: 14px; color: #6F7F75; margin-bottom: 12px;">
-              <span id="otp-sent-text">Verification code sent to</span>
-              <strong id="display-user-email" style="color: #12372A; margin: 0 4px; word-break: break-all;">user@example.com</strong>
-              <button type="button" class="auth-otp-change-num" id="btn-change-email">
-                <i data-lucide="edit-3" style="width:12px;height:12px;vertical-align:middle;"></i> 
-                <span id="btn-edit-text">Change</span>
-              </button>
-            </div>
-
-            <!-- 6-box OTP entry -->
-            <div class="auth-otp-boxes" id="otp-inputs">
-              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" required>
-              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-            </div>
+          <div style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 8px;">
+            Verification code sent to <strong id="otp-email-target" style="color: var(--forest-dark);"></strong>
           </div>
 
-          <!-- OTP Timer and Resend -->
-          <div class="auth-otp-meta">
-            <span class="auth-otp-timer" id="otp-timer-display">Resend OTP in <strong id="timer-count">60</strong>s</span>
-            <button type="button" class="auth-otp-resend-btn" id="btn-resend-otp" disabled>Resend Code</button>
+          <!-- 6-digit boxes -->
+          <div class="auth-otp-boxes" id="otp-inputs">
+            <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autofocus>
+            <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
           </div>
 
-          <!-- Verify Button -->
-          <button type="button" class="auth-btn-primary" id="btn-verify-otp">
-            <span id="btn-verify-text">Verify & Continue</span>
-            <span class="auth-btn-arrow">→</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 13px;">
+            <span id="otp-timer-label" style="color: var(--text-muted);">Resend OTP in <strong id="timer-sec">60</strong>s</span>
+            <button type="button" id="btn-resend-code" style="background:none; border:none; color:var(--sage-green); font-weight:600; cursor:pointer;" disabled>Resend Code</button>
+          </div>
+
+          <button type="button" class="auth-btn-submit" id="btn-verify-submit">
+            <span>Verify & Continue</span>
+            <span>→</span>
           </button>
 
-          <p class="auth-switch-prompt" style="margin-top: 18px;">
-            <button type="button" class="auth-switch-link" id="link-back-to-login">← Back to Log In</button>
+          <p class="auth-switch-text">
+            <button type="button" id="btn-back-login-from-otp">← Back to Log In</button>
           </p>
         </div>
 
-        <!-- Trust & Security Footer -->
-        <div class="auth-trust-divider"></div>
-        <div class="auth-trust-items">
-          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
-          <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
-          <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
+        <!-- ── VIEW 4: FORGOT PASSWORD ── -->
+        <div class="auth-view" id="view-forgot">
+          <h2 class="auth-card__title">Reset Password</h2>
+          <p class="auth-card__subtitle">Enter your registered email to receive a password reset OTP</p>
+
+          <div id="forgot-alert" class="auth-alert"></div>
+
+          <form id="form-forgot" novalidate>
+            <div class="auth-field-group">
+              <label class="auth-field-label" for="forgot-email">EMAIL ADDRESS</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon"><i data-lucide="mail" style="width: 17px; height: 17px;"></i></span>
+                <input type="email" id="forgot-email" class="auth-input" placeholder="your.email@example.com" required>
+              </div>
+            </div>
+
+            <button type="submit" class="auth-btn-submit" id="btn-forgot-submit">
+              <span>Send Reset OTP</span>
+              <span>→</span>
+            </button>
+
+            <p class="auth-switch-text">
+              <button type="button" id="btn-back-login-from-forgot">← Back to Log In</button>
+            </p>
+          </form>
         </div>
-        <p class="auth-secure-subtext">
-          <i data-lucide="lock" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i>
-          <span id="text-privacy">Your data is secure and protected under AgriStack guidelines.</span>
+
+        <!-- ── VIEW 5: SET NEW PASSWORD ── -->
+        <div class="auth-view" id="view-set-new-pwd">
+          <h2 class="auth-card__title">New Password</h2>
+          <p class="auth-card__subtitle">Enter your new secure password</p>
+
+          <div id="new-pwd-alert" class="auth-alert"></div>
+
+          <form id="form-new-pwd" novalidate>
+            <div class="auth-field-group">
+              <label class="auth-field-label" for="input-new-pwd">NEW PASSWORD</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon"><i data-lucide="lock" style="width: 17px; height: 17px;"></i></span>
+                <input type="password" id="input-new-pwd" class="auth-input" placeholder="Minimum 6 characters" required>
+              </div>
+            </div>
+
+            <button type="submit" class="auth-btn-submit" id="btn-save-new-pwd">
+              <span>Save & Log In</span>
+              <span>→</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Trust Signals Footer -->
+        <div class="auth-trust-divider"></div>
+        <div class="auth-trust-row">
+          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;"></i> Secure</span>
+          <span class="auth-trust-dot">•</span>
+          <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;"></i> Simple</span>
+          <span class="auth-trust-dot">•</span>
+          <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;"></i> Transparent</span>
+        </div>
+        <p class="auth-trust-subtext">
+          <i data-lucide="lock" style="width:12px;height:12px;color:#5B9A72;"></i>
+          <span>Your data is secure and protected under AgriStack guidelines.</span>
         </p>
 
       </div>
@@ -431,404 +1126,139 @@
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
 
-      // Elements
-      const tabsContainer = document.getElementById('auth-tabs-container');
-      const tabBtnLogin = document.getElementById('tab-btn-login');
-      const tabBtnRegister = document.getElementById('tab-btn-register');
-      const loginForm = document.getElementById('auth-login-form');
-      const registerForm = document.getElementById('auth-register-form');
-      const otpStepContainer = document.getElementById('otp-step-container');
-
-      // Login elements
-      const loginEmail = document.getElementById('login-email');
-      const loginPassword = document.getElementById('login-password');
-      const btnLogin = document.getElementById('btn-login');
-      const loginAlert = document.getElementById('login-alert');
-      const linkToRegister = document.getElementById('link-to-register');
-
-      // Register elements
-      const registerName = document.getElementById('register-name');
-      const registerEmail = document.getElementById('register-email');
-      const registerPhone = document.getElementById('register-phone');
-      const registerPassword = document.getElementById('register-password');
-      const btnRegister = document.getElementById('btn-register');
-      const registerAlert = document.getElementById('register-alert');
-      const linkToLogin = document.getElementById('link-to-login');
-      const roleCards = document.querySelectorAll('.auth-role-card');
-
-      // OTP elements
-      const displayUserEmail = document.getElementById('display-user-email');
-      const btnChangeEmail = document.getElementById('btn-change-email');
-      const otpBoxes = Array.from(document.querySelectorAll('.auth-otp-box'));
-      const otpAlert = document.getElementById('otp-alert');
-      const btnVerifyOtp = document.getElementById('btn-verify-otp');
-      const timerCount = document.getElementById('timer-count');
-      const btnResendOtp = document.getElementById('btn-resend-otp');
-      const otpTimerDisplay = document.getElementById('otp-timer-display');
-      const linkBackToLogin = document.getElementById('link-back-to-login');
-
-      // Language elements
-      const langMenuBtn = document.getElementById('lang-menu-btn');
-      const langMenu = document.getElementById('lang-menu');
-      const currentLangText = document.getElementById('current-lang-text');
-
-      let currentRole = 'farmer';
-      let currentLang = 'en';
-      let countdown = 60;
-      let timerInterval = null;
-      let activeOtpEmail = '';
-
-      // ── UI Alert Helpers ──
-      function showAlert(element, message, type = 'error') {
-        element.textContent = message;
-        element.className = `auth-alert auth-alert--${type}`;
-        element.style.display = 'block';
-      }
-
-      function hideAlert(element) {
-        element.style.display = 'none';
-        element.textContent = '';
-      }
-
-      // ── Translations Dictionary ──
-      const translations = {
-        en: {
-          langName: 'English',
-          headline: 'Sell smarter.<br>Discover better<br><em>markets.</em>',
-          subtitle: "Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and AI-powered mandi insights.",
-          badgeFarmers: '50,000+ Active Farmers',
-          badgeMandis: '120+ APMC Mandis',
-          badgeVerified: '100% Verified Buyers',
-          authTitleLogin: 'Welcome back',
-          authSubtitleLogin: 'Enter your credentials to access your account',
-          authTitleRegister: 'Create Account',
-          authSubtitleRegister: 'Join KrishiShetra and discover better market rates',
-          authTitleOtp: 'Verify Email',
-          authSubtitleOtp: 'Enter the 6-digit OTP sent to your email inbox',
-          tabLogin: 'Log In',
-          tabRegister: 'Register',
-          labelLoginEmail: 'EMAIL ADDRESS',
-          labelLoginPassword: 'PASSWORD',
-          btnLogin: 'Log In',
-          btnRegister: 'Register & Send OTP',
-          labelRole: 'I AM A...',
-          roleFarmer: 'Farmer',
-          roleFpo: 'FPO',
-          roleBuyer: 'Buyer',
-          roleTransporter: 'Transporter',
-          labelRegisterName: 'FULL NAME',
-          labelPhone: 'MOBILE NUMBER',
-          labelRegisterPassword: 'PASSWORD',
-          labelOtp: 'ENTER 6-DIGIT EMAIL OTP',
-          otpSent: 'Verification code sent to',
-          btnChange: 'Change',
-          btnVerify: 'Verify & Continue',
-          btnResend: 'Resend Code',
-          trustSecure: 'Secure',
-          trustSimple: 'Simple',
-          trustTransparent: 'Transparent',
-          textPrivacy: 'Your data is secure and protected under AgriStack guidelines.',
-          textNoAccount: "Don't have an account?",
-          textHaveAccount: "Already have an account?"
-        },
-        hi: {
-          langName: 'हिन्दी',
-          headline: 'होशियारी से बेचें.<br>बेहतर मंडियां<br><em>खोजें।</em>',
-          subtitle: 'भारत के अग्रणी कृषि मंच से जुड़ें और सीधे सत्यापित खरीदारों एवं सटीक मंडी पूर्वानुमान का लाभ उठाएं।',
-          badgeFarmers: '५०,०००+ सक्रिय किसान',
-          badgeMandis: '१२०+ एपीएमसी मंडियां',
-          badgeVerified: '१००% सत्यापित खरीदार',
-          authTitleLogin: 'कृषि क्षेत्र में स्वागत है',
-          authSubtitleLogin: 'अपने खाते में प्रवेश करने के लिए विवरण दर्ज करें',
-          authTitleRegister: 'नया खाता बनाएं',
-          authSubtitleRegister: 'कृषि क्षेत्र से जुड़ें और बेहतर मंडी भाव पाएं',
-          authTitleOtp: 'ईमेल सत्यापित करें',
-          authSubtitleOtp: 'अपने ईमेल इनबॉक्स में भेजा गया ६-अंकों का ओटीपी दर्ज करें',
-          tabLogin: 'लॉग इन',
-          tabRegister: 'पंजीकरण',
-          labelLoginEmail: 'ईमेल पता',
-          labelLoginPassword: 'पासवर्ड',
-          btnLogin: 'लॉग इन करें',
-          btnRegister: 'खाता बनाएं एवं ओटीपी भेजें',
-          labelRole: 'मेरी भूमिका...',
-          roleFarmer: 'किसान',
-          roleFpo: 'एफपीओ (FPO)',
-          roleBuyer: 'खरीदार',
-          roleTransporter: 'ट्रांसपोर्टर',
-          labelRegisterName: 'पूरा नाम',
-          labelPhone: 'मोबाइल नंबर',
-          labelRegisterPassword: 'पासवर्ड',
-          labelOtp: '६ अंकों का ओटीपी दर्ज करें',
-          otpSent: 'ओटीपी भेजा गया:',
-          btnChange: 'बदलें',
-          btnVerify: 'सत्यापित करें और आगे बढ़ें',
-          btnResend: 'पुनः ओटीपी भेजें',
-          trustSecure: 'सुरक्षित',
-          trustSimple: 'सरल',
-          trustTransparent: 'पारदर्शी',
-          textPrivacy: 'आपका डेटा एग्रीस्टैक दिशानिर्देशों के तहत पूरी तरह सुरक्षित है।',
-          textNoAccount: 'खाता नहीं है?',
-          textHaveAccount: 'पहले से खाता है?'
-        },
-        mr: {
-          langName: 'मराठी',
-          headline: 'स्मार्ट विक्री करा.<br>उत्तम बाजारपेठ<br><em>शोधा.</em>',
-          subtitle: 'भारतातील अग्रगण्य कृषी नेटवर्कशी जोडा, थेट पडताळणीकृत खरेदीदारांशी संपर्क साधा आणि योग्य भाव मिळवा.',
-          badgeFarmers: '५०,०००+ शेतकरी',
-          badgeMandis: '१२०+ कृषी उत्पन्न बाजार',
-          badgeVerified: '१००% खात्रीशीर व्यापारी',
-          authTitleLogin: 'कृषिक्षेत्र मध्ये आपले स्वागत',
-          authSubtitleLogin: 'तुमच्या खात्यात लॉग इन करण्यासाठी माहिती भरा',
-          authTitleRegister: 'नवीन खाते तयार करा',
-          authSubtitleRegister: 'कृषिक्षेत्रशी जोडा आणि उत्तम बाजारभाव मिळवा',
-          authTitleOtp: 'ईमेल पडताळणी करा',
-          authSubtitleOtp: 'तुमच्या ईमेलवर पाठवलेला ६-अंकी ओटीपी प्रविष्ट करा',
-          tabLogin: 'लॉग इन',
-          tabRegister: 'नोंदणी',
-          labelLoginEmail: 'ईमेल पत्ता',
-          labelLoginPassword: 'पासवर्ड',
-          btnLogin: 'लॉग इन करा',
-          btnRegister: 'नोंदणी करा व ओटीपी पाठवा',
-          labelRole: 'मी आहे...',
-          roleFarmer: 'शेतकरी',
-          roleFpo: 'एफपीओ',
-          roleBuyer: 'खरेदीदार',
-          roleTransporter: 'वाहतूकदार',
-          labelRegisterName: 'पूर्ण नाव',
-          labelPhone: 'मोबाईल नंबर',
-          labelRegisterPassword: 'पासवर्ड',
-          labelOtp: '६-अंकी ओटीपी प्रविष्ट करा',
-          otpSent: 'ओटीपी पाठवला आहे:',
-          btnChange: 'बदला',
-          btnVerify: 'पडताळणी करा व पुढे जा',
-          btnResend: 'पुन्हा ओटीपी पाठवा',
-          trustSecure: 'सुरक्षित',
-          trustSimple: 'सोपे',
-          trustTransparent: 'पारदर्शक',
-          textPrivacy: 'आपला डेटा ॲग्रीस्टॅक नियमांनुसार पूर्णपणे सुरक्षित आहे.',
-          textNoAccount: 'खाते नाही का?',
-          textHaveAccount: 'आधीच खाते आहे?'
-        }
+      // Views
+      const views = {
+        login: document.getElementById('view-login'),
+        register: document.getElementById('view-register'),
+        otp: document.getElementById('view-otp'),
+        forgot: document.getElementById('view-forgot'),
+        setNewPwd: document.getElementById('view-set-new-pwd')
       };
 
-      // ── Apply Language ──
-      function setLanguage(lang) {
-        currentLang = lang;
-        const t = translations[lang] || translations.en;
+      function switchView(viewName) {
+        Object.values(views).forEach(v => v.classList.remove('active'));
+        if (views[viewName]) views[viewName].classList.add('active');
+        if (window.lucide) lucide.createIcons();
+      }
 
-        currentLangText.textContent = t.langName;
-        document.getElementById('hero-headline').innerHTML = t.headline;
-        document.getElementById('hero-subtitle').textContent = t.subtitle;
-        document.getElementById('badge-farmers').textContent = t.badgeFarmers;
-        document.getElementById('badge-mandis').textContent = t.badgeMandis;
-        document.getElementById('badge-verified').textContent = t.badgeVerified;
-        
-        tabBtnLogin.textContent = t.tabLogin;
-        tabBtnRegister.textContent = t.tabRegister;
-        document.getElementById('label-login-email').textContent = t.labelLoginEmail;
-        document.getElementById('label-login-password').textContent = t.labelLoginPassword;
-        document.getElementById('btn-login-text').textContent = t.btnLogin;
-        
-        document.getElementById('label-role').textContent = t.labelRole;
-        document.getElementById('role-name-farmer').textContent = t.roleFarmer;
-        document.getElementById('role-name-fpo').textContent = t.roleFpo;
-        document.getElementById('role-name-buyer').textContent = t.roleBuyer;
-        const roleTransporterEl = document.getElementById('role-name-transporter');
-        if (roleTransporterEl) roleTransporterEl.textContent = t.roleTransporter;
-        document.getElementById('label-register-name').textContent = t.labelRegisterName;
-        document.getElementById('label-register-email').textContent = t.labelLoginEmail;
-        document.getElementById('label-phone').textContent = t.labelPhone;
-        document.getElementById('label-register-password').textContent = t.labelRegisterPassword;
-        document.getElementById('btn-register-text').textContent = t.btnRegister;
+      // Role Selection State
+      let selectedRole = 'farmer';
+      const roleButtons = document.querySelectorAll('.auth-role-btn');
 
-        document.getElementById('label-otp').textContent = t.labelOtp;
-        document.getElementById('otp-sent-text').textContent = t.otpSent;
-        document.getElementById('btn-edit-text').textContent = t.btnChange;
-        document.getElementById('btn-verify-text').textContent = t.btnVerify;
-        btnResendOtp.textContent = t.btnResend;
+      roleButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          roleButtons.forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-checked', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-checked', 'true');
+          selectedRole = btn.dataset.role || 'farmer';
+        });
+      });
 
-        document.getElementById('trust-secure').textContent = t.trustSecure;
-        document.getElementById('trust-simple').textContent = t.trustSimple;
-        document.getElementById('trust-transparent').textContent = t.trustTransparent;
-        document.getElementById('text-privacy').textContent = t.textPrivacy;
+      // Show / Hide Password Toggle
+      const btnToggleLoginPwd = document.getElementById('btn-toggle-login-pwd');
+      const inputLoginPwd = document.getElementById('input-login-password');
+      const eyeIconLogin = document.getElementById('eye-icon-login');
 
-        document.getElementById('text-no-account').textContent = t.textNoAccount;
-        document.getElementById('text-have-account').textContent = t.textHaveAccount;
-
-        document.querySelectorAll('.auth-lang-menu__item').forEach(item => {
-          item.classList.toggle('active', item.dataset.lang === lang);
+      if (btnToggleLoginPwd && inputLoginPwd) {
+        btnToggleLoginPwd.addEventListener('click', () => {
+          const isPwd = inputLoginPwd.type === 'password';
+          inputLoginPwd.type = isPwd ? 'text' : 'password';
+          eyeIconLogin.setAttribute('data-lucide', isPwd ? 'eye-off' : 'eye');
+          if (window.lucide) lucide.createIcons();
         });
       }
 
-      // ── Tab Switching Handlers ──
-      function showLoginTab() {
-        tabBtnLogin.classList.add('active');
-        tabBtnRegister.classList.remove('active');
-        tabsContainer.style.display = 'flex';
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-        otpStepContainer.classList.remove('active');
-        
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleLogin;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleLogin;
-        hideAlert(loginAlert);
-      }
+      // Language Switcher Dropdown
+      const btnLangToggle = document.getElementById('btn-lang-toggle');
+      const langDropdown = document.getElementById('lang-dropdown');
+      const currentLangLabel = document.getElementById('current-lang-label');
 
-      function showRegisterTab() {
-        tabBtnRegister.classList.add('active');
-        tabBtnLogin.classList.remove('active');
-        tabsContainer.style.display = 'flex';
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'block';
-        otpStepContainer.classList.remove('active');
-
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleRegister;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleRegister;
-        hideAlert(registerAlert);
-      }
-
-      function showOtpStep(email) {
-        activeOtpEmail = email;
-        displayUserEmail.textContent = email;
-        tabsContainer.style.display = 'none';
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'none';
-        otpStepContainer.classList.add('active');
-
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleOtp;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleOtp;
-
-        hideAlert(otpAlert);
-        startResendTimer();
-        otpBoxes.forEach(b => b.value = '');
-        otpBoxes[0].focus();
-      }
-
-      tabBtnLogin.addEventListener('click', showLoginTab);
-      tabBtnRegister.addEventListener('click', showRegisterTab);
-      linkToRegister.addEventListener('click', showRegisterTab);
-      linkToLogin.addEventListener('click', showLoginTab);
-      linkBackToLogin.addEventListener('click', showLoginTab);
-      btnChangeEmail.addEventListener('click', showRegisterTab);
-
-      // ── Language Dropdown Toggle ──
-      langMenuBtn.addEventListener('click', (e) => {
+      btnLangToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        langMenu.classList.toggle('open');
-        langMenuBtn.setAttribute('aria-expanded', langMenu.classList.contains('open'));
+        langDropdown.classList.toggle('show');
       });
 
       document.addEventListener('click', () => {
-        langMenu.classList.remove('open');
-        langMenuBtn.setAttribute('aria-expanded', 'false');
+        langDropdown.classList.remove('show');
       });
 
-      document.querySelectorAll('.auth-lang-menu__item').forEach(btn => {
-        btn.addEventListener('click', () => {
-          setLanguage(btn.dataset.lang);
-          langMenu.classList.remove('open');
+      const translations = {
+        en: {
+          label: 'English',
+          headline: 'Sell smarter.<br>Discover better<br><em>markets.</em>',
+          subtext: "Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and AI-powered mandi insights.",
+          title: 'Welcome back',
+          subtitle: 'Enter your details to access your account'
+        },
+        hi: {
+          label: 'हिन्दी',
+          headline: 'होशियारी से बेचें.<br>बेहतर मंडियां<br><em>खोजें।</em>',
+          subtext: 'भारत के अग्रणी कृषि मंच से जुड़ें और सीधे सत्यापित खरीदारों एवं सटीक मंडी पूर्वानुमान का लाभ उठाएं।',
+          title: 'स्वागत है',
+          subtitle: 'अपने खाते में प्रवेश करने के लिए विवरण दर्ज करें'
+        },
+        mr: {
+          label: 'मराठी',
+          headline: 'स्मार्ट विक्री करा.<br>उत्तम बाजारपेठ<br><em>शोधा.</em>',
+          subtext: 'भारतातील अग्रगण्य कृषी नेटवर्कशी जोडा, थेट पडताळणीकृत खरेदीदारांशी संपर्क साधा आणि योग्य भाव मिळवा.',
+          title: 'स्वागत आहे',
+          subtitle: 'तुमच्या खात्यात लॉग इन करण्यासाठी माहिती भरा'
+        }
+      };
+
+      document.querySelectorAll('.auth-lang-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const lang = item.dataset.lang;
+          const t = translations[lang] || translations.en;
+          currentLangLabel.textContent = t.label;
+          document.getElementById('hero-headline').innerHTML = t.headline;
+          document.getElementById('hero-subtext').textContent = t.subtext;
+          document.getElementById('login-title').textContent = t.title;
+          document.getElementById('login-subtitle').textContent = t.subtitle;
+          document.querySelectorAll('.auth-lang-item').forEach(i => i.classList.toggle('active', i === item));
         });
       });
 
-      // ── Role Selector ──
-      roleCards.forEach(card => {
-        card.addEventListener('click', () => {
-          roleCards.forEach(c => {
-            c.classList.remove('active');
-            c.setAttribute('aria-checked', 'false');
-          });
-          card.classList.add('active');
-          card.setAttribute('aria-checked', 'true');
-          currentRole = card.dataset.role;
-        });
+      // Navigation switches
+      document.getElementById('btn-goto-register').addEventListener('click', () => switchView('register'));
+      document.getElementById('btn-goto-login-from-reg').addEventListener('click', () => switchView('login'));
+      document.getElementById('btn-goto-forgot').addEventListener('click', () => switchView('forgot'));
+      document.getElementById('btn-back-login-from-forgot').addEventListener('click', () => switchView('login'));
+      document.getElementById('btn-back-login-from-otp').addEventListener('click', () => switchView('login'));
 
-        card.addEventListener('keydown', (e) => {
-          if (e.key === ' ' || e.key === 'Enter') {
-            e.preventDefault();
-            card.click();
-          }
-        });
-      });
-
-      // Phone Input Formatting
-      registerPhone.addEventListener('input', (e) => {
-        let val = e.target.value.replace(/\D/g, '');
-        if (val.length > 10) val = val.slice(0, 10);
-        e.target.value = val;
-      });
-
-      // ── Timer Handler (60s Cooldown) ──
-      function startResendTimer() {
-        countdown = 60;
-        btnResendOtp.disabled = true;
-        otpTimerDisplay.style.display = 'inline';
-        timerCount.textContent = countdown;
-        
-        clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-          countdown--;
-          timerCount.textContent = countdown;
-          if (countdown <= 0) {
-            clearInterval(timerInterval);
-            otpTimerDisplay.style.display = 'none';
-            btnResendOtp.disabled = false;
-          }
-        }, 1000);
+      // Helper Alerts
+      function showAlert(el, msg, type = 'error') {
+        el.textContent = msg;
+        el.className = `auth-alert auth-alert--${type}`;
+        el.style.display = 'block';
+      }
+      function hideAlert(el) {
+        el.style.display = 'none';
+        el.textContent = '';
       }
 
-      // ── 6-Box OTP Input Handling ──
-      otpBoxes.forEach((box, idx) => {
-        box.addEventListener('input', (e) => {
-          const val = e.target.value.replace(/\D/g, '');
-          e.target.value = val ? val[val.length - 1] : '';
-          hideAlert(otpAlert);
+      // ── 1. LOGIN SUBMISSION ──
+      const formLogin = document.getElementById('form-login');
+      const loginAlert = document.getElementById('login-alert');
+      const btnLoginSubmit = document.getElementById('btn-login-submit');
 
-          if (e.target.value && idx < otpBoxes.length - 1) {
-            otpBoxes[idx + 1].focus();
-          }
-        });
-
-        box.addEventListener('keydown', (e) => {
-          if (e.key === 'Backspace' && !box.value && idx > 0) {
-            otpBoxes[idx - 1].focus();
-          }
-        });
-
-        box.addEventListener('paste', (e) => {
-          e.preventDefault();
-          const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
-          if (pasted.length > 0) {
-            pasted.split('').forEach((char, i) => {
-              if (otpBoxes[i]) otpBoxes[i].value = char;
-            });
-            const nextFocus = Math.min(pasted.length, 5);
-            otpBoxes[nextFocus].focus();
-          }
-        });
-      });
-
-      function getEnteredOtp() {
-        return otpBoxes.map(b => b.value).join('');
-      }
-
-      // ── 1. LOGIN API HANDLER ──
-      loginForm.addEventListener('submit', async (e) => {
+      formLogin.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideAlert(loginAlert);
 
-        const email = loginEmail.value.trim();
-        const password = loginPassword.value;
+        const email = document.getElementById('input-login-email').value.trim();
+        const password = inputLoginPwd.value;
 
         if (!email || !password) {
-          showAlert(loginAlert, 'Please enter both email and password.');
+          showAlert(loginAlert, 'Please enter email and password.');
           return;
         }
 
-        btnLogin.disabled = true;
-        btnLogin.innerHTML = 'Signing in… <span class="auth-btn-arrow">⏳</span>';
+        btnLoginSubmit.disabled = true;
+        btnLoginSubmit.innerHTML = 'Signing in…';
 
         try {
           const res = await fetch(`${window.API_BASE_URL}/auth/login`, {
@@ -836,189 +1266,212 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
           });
-
           const data = await res.json();
 
           if (res.ok && data.success) {
-            // Save token and user in session
             window.Auth.setToken(data.token);
             window.Auth.setUser(data.user);
-
-            btnLogin.innerHTML = 'Login Successful! ✓';
-            btnLogin.style.background = '#5B9A72';
+            btnLoginSubmit.innerHTML = 'Login Successful! ✓';
 
             setTimeout(() => {
-              const userRole = (data.user && data.user.role) ? data.user.role.toLowerCase() : 'farmer';
-              if (userRole === 'buyer') {
+              // Role routing logic
+              const role = (data.user && data.user.role) ? data.user.role.toLowerCase() : selectedRole;
+              if (role === 'buyer') {
                 window.location.href = 'buyer.html';
-              } else if (userRole === 'fpo') {
+              } else if (role === 'fpo') {
                 window.location.href = 'fpo-dashboard.html';
-              } else if (userRole === 'transporter') {
+              } else if (role === 'transporter' || role === 'transport') {
                 window.location.href = 'transporter/dashboard.html';
-              } else if (userRole === 'admin') {
+              } else if (role === 'admin') {
                 window.location.href = 'admin/dashboard.html';
               } else {
                 window.location.href = 'dashboard.html';
               }
-            }, 600);
+            }, 500);
           } else {
-            btnLogin.disabled = false;
-            btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(loginAlert, data.message || 'Invalid email or password');
-
-            // If unverified, provide helpful action to verify
-            if (data.message && data.message.includes('verify your email')) {
-              activeOtpEmail = email;
-              setTimeout(() => {
-                showOtpStep(email);
-                showAlert(otpAlert, 'Please enter your verification OTP to activate your account.');
-              }, 1200);
-            }
+            btnLoginSubmit.disabled = false;
+            btnLoginSubmit.innerHTML = '<span>Log In</span> <span>→</span>';
+            showAlert(loginAlert, data.message || 'Invalid credentials');
           }
         } catch (err) {
-          btnLogin.disabled = false;
-          btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(loginAlert, 'Network error. Please check your backend connection.');
+          btnLoginSubmit.disabled = false;
+          btnLoginSubmit.innerHTML = '<span>Log In</span> <span>→</span>';
+          showAlert(loginAlert, 'Network error. Please check backend connection.');
         }
       });
 
-      // ── 2. REGISTER API HANDLER ──
-      registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        hideAlert(registerAlert);
+      // ── Dedicated FPO Direct Login ──
+      document.getElementById('btn-fpo-direct').addEventListener('click', () => {
+        const fpoCode = document.getElementById('fpo-code-input').value.trim();
+        if (fpoCode) {
+          localStorage.setItem('krishi_fpo_code', fpoCode);
+        }
+        window.location.href = 'fpo-dashboard.html';
+      });
 
-        const name = registerName.value.trim();
-        const email = registerEmail.value.trim();
-        const phone = registerPhone.value.trim();
-        const password = registerPassword.value;
+      // ── 2. REGISTRATION SUBMISSION ──
+      const formRegister = document.getElementById('form-register');
+      const regAlert = document.getElementById('register-alert');
+      const btnRegSubmit = document.getElementById('btn-reg-submit');
+      let activeOtpEmail = '';
+
+      formRegister.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert(regAlert);
+
+        const name = document.getElementById('reg-name').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const phone = document.getElementById('reg-phone').value.trim();
+        const password = document.getElementById('reg-password').value;
 
         if (!name || !email || !password) {
-          showAlert(registerAlert, 'Please fill in all required fields.');
+          showAlert(regAlert, 'Please fill in all required fields.');
           return;
         }
 
-        if (password.length < 6) {
-          showAlert(registerAlert, 'Password must be at least 6 characters.');
-          return;
-        }
-
-        btnRegister.disabled = true;
-        btnRegister.innerHTML = 'Sending OTP… <span class="auth-btn-arrow">⏳</span>';
+        btnRegSubmit.disabled = true;
+        btnRegSubmit.innerHTML = 'Sending OTP…';
 
         try {
           const res = await fetch(`${window.API_BASE_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name,
-              email,
-              phone,
-              password,
-              role: currentRole
-            })
+            body: JSON.stringify({ name, email, phone, password, role: selectedRole })
           });
-
           const data = await res.json();
 
           if (res.ok && data.success) {
-            btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
-            
-            // Switch to OTP verification step
-            showOtpStep(email);
-            showAlert(otpAlert, data.message || 'Registration successful. Check your email for the OTP.', 'success');
+            activeOtpEmail = email;
+            document.getElementById('otp-email-target').textContent = email;
+            switchView('otp');
+            showAlert(document.getElementById('otp-alert'), data.message || 'Verification OTP sent to your inbox.', 'success');
+            startOtpCountdown();
           } else {
-            btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(registerAlert, data.message || 'Registration failed. Please try again.');
+            btnRegSubmit.disabled = false;
+            btnRegSubmit.innerHTML = '<span>Register & Send OTP</span> <span>→</span>';
+            showAlert(regAlert, data.message || 'Registration failed.');
           }
         } catch (err) {
-          btnRegister.disabled = false;
-          btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(registerAlert, 'Network error. Please check your backend connection.');
+          btnRegSubmit.disabled = false;
+          btnRegSubmit.innerHTML = '<span>Register & Send OTP</span> <span>→</span>';
+          showAlert(regAlert, 'Network error. Please try again.');
         }
       });
 
-      // ── 3. VERIFY OTP API HANDLER ──
-      btnVerifyOtp.addEventListener('click', async () => {
+      // ── 3. OTP VERIFICATION ──
+      const otpBoxes = Array.from(document.querySelectorAll('.auth-otp-box'));
+      otpBoxes.forEach((box, index) => {
+        box.addEventListener('input', (e) => {
+          box.value = box.value.replace(/\D/g, '');
+          if (box.value && index < otpBoxes.length - 1) {
+            otpBoxes[index + 1].focus();
+          }
+        });
+        box.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !box.value && index > 0) {
+            otpBoxes[index - 1].focus();
+          }
+        });
+      });
+
+      function getOtpValue() {
+        return otpBoxes.map(b => b.value).join('');
+      }
+
+      let otpTimer = null;
+      function startOtpCountdown() {
+        let count = 60;
+        const timerSec = document.getElementById('timer-sec');
+        const btnResend = document.getElementById('btn-resend-code');
+        btnResend.disabled = true;
+
+        if (otpTimer) clearInterval(otpTimer);
+        otpTimer = setInterval(() => {
+          count--;
+          if (timerSec) timerSec.textContent = count;
+          if (count <= 0) {
+            clearInterval(otpTimer);
+            btnResend.disabled = false;
+          }
+        }, 1000);
+      }
+
+      const btnVerifySubmit = document.getElementById('btn-verify-submit');
+      btnVerifySubmit.addEventListener('click', async () => {
+        const otp = getOtpValue();
+        const otpAlert = document.getElementById('otp-alert');
         hideAlert(otpAlert);
-        const otp = getEnteredOtp();
 
         if (otp.length < 6) {
           showAlert(otpAlert, 'Please enter all 6 digits.');
           return;
         }
 
-        btnVerifyOtp.disabled = true;
-        btnVerifyOtp.innerHTML = 'Verifying… <span class="auth-btn-arrow">⏳</span>';
+        btnVerifySubmit.disabled = true;
+        btnVerifySubmit.innerHTML = 'Verifying…';
 
         try {
           const res = await fetch(`${window.API_BASE_URL}/auth/verify-email`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: activeOtpEmail,
-              otp: otp
-            })
+            body: JSON.stringify({ email: activeOtpEmail, otp })
           });
-
           const data = await res.json();
 
           if (res.ok && data.success) {
-            btnVerifyOtp.innerHTML = 'Email Verified! ✓';
-            btnVerifyOtp.style.background = '#5B9A72';
-
-            showAlert(otpAlert, 'Email verified successfully! Redirecting to login…', 'success');
-
+            showAlert(otpAlert, 'Email verified! Please log in.', 'success');
             setTimeout(() => {
-              btnVerifyOtp.disabled = false;
-              btnVerifyOtp.style.background = '';
-              btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
-              
-              showLoginTab();
-              loginEmail.value = activeOtpEmail;
-              showAlert(loginAlert, 'Email verified successfully. Please log in with your password.', 'success');
-            }, 1200);
+              switchView('login');
+              document.getElementById('input-login-email').value = activeOtpEmail;
+            }, 1000);
           } else {
-            btnVerifyOtp.disabled = false;
-            btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+            btnVerifySubmit.disabled = false;
+            btnVerifySubmit.innerHTML = '<span>Verify & Continue</span> <span>→</span>';
             showAlert(otpAlert, data.message || 'Invalid or expired OTP.');
           }
         } catch (err) {
-          btnVerifyOtp.disabled = false;
-          btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(otpAlert, 'Network error. Please check your backend connection.');
+          btnVerifySubmit.disabled = false;
+          btnVerifySubmit.innerHTML = '<span>Verify & Continue</span> <span>→</span>';
+          showAlert(otpAlert, 'Network error. Please try again.');
         }
       });
 
-      // ── 4. RESEND OTP API HANDLER ──
-      btnResendOtp.addEventListener('click', async () => {
-        hideAlert(otpAlert);
-        btnResendOtp.disabled = true;
-        btnResendOtp.textContent = 'Sending…';
+      // ── 4. FORGOT PASSWORD & RESET FLOW ──
+      const formForgot = document.getElementById('form-forgot');
+      const forgotAlert = document.getElementById('forgot-alert');
+      const btnForgotSubmit = document.getElementById('btn-forgot-submit');
+      let resetTokenHolder = '';
+
+      formForgot.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert(forgotAlert);
+        const email = document.getElementById('forgot-email').value.trim();
+
+        if (!email) {
+          showAlert(forgotAlert, 'Please enter your email.');
+          return;
+        }
+
+        btnForgotSubmit.disabled = true;
+        btnForgotSubmit.innerHTML = 'Sending…';
 
         try {
-          const res = await fetch(`${window.API_BASE_URL}/auth/resend-verification`, {
+          const res = await fetch(`${window.API_BASE_URL}/auth/forgot-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: activeOtpEmail })
+            body: JSON.stringify({ email })
           });
-
           const data = await res.json();
 
-          if (res.ok && data.success) {
-            btnResendOtp.textContent = translations[currentLang].btnResend;
-            showAlert(otpAlert, data.message || 'A new verification OTP has been sent.', 'success');
-            startResendTimer();
-          } else {
-            btnResendOtp.disabled = false;
-            btnResendOtp.textContent = translations[currentLang].btnResend;
-            showAlert(otpAlert, data.message || 'Failed to resend OTP.');
-          }
+          activeOtpEmail = email;
+          document.getElementById('otp-email-target').textContent = email;
+          switchView('otp');
+          showAlert(document.getElementById('otp-alert'), data.message || 'Reset OTP sent to your email.', 'success');
+          startOtpCountdown();
         } catch (err) {
-          btnResendOtp.disabled = false;
-          btnResendOtp.textContent = translations[currentLang].btnResend;
-          showAlert(otpAlert, 'Network error. Please check your backend connection.');
+          btnForgotSubmit.disabled = false;
+          btnForgotSubmit.innerHTML = '<span>Send Reset OTP</span> <span>→</span>';
+          showAlert(forgotAlert, 'Network error. Please try again.');
         }
       });
 
