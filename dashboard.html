@@ -14,6 +14,15 @@
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/mandi-map.css">
+
+  <!-- Leaflet Map (Free, Zero Token Required) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Leaflet MarkerCluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -251,6 +260,283 @@
       </div>
     </section>
 
+    <!-- ── 6. NEARBY MANDIS — INTERACTIVE INDIA MANDI MAP ── -->
+    <section class="dash-section" id="dash-mandi-map">
+      <div class="container">
+        <div class="dash-section__header mandi-section-header">
+          <div>
+            <h2 class="dash-section__title">Nearby Mandis (India)</h2>
+            <p class="dash-section__subtitle">Locate APMC markets across India, compare live commodity prices & get AI selling advice</p>
+          </div>
+          <div class="mandi-header-actions">
+            <button class="btn btn--secondary btn--sm" id="mandi-btn-view-india" title="Reset view to whole India">
+              <span>🇮🇳 View All India</span>
+            </button>
+            <button class="btn btn--secondary btn--sm" id="mandi-btn-my-loc-hdr">
+              <i data-lucide="crosshair"></i> <span>My Location</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Selling Assistant Card -->
+        <div class="mandi-ai-card" id="mandi-ai-card">
+          <div class="mandi-ai-card__header">
+            <div class="mandi-ai-card__title-row">
+              <span class="mandi-ai-badge"><i data-lucide="sparkles"></i> AI Selling Assistant</span>
+              <span class="mandi-ai-card__crop-tag" id="mandi-ai-crop-tag">🌾 Rice Analysis</span>
+            </div>
+            <span class="mandi-ai-card__status">🟢 Updated for Today</span>
+          </div>
+          <div class="mandi-ai-card__body">
+            <div class="mandi-ai-card__msg" id="mandi-ai-msg">
+              Analyzing nearby markets for your location...
+            </div>
+            <div class="mandi-ai-card__actions" id="mandi-ai-actions">
+              <!-- Dynamically rendered -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="mandi-filter-bar">
+          <!-- Search Row -->
+          <div class="mandi-search-row">
+            <div class="mandi-search-box">
+              <i data-lucide="search" class="mandi-search-icon"></i>
+              <input type="text" id="mandi-search-input" class="mandi-search-input" placeholder="Search 80+ mandis, cities, or states (e.g. Pune, Indore, Khanna, Rajkot, Guntur)..." autocomplete="off">
+              <button class="mandi-search-clear" id="mandi-search-clear" style="display:none;" aria-label="Clear search">✕</button>
+            </div>
+            <div id="mandi-user-location-text" class="mandi-user-location" style="display:none;"></div>
+          </div>
+
+          <!-- Controls Row -->
+          <div class="mandi-filter-row">
+            <div class="mandi-filter-row__left">
+              <!-- Crop Dropdown (15 Agricultural Commodities) -->
+              <div class="mandi-filter-group">
+                <label class="mandi-filter-label" for="mandi-crop-filter">Crop:</label>
+                <select id="mandi-crop-filter" class="dash-filter-select">
+                  <option value="rice">🌾 Rice (धान / तांदूळ)</option>
+                  <option value="wheat">🌾 Wheat (गेहूं / गहू)</option>
+                  <option value="onion">🧅 Onion (प्याज / कांदा)</option>
+                  <option value="tomato">🍅 Tomato (टमाटर / टोमॅटो)</option>
+                  <option value="maize">🌽 Maize (मक्का / मका)</option>
+                  <option value="soybean">🫘 Soybean (सोयाबीन)</option>
+                  <option value="potato">🥔 Potato (आलू / बटाटा)</option>
+                  <option value="chilli">🌶️ Chilli (मिर्च / मिरची)</option>
+                  <option value="groundnut">🥜 Groundnut (मूंगफली / भुईमूग)</option>
+                  <option value="cotton">☁️ Cotton (कपास / कापूस)</option>
+                  <option value="sugarcane">🎋 Sugarcane (गन्ना / ऊस)</option>
+                  <option value="mango">🥭 Mango (आम / आंबा)</option>
+                  <option value="banana">🍌 Banana (केला / केळी)</option>
+                  <option value="grapes">🍇 Grapes (अंगूर / द्राक्षे)</option>
+                  <option value="pulses">🥣 Pulses (दालें / कडधान्ये)</option>
+                </select>
+              </div>
+
+              <!-- State Filter -->
+              <div class="mandi-filter-group">
+                <label class="mandi-filter-label" for="mandi-state-filter">State:</label>
+                <select id="mandi-state-filter" class="dash-filter-select">
+                  <option value="all">🇮🇳 All India</option>
+                  <option value="Maharashtra">Maharashtra (महाराष्ट्र)</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh (मध्य प्रदेश)</option>
+                  <option value="Gujarat">Gujarat (गुजरात)</option>
+                  <option value="Punjab">Punjab (पंजाब)</option>
+                  <option value="Haryana">Haryana (हरियाणा)</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh (उत्तर प्रदेश)</option>
+                  <option value="Rajasthan">Rajasthan (राजस्थान)</option>
+                  <option value="Karnataka">Karnataka (कर्नाटक)</option>
+                  <option value="Telangana">Telangana (तेलंगाना)</option>
+                  <option value="Andhra Pradesh">Andhra Pradesh (आंध्र प्रदेश)</option>
+                  <option value="Tamil Nadu">Tamil Nadu (तमिलनाडु)</option>
+                  <option value="Bihar">Bihar (बिहार)</option>
+                  <option value="West Bengal">West Bengal (पश्चिम बंगाल)</option>
+                  <option value="Odisha">Odisha (ओडिशा)</option>
+                </select>
+              </div>
+
+              <!-- Distance Filter Pills -->
+              <div class="mandi-filter-group mandi-dist-group">
+                <label class="mandi-filter-label">Radius:</label>
+                <div class="mandi-dist-btns">
+                  <button class="mandi-dist-btn" data-dist="10">10 km</button>
+                  <button class="mandi-dist-btn" data-dist="25">25 km</button>
+                  <button class="mandi-dist-btn" data-dist="50">50 km</button>
+                  <button class="mandi-dist-btn" data-dist="100">100 km</button>
+                  <button class="mandi-dist-btn" data-dist="250">250 km</button>
+                  <button class="mandi-dist-btn mandi-dist-btn--active" data-dist="0">All India</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mandi-filter-row__right">
+              <!-- Map / List Toggle -->
+              <div class="mandi-toggle">
+                <button class="mandi-toggle-btn mandi-toggle-btn--active" data-view="map" aria-label="Map View">
+                  <i data-lucide="map"></i> <span>Map</span>
+                </button>
+                <button class="mandi-toggle-btn" data-view="list" aria-label="List View">
+                  <i data-lucide="list"></i> <span>List</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map + List Split Layout -->
+        <div class="mandi-layout" id="mandi-main-layout">
+
+          <!-- LEFT: MAP -->
+          <div class="mandi-map-wrap" id="mandi-map-wrap">
+            <div class="mandi-map-container" id="mandi-map-container">
+
+              <!-- Loading State -->
+              <div class="mandi-map-loading" id="mandi-map-loading">
+                <div class="dash-spinner"></div>
+                <p>Loading Indian Mandis Map...</p>
+              </div>
+
+              <!-- Leaflet Map Container -->
+              <div id="mandi-map" class="mandi-map"></div>
+
+              <!-- Custom Map Controls -->
+              <div class="mandi-map-controls" id="mandi-map-controls">
+                <button class="mandi-map-ctrl" id="mandi-zoom-in" title="Zoom In" aria-label="Zoom in">＋</button>
+                <button class="mandi-map-ctrl" id="mandi-zoom-out" title="Zoom Out" aria-label="Zoom out">−</button>
+                <button class="mandi-map-ctrl mandi-map-ctrl--loc" id="mandi-my-location" title="Center on My Location" aria-label="Center on my location">◎</button>
+                <button class="mandi-map-ctrl mandi-map-ctrl--india" id="mandi-ctrl-india" title="Reset View to All India" aria-label="View whole India">🇮🇳</button>
+              </div>
+
+              <!-- Location Permission Prompt (over map) -->
+              <div class="mandi-location-prompt" id="mandi-location-prompt" style="display:none;">
+                <div class="mandi-location-prompt__card">
+                  <div class="mandi-location-prompt__icon"><i data-lucide="map-pin"></i></div>
+                  <h4>Find Nearby Mandis</h4>
+                  <p>Allow location access to find closest agricultural markets near your farm.</p>
+                  <p class="mandi-location-status" id="mandi-location-status" style="display:none;"></p>
+                  <button class="btn btn--primary btn--sm" id="mandi-use-location-btn">📍 Use My Location</button>
+                  <div class="mandi-location-prompt__or">or choose city</div>
+                  <select id="mandi-manual-location" class="dash-filter-select">
+                    <option value="">Select your city in India...</option>
+                    <optgroup label="Maharashtra">
+                      <option value="Pune">Pune</option>
+                      <option value="Mumbai">Mumbai / Vashi</option>
+                      <option value="Nashik">Nashik</option>
+                      <option value="Nagpur">Nagpur</option>
+                      <option value="Solapur">Solapur</option>
+                      <option value="Kolhapur">Kolhapur</option>
+                      <option value="Aurangabad">Chhatrapati Sambhajinagar</option>
+                      <option value="Satara">Satara</option>
+                      <option value="Sangli">Sangli</option>
+                      <option value="Ahmednagar">Ahmednagar</option>
+                      <option value="Jalgaon">Jalgaon</option>
+                      <option value="Akola">Akola</option>
+                      <option value="Amravati">Amravati</option>
+                      <option value="Latur">Latur</option>
+                      <option value="Nanded">Nanded</option>
+                      <option value="Dhule">Dhule</option>
+                    </optgroup>
+                    <optgroup label="Punjab & Haryana">
+                      <option value="Ludhiana">Ludhiana / Khanna</option>
+                      <option value="Amritsar">Amritsar</option>
+                      <option value="Jalandhar">Jalandhar</option>
+                      <option value="Patiala">Patiala</option>
+                      <option value="Bathinda">Bathinda</option>
+                      <option value="Karnal">Karnal</option>
+                      <option value="Hisar">Hisar</option>
+                      <option value="Panipat">Panipat</option>
+                      <option value="Sirsa">Sirsa</option>
+                      <option value="Rohtak">Rohtak</option>
+                      <option value="Ambala">Ambala</option>
+                    </optgroup>
+                    <optgroup label="Madhya Pradesh">
+                      <option value="Indore">Indore</option>
+                      <option value="Bhopal">Bhopal</option>
+                      <option value="Ujjain">Ujjain</option>
+                      <option value="Dewas">Dewas</option>
+                      <option value="Ratlam">Ratlam</option>
+                      <option value="Gwalior">Gwalior</option>
+                      <option value="Jabalpur">Jabalpur</option>
+                      <option value="Sagar">Sagar</option>
+                    </optgroup>
+                    <optgroup label="Gujarat">
+                      <option value="Ahmedabad">Ahmedabad</option>
+                      <option value="Rajkot">Rajkot</option>
+                      <option value="Surat">Surat</option>
+                      <option value="Vadodara">Vadodara</option>
+                      <option value="Anand">Anand</option>
+                      <option value="Mehsana">Mehsana / Unjha</option>
+                      <option value="Bhavnagar">Bhavnagar</option>
+                    </optgroup>
+                    <optgroup label="Rajasthan & Uttar Pradesh">
+                      <option value="Jaipur">Jaipur</option>
+                      <option value="Kota">Kota</option>
+                      <option value="Jodhpur">Jodhpur</option>
+                      <option value="Bikaner">Bikaner</option>
+                      <option value="Sri Ganganagar">Sri Ganganagar</option>
+                      <option value="Lucknow">Lucknow</option>
+                      <option value="Kanpur">Kanpur</option>
+                      <option value="Agra">Agra</option>
+                      <option value="Varanasi">Varanasi</option>
+                      <option value="Prayagraj">Prayagraj</option>
+                      <option value="Meerut">Meerut</option>
+                      <option value="Bareilly">Bareilly</option>
+                      <option value="Gorakhpur">Gorakhpur</option>
+                    </optgroup>
+                    <optgroup label="South India">
+                      <option value="Bengaluru">Bengaluru (Karnataka)</option>
+                      <option value="Hubballi">Hubballi (Karnataka)</option>
+                      <option value="Mysuru">Mysuru (Karnataka)</option>
+                      <option value="Belagavi">Belagavi (Karnataka)</option>
+                      <option value="Hyderabad">Hyderabad (Telangana)</option>
+                      <option value="Warangal">Warangal (Telangana)</option>
+                      <option value="Nizamabad">Nizamabad (Telangana)</option>
+                      <option value="Vijayawada">Vijayawada (Andhra)</option>
+                      <option value="Guntur">Guntur (Andhra)</option>
+                      <option value="Kurnool">Kurnool (Andhra)</option>
+                      <option value="Chennai">Chennai (Tamil Nadu)</option>
+                      <option value="Coimbatore">Coimbatore (Tamil Nadu)</option>
+                      <option value="Erode">Erode (Tamil Nadu)</option>
+                      <option value="Madurai">Madurai (Tamil Nadu)</option>
+                    </optgroup>
+                    <optgroup label="Other States">
+                      <option value="Patna">Patna (Bihar)</option>
+                      <option value="Kolkata">Kolkata (West Bengal)</option>
+                      <option value="Bhubaneswar">Bhubaneswar (Odisha)</option>
+                      <option value="Raipur">Raipur (Chhattisgarh)</option>
+                      <option value="Ranchi">Ranchi (Jharkhand)</option>
+                      <option value="Guwahati">Guwahati (Assam)</option>
+                      <option value="Kochi">Kochi (Kerala)</option>
+                      <option value="Panaji">Panaji (Goa)</option>
+                      <option value="Shimla">Shimla (Himachal)</option>
+                      <option value="Dehradun">Dehradun (Uttarakhand)</option>
+                      <option value="Jammu">Jammu (J&K)</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Floating Best Market Card -->
+              <div class="mandi-best-card" id="mandi-best-card" style="display:none;"></div>
+
+              <!-- Popup Container -->
+              <div class="mandi-popup-container" id="mandi-popup-container" style="display:none;"></div>
+
+            </div>
+          </div>
+
+          <!-- RIGHT: LIST PANEL -->
+          <div class="mandi-list-wrap" id="mandi-list-wrap">
+            <div class="mandi-list-panel" id="mandi-list-panel">
+              <!-- Rendered dynamically by mandi-map.js -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- FOOTER -->
@@ -429,8 +715,28 @@
     </div>
   </div>
 
+  <!-- MANDI FULL DETAILS MODAL -->
+  <div class="dash-modal-overlay" id="mandi-details-modal-overlay">
+    <div class="dash-modal dash-modal--lg" id="mandi-details-modal">
+      <div class="dash-modal__header">
+        <div>
+          <div class="mandi-modal-title-row" style="display:flex; align-items:center; gap:8px;">
+            <h3 id="mandi-modal-name">Pune APMC</h3>
+            <span class="mandi-modal-status-badge" id="mandi-modal-status" style="font-size:11px; padding:2px 8px; border-radius:6px; background:#eaf6ed; color:#5b9a72; font-weight:700;">🟢 Open</span>
+          </div>
+          <span class="dash-crop-modal__sub" id="mandi-modal-location" style="font-size:12px; color:var(--ks-text-muted);">Market Yard, Gultekdi, Pune · Maharashtra</span>
+        </div>
+        <button class="dash-modal__close" id="mandi-details-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad" id="mandi-details-modal-body">
+        <!-- Rendered dynamically by mandi-map.js -->
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPTS -->
   <script src="js/navbar.js"></script>
+  <script src="js/mandi-map.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 </html>
