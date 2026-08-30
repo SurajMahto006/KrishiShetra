@@ -119,10 +119,10 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 1360px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 24px;
-  gap: 16px;
+  padding: 0 16px;
+  gap: 8px;
 }
 
 /* Logo */
@@ -169,15 +169,16 @@ img { max-width: 100%; display: block; }
 /* Global Search */
 .dash-search {
   position: relative;
-  flex: 1;
-  max-width: 270px;
+  flex: 0 1 200px;
+  max-width: 220px;
+  min-width: 120px;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-full);
-  padding: 0 14px;
-  gap: 8px;
+  padding: 0 12px;
+  gap: 6px;
   transition: all 0.2s ease;
 }
 
@@ -188,8 +189,8 @@ img { max-width: 100%; display: block; }
 }
 
 .dash-search__icon {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   color: rgba(255, 255, 255, 0.6);
   flex-shrink: 0;
 }
@@ -199,10 +200,11 @@ img { max-width: 100%; display: block; }
   border: none;
   background: transparent;
   outline: none;
-  font-size: 13px;
+  font-size: 12.5px;
   color: #FFFFFF;
-  padding: 8px 0;
+  padding: 7px 0;
   font-family: var(--font-body);
+  min-width: 0;
 }
 
 .dash-search__input::placeholder {
@@ -210,11 +212,11 @@ img { max-width: 100%; display: block; }
 }
 
 .dash-search__kbd {
-  font-size: 10px;
+  font-size: 9px;
   color: rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 2px 5px;
+  border-radius: 3px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   flex-shrink: 0;
 }
@@ -274,15 +276,16 @@ img { max-width: 100%; display: block; }
 .dash-header__nav {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+  flex-shrink: 1;
 }
 
 .dash-header__link {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  font-size: 13px;
+  gap: 5px;
+  padding: 6px 9px;
+  font-size: 12.5px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
@@ -292,9 +295,9 @@ img { max-width: 100%; display: block; }
 }
 
 .dash-header__link svg {
-  width: 15px;
-  height: 15px;
-  opacity: 0.8;
+  width: 14px;
+  height: 14px;
+  opacity: 0.85;
 }
 
 .dash-header__link:hover {
@@ -310,20 +313,21 @@ img { max-width: 100%; display: block; }
 }
 .dash-header__link--active svg { opacity: 1; }
 
-/* Right Actions */
+/* Right Actions (Notification + Profile Always Visible) */
 .dash-header__actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .buyer-kyc-header-pill {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 11px;
-  font-size: 11px;
+  padding: 4px 9px;
+  font-size: 10.5px;
   font-weight: 700;
   color: var(--kl-mint-soft);
   background: rgba(91, 154, 114, 0.18);
@@ -331,16 +335,17 @@ img { max-width: 100%; display: block; }
   border-radius: var(--radius-full);
   text-decoration: none;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
-.buyer-kyc-header-pill svg { width: 13px; height: 13px; }
+.buyer-kyc-header-pill svg { width: 12px; height: 12px; }
 .buyer-kyc-header-pill:hover {
   background: rgba(91, 154, 114, 0.3);
   color: #FFFFFF;
 }
 
 .dash-header__action-btn {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -351,6 +356,7 @@ img { max-width: 100%; display: block; }
   cursor: pointer;
   position: relative;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .dash-header__action-btn:hover {
@@ -1783,12 +1789,14 @@ img { max-width: 100%; display: block; }
   .kl-kpi-grid { grid-template-columns: repeat(3, 1fr); }
   .kl-lot-grid { grid-template-columns: repeat(2, 1fr); }
   .kl-lot-detail-layout { grid-template-columns: 1fr 340px; }
-  .dash-search { max-width: 200px; }
+  .dash-search { max-width: 180px; }
+  .dash-header__link { padding: 6px 7px; font-size: 12px; gap: 4px; }
 }
 
-@media (max-width: 1040px) {
+@media (max-width: 1100px) {
   .dash-header__nav { display: none; }
   .dash-header__toggle { display: flex; }
+  .dash-search { max-width: 240px; }
 }
 
 @media (max-width: 992px) {
