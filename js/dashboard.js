@@ -831,7 +831,7 @@ function triggerGenerateForecast() {
   }
   if (generateBtn) {
     generateBtn.disabled = true;
-    generateBtn.innerHTML = '<div class="dash-spinner" style="width:16px;height:16px;border-width:2px;margin:0;"></div> <span>Analyzing...</span>';
+    generateBtn.innerHTML = '<div class="dash-spinner" style="width:16px;height:16px;border-width:2px;margin:0;"></div> <span>Analyzing Market Data...</span>';
   }
 
   setTimeout(() => {
@@ -844,11 +844,11 @@ function triggerGenerateForecast() {
     }
     if (generateBtn) {
       generateBtn.disabled = false;
-      generateBtn.innerHTML = '<i data-lucide="sparkles"></i> <span>Generate Forecast</span>';
+      generateBtn.innerHTML = '<i data-lucide="sparkles"></i> <span>✦ Generate AI Forecast</span>';
       if (window.lucide) lucide.createIcons();
     }
     showToast(`AI forecast updated for ${result.cropName} in ${mandi}`);
-  }, 450);
+  }, 500);
 }
 
 function applyForecastResults(res) {
@@ -866,17 +866,44 @@ function applyForecastResults(res) {
   const miniLabel = document.getElementById('forecast-mini-target-label');
   const alertBtn = document.getElementById('btn-set-alert-ai');
 
-  if (headline) headline.textContent = `${res.cropName} — ${res.mandi} Forecast`;
+  // New Signal & Range Elements
+  const signalTrend = document.getElementById('signal-trend-val');
+  const signalArrivals = document.getElementById('signal-arrivals-val');
+  const signalDemand = document.getElementById('signal-demand-val');
+  const rangeLower = document.getElementById('range-lower-val');
+  const rangeExpected = document.getElementById('range-expected-val');
+  const rangeUpper = document.getElementById('range-upper-val');
+
+  if (headline) headline.textContent = `${res.cropName} — ${res.mandi} / ${res.days}-Day AI Price Forecast`;
   if (insight) {
     insight.innerHTML = `"${res.cropName} prices are projected to <em>${res.isUp ? 'rise by ' + res.changePct : 'soften by ' + res.changePct}</em> over the next ${res.days} days."`;
   }
   if (recBadge) {
-    recBadge.textContent = res.recommendation;
+    recBadge.textContent = res.isUp ? `RECOMMENDATION: HOLD INVENTORY 3-5 DAYS` : `RECOMMENDATION: SELL IMMEDIATELY`;
     recBadge.style.background = res.isUp ? 'var(--ks-amber)' : 'var(--ks-terracotta)';
     recBadge.style.color = res.isUp ? 'var(--ks-evergreen)' : '#FFFFFF';
   }
   if (curPrice) curPrice.textContent = `₹${res.currentPrice.toLocaleString('en-IN')}/q`;
-  if (expPrice) expPrice.textContent = `₹${res.expectedPrice.toLocaleString('en-IN')}/q`;
+  
+  // Count-up animation for expected price
+  if (expPrice) {
+    const startPrice = res.currentPrice;
+    const endPrice = res.expectedPrice;
+    const duration = 600;
+    const startTime = performance.now();
+
+    function stepCount(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const val = Math.round(startPrice + (endPrice - startPrice) * progress);
+      expPrice.textContent = `₹${val.toLocaleString('en-IN')}/q`;
+      if (progress < 1) {
+        requestAnimationFrame(stepCount);
+      }
+    }
+    requestAnimationFrame(stepCount);
+  }
+
   if (changeVal) {
     changeVal.textContent = `${res.changePct} (${res.isUp ? '↑' : '↓'} ₹${Math.abs(res.changeAmount)}/q)`;
     changeVal.style.color = res.isUp ? 'var(--ks-mint)' : 'var(--ks-terracotta)';
@@ -888,6 +915,18 @@ function applyForecastResults(res) {
   if (miniTarget) miniTarget.textContent = `₹${res.expectedPrice.toLocaleString('en-IN')}`;
   if (miniLabel) miniLabel.textContent = `In ${res.days} Days`;
   if (alertBtn) alertBtn.innerHTML = `<i data-lucide="bell-ring"></i> Set Target Alert (₹${res.expectedPrice.toLocaleString('en-IN')})`;
+
+  // Update Signals & Range
+  if (signalTrend) signalTrend.textContent = `${res.isUp ? 'Bullish' : 'Bearish'} (${res.changePct})`;
+  if (signalArrivals) signalArrivals.textContent = res.isUp ? 'Moderate (Down 8%)' : 'High Surge (+18%)';
+  if (signalDemand) signalDemand.textContent = res.isUp ? 'High ↑' : 'Stable';
+
+  const lowerBound = Math.round(res.expectedPrice * 0.98);
+  const upperBound = Math.round(res.expectedPrice * 1.02);
+
+  if (rangeLower) rangeLower.textContent = `₹${lowerBound.toLocaleString('en-IN')}/q`;
+  if (rangeExpected) rangeExpected.textContent = `₹${res.expectedPrice.toLocaleString('en-IN')}/q`;
+  if (rangeUpper) rangeUpper.textContent = `₹${upperBound.toLocaleString('en-IN')}/q`;
 
   // Animate ring
   const circle = document.getElementById('forecast-ring-circle');

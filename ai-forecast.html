@@ -121,17 +121,25 @@
   <main class="dash-main" id="dash-main">
 
     <!-- ── 1. AI MARKET FORECAST ENGINE ── -->
-    <section class="dash-section" id="dash-ai-forecast-section" style="padding-top: calc(var(--nav-height) + 28px);">
+    <section class="dash-section" id="dash-ai-forecast-section" style="padding-top: calc(var(--nav-height) + 24px);">
       <div class="container">
-        <div class="dash-section__header">
-          <div>
-            <h1 class="dash-section__title" style="font-size: 28px;">🤖 AI Market Price Forecast Engine</h1>
-            <p class="dash-section__subtitle">Predict price trends across 42 mandis using historical seasonality, weather radar, and buyer demand trends.</p>
+        
+        <!-- Hero Header -->
+        <div class="ai-hero-header">
+          <div class="ai-hero-header__glow" aria-hidden="true"></div>
+          <div class="ai-eyebrow">
+            <span class="ai-eyebrow__pulse"></span> LIVE MARKET INTELLIGENCE · AI PREDICTION ENGINE
           </div>
+          <h1 class="ai-hero-header__title">Predict the Market <em>Before It Moves.</em></h1>
+          <p class="ai-hero-header__subtitle">AI-powered price forecasting across 42 mandis using historical seasonality, weather signals, market arrivals, and buyer demand.</p>
         </div>
 
-        <!-- Interactive Forecast Control Bar -->
+        <!-- Forecast Control Center Card -->
         <div class="dash-card dash-forecast-controls-card">
+          <div class="ai-control-header">
+            <span class="ai-control-header__tag"><i data-lucide="sliders" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Forecast Control Center</span>
+            <span class="ai-control-header__sub">Configure your prediction parameters</span>
+          </div>
           <div class="dash-forecast-form">
             <div class="dash-forecast-field">
               <label for="forecast-crop-select">Select Crop</label>
@@ -171,15 +179,51 @@
               </div>
             </div>
             <div class="dash-forecast-btn-wrap">
-              <button class="btn btn--primary dash-forecast-btn" id="btn-generate-forecast">
-                <i data-lucide="sparkles"></i> <span>Generate Forecast</span>
+              <button class="btn btn--primary dash-forecast-btn btn-shimmer" id="btn-generate-forecast">
+                <i data-lucide="sparkles"></i> <span>✦ Generate AI Forecast</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- AI Forecast Results Card -->
-        <div class="dash-ai-card" id="ai-insight-card" style="margin-top: 24px;">
+        <!-- Market Signals Grid -->
+        <div class="ai-signals-grid" id="ai-signals-grid">
+          <div class="ai-signal-card">
+            <div class="ai-signal-card__icon ai-signal-card__icon--weather">🌦</div>
+            <div>
+              <div class="ai-signal-card__label">Weather Radar</div>
+              <div class="ai-signal-card__value" id="signal-weather-val">Favorable</div>
+              <div class="ai-signal-card__sub">Normal Monsoon Activity</div>
+            </div>
+          </div>
+          <div class="ai-signal-card">
+            <div class="ai-signal-card__icon ai-signal-card__icon--trend">📈</div>
+            <div>
+              <div class="ai-signal-card__label">Historical Trend</div>
+              <div class="ai-signal-card__value" id="signal-trend-val">Bullish (+4.2%)</div>
+              <div class="ai-signal-card__sub">5-Yr Seasonality Index</div>
+            </div>
+          </div>
+          <div class="ai-signal-card">
+            <div class="ai-signal-card__icon ai-signal-card__icon--arrivals">🚚</div>
+            <div>
+              <div class="ai-signal-card__label">Mandi Arrivals</div>
+              <div class="ai-signal-card__value" id="signal-arrivals-val">Moderate</div>
+              <div class="ai-signal-card__sub">Down 8% Volume</div>
+            </div>
+          </div>
+          <div class="ai-signal-card">
+            <div class="ai-signal-card__icon ai-signal-card__icon--demand">🛒</div>
+            <div>
+              <div class="ai-signal-card__label">Buyer Demand</div>
+              <div class="ai-signal-card__value" id="signal-demand-val">High ↑</div>
+              <div class="ai-signal-card__sub">Up 14% Corporate Bids</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Forecast Hero Intelligence Panel -->
+        <div class="dash-ai-card" id="ai-insight-card">
           <div class="dash-ai-card__glow"></div>
           <div class="dash-ai-card__inner">
             <div class="dash-ai-card__badge" id="forecast-badge">
@@ -188,12 +232,12 @@
 
             <div class="dash-ai-card__content" id="forecast-result-content">
               <div class="dash-ai-card__left">
-                <h3 class="dash-ai-card__headline" id="forecast-headline">Rice — Pune APMC Forecast</h3>
+                <h3 class="dash-ai-card__headline" id="forecast-headline">Rice — Pune APMC / 7-Day AI Price Forecast</h3>
                 <p class="dash-ai-card__insight" id="forecast-insight-text">
                   "Rice prices are projected to <em>rise by +4.2%</em> over the next 7 days due to reduced arrivals and strong procurement demand."
                 </p>
                 <div class="dash-ai-card__recommendation">
-                  <div class="dash-ai-card__rec-badge" id="forecast-rec-badge">WAIT 3 DAYS</div>
+                  <div class="dash-ai-card__rec-badge" id="forecast-rec-badge">RECOMMENDATION: HOLD INVENTORY 3-5 DAYS</div>
                   <div class="dash-ai-card__rec-details">
                     <div class="dash-ai-card__rec-detail">
                       <span class="dash-ai-card__rec-label">Current Price</span>
@@ -213,7 +257,7 @@
                     </div>
                   </div>
                   <p class="dash-ai-card__reason" id="forecast-reason-text">
-                    <i data-lucide="info"></i> "Buyer demand is rising by 14% while regional mandi arrivals dropped 8% this week."
+                    <i data-lucide="info"></i> "Buyer demand is rising by 14% while regional mandi arrivals dropped 8% this week. Signal strength: High."
                   </p>
                 </div>
                 <div class="dash-ai-card__btns">
@@ -252,6 +296,28 @@
               <div class="dash-spinner"></div>
               <h4>Analyzing market data across 42 mandis...</h4>
               <p>Evaluating buyer inquiries, weather projections, arrival volumes, and historical seasonality.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price Range Estimation Card -->
+        <div class="ai-range-card" id="ai-range-card">
+          <div class="ai-range-card__title">
+            <span><i data-lucide="bar-chart-2" style="width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i> Expected Price Range Estimation</span>
+            <span style="font-size:12px; font-weight:600; color:var(--ks-sage);">87% Statistical Confidence Band</span>
+          </div>
+          <div class="ai-range-bar-wrap">
+            <div class="ai-range-item">
+              <div class="ai-range-item__label">Lower Bound</div>
+              <div class="ai-range-item__val" id="range-lower-val">₹2,910/q</div>
+            </div>
+            <div class="ai-range-item">
+              <div class="ai-range-item__label">Expected AI Price</div>
+              <div class="ai-range-item__val ai-range-item__val--expected" id="range-expected-val">₹2,970/q</div>
+            </div>
+            <div class="ai-range-item">
+              <div class="ai-range-item__label">Upper Bound</div>
+              <div class="ai-range-item__val" id="range-upper-val">₹3,040/q</div>
             </div>
           </div>
         </div>
