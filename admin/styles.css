@@ -8,65 +8,65 @@
 
 :root {
   /* ── Background Palette ── */
-  --bg-main:          #EDE9DC;
-  --bg-surface:       #E8E4D6;
-  --bg-elevated:      #F0EDE2;
-  --bg-page:          #EDE9DC;
+  --bg-main:          #F5F4ED;
+  --bg-surface:       #E5F0E7;
+  --bg-elevated:      #FAF9F5;
+  --bg-page:          #F5F4ED;
   --bg-card:          #FFFFFF;
   --bg-card-hover:    #FAFAF8;
-  --bg-hero-card:     #1E3D2F;
-  --bg-header:        #1A3A28;
-  --bg-input:         #F5F3EC;
+  --bg-hero-card:     #12372A;
+  --bg-header:        #12372A;
+  --bg-input:         #FFFFFF;
   --bg-input-focus:   #FFFFFF;
 
   /* ── Typography Colors ── */
-  --text-primary:     #1A1A1A;
-  --text-secondary:   #4A5550;
-  --text-muted:       #7A8880;
-  --text-heading:     #0F1F17;
-  --text-accent:      #2D6A4F;
-  --text-on-dark:     #F5F2EB;
+  --text-primary:     #17221D;
+  --text-secondary:   #6F7F75;
+  --text-muted:       #8A9A90;
+  --text-heading:     #12372A;
+  --text-accent:      #5B9A72;
+  --text-on-dark:     #FFFFFF;
   --text-on-accent:   #FFFFFF;
 
   /* ── Brand Colors ── */
-  --green-primary:    #1E3D2F;
-  --green-mid:        #2D6A4F;
-  --green-bright:     #3A7D5C;
-  --green-light:      #52936E;
-  --green-pale:       #D4EAD8;
-  --green-nav:        #1A3A28;
-  --amber:            #C8963E;
-  --amber-dark:       #A87830;
-  --amber-light:      #E8B96A;
-  --amber-pale:       #FDF3DC;
-  --terracotta:       #C05A45;
-  --blue-soft:        #4A7FA5;
-  --blue-pale:        #DCE9F5;
+  --green-primary:    #12372A;
+  --green-mid:        #5B9A72;
+  --green-bright:     #8FCB9B;
+  --green-light:      #8FCB9B;
+  --green-pale:       #E5F0E7;
+  --green-nav:        #12372A;
+  --amber:            #D6A84F;
+  --amber-dark:       #B88935;
+  --amber-light:      #FDF8ED;
+  --amber-pale:       #FDF8ED;
+  --terracotta:       #C96D5B;
+  --blue-soft:        #3B82F6;
+  --blue-pale:        #EBF3FB;
   --purple-soft:      #7B5EA7;
   --purple-pale:      #EDE8F5;
 
   /* ── Status Colors — light mode ── */
-  --status-success-bg:      #EDFAF2;
-  --status-success-border:  #A8DEC0;
-  --status-success-text:    #1E6B40;
+  --status-success-bg:      #E8F5EC;
+  --status-success-border:  #8FCB9B;
+  --status-success-text:    #2E7246;
 
-  --status-warning-bg:      #FEF8EC;
-  --status-warning-border:  #F0D090;
-  --status-warning-text:    #8A6010;
+  --status-warning-bg:      #FDF6E8;
+  --status-warning-border:  #E8C882;
+  --status-warning-text:    #8C6517;
 
-  --status-info-bg:          #EBF3FB;
-  --status-info-border:      #A8CDE8;
-  --status-info-text:        #1E5280;
+  --status-info-bg:          #EBF4FC;
+  --status-info-border:      #A3CDF7;
+  --status-info-text:        #1E5C99;
 
   --status-error-bg:         #FDF0EE;
-  --status-error-border:     #EAB8B0;
-  --status-error-text:       #9B2B1A;
+  --status-error-border:     #E8A89C;
+  --status-error-text:       #C96D5B;
 
   /* ── Borders ── */
-  --border-subtle:    #E2DDD0;
-  --border-light:     #D4CFBE;
-  --border-medium:    #B8B2A0;
-  --border-accent:    rgba(46, 106, 79, 0.3);
+  --border-subtle:    #E7E6DC;
+  --border-light:     #E4E3D8;
+  --border-medium:    #DCE6DF;
+  --border-accent:    rgba(91, 154, 114, 0.3);
 
   /* ── Typography ── */
   --font-serif:       'Playfair Display', Georgia, serif;
@@ -82,13 +82,13 @@
 
   /* ── Shadows — light mode ── */
   --shadow-xs:    0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-sm:    0 2px 8px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-md:    0 6px 20px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
-  --shadow-lg:    0 16px 40px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-card:  0 2px 12px rgba(30,61,47,0.08), 0 1px 3px rgba(30,61,47,0.05);
-  --shadow-card-hover: 0 8px 28px rgba(30,61,47,0.14), 0 2px 8px rgba(30,61,47,0.07);
-  --shadow-green: 0 4px 14px rgba(30,61,47,0.25);
-  --shadow-amber: 0 4px 14px rgba(200,150,62,0.30);
+  --shadow-sm:    0 2px 8px rgba(18,55,42,0.06), 0 1px 3px rgba(18,55,42,0.03);
+  --shadow-md:    0 6px 20px rgba(18,55,42,0.08), 0 2px 6px rgba(18,55,42,0.04);
+  --shadow-lg:    0 16px 40px rgba(18,55,42,0.11), 0 4px 12px rgba(18,55,42,0.06);
+  --shadow-card:  0 2px 12px rgba(18,55,42,0.06), 0 1px 3px rgba(18,55,42,0.03);
+  --shadow-card-hover: 0 8px 28px rgba(91,154,114,0.15), 0 2px 8px rgba(18,55,42,0.05);
+  --shadow-green: 0 4px 14px rgba(18,55,42,0.22);
+  --shadow-amber: 0 4px 14px rgba(214,168,79,0.25);
 
   /* ── Transitions ── */
   --ease-out:          cubic-bezier(0.16, 1, 0.3, 1);

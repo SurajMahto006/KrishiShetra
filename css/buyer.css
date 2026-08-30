@@ -9,27 +9,27 @@
    ────────────────────────────────────────────── */
 :root {
   /* Core Palette */
-  --kl-evergreen: #0B251C;
-  --kl-evergreen-light: #12372A;
-  --kl-forest-mid: #1A4D3B;
-  --kl-sage: #43766C;
-  --kl-mint: #5B9A72;
-  --kl-mint-soft: #7AB893;
-  --kl-mint-light: #E8F5E9;
+  --kl-evergreen: #12372A;
+  --kl-evergreen-light: #1A4D3B;
+  --kl-forest-mid: #12372A;
+  --kl-sage: #5B9A72;
+  --kl-mint: #8FCB9B;
+  --kl-mint-soft: #8FCB9B;
+  --kl-mint-light: #E5F0E7;
   --kl-amber: #D6A84F;
-  --kl-amber-light: #FEF3C7;
+  --kl-amber-light: #FDF8ED;
   --kl-terracotta: #C96D5B;
-  --kl-terracotta-light: #FEF2F2;
+  --kl-terracotta-light: #FDF0EE;
   --kl-blue: #3B82F6;
   --kl-blue-light: #EFF6FF;
-  --kl-charcoal: #0F172A;
-  --kl-slate: #334155;
-  --kl-muted: #64748B;
-  --kl-subtle: #94A3B8;
-  --kl-border: #E2E8F0;
-  --kl-border-subtle: #F1F5F9;
-  --kl-bg-body: #F8FAFC;
-  --kl-bg-ivory: #FAF9F5;
+  --kl-charcoal: #17221D;
+  --kl-slate: #17221D;
+  --kl-muted: #6F7F75;
+  --kl-subtle: #8A9A90;
+  --kl-border: #E2DDD0;
+  --kl-border-subtle: #E7E6DC;
+  --kl-bg-body: #F5F4ED;
+  --kl-bg-ivory: #F5F4ED;
   --kl-card-white: #FFFFFF;
 
   /* Typography */
