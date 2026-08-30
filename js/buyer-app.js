@@ -38,18 +38,50 @@ function handleRouteUpdate() {
   else if (hash.includes('/profile')) currentRoute = 'profile';
   else currentRoute = 'dashboard';
 
-  // Update active nav
-  document.querySelectorAll('.buyer-nav-item, .buyer-mnav-item').forEach(el => {
-    el.classList.remove('active');
+  // Update active top nav links
+  document.querySelectorAll('.dash-header__link').forEach(el => {
+    el.classList.remove('dash-header__link--active');
     const r = el.getAttribute('data-route') || '';
     const match = (currentRoute === 'lot-detail' && r.includes('lots')) ||
                   (currentRoute === 'order-detail' && r.includes('orders')) ||
                   r.includes(currentRoute);
-    if (match) el.classList.add('active');
+    if (match) el.classList.add('dash-header__link--active');
   });
 
   renderView(currentRoute);
 }
+
+function toggleProfileDropdown() {
+  const dropdown = document.getElementById('dash-profile-dropdown');
+  if (dropdown) dropdown.classList.toggle('active');
+}
+
+function closeProfileDropdown() {
+  const dropdown = document.getElementById('dash-profile-dropdown');
+  if (dropdown) dropdown.classList.remove('active');
+}
+
+function toggleMobileNav() {
+  const menu = document.getElementById('dash-mobile-menu');
+  if (menu) menu.classList.toggle('active');
+}
+
+// Close profile dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('dash-profile-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    closeProfileDropdown();
+  }
+});
+
+// Keyboard shortcut Ctrl+K
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    const searchInput = document.getElementById('global-buyer-search');
+    if (searchInput) searchInput.focus();
+  }
+});
 
 function renderView(route) {
   const c = document.getElementById('buyer-page-content');

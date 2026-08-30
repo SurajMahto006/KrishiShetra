@@ -28,115 +28,140 @@
   <!-- Ambient Background -->
   <div class="buyer-ambient-bg" aria-hidden="true"></div>
 
-  <!-- APPLICATION SHELL -->
-  <div class="buyer-layout">
+  <!-- ═════════════════════════════════════════════════
+       FIXED TOP HEADER / NAVBAR (Similar to Farmer Dashboard)
+       ═════════════════════════════════════════════════ -->
+  <header class="dash-header" id="buyer-header">
+    <div class="dash-header__inner">
+      <!-- Brand Logo -->
+      <a href="#/buyer/dashboard" class="dash-header__logo" id="buyer-logo">
+        <div class="dash-header__logo-icon">🌿</div>
+        <span class="dash-header__logo-text">KrishiLink</span>
+        <span class="buyer-header__badge">BUYER</span>
+      </a>
 
-    <!-- ═══ SIDEBAR ═══ -->
-    <aside class="buyer-sidebar" id="buyer-sidebar">
-      <div class="buyer-sidebar__brand">
-        <div class="buyer-sidebar__logo-icon">🌿</div>
-        <span class="buyer-sidebar__brand-name">KrishiLink</span>
-        <span class="buyer-sidebar__badge">BUYER</span>
+      <!-- Global Search -->
+      <div class="dash-search" id="buyer-search-wrapper">
+        <i data-lucide="search" class="dash-search__icon"></i>
+        <input type="text" id="global-buyer-search" class="dash-search__input" placeholder="Search crops, mandis, lots..." autocomplete="off" aria-label="Global search">
+        <kbd class="dash-search__kbd">Ctrl K</kbd>
+        <div class="kl-search-results" id="kl-search-results"></div>
       </div>
 
-      <nav class="buyer-sidebar__nav">
-        <a href="#/buyer/dashboard" class="buyer-nav-item active" data-route="/buyer/dashboard">
-          <i data-lucide="layout-dashboard"></i> Dashboard
+      <!-- Top Navigation Links -->
+      <nav class="dash-header__nav" id="buyer-nav">
+        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard">
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
         </a>
-        <a href="#/buyer/marketplace" class="buyer-nav-item" data-route="/buyer/marketplace">
-          <i data-lucide="store"></i> Marketplace
+        <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace">
+          <i data-lucide="store" class="dash-header__link-icon"></i> Marketplace
         </a>
-        <a href="#/buyer/lots" class="buyer-nav-item" data-route="/buyer/lots">
-          <i data-lucide="package-search"></i> My Lots
+        <a href="#/buyer/lots" class="dash-header__link" data-route="/buyer/lots">
+          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
         </a>
-        <a href="#/buyer/offers" class="buyer-nav-item" data-route="/buyer/offers">
-          <i data-lucide="message-square"></i> Offers & Bids
+        <a href="#/buyer/offers" class="dash-header__link" data-route="/buyer/offers">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> Offers
         </a>
-        <a href="#/buyer/orders" class="buyer-nav-item" data-route="/buyer/orders">
-          <i data-lucide="clipboard-check"></i> Orders
+        <a href="#/buyer/orders" class="dash-header__link" data-route="/buyer/orders">
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
         </a>
-        <a href="#/buyer/logistics" class="buyer-nav-item" data-route="/buyer/logistics">
-          <i data-lucide="map-pin"></i> Logistics
+        <a href="#/buyer/logistics" class="dash-header__link" data-route="/buyer/logistics">
+          <i data-lucide="map-pin" class="dash-header__link-icon"></i> Logistics
         </a>
-        <a href="#/buyer/payments" class="buyer-nav-item" data-route="/buyer/payments">
-          <i data-lucide="credit-card"></i> Payments
-        </a>
-
-        <hr class="buyer-sidebar__divider">
-
-        <a href="#/buyer/profile" class="buyer-nav-item" data-route="/buyer/profile">
-          <i data-lucide="user-check"></i> Profile
+        <a href="#/buyer/payments" class="dash-header__link" data-route="/buyer/payments">
+          <i data-lucide="credit-card" class="dash-header__link-icon"></i> Payments
         </a>
       </nav>
 
-      <!-- KYC Status Card -->
-      <div class="buyer-sidebar__kyc-box">
-        <div class="buyer-sidebar__kyc-status">
-          <i data-lucide="shield-check" style="width:13px;height:13px;"></i> KYC VERIFIED
-        </div>
-        <div class="buyer-sidebar__kyc-sub">ABC Foods Pvt Ltd<br>Escrow Limit: ₹50,00,000</div>
-        <a href="#/buyer/kyc-verification" class="buyer-sidebar__kyc-link">View Verification →</a>
-      </div>
-    </aside>
+      <!-- Right Actions (KYC Pill, Notifications, Profile Dropdown) -->
+      <div class="dash-header__actions">
+        <!-- KYC Verification Status Pill -->
+        <a href="#/buyer/kyc-verification" class="buyer-kyc-header-pill" title="Verification Status">
+          <i data-lucide="shield-check"></i>
+          <span>KYC VERIFIED</span>
+        </a>
 
-    <!-- ═══ MAIN WRAPPER ═══ -->
-    <div class="buyer-main-wrapper">
-
-      <!-- Top Header -->
-      <header class="buyer-header">
-        <div class="buyer-header__left">
-          <button class="buyer-hamburger" id="buyer-hamburger" aria-label="Toggle sidebar menu" onclick="toggleMobileSidebar()">
-            <i data-lucide="menu" style="width:20px;height:20px;"></i>
+        <!-- Notifications -->
+        <div style="position:relative;">
+          <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+            <i data-lucide="bell"></i>
+            <span class="dash-header__badge" id="notifications-badge">5</span>
           </button>
-          <div class="buyer-search-bar" id="buyer-search-wrapper">
-            <i data-lucide="search"></i>
-            <input type="text" id="global-buyer-search" placeholder="Search crops, mandis, lots, sellers..." autocomplete="off" aria-label="Global search">
-            <div class="kl-search-results" id="kl-search-results"></div>
+          <div class="kl-notification-panel" id="kl-notification-panel"></div>
+        </div>
+
+        <!-- Profile Menu Dropdown -->
+        <div class="dash-profile-wrap" id="dash-profile-wrap">
+          <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu" onclick="toggleProfileDropdown()">
+            <div class="dash-header__avatar" id="header-avatar">RP</div>
+            <span class="dash-header__profile-name" id="header-user-name">Rajesh</span>
+            <i data-lucide="chevron-down" class="dash-header__profile-chevron"></i>
+          </button>
+          <div class="dash-profile-dropdown" id="dash-profile-dropdown">
+            <div class="dash-profile-dropdown__header">
+              <div class="dash-header__avatar dash-header__avatar--lg" id="dropdown-avatar">RP</div>
+              <div>
+                <div class="dash-profile-dropdown__name" id="dropdown-user-name">ABC Foods Pvt Ltd</div>
+                <div class="dash-profile-dropdown__phone" id="dropdown-user-phone">Rajesh Patil · Pune</div>
+              </div>
+            </div>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="#/buyer/profile" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="building-2"></i> Business Profile & Settings</a>
+            <a href="#/buyer/kyc-verification" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="shield-check"></i> KYC Verification Docs</a>
+            <a href="#/buyer/payments" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="wallet"></i> Escrow Ledger (₹50L Limit)</a>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="repeat"></i> Switch to Farmer Portal</a>
+            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
 
-        <div class="buyer-header__right">
-          <div style="position:relative;">
-            <button class="buyer-icon-btn" id="btn-notifications" title="Notifications" aria-label="Notifications">
-              <i data-lucide="bell"></i>
-              <span class="buyer-icon-btn__badge"></span>
-            </button>
-            <div class="kl-notification-panel" id="kl-notification-panel"></div>
-          </div>
-
-          <a href="#/buyer/profile" class="buyer-profile-pill">
-            <div class="buyer-profile-avatar">RP</div>
-            <span class="buyer-profile-name">Rajesh Patil</span>
-          </a>
-        </div>
-      </header>
-
-      <!-- Dynamic Page Content -->
-      <main class="buyer-page-container" id="buyer-page-content">
-        <!-- Views injected by buyer-app.js -->
-      </main>
-
+        <!-- Mobile Toggle Button -->
+        <button class="dash-header__toggle" id="dash-nav-toggle" aria-label="Toggle navigation" onclick="toggleMobileNav()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Mobile Bottom Navigation -->
-  <nav class="buyer-mobile-nav">
-    <a href="#/buyer/dashboard" class="buyer-mnav-item active" data-route="/buyer/dashboard">
-      <i data-lucide="home"></i> Home
-    </a>
-    <a href="#/buyer/marketplace" class="buyer-mnav-item" data-route="/buyer/marketplace">
-      <i data-lucide="store"></i> Market
-    </a>
-    <a href="#/buyer/offers" class="buyer-mnav-item" data-route="/buyer/offers">
-      <i data-lucide="message-square"></i> Offers
-    </a>
-    <a href="#/buyer/orders" class="buyer-mnav-item" data-route="/buyer/orders">
-      <i data-lucide="clipboard-check"></i> Orders
-    </a>
-    <a href="#/buyer/profile" class="buyer-mnav-item" data-route="/buyer/profile">
-      <i data-lucide="user"></i> Profile
-    </a>
-  </nav>
+    <!-- Mobile Drawer Menu -->
+    <div class="dash-header__mobile-menu" id="dash-mobile-menu">
+      <nav class="dash-header__mobile-nav">
+        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard" onclick="toggleMobileNav()">
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+        </a>
+        <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace" onclick="toggleMobileNav()">
+          <i data-lucide="store" class="dash-header__link-icon"></i> Marketplace
+        </a>
+        <a href="#/buyer/lots" class="dash-header__link" data-route="/buyer/lots" onclick="toggleMobileNav()">
+          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+        </a>
+        <a href="#/buyer/offers" class="dash-header__link" data-route="/buyer/offers" onclick="toggleMobileNav()">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> Offers
+        </a>
+        <a href="#/buyer/orders" class="dash-header__link" data-route="/buyer/orders" onclick="toggleMobileNav()">
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+        </a>
+        <a href="#/buyer/logistics" class="dash-header__link" data-route="/buyer/logistics" onclick="toggleMobileNav()">
+          <i data-lucide="map-pin" class="dash-header__link-icon"></i> Logistics
+        </a>
+        <a href="#/buyer/payments" class="dash-header__link" data-route="/buyer/payments" onclick="toggleMobileNav()">
+          <i data-lucide="credit-card" class="dash-header__link-icon"></i> Payments
+        </a>
+        <a href="#/buyer/profile" class="dash-header__link" data-route="/buyer/profile" onclick="toggleMobileNav()">
+          <i data-lucide="user-check" class="dash-header__link-icon"></i> Profile
+        </a>
+        <a href="#/buyer/kyc-verification" class="dash-header__link" data-route="/buyer/kyc-verification" onclick="toggleMobileNav()">
+          <i data-lucide="shield-check" class="dash-header__link-icon"></i> KYC Verification
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ═════════════════════════════════════════════════
+       MAIN PAGE CONTENT CONTAINER
+       ═════════════════════════════════════════════════ -->
+  <main class="buyer-page-container" id="buyer-page-content">
+    <!-- Views injected dynamically by buyer-app.js -->
+  </main>
 
   <!-- ═══ MODAL OVERLAY ═══ -->
   <div class="kl-modal-overlay" id="kl-modal-overlay" onclick="closeModalOnBackdrop(event)">
@@ -152,9 +177,6 @@
 
   <!-- ═══ TOAST CONTAINER ═══ -->
   <div class="kl-toast-container" id="kl-toast-container"></div>
-
-  <!-- Sidebar Mobile Overlay -->
-  <div id="sidebar-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;display:none;" onclick="toggleMobileSidebar()"></div>
 
   <!-- JS Modules -->
   <script src="js/buyer-data.js"></script>
