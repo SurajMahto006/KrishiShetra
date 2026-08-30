@@ -1,35 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KrishiShetra — Login & Access Platform</title>
-  <meta name="description" content="Access KrishiShetra AgriTech platform to discover live mandi prices, AI-driven crop forecasting, and verified buyer networks.">
+  <meta name="description"
+    content="Access KrishiShetra AgriTech platform to discover live mandi prices, AI-driven crop forecasting, and verified buyer networks.">
 
-  <!-- Google Fonts (Inter + Playfair Display + Noto Sans Devanagari) -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+    rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <!-- i18n Multilingual Engine -->
-  <script src="js/i18n.js"></script>
 </head>
+
 <body>
 
   <!-- ════════════════════════════════════════
        SPLIT-SCREEN AUTHENTICATION PAGE
        ════════════════════════════════════════ -->
   <div class="auth-wrapper">
-    
+
     <!-- ── Left Visual Column (Desktop) ── -->
     <aside class="auth-hero" aria-label="Visual Brand Story">
       <div class="auth-hero__bg">
-        <img src="assets/images/hero-farm.jpg" alt="Indian farmers working in lush green terrace fields at golden sunrise" id="auth-hero-img">
+        <img src="assets/images/hero-farm.jpg"
+          alt="Indian farmers working in lush green terrace fields at golden sunrise" id="auth-hero-img">
       </div>
       <div class="auth-hero__overlay"></div>
 
@@ -49,7 +53,8 @@
           <em>markets.</em>
         </h1>
         <p class="auth-hero__subtitle" id="hero-subtitle">
-          Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and AI-powered mandi insights.
+          Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and
+          AI-powered mandi insights.
         </p>
 
         <div class="auth-hero__badges">
@@ -71,25 +76,9 @@
 
     <!-- ── Right Form Column ── -->
     <main class="auth-content">
-      
-      <!-- Top Language Selector -->
-      <div class="auth-content__header-bar">
-        <div class="auth-lang-dropdown">
-          <button type="button" class="auth-lang-btn" id="lang-menu-btn" aria-haspopup="true" aria-expanded="false">
-            <i data-lucide="globe" style="width:15px;height:15px;"></i>
-            <span id="current-lang-text">English</span>
-            <span style="font-size: 10px; opacity: 0.7;">▼</span>
-          </button>
-          <div class="auth-lang-menu" id="lang-menu" role="menu">
-            <button type="button" class="auth-lang-menu__item active" data-lang="en">English</button>
-            <button type="button" class="auth-lang-menu__item" data-lang="hi">हिन्दी (Hindi)</button>
-            <button type="button" class="auth-lang-menu__item" data-lang="mr">मराठी (Marathi)</button>
-          </div>
-        </div>
-      </div>
 
       <div class="auth-card-box">
-        
+
         <!-- Header Text -->
         <header class="auth-header">
           <h2 class="auth-header__title" id="auth-title">Welcome back</h2>
@@ -98,12 +87,12 @@
 
         <!-- ── Step 1: Mobile & Role Form ── -->
         <form id="auth-phone-form" class="auth-phone-form" onsubmit="return false;" novalidate>
-          
+
           <!-- Role Selector -->
           <div class="auth-roles-group">
             <label class="auth-roles-label" id="label-role">I AM A...</label>
             <div class="auth-roles" role="radiogroup" aria-labelledby="label-role">
-              
+
               <div class="auth-role-card active" data-role="farmer" tabindex="0" role="radio" aria-checked="true">
                 <span class="auth-role-card__icon"><i data-lucide="tractor"></i></span>
                 <span class="auth-role-card__name" id="role-name-farmer">Farmer</span>
@@ -133,19 +122,12 @@
                 <span>🇮🇳</span>
                 <span>+91</span>
               </div>
-              <input 
-                type="tel" 
-                id="phone-input" 
-                class="auth-phone-box__input" 
-                placeholder="Enter 10-digit number" 
-                maxlength="10" 
-                inputmode="numeric" 
-                pattern="[0-9]{10}"
-                autocomplete="tel-national" 
-                required
-              >
+              <input type="tel" id="phone-input" class="auth-phone-box__input" placeholder="Enter 10-digit number"
+                maxlength="10" inputmode="numeric" pattern="[0-9]{10}" autocomplete="tel-national" required>
             </div>
-            <p id="phone-error" style="color: #C96D5B; font-size: 13px; margin-top: 6px; display: none; font-weight: 500;">Please enter a valid 10-digit mobile number.</p>
+            <p id="phone-error"
+              style="color: #C96D5B; font-size: 13px; margin-top: 6px; display: none; font-weight: 500;">Please enter a
+              valid 10-digit mobile number.</p>
           </div>
 
           <!-- Action Button -->
@@ -157,36 +139,44 @@
 
         <!-- ── Step 2: OTP Verification Form (Hidden Initially) ── -->
         <div class="auth-otp-step" id="otp-step-container">
-          
+
           <div style="margin-bottom: 20px;">
             <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT OTP</label>
             <div style="font-size: 14px; color: #6F7F75; margin-bottom: 12px;">
               <span id="otp-sent-text">Code sent to</span>
               <strong id="display-phone-number" style="color: #12372A; margin: 0 4px;">+91 98765 43210</strong>
-              <button type="button" class="auth-otp-change-num" id="btn-change-phone"><i data-lucide="edit-3" style="width:12px;height:12px;vertical-align:middle;"></i> <span id="btn-edit-text">Edit</span></button>
+              <button type="button" class="auth-otp-change-num" id="btn-change-phone"><i data-lucide="edit-3"
+                  style="width:12px;height:12px;vertical-align:middle;"></i> <span
+                  id="btn-edit-text">Edit</span></button>
             </div>
 
             <!-- 6-box OTP entry -->
             <div class="auth-otp-boxes" id="otp-inputs">
-              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" required>
+              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"
+                autocomplete="one-time-code" required>
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
             </div>
-            <p id="otp-error" style="color: #C96D5B; font-size: 13px; margin-bottom: 12px; display: none; font-weight: 500;">Invalid OTP code. Try entering 123456.</p>
+            <p id="otp-error"
+              style="color: #C96D5B; font-size: 13px; margin-bottom: 12px; display: none; font-weight: 500;">Invalid OTP
+              code. Try entering 123456.</p>
           </div>
 
           <!-- Demo Quick Fill helper for Evaluators -->
           <div class="auth-demo-pill">
-            <span><i data-lucide="sparkles" style="width:13px;height:13px;color:#D6A84F;vertical-align:middle;margin-right:3px;"></i> Demo OTP: <strong>123456</strong></span>
+            <span><i data-lucide="sparkles"
+                style="width:13px;height:13px;color:#D6A84F;vertical-align:middle;margin-right:3px;"></i> Demo OTP:
+              <strong>123456</strong></span>
             <button type="button" id="btn-autofill-otp">Auto Fill</button>
           </div>
 
           <!-- OTP Timer and Resend -->
           <div class="auth-otp-meta">
-            <span class="auth-otp-timer" id="otp-timer-display">Resend OTP in <strong id="timer-count">30</strong>s</span>
+            <span class="auth-otp-timer" id="otp-timer-display">Resend OTP in <strong
+                id="timer-count">30</strong>s</span>
             <button type="button" class="auth-otp-resend-btn" id="btn-resend-otp" disabled>Resend Code</button>
           </div>
 
@@ -200,11 +190,17 @@
         <!-- Trust & Security Footer -->
         <div class="auth-trust-divider"></div>
         <div class="auth-trust-items">
-          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
+          <span class="auth-trust-item"><i data-lucide="shield-check"
+              style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span
+              id="trust-secure">Secure</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
+          <span class="auth-trust-item"><i data-lucide="zap"
+              style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span
+              id="trust-simple">Simple</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
+          <span class="auth-trust-item"><i data-lucide="eye"
+              style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span
+              id="trust-transparent">Transparent</span></span>
         </div>
         <p class="auth-secure-subtext">
           <i data-lucide="lock" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i>
@@ -244,153 +240,8 @@
       const roleCards = document.querySelectorAll('.auth-role-card');
 
       let currentRole = 'farmer';
-      let currentLang = localStorage.getItem('krishi_lang') || localStorage.getItem('krishi_user_lang') || 'en';
       let countdown = 30;
       let timerInterval = null;
-
-      // ── Translations Dictionary ──
-      const translations = {
-        en: {
-          langName: 'English',
-          headline: 'Sell smarter.<br>Discover better<br><em>markets.</em>',
-          subtitle: "Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and AI-powered mandi insights.",
-          badgeFarmers: '50,000+ Active Farmers',
-          badgeMandis: '120+ APMC Mandis',
-          badgeVerified: '100% Verified Buyers',
-          authTitle: 'Welcome back',
-          authSubtitle: 'Enter your details to access your account',
-          labelRole: 'I AM A...',
-          roleFarmer: 'Farmer',
-          roleFpo: 'FPO',
-          roleBuyer: 'Buyer',
-          labelPhone: 'MOBILE NUMBER',
-          phonePlaceholder: 'Enter 10-digit number',
-          btnGetOtp: 'Get OTP',
-          labelOtp: 'ENTER 6-DIGIT OTP',
-          otpSent: 'Code sent to',
-          btnEdit: 'Edit',
-          btnVerify: 'Verify & Continue',
-          btnResend: 'Resend Code',
-          trustSecure: 'Secure',
-          trustSimple: 'Simple',
-          trustTransparent: 'Transparent',
-          textPrivacy: 'Your data is secure and protected under AgriStack guidelines.'
-        },
-        hi: {
-          langName: 'हिन्दी',
-          headline: 'होशियारी से बेचें.<br>बेहतर मंडियां<br><em>खोजें।</em>',
-          subtitle: 'भारत के अग्रणी कृषि मंच से जुड़ें और सीधे सत्यापित खरीदारों एवं सटीक मंडी पूर्वानुमान का लाभ उठाएं।',
-          badgeFarmers: '५०,०००+ सक्रिय किसान',
-          badgeMandis: '१२०+ एपीएमसी मंडियां',
-          badgeVerified: '१००% सत्यापित खरीदार',
-          authTitle: 'कृषि क्षेत्र में स्वागत है',
-          authSubtitle: 'अपने खाते में प्रवेश करने के लिए विवरण दर्ज करें',
-          labelRole: 'मेरी भूमिका...',
-          roleFarmer: 'किसान',
-          roleFpo: 'एफपीओ (FPO)',
-          roleBuyer: 'खरीदार',
-          labelPhone: 'मोबाइल नंबर',
-          phonePlaceholder: '१० अंकों का मोबाइल नंबर दर्ज करें',
-          btnGetOtp: 'ओटीपी प्राप्त करें',
-          labelOtp: '६ अंकों का ओटीपी दर्ज करें',
-          otpSent: 'ओटीपी भेजा गया:',
-          btnEdit: 'बदलें',
-          btnVerify: 'सत्यापित करें और आगे बढ़ें',
-          btnResend: 'पुनः ओटीपी भेजें',
-          trustSecure: 'सुरक्षित',
-          trustSimple: 'सरल',
-          trustTransparent: 'पारदर्शी',
-          textPrivacy: 'आपका डेटा एग्रीस्टैक दिशानिर्देशों के तहत पूरी तरह सुरक्षित है।'
-        },
-        mr: {
-          langName: 'मराठी',
-          headline: 'स्मार्ट विक्री करा.<br>उत्तम बाजारपेठ<br><em>शोधा.</em>',
-          subtitle: 'भारतातील अग्रगण्य कृषी नेटवर्कशी जोडा, थेट पडताळणीकृत खरेदीदारांशी संपर्क साधा आणि योग्य भाव मिळवा.',
-          badgeFarmers: '५०,०००+ शेतकरी',
-          badgeMandis: '१२०+ कृषी उत्पन्न बाजार',
-          badgeVerified: '१००% खात्रीशीर व्यापारी',
-          authTitle: 'कृषिक्षेत्र मध्ये आपले स्वागत',
-          authSubtitle: 'तुमच्या खात्यात लॉग इन करण्यासाठी माहिती भरा',
-          labelRole: 'मी आहे...',
-          roleFarmer: 'शेतकरी',
-          roleFpo: 'एफपीओ',
-          roleBuyer: 'खरेदीदार',
-          labelPhone: 'मोबाईल नंबर',
-          phonePlaceholder: '१० अंकी मोबाईल नंबर टाका',
-          btnGetOtp: 'ओटीपी मिळवा',
-          labelOtp: '६-अंकी ओटीपी प्रविष्ट करा',
-          otpSent: 'ओटीपी पाठवला आहे:',
-          btnEdit: 'बदला',
-          btnVerify: 'पडताळणी करा व पुढे जा',
-          btnResend: 'पुन्हा ओटीपी पाठवा',
-          trustSecure: 'सुरक्षित',
-          trustSimple: 'सोपे',
-          trustTransparent: 'पारदर्शक',
-          textPrivacy: 'आपला डेटा ॲग्रीस्टॅक नियमांनुसार पूर्णपणे सुरक्षित आहे.'
-        }
-      };
-
-      // ── Apply Language ──
-      function setLanguage(lang) {
-        currentLang = lang;
-        const t = translations[lang] || translations.en;
-
-        currentLangText.textContent = t.langName;
-        document.getElementById('hero-headline').innerHTML = t.headline;
-        document.getElementById('hero-subtitle').textContent = t.subtitle;
-        document.getElementById('badge-farmers').textContent = t.badgeFarmers;
-        document.getElementById('badge-mandis').textContent = t.badgeMandis;
-        document.getElementById('badge-verified').textContent = t.badgeVerified;
-        document.getElementById('auth-title').textContent = t.authTitle;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitle;
-        document.getElementById('label-role').textContent = t.labelRole;
-        document.getElementById('role-name-farmer').textContent = t.roleFarmer;
-        document.getElementById('role-name-fpo').textContent = t.roleFpo;
-        document.getElementById('role-name-buyer').textContent = t.roleBuyer;
-        document.getElementById('label-phone').textContent = t.labelPhone;
-        phoneInput.placeholder = t.phonePlaceholder;
-        document.getElementById('btn-otp-text').textContent = t.btnGetOtp;
-        document.getElementById('label-otp').textContent = t.labelOtp;
-        document.getElementById('otp-sent-text').textContent = t.otpSent;
-        document.getElementById('btn-edit-text').textContent = t.btnEdit;
-        document.getElementById('btn-verify-text').textContent = t.btnVerify;
-        btnResendOtp.textContent = t.btnResend;
-        document.getElementById('trust-secure').textContent = t.trustSecure;
-        document.getElementById('trust-simple').textContent = t.trustSimple;
-        document.getElementById('trust-transparent').textContent = t.trustTransparent;
-        document.getElementById('text-privacy').textContent = t.textPrivacy;
-
-        document.querySelectorAll('.auth-lang-menu__item').forEach(item => {
-          item.classList.toggle('active', item.dataset.lang === lang);
-        });
-
-        try {
-          localStorage.setItem('krishi_lang', lang);
-          localStorage.setItem('krishi_user_lang', lang);
-        } catch(e) {}
-      }
-
-      // Initialize language immediately on load
-      setLanguage(currentLang);
-
-      // ── Language Dropdown Toggle ──
-      langMenuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        langMenu.classList.toggle('open');
-        langMenuBtn.setAttribute('aria-expanded', langMenu.classList.contains('open'));
-      });
-
-      document.addEventListener('click', () => {
-        langMenu.classList.remove('open');
-        langMenuBtn.setAttribute('aria-expanded', 'false');
-      });
-
-      document.querySelectorAll('.auth-lang-menu__item').forEach(btn => {
-        btn.addEventListener('click', () => {
-          setLanguage(btn.dataset.lang);
-          langMenu.classList.remove('open');
-        });
-      });
 
       // ── Role Selector ──
       roleCards.forEach(card => {
@@ -428,7 +279,7 @@
         btnResendOtp.disabled = true;
         otpTimerDisplay.style.display = 'inline';
         timerCount.textContent = countdown;
-        
+
         clearInterval(timerInterval);
         timerInterval = setInterval(() => {
           countdown--;
@@ -573,4 +424,5 @@
     });
   </script>
 </body>
+
 </html>

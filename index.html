@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KrishiShetra — Know the Price. Choose the Market. Sell Better.</title>
-  <meta name="description" content="KrishiShetra connects farmers with market intelligence, AI-powered price insights and verified buyers for better crop realization.">
+  <meta name="description"
+    content="KrishiShetra connects farmers with market intelligence, AI-powered price insights and verified buyers for better crop realization.">
   <meta name="keywords" content="agritech, market intelligence, farmer, crop prices, AI forecast, mandi, agriculture">
 
   <!-- Preload critical assets -->
   <link rel="preload" href="assets/images/hero-farm.jpg" as="image">
 
-  <!-- Google Fonts (Inter + Playfair Display + Noto Sans Devanagari) -->
+  <!-- Google Fonts (Inter + Playfair Display) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <!-- i18n Multilingual Engine -->
-  <script src="js/i18n.js"></script>
 </head>
+
 <body>
   <!-- ════════════════════════════════════════
        NAVBAR
@@ -35,22 +36,15 @@
       </a>
 
       <div class="navbar__nav" id="nav-menu">
-        <a href="#solution" class="navbar__link" data-i18n="nav.product">Product</a>
-        <a href="#scroll-transition" class="navbar__link" data-i18n="nav.howItWorks">How It Works</a>
-        <a href="#intelligence" class="navbar__link" data-i18n="nav.intelligence">Market Intelligence</a>
-        <a href="#buyers" class="navbar__link" data-i18n="nav.forBuyers">For Buyers</a>
-        <a href="#fpo" class="navbar__link" data-i18n="nav.forFpos">For FPOs</a>
+        <a href="#solution" class="navbar__link">Product</a>
+        <a href="#scroll-transition" class="navbar__link">How It Works</a>
+        <a href="#intelligence" class="navbar__link">Market Intelligence</a>
+        <a href="#buyers" class="navbar__link">For Buyers</a>
+        <a href="#fpo" class="navbar__link">For FPOs</a>
       </div>
 
       <div class="navbar__actions" style="display: flex; align-items: center; gap: 10px;">
-        <!-- Language Switcher Pills -->
-        <div class="dash-header__lang-pills" role="group" aria-label="Language selector">
-          <button class="lang-pill-btn lang-pill-btn--active" data-lang="en" onclick="setLanguage('en')" title="Switch to English">EN</button>
-          <button class="lang-pill-btn" data-lang="hi" onclick="setLanguage('hi')" title="हिंदी में बदलें">हिं</button>
-          <button class="lang-pill-btn" data-lang="mr" onclick="setLanguage('mr')" title="मराठी मध्ये बदला">म</button>
-        </div>
-
-        <a href="login.html" class="navbar__cta" id="btn-login-nav" data-i18n="nav.login">Login</a>
+        <a href="login.html" class="navbar__cta" id="btn-login-nav">Login</a>
       </div>
 
       <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle menu">
@@ -66,7 +60,8 @@
        ════════════════════════════════════════ -->
   <section class="hero" id="hero">
     <div class="hero__bg">
-      <img src="assets/images/hero-farm.jpg" alt="Indian farmer working in lush green rice paddy fields at golden hour sunrise" id="hero-bg-img">
+      <img src="assets/images/hero-farm.jpg"
+        alt="Indian farmer working in lush green rice paddy fields at golden hour sunrise" id="hero-bg-img">
     </div>
     <div class="hero__overlay"></div>
 
@@ -75,11 +70,13 @@
         <h1 class="hero__headline" id="hero-headline">
           <span class="line"><span class="line-inner" data-i18n="landing.heroTitle1">Your Crop.</span></span>
           <span class="line"><span class="line-inner" data-i18n="landing.heroTitle2">Your Market.</span></span>
-          <span class="line"><span class="line-inner"><span data-i18n="landing.heroTitle3">Your Best Price.</span></span></span>
+          <span class="line"><span class="line-inner"><span data-i18n="landing.heroTitle3">Your Best
+                Price.</span></span></span>
         </h1>
 
         <p class="hero__subtitle" id="hero-subtitle" data-i18n="landing.heroSubtitle">
-          KrishiShetra connects Indian farmers directly with live APMC mandi intelligence, AI-powered price forecasting, and verified institutional buyers.
+          KrishiShetra connects Indian farmers directly with live APMC mandi intelligence, AI-powered price forecasting,
+          and verified institutional buyers.
         </p>
 
         <div class="hero__actions" id="hero-actions">
@@ -179,32 +176,32 @@
       <div class="scroll-transition__flow container" id="transition-flow">
         <div class="flow-step">
           <div class="flow-step__icon"><i data-lucide="sprout"></i></div>
-          <div class="flow-step__label" data-i18n="nav.forFarmers">Farmer</div>
+          <div class="flow-step__label">Farmer</div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step">
           <div class="flow-step__icon"><i data-lucide="bar-chart-3"></i></div>
-          <div class="flow-step__label" data-i18n="nav.market">Market Prices</div>
+          <div class="flow-step__label">Market Prices</div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step">
           <div class="flow-step__icon"><i data-lucide="cpu"></i></div>
-          <div class="flow-step__label" data-i18n="nav.forecast">AI Forecast</div>
+          <div class="flow-step__label">AI Analysis</div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step">
           <div class="flow-step__icon"><i data-lucide="trending-up"></i></div>
-          <div class="flow-step__label" data-i18n="landing.trustMarketIntel">Buyer Demand</div>
+          <div class="flow-step__label">Buyer Demand</div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step">
           <div class="flow-step__icon"><i data-lucide="shield-check"></i></div>
-          <div class="flow-step__label" data-i18n="landing.trustVerifiedBuyers">Verified Buyer</div>
+          <div class="flow-step__label">Verified Buyer</div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step">
           <div class="flow-step__icon"><i data-lucide="wallet"></i></div>
-          <div class="flow-step__label" data-i18n="landing.trustInstantPay">Guaranteed Pay</div>
+          <div class="flow-step__label">Better Sale</div>
         </div>
       </div>
     </div>
@@ -216,9 +213,9 @@
   <section class="section-problem" id="problem">
     <div class="container">
       <div class="section-problem__header">
-        <p class="t-label" style="color: var(--ks-text-muted); margin-bottom: 12px;" data-i18n="landing.problemTitle">The Challenge</p>
-        <h2 class="section-problem__title" data-i18n="landing.problemDesc">
-          Traditional middlemen, opaque mandi pricing, and distress selling reduce farmer profits by up to 35%.
+        <p class="t-label" style="color: var(--ks-text-muted); margin-bottom: 12px;">The Challenge</p>
+        <h2 class="section-problem__title">
+          Farmers shouldn't have to<br>sell <em>blind.</em>
         </h2>
       </div>
 
@@ -257,9 +254,9 @@
   <section class="section-solution" id="solution">
     <div class="container">
       <div class="section-solution__header">
-        <p class="section-solution__label" data-i18n="landing.solTitle">How KrishiShetra Solves It</p>
-        <h2 class="section-solution__title" data-i18n="landing.solDesc">
-          Direct farmer-to-buyer linkage backed by real-time APMC data and AI price prediction.
+        <p class="section-solution__label">The KrishiShetra Way</p>
+        <h2 class="section-solution__title">
+          From uncertainty to<br>informed decisions.
         </h2>
       </div>
 
@@ -350,23 +347,25 @@
           <div class="dashboard-chart__title">Price Trend — Onion (Nashik) — 30 Days</div>
           <svg class="chart-canvas" viewBox="0 0 900 200" preserveAspectRatio="none" id="price-chart">
             <!-- Grid lines -->
-            <line x1="0" y1="50" x2="900" y2="50" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-            <line x1="0" y1="100" x2="900" y2="100" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-            <line x1="0" y1="150" x2="900" y2="150" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="0" y1="50" x2="900" y2="50" stroke="rgba(255,255,255,0.04)" stroke-width="1" />
+            <line x1="0" y1="100" x2="900" y2="100" stroke="rgba(255,255,255,0.04)" stroke-width="1" />
+            <line x1="0" y1="150" x2="900" y2="150" stroke="rgba(255,255,255,0.04)" stroke-width="1" />
 
             <!-- Area fill -->
-            <path id="chart-area" d="" fill="url(#chartGradient)" opacity="0"/>
+            <path id="chart-area" d="" fill="url(#chartGradient)" opacity="0" />
 
             <!-- Price line -->
-            <path id="chart-line" d="" fill="none" stroke="var(--ks-green-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1200" stroke-dashoffset="1200"/>
+            <path id="chart-line" d="" fill="none" stroke="var(--ks-green-accent)" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1200" stroke-dashoffset="1200" />
 
             <!-- AI Forecast (dashed) -->
-            <path id="chart-forecast" d="" fill="none" stroke="var(--ks-gold)" stroke-width="2" stroke-dasharray="8 6" opacity="0"/>
+            <path id="chart-forecast" d="" fill="none" stroke="var(--ks-gold)" stroke-width="2" stroke-dasharray="8 6"
+              opacity="0" />
 
             <defs>
               <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="rgba(74, 157, 110, 0.3)"/>
-                <stop offset="100%" stop-color="rgba(74, 157, 110, 0)"/>
+                <stop offset="0%" stop-color="rgba(74, 157, 110, 0.3)" />
+                <stop offset="100%" stop-color="rgba(74, 157, 110, 0)" />
               </linearGradient>
             </defs>
           </svg>
@@ -693,7 +692,9 @@
     <div class="login-card">
       <button class="login-card__close" id="login-close">✕</button>
       <div class="login-card__logo">
-        <div class="login-card__logo-text"><i data-lucide="sprout" style="width:20px;height:20px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> KrishiShetra</div>
+        <div class="login-card__logo-text"><i data-lucide="sprout"
+            style="width:20px;height:20px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
+          KrishiShetra</div>
         <div class="login-card__tagline">Your market intelligence platform</div>
       </div>
 
@@ -706,10 +707,14 @@
         <div class="login-card__field">
           <label class="login-card__label">I am a</label>
           <div class="login-card__role-select" id="role-select">
-            <button type="button" class="login-card__role active" data-role="farmer"><i data-lucide="tractor" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Farmer</button>
-            <button type="button" class="login-card__role" data-role="fpo"><i data-lucide="users" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> FPO</button>
-            <button type="button" class="login-card__role" data-role="buyer"><i data-lucide="store" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Buyer</button>
-            <button type="button" class="login-card__role" data-role="admin"><i data-lucide="settings" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Admin</button>
+            <button type="button" class="login-card__role active" data-role="farmer"><i data-lucide="tractor"
+                style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Farmer</button>
+            <button type="button" class="login-card__role" data-role="fpo"><i data-lucide="users"
+                style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> FPO</button>
+            <button type="button" class="login-card__role" data-role="buyer"><i data-lucide="store"
+                style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Buyer</button>
+            <button type="button" class="login-card__role" data-role="admin"><i data-lucide="settings"
+                style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Admin</button>
           </div>
         </div>
 
@@ -730,7 +735,7 @@
   <!-- Lenis Smooth Scroll -->
   <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
   <!-- Main Scripts -->
-  <script src="js/i18n.js"></script>
   <script src="js/main.js"></script>
 </body>
+
 </html>

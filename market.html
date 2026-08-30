@@ -8,19 +8,12 @@
   <meta name="description"
     content="Live mandi market prices, crop price comparisons across APMC mandis, historical trend charts, and real-time agricultural market intelligence.">
 
-  <!-- Google Fonts (Inter + Playfair Display + Noto Sans Devanagari) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
-
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <!-- i18n Multilingual Engine -->
-  <script src="js/i18n.js"></script>
 </head>
 
 <body class="dashboard-body">
@@ -50,39 +43,29 @@
 
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
-          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> <span data-i18n="nav.dashboard">Dashboard</span>
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
         </a>
         <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="nav.lots">My Lots</span>
+          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
         </a>
         <a href="market.html" class="dash-header__link dash-header__link--active" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="nav.market">Market</span>
+          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
         </a>
         <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="nav.forecast">AI Forecast</span>
+          <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
         </a>
         <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="nav.buyers">Buyers</span>
+          <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="nav.orders">Orders</span>
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
         </a>
       </nav>
 
       <div class="dash-header__actions">
-        <!-- Quick Language Switcher Pills -->
-        <div class="dash-header__lang-pills" role="group" aria-label="Language selector">
-          <button class="lang-pill-btn lang-pill-btn--active" data-lang="en" onclick="setLanguage('en')" title="Switch to English">EN</button>
-          <button class="lang-pill-btn" data-lang="hi" onclick="setLanguage('hi')" title="हिंदी में बदलें">हिं</button>
-          <button class="lang-pill-btn" data-lang="mr" onclick="setLanguage('mr')" title="मराठी मध्ये बदला">म</button>
-        </div>
-
         <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
-        </button>
-        <button class="dash-header__action-btn" id="btn-language" aria-label="Language" title="Change Language">
-          <i data-lucide="globe"></i>
         </button>
         <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
           <i data-lucide="help-circle"></i>
@@ -148,9 +131,11 @@
         <div class="dash-section__header">
           <div>
             <h2 class="dash-section__title" data-i18n="marketPage.title">Market Overview</h2>
-            <p class="dash-section__subtitle" data-i18n="marketPage.subtitle">Live prices from verified nearby mandis</p>
+            <p class="dash-section__subtitle" data-i18n="marketPage.subtitle">Live prices from verified nearby mandis
+            </p>
           </div>
-          <button class="dash-section__action" id="btn-refresh-market"><i data-lucide="refresh-cw"></i> Refresh Prices</button>
+          <button class="dash-section__action" id="btn-refresh-market"><i data-lucide="refresh-cw"></i> Refresh
+            Prices</button>
         </div>
 
         <!-- Filter Bar -->
@@ -353,26 +338,32 @@
           </div>
         </div>
         <div class="dash-insights__grid" id="insights-grid">
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-up" style="color:var(--ks-mint);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-up"
+                style="color:var(--ks-mint);"></i></span>
             <p>Rice demand is <strong>increasing by 14%</strong> across Maharashtra mandis due to institutional buying.
             </p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="flame" style="color:var(--ks-coral);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="flame"
+                style="color:var(--ks-coral);"></i></span>
             <p>Onion prices are <strong>rising in Pune & Nashik</strong>. Current price is ₹2,850/q, 12% above seasonal
               average.</p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-down" style="color:var(--ks-coral);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-down"
+                style="color:var(--ks-coral);"></i></span>
             <p>Tomato market arrivals are <strong>up by 20%</strong> in Solapur. Recommended to sell fresh harvest
               within 2 days.</p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="award" style="color:var(--ks-gold);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="award"
+                style="color:var(--ks-gold);"></i></span>
             <p><strong>Mumbai APMC</strong> currently offers highest realization on premium grade grains.</p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="tractor" style="color:var(--ks-sage);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="tractor"
+                style="color:var(--ks-sage);"></i></span>
             <p>Soybean millers in <strong>Indore</strong> are offering premium contracts for moisture level under 10%.
             </p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="lightbulb" style="color:var(--ks-gold);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="lightbulb"
+                style="color:var(--ks-gold);"></i></span>
             <p>Set a <strong>Target Price Alert</strong> on chilli and cotton to receive direct SMS when prices spike.
             </p>
           </div>
@@ -387,7 +378,9 @@
     <div class="container">
       <div class="footer__inner">
         <div>
-          <div class="footer__brand"><i data-lucide="sprout" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> KrishiShetra</div>
+          <div class="footer__brand"><i data-lucide="sprout"
+              style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
+            KrishiShetra</div>
           <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
         </div>
         <div class="footer__links">
@@ -575,25 +568,7 @@
     </div>
   </div>
 
-  <div class="dash-modal-overlay" id="language-modal-overlay">
-    <div class="dash-modal dash-modal--sm" id="language-modal">
-      <div class="dash-modal__header">
-        <h3>Select Language</h3>
-        <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
-      </div>
-      <div class="dash-modal__body-pad">
-        <div class="dash-lang-list">
-          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span>
-            <strong>Active</strong></button>
-          <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
-          <button class="dash-lang-btn" onclick="setLanguage('hi')"><span>हिन्दी (Hindi)</span></button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- SCRIPTS -->
-  <script src="js/i18n.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/living-field.js"></script>
   <script src="js/dashboard.js"></script>

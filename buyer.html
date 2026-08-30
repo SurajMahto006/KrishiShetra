@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KrishiLink — B2B Agricultural Procurement Platform</title>
-  <meta name="description" content="Production-grade agricultural procurement, lot discovery, quality analytics, digital offer negotiation, order tracking, and escrow payments for verified buyers.">
+  <meta name="description"
+    content="Production-grade agricultural procurement, lot discovery, quality analytics, digital offer negotiation, order tracking, and escrow payments for verified buyers.">
 
-  <!-- Google Fonts (Inter + Playfair Display + Noto Sans Devanagari) -->
+  <!-- Google Fonts (Inter + Playfair Display) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -21,8 +23,6 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- i18n Multilingual Engine -->
-  <script src="js/i18n.js"></script>
 </head>
 
 <body class="buyer-body">
@@ -45,14 +45,17 @@
       <!-- Global Search -->
       <div class="dash-search" id="buyer-search-wrapper">
         <i data-lucide="search" class="dash-search__icon"></i>
-        <input type="text" id="global-buyer-search" class="dash-search__input" placeholder="Search crops, mandis, lots..." data-i18n-placeholder="nav.searchPlaceholder" autocomplete="off" aria-label="Global search">
+        <input type="text" id="global-buyer-search" class="dash-search__input"
+          placeholder="Search crops, mandis, lots..." data-i18n-placeholder="nav.searchPlaceholder" autocomplete="off"
+          aria-label="Global search">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="kl-search-results" id="kl-search-results"></div>
       </div>
 
       <!-- Top Navigation Links -->
       <nav class="dash-header__nav" id="buyer-nav">
-        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard" data-i18n="nav.dashboard">
+        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard"
+          data-i18n="nav.dashboard">
           <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
         </a>
         <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace">
@@ -75,15 +78,8 @@
         </a>
       </nav>
 
-      <!-- Right Actions (KYC Pill, Lang, Notifications, Profile Dropdown) -->
+      <!-- Right Actions (KYC Pill, Notifications, Profile Dropdown) -->
       <div class="dash-header__actions">
-        <!-- Quick Language Switcher Pills -->
-        <div class="dash-header__lang-pills" role="group" aria-label="Language selector">
-          <button class="lang-pill-btn lang-pill-btn--active" data-lang="en" onclick="setLanguage('en')" title="Switch to English">EN</button>
-          <button class="lang-pill-btn" data-lang="hi" onclick="setLanguage('hi')" title="हिंदी में बदलें">हिं</button>
-          <button class="lang-pill-btn" data-lang="mr" onclick="setLanguage('mr')" title="मराठी मध्ये बदला">म</button>
-        </div>
-
         <!-- KYC Verification Status Pill -->
         <a href="#/buyer/kyc-verification" class="buyer-kyc-header-pill" title="Verification Status">
           <i data-lucide="shield-check"></i>
@@ -92,7 +88,8 @@
 
         <!-- Notifications -->
         <div style="position:relative;">
-          <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+          <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications"
+            title="Notifications">
             <i data-lucide="bell"></i>
             <span class="dash-header__badge" id="notifications-badge">5</span>
           </button>
@@ -101,7 +98,8 @@
 
         <!-- Profile Menu Dropdown -->
         <div class="dash-profile-wrap" id="dash-profile-wrap">
-          <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu" onclick="toggleProfileDropdown()">
+          <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu"
+            onclick="toggleProfileDropdown()">
             <div class="dash-header__avatar" id="header-avatar">RP</div>
             <span class="dash-header__profile-name" id="header-user-name">Rajesh</span>
             <i data-lucide="chevron-down" class="dash-header__profile-chevron"></i>
@@ -115,17 +113,23 @@
               </div>
             </div>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="#/buyer/profile" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="building-2"></i> Business Profile & Settings</a>
-            <a href="#/buyer/kyc-verification" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="shield-check"></i> KYC Verification Docs</a>
-            <a href="#/buyer/payments" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="wallet"></i> Escrow Ledger (₹50L Limit)</a>
+            <a href="#/buyer/profile" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i
+                data-lucide="building-2"></i> Business Profile & Settings</a>
+            <a href="#/buyer/kyc-verification" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i
+                data-lucide="shield-check"></i> KYC Verification Docs</a>
+            <a href="#/buyer/payments" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i
+                data-lucide="wallet"></i> Escrow Ledger (₹50L Limit)</a>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="repeat"></i> Switch to Farmer Portal</a>
-            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
+            <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="repeat"></i> Switch to Farmer
+              Portal</a>
+            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
+                data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
 
         <!-- Mobile Toggle Button -->
-        <button class="dash-header__toggle" id="dash-nav-toggle" aria-label="Toggle navigation" onclick="toggleMobileNav()">
+        <button class="dash-header__toggle" id="dash-nav-toggle" aria-label="Toggle navigation"
+          onclick="toggleMobileNav()">
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -134,10 +138,12 @@
     <!-- Mobile Drawer Menu -->
     <div class="dash-header__mobile-menu" id="dash-mobile-menu">
       <nav class="dash-header__mobile-nav">
-        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard" onclick="toggleMobileNav()">
+        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard"
+          onclick="toggleMobileNav()">
           <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
         </a>
-        <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace" onclick="toggleMobileNav()">
+        <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace"
+          onclick="toggleMobileNav()">
           <i data-lucide="store" class="dash-header__link-icon"></i> Marketplace
         </a>
         <a href="#/buyer/lots" class="dash-header__link" data-route="/buyer/lots" onclick="toggleMobileNav()">
@@ -158,7 +164,8 @@
         <a href="#/buyer/profile" class="dash-header__link" data-route="/buyer/profile" onclick="toggleMobileNav()">
           <i data-lucide="user-check" class="dash-header__link-icon"></i> Profile
         </a>
-        <a href="#/buyer/kyc-verification" class="dash-header__link" data-route="/buyer/kyc-verification" onclick="toggleMobileNav()">
+        <a href="#/buyer/kyc-verification" class="dash-header__link" data-route="/buyer/kyc-verification"
+          onclick="toggleMobileNav()">
           <i data-lucide="shield-check" class="dash-header__link-icon"></i> KYC Verification
         </a>
       </nav>
@@ -188,8 +195,8 @@
   <div class="kl-toast-container" id="kl-toast-container"></div>
 
   <!-- JS Modules -->
-  <script src="js/i18n.js"></script>
   <script src="js/buyer-data.js"></script>
   <script src="js/buyer-app.js"></script>
 </body>
+
 </html>

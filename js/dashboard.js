@@ -1438,28 +1438,7 @@ function openHelpModal() {
   openModal('help-modal-overlay');
 }
 
-function openLanguageModal() {
-  const closeBtn = document.getElementById('language-modal-close');
-  if (closeBtn) closeBtn.onclick = () => closeModal('language-modal-overlay');
-  openModal('language-modal-overlay');
-}
 
-function setLanguage(lang) {
-  closeModal('language-modal-overlay');
-  if (window.KrishiI18n) {
-    window.KrishiI18n.setLanguage(lang);
-  }
-}
-
-// Re-render dynamic dashboard content when language changes
-window.addEventListener('krishi:language-change', () => {
-  if (typeof renderMarketGrid === 'function') renderMarketGrid();
-  if (typeof renderLotsPanel === 'function') renderLotsPanel();
-  if (typeof renderOffersPanel === 'function') renderOffersPanel();
-  if (typeof renderOrdersGrid === 'function') renderOrdersGrid();
-  if (typeof renderAlertsGrid === 'function') renderAlertsGrid();
-  if (typeof renderFarmerListings === 'function') renderFarmerListings();
-});
 
 // ═════════════════════════════════════════════════════════════════════
 // 8. INTERACTIVE SEARCH & FILTERS

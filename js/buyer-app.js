@@ -15,19 +15,10 @@ let kycCurrentStep = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('hashchange', handleRouteUpdate);
-  window.addEventListener('krishi:language-change', () => {
-    handleRouteUpdate();
-  });
   initSearchDropdown();
   initNotificationPanel();
   handleRouteUpdate();
 });
-
-function setLanguage(lang) {
-  if (window.KrishiI18n) {
-    window.KrishiI18n.setLanguage(lang);
-  }
-}
 
 // ═══════════════════════════════════════════════
 // 2. ROUTER
@@ -52,8 +43,8 @@ function handleRouteUpdate() {
     el.classList.remove('dash-header__link--active');
     const r = el.getAttribute('data-route') || '';
     const match = (currentRoute === 'lot-detail' && r.includes('lots')) ||
-                  (currentRoute === 'order-detail' && r.includes('orders')) ||
-                  r.includes(currentRoute);
+      (currentRoute === 'order-detail' && r.includes('orders')) ||
+      r.includes(currentRoute);
     if (match) el.classList.add('dash-header__link--active');
   });
 
@@ -1064,4 +1055,4 @@ function renderProfileView() {
   </div>`;
 }
 
-function initKYCFormHandlers() {}
+function initKYCFormHandlers() { }

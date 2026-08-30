@@ -37,8 +37,8 @@
   --radius-full: 9999px;
 
   --nav-height: 72px;
-  --font-display: 'Playfair Display', 'Noto Sans Devanagari', Georgia, serif;
-  --font-body: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ── Base ── */
@@ -447,41 +447,6 @@ body.dashboard-body {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-}
-
-/* Quick Header Language Switcher Pills */
-.dash-header__lang-pills {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: var(--radius-full);
-  padding: 2px;
-  gap: 2px;
-}
-
-.lang-pill-btn {
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  line-height: 1;
-}
-
-.lang-pill-btn:hover {
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.lang-pill-btn--active {
-  background: var(--ks-sage) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 .dash-header__action-btn {

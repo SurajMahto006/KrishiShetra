@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function initActiveRouteHighlight() {
   const currentPath = window.location.pathname.toLowerCase();
-  
+
   // Mapping of pages to navigation IDs
   const routeMap = [
     { page: 'dashboard.html', navId: 'nav-dashboard', mobileId: 'mnav-dashboard', bottomId: 'bnav-home' },
@@ -206,12 +206,3 @@ function initGlobalSearch() {
     }
   });
 }
-
-// Global setLanguage handler
-window.setLanguage = function(lang) {
-  if (window.KrishiI18n) {
-    window.KrishiI18n.setLanguage(lang);
-  }
-  const langModal = document.getElementById('language-modal-overlay');
-  if (langModal) langModal.classList.remove('active');
-};
