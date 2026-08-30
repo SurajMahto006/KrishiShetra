@@ -70,6 +70,13 @@
       </nav>
 
       <div class="dash-header__actions">
+        <!-- Quick Language Switcher Pills -->
+        <div class="dash-header__lang-pills" role="group" aria-label="Language selector">
+          <button class="lang-pill-btn lang-pill-btn--active" data-lang="en" onclick="setLanguage('en')" title="Switch to English">EN</button>
+          <button class="lang-pill-btn" data-lang="hi" onclick="setLanguage('hi')" title="हिंदी में बदलें">हिं</button>
+          <button class="lang-pill-btn" data-lang="mr" onclick="setLanguage('mr')" title="मराठी मध्ये बदला">म</button>
+        </div>
+
         <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
@@ -322,6 +329,7 @@
   </div>
 
   <!-- SCRIPTS -->
+  <script src="js/i18n.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/living-field.js"></script>
   <script src="js/dashboard.js"></script>

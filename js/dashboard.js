@@ -502,7 +502,11 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
 
   if (filterText) {
     const q = filterText.toLowerCase();
-    crops = crops.filter(c => c.name.toLowerCase().includes(q) || c.market.toLowerCase().includes(q));
+    crops = crops.filter(c => {
+      const matchSearch = window.KrishiI18n ? window.KrishiI18n.matchesCropQuery(c.id, q) : c.name.toLowerCase().includes(q);
+      const matchMarket = c.market.toLowerCase().includes(q);
+      return matchSearch || matchMarket;
+    });
   }
   if (cropFilter !== 'all') {
     crops = crops.filter(c => c.id === cropFilter);
@@ -521,20 +525,29 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
   }
   if (emptyState) emptyState.style.display = 'none';
 
-  grid.innerHTML = crops.map(c => `
+  const viewDetailsLabel = window.t ? window.t('common.viewDetails', 'View Details') : 'View Details';
+
+  grid.innerHTML = crops.map(c => {
+    const displayName = window.KrishiI18n ? window.KrishiI18n.getCropName(c.id) : c.name;
+    const displayMandi = window.KrishiI18n ? window.KrishiI18n.getMandiName(c.market) : c.market;
+    const demandText = c.demand === 'high' ? (window.KrishiI18n?.currentLang === 'mr' ? 'वाढती मागणी' : window.KrishiI18n?.currentLang === 'hi' ? 'उच्च मांग' : 'High Demand')
+      : (c.demand === 'medium' ? (window.KrishiI18n?.currentLang === 'mr' ? 'मध्यम' : window.KrishiI18n?.currentLang === 'hi' ? 'मध्यम' : 'Medium')
+        : (window.KrishiI18n?.currentLang === 'mr' ? 'कमी मागणी' : window.KrishiI18n?.currentLang === 'hi' ? 'कम मांग' : 'Low Demand'));
+
+    return `
     <div class="dash-crop-card" onclick="openCropDetails('${c.id}')" data-crop-id="${c.id}">
       <div class="dash-crop-card__image-wrap">
         <img src="${c.image}" alt="${c.name}" class="dash-crop-card__img" loading="lazy" onerror="this.style.display='none';">
         <span class="dash-crop-card__demand-badge dash-crop-card__demand-badge--${c.demand}">
-          ${c.demand === 'high' ? '<i data-lucide="trending-up" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> High Demand' : (c.demand === 'medium' ? '<i data-lucide="activity" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> Medium' : 'Low Demand')}
+          ${c.demand === 'high' ? '<i data-lucide="trending-up" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ' : (c.demand === 'medium' ? '<i data-lucide="activity" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ' : '')}${demandText}
         </span>
       </div>
       <div class="dash-crop-card__body">
         <div class="dash-crop-card__header">
           <div class="dash-crop-card__title-row">
-            <span class="dash-crop-card__name">${c.name}</span>
+            <span class="dash-crop-card__name">${displayName}</span>
           </div>
-          <span class="dash-crop-card__market">${c.market}</span>
+          <span class="dash-crop-card__market">${displayMandi}</span>
         </div>
         <div class="dash-crop-card__price-row">
           <div class="dash-crop-card__price">
@@ -546,11 +559,12 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
           </div>
         </div>
         <button class="btn btn--secondary dash-crop-card__btn" onclick="event.stopPropagation(); openCropDetails('${c.id}')">
-          View Details
+          ${viewDetailsLabel}
         </button>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 // Render "What Farmers Are Selling"
@@ -1432,9 +1446,20 @@ function openLanguageModal() {
 
 function setLanguage(lang) {
   closeModal('language-modal-overlay');
-  const map = { en: 'English', mr: 'मराठी', hi: 'हिन्दी', te: 'తెలుగు', ta: 'தமிழ்' };
-  showToast(`Language changed to ${map[lang] || 'English'}`);
+  if (window.KrishiI18n) {
+    window.KrishiI18n.setLanguage(lang);
+  }
 }
+
+// Re-render dynamic dashboard content when language changes
+window.addEventListener('krishi:language-change', () => {
+  if (typeof renderMarketGrid === 'function') renderMarketGrid();
+  if (typeof renderLotsPanel === 'function') renderLotsPanel();
+  if (typeof renderOffersPanel === 'function') renderOffersPanel();
+  if (typeof renderOrdersGrid === 'function') renderOrdersGrid();
+  if (typeof renderAlertsGrid === 'function') renderAlertsGrid();
+  if (typeof renderFarmerListings === 'function') renderFarmerListings();
+});
 
 // ═════════════════════════════════════════════════════════════════════
 // 8. INTERACTIVE SEARCH & FILTERS

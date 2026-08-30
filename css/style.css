@@ -36,8 +36,8 @@
   --ks-orange: #f39c12;
 
   /* Typography */
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Playfair Display', 'Noto Sans Devanagari', Georgia, serif;
+  --font-body: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Sizing */
   --nav-height: 80px;
