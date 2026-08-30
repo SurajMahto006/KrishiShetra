@@ -5,6 +5,7 @@ const cors = require('cors');
 const healthRoutes = require('./routes/health.routes');
 const testRoutes = require('./routes/test.routes');
 const authRoutes = require('./routes/auth.routes');
+const farmerRoutes = require('./routes/farmer.routes');
 const connectDB = require('./config/db');
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 // Routes
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/farmer', farmerRoutes);
 app.use('/api/test', testRoutes);
 
 
