@@ -1741,9 +1741,65 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Mobile Profile Nav link
-  const mobileProf = document.getElementById('mobile-nav-profile');
-  if (mobileProf) mobileProf.onclick = openProfileModal;
+// ═════════════════════════════════════════════════════════════════════
+// 12. ANIMATED COUNT-UP & INTERACTIVE CARD SPOTLIGHTS
+// ═════════════════════════════════════════════════════════════════════
+
+function initKpiCountUp() {
+  const counters = document.querySelectorAll('.kpi-counter');
+  counters.forEach(counter => {
+    const rawTarget = counter.getAttribute('data-target');
+    const target = rawTarget ? parseFloat(rawTarget) : parseFloat(counter.textContent.replace(/[^0-9.]/g, ''));
+    const prefix = counter.getAttribute('data-prefix') || '';
+    const suffix = counter.getAttribute('data-suffix') || '';
+    if (isNaN(target)) return;
+
+    let start = 0;
+    const duration = 900;
+    const startTime = performance.now();
+
+    function step(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(start + (target - start) * ease);
+
+      if (target >= 1000) {
+        counter.textContent = `${prefix}${current.toLocaleString('en-IN')}${suffix}`;
+      } else {
+        counter.textContent = `${prefix}${current}${suffix}`;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        if (target >= 1000) {
+          counter.textContent = `${prefix}${target.toLocaleString('en-IN')}${suffix}`;
+        } else {
+          counter.textContent = `${prefix}${target}${suffix}`;
+        }
+      }
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+function initCardSpotlight() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  document.querySelectorAll('.dash-interactive-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mouse-x', `${x}%`);
+      card.style.setProperty('--mouse-y', `${y}%`);
+    });
+  });
+}
+
+  // 6. Interactive Count-Up and Card Micro-Animations
+  initKpiCountUp();
+  initCardSpotlight();
 
   // Initialize Lucide icons
   if (window.lucide) lucide.createIcons();
