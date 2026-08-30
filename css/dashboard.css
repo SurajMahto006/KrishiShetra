@@ -91,12 +91,39 @@ body.dashboard-body {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg,
-      rgba(245, 244, 237, 0.76) 0%,
-      rgba(245, 244, 237, 0.84) 20%,
-      rgba(245, 244, 237, 0.90) 50%,
-      rgba(245, 244, 237, 0.95) 80%,
+      rgba(245, 244, 237, 0.72) 0%,
+      rgba(245, 244, 237, 0.82) 20%,
+      rgba(245, 244, 237, 0.88) 50%,
+      rgba(245, 244, 237, 0.94) 80%,
       rgba(245, 244, 237, 0.98) 100%);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(1.5px);
+}
+
+.living-field-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.92;
+}
+
+/* AI Intelligence Ambient Breathing Glow */
+.ai-intelligence-glow {
+  position: absolute;
+  inset: -15px;
+  border-radius: var(--radius-xl);
+  background: radial-gradient(circle at 50% 50%, rgba(143, 203, 155, 0.14) 0%, rgba(91, 154, 114, 0.05) 50%, transparent 75%);
+  pointer-events: none;
+  animation: aiBreatheGlow 6s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes aiBreatheGlow {
+  0% { opacity: 0.35; transform: scale(0.98); }
+  100% { opacity: 0.9; transform: scale(1.02); }
 }
 
 /* Subtle abstract agricultural contour & field-line pattern */
