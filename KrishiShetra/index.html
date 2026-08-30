@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiShetra — Know the Price. Choose the Market. Sell Better.</title>
+  <meta name="description" content="KrishiShetra connects farmers with market intelligence, AI-powered price insights and verified buyers for better crop realization.">
+  <meta name="keywords" content="agritech, market intelligence, farmer, crop prices, AI forecast, mandi, agriculture">
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="assets/images/hero-farm.jpg" as="image">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
+</head>
+<body>
+  <!-- ════════════════════════════════════════
+       NAVBAR
+       ════════════════════════════════════════ -->
+  <nav class="navbar navbar--transparent" id="navbar">
+    <div class="navbar__inner">
+      <a href="#" class="navbar__logo" id="nav-logo">
+        <div class="navbar__logo-icon">🌾</div>
+        <span>KrishiShetra</span>
+      </a>
+
+      <div class="navbar__nav" id="nav-menu">
+        <a href="#solution" class="navbar__link">Product</a>
+        <a href="#scroll-transition" class="navbar__link">How It Works</a>
+        <a href="#intelligence" class="navbar__link">Market Intelligence</a>
+        <a href="#buyers" class="navbar__link">For Buyers</a>
+        <a href="fpo-dashboard.html" class="navbar__link">For FPOs</a>
+      </div>
+
+      <div class="navbar__actions">
+        <button class="navbar__login" id="btn-login-nav">Login</button>
+        <a href="fpo-dashboard.html" class="navbar__cta" id="btn-enter-nav">Enter Platform</a>
+      </div>
+
+      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════
+       HERO SECTION
+       ════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <img src="assets/images/hero-farm.jpg" alt="Indian farmer working in lush green rice paddy fields at golden hour sunrise" id="hero-bg-img">
+    </div>
+    <div class="hero__overlay"></div>
+
+    <div class="hero__content">
+      <div class="hero__text">
+        <h1 class="hero__headline" id="hero-headline">
+          <span class="line"><span class="line-inner">Your Crop.</span></span>
+          <span class="line"><span class="line-inner">Your Market.</span></span>
+          <span class="line"><span class="line-inner">Your <em class="highlight">Best Price.</em></span></span>
+        </h1>
+
+        <p class="hero__subtitle" id="hero-subtitle">
+          KrishiShetra connects farmers with market intelligence,
+          AI-powered price insights and verified buyers.
+        </p>
+
+        <div class="hero__actions" id="hero-actions">
+          <a href="#solution" class="btn btn--primary" id="btn-explore">
+            Explore KrishiShetra
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="#scroll-transition" class="btn btn--secondary" id="btn-how">
+            See How It Works
+          </a>
+        </div>
+
+        <div class="hero__trust" id="hero-trust">
+          <span class="hero__trust-item">
+            <span class="hero__trust-dot"></span>
+            Market Intelligence
+          </span>
+          <span class="hero__trust-item">
+            <span class="hero__trust-dot"></span>
+            AI Insights
+          </span>
+          <span class="hero__trust-item">
+            <span class="hero__trust-dot"></span>
+            Verified Buyers
+          </span>
+          <span class="hero__trust-item">
+            <span class="hero__trust-dot"></span>
+            Transparent Transactions
+          </span>
+        </div>
+      </div>
+
+      <!-- Floating Intelligence Card -->
+      <div class="hero__intel" id="hero-intel">
+        <div class="intel-card">
+          <div class="intel-card__header">
+            <div class="intel-card__crop">
+              <div class="intel-card__crop-icon">🧅</div>
+              <div>
+                <div class="intel-card__crop-name">Onion</div>
+                <div class="intel-card__crop-market">Nashik APMC</div>
+              </div>
+            </div>
+            <div class="intel-card__live">
+              <span class="intel-card__live-dot"></span>
+              Live
+            </div>
+          </div>
+
+          <div class="intel-card__metrics">
+            <div class="intel-metric">
+              <div class="intel-metric__label">Market Price</div>
+              <div class="intel-metric__value" id="intel-price">₹2,650</div>
+              <div class="intel-metric__change">/quintal</div>
+            </div>
+            <div class="intel-metric">
+              <div class="intel-metric__label">AI Forecast</div>
+              <div class="intel-metric__value" id="intel-forecast">₹2,850</div>
+              <div class="intel-metric__change intel-metric__change--up">↑ 7.5%</div>
+            </div>
+          </div>
+
+          <div class="intel-card__recommendation">
+            <div class="intel-card__rec-label">AI Recommendation</div>
+            <div class="intel-card__rec-value">WAIT 2 DAYS</div>
+          </div>
+
+          <div class="intel-card__bottom">
+            <div class="intel-card__best-market">
+              Best Market: <span>Pune</span>
+            </div>
+            <div class="intel-card__net-real">
+              <div class="intel-card__net-label">Net Real.</div>
+              <div class="intel-card__net-value">₹2,580/q</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__scroll" id="hero-scroll">
+      <span class="hero__scroll-text">Scroll to explore</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       SCROLL TRANSITION — FARM TO MARKET
+       ════════════════════════════════════════ -->
+  <section class="scroll-transition" id="scroll-transition">
+    <div class="scroll-transition__inner">
+      <div class="scroll-transition__bg" id="transition-bg">
+        <img src="assets/images/market.jpg" alt="Busy Indian agricultural mandi wholesale market">
+        <div class="scroll-transition__overlay"></div>
+      </div>
+
+      <div class="scroll-transition__flow container" id="transition-flow">
+        <div class="flow-step">
+          <div class="flow-step__icon">🌾</div>
+          <div class="flow-step__label">Farmer</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step__icon">📊</div>
+          <div class="flow-step__label">Market Prices</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step__icon">🤖</div>
+          <div class="flow-step__label">AI Analysis</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step__icon">📈</div>
+          <div class="flow-step__label">Buyer Demand</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step__icon">✅</div>
+          <div class="flow-step__label">Verified Buyer</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step__icon">💰</div>
+          <div class="flow-step__label">Better Sale</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       SECTION 2 — THE PROBLEM
+       ════════════════════════════════════════ -->
+  <section class="section-problem" id="problem">
+    <div class="container">
+      <div class="section-problem__header">
+        <p class="t-label" style="color: var(--ks-text-muted); margin-bottom: 12px;">The Challenge</p>
+        <h2 class="section-problem__title">
+          Farmers shouldn't have to<br>sell <em>blind.</em>
+        </h2>
+      </div>
+
+      <div class="problem-grid" id="problem-grid">
+        <div class="problem-card">
+          <span class="problem-card__number">01</span>
+          <div class="problem-card__icon">❓</div>
+          <h3 class="problem-card__title">Uncertain Prices</h3>
+          <p class="problem-card__desc">"Is today's price really the best? Should I wait or sell now?"</p>
+        </div>
+        <div class="problem-card">
+          <span class="problem-card__number">02</span>
+          <div class="problem-card__icon">🔍</div>
+          <h3 class="problem-card__title">Limited Market Visibility</h3>
+          <p class="problem-card__desc">"Which nearby market will give me more for the same crop?"</p>
+        </div>
+        <div class="problem-card">
+          <span class="problem-card__number">03</span>
+          <div class="problem-card__icon">🤝</div>
+          <h3 class="problem-card__title">Weak Buyer Connections</h3>
+          <p class="problem-card__desc">"Who is actually willing to buy my produce at a fair price?"</p>
+        </div>
+        <div class="problem-card">
+          <span class="problem-card__number">04</span>
+          <div class="problem-card__icon">💸</div>
+          <h3 class="problem-card__title">Hidden Costs</h3>
+          <p class="problem-card__desc">"Will transport and storage costs reduce my actual profit?"</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       SECTION 3 — THE SOLUTION
+       ════════════════════════════════════════ -->
+  <section class="section-solution" id="solution">
+    <div class="container">
+      <div class="section-solution__header">
+        <p class="section-solution__label">The KrishiShetra Way</p>
+        <h2 class="section-solution__title">
+          From uncertainty to<br>informed decisions.
+        </h2>
+      </div>
+
+      <div class="solution-journey" id="solution-journey">
+        <div class="solution-step">
+          <div class="solution-step__number">01</div>
+          <span class="solution-step__icon">🔎</span>
+          <h3 class="solution-step__title">Discover</h3>
+          <p class="solution-step__desc">See prices across nearby markets in real time.</p>
+        </div>
+        <div class="solution-step">
+          <div class="solution-step__number">02</div>
+          <span class="solution-step__icon">📈</span>
+          <h3 class="solution-step__title">Predict</h3>
+          <p class="solution-step__desc">Understand where prices may move with AI forecasts.</p>
+        </div>
+        <div class="solution-step">
+          <div class="solution-step__number">03</div>
+          <span class="solution-step__icon">⚖️</span>
+          <h3 class="solution-step__title">Compare</h3>
+          <p class="solution-step__desc">Calculate your actual net realization across markets.</p>
+        </div>
+        <div class="solution-step">
+          <div class="solution-step__number">04</div>
+          <span class="solution-step__icon">🤝</span>
+          <h3 class="solution-step__title">Match</h3>
+          <p class="solution-step__desc">Find verified buyers looking for your crop.</p>
+        </div>
+        <div class="solution-step">
+          <div class="solution-step__number">05</div>
+          <span class="solution-step__icon">✅</span>
+          <h3 class="solution-step__title">Sell</h3>
+          <p class="solution-step__desc">Create a lot, receive offers and complete the transaction.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       SECTION 4 — MARKET INTELLIGENCE
+       ════════════════════════════════════════ -->
+  <section class="section-intelligence" id="intelligence">
+    <div class="container">
+      <div class="section-intelligence__header">
+        <p class="section-intelligence__label">Market Intelligence</p>
+        <h2 class="section-intelligence__title">
+          Information you normally don't have.
+        </h2>
+      </div>
+
+      <div class="dashboard-preview" id="dashboard-preview">
+        <div class="dashboard-preview__topbar">
+          <span class="dashboard-preview__dot dashboard-preview__dot--red"></span>
+          <span class="dashboard-preview__dot dashboard-preview__dot--yellow"></span>
+          <span class="dashboard-preview__dot dashboard-preview__dot--green"></span>
+        </div>
+
+        <div class="dashboard-metrics" id="dashboard-metrics">
+          <div class="dash-metric">
+            <div class="dash-metric__label">Market Price</div>
+            <div class="dash-metric__value" data-count="2700" data-prefix="₹" data-suffix="">₹0</div>
+            <div class="dash-metric__sub">/quintal</div>
+          </div>
+          <div class="dash-metric">
+            <div class="dash-metric__label">AI Forecast</div>
+            <div class="dash-metric__value" data-count="2850" data-prefix="₹" data-suffix="">₹0</div>
+            <div class="dash-metric__sub dash-metric__sub--up">↑ 5.6%</div>
+          </div>
+          <div class="dash-metric">
+            <div class="dash-metric__label">Buyer Demand</div>
+            <div class="dash-metric__value" style="font-size: 22px; color: var(--ks-gold);">HIGH</div>
+            <div class="dash-metric__sub dash-metric__sub--high">48 Active Buyers</div>
+          </div>
+          <div class="dash-metric">
+            <div class="dash-metric__label">Best Market</div>
+            <div class="dash-metric__value" style="font-size: 22px;">Pune</div>
+            <div class="dash-metric__sub">APMC Market</div>
+          </div>
+          <div class="dash-metric">
+            <div class="dash-metric__label">Net Realization</div>
+            <div class="dash-metric__value" data-count="2580" data-prefix="₹" data-suffix="">₹0</div>
+            <div class="dash-metric__sub dash-metric__sub--up">/quintal</div>
+          </div>
+        </div>
+
+        <!-- SVG Chart -->
+        <div class="dashboard-chart" id="dashboard-chart">
+          <div class="dashboard-chart__title">Price Trend — Onion (Nashik) — 30 Days</div>
+          <svg class="chart-canvas" viewBox="0 0 900 200" preserveAspectRatio="none" id="price-chart">
+            <!-- Grid lines -->
+            <line x1="0" y1="50" x2="900" y2="50" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="0" y1="100" x2="900" y2="100" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="0" y1="150" x2="900" y2="150" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+            <!-- Area fill -->
+            <path id="chart-area" d="" fill="url(#chartGradient)" opacity="0"/>
+
+            <!-- Price line -->
+            <path id="chart-line" d="" fill="none" stroke="var(--ks-green-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1200" stroke-dashoffset="1200"/>
+
+            <!-- AI Forecast (dashed) -->
+            <path id="chart-forecast" d="" fill="none" stroke="var(--ks-gold)" stroke-width="2" stroke-dasharray="8 6" opacity="0"/>
+
+            <defs>
+              <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="rgba(74, 157, 110, 0.3)"/>
+                <stop offset="100%" stop-color="rgba(74, 157, 110, 0)"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       SECTION 5 — AI DECISION
+       ════════════════════════════════════════ -->
+  <section class="section-ai" id="ai-decision">
+    <div class="section-ai__bg-glow"></div>
+    <div class="container">
+      <div class="section-ai__header">
+        <p class="t-label" style="color: var(--ks-green-accent); margin-bottom: 16px;">AI-Powered Intelligence</p>
+        <h2 class="section-ai__title">
+          Don't just know the price.<br>Know <em>when</em> to sell.
+        </h2>
+      </div>
+
+      <div class="ai-flow" id="ai-flow">
+        <div class="ai-flow__step">
+          <div class="ai-flow__step-label">Current Price</div>
+          <div class="ai-flow__step-value">₹2,700</div>
+          <div class="ai-flow__step-unit">/quintal</div>
+        </div>
+
+        <div class="ai-flow__connector">→</div>
+
+        <div class="ai-flow__step ai-flow__step--highlight">
+          <div class="ai-flow__step-label">AI Forecast</div>
+          <div class="ai-flow__step-value">₹2,850</div>
+          <div class="ai-flow__step-unit">/quintal</div>
+        </div>
+
+        <div class="ai-flow__connector">→</div>
+
+        <div class="ai-flow__step">
+          <div class="ai-flow__step-label">Recommendation</div>
+          <div class="ai-flow__step-value" style="font-size: 28px; color: var(--ks-gold-light);">WAIT 2–3 DAYS</div>
+          <div class="ai-flow__step-unit">for better realization</div>
+        </div>
+
+        <div class="ai-flow__connector">→</div>
+
+        <div class="ai-flow__step ai-flow__step--highlight">
+          <div class="ai-flow__step-label">Expected Net Realization</div>
+          <div class="ai-flow__step-value" style="color: var(--ks-green-glow);">₹2,580</div>
+          <div class="ai-flow__step-unit">/quintal after costs</div>
+        </div>
+      </div>
+
+      <div class="ai-confidence" id="ai-confidence">
+        <div class="ai-confidence__badge">
+          <span class="ai-confidence__value">86%</span>
+          <span class="ai-confidence__label">Confidence Score</span>
+        </div>
+        <p class="ai-confidence__note">
+          Based on historical prices, market arrivals,
+          buyer demand, transportation and storage costs.
+        </p>
+        <p class="ai-confidence__disclaimer">
+          *AI predictions are estimates and should be used as one input in your decision-making process.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       SECTION 6 — VERIFIED BUYERS
+       ════════════════════════════════════════ -->
+  <section class="section-buyers" id="buyers">
+    <div class="container">
+      <div class="section-buyers__header">
+        <p class="t-label" style="color: var(--ks-green-accent); margin-bottom: 12px;">Buyer Marketplace</p>
+        <h2 class="section-buyers__title">
+          Your next buyer could already be looking for your crop.
+        </h2>
+      </div>
+
+      <div class="buyer-grid" id="buyer-grid">
+        <div class="buyer-card">
+          <div class="buyer-card__top">
+            <h3 class="buyer-card__name">ABC Agro Traders</h3>
+            <span class="buyer-card__verified">✓ Verified</span>
+          </div>
+          <div class="buyer-card__details">
+            <div class="buyer-card__detail">
+              <div class="buyer-card__detail-label">Crop</div>
+              <div class="buyer-card__detail-value">Onion</div>
+            </div>
+            <div class="buyer-card__detail">
+              <div class="buyer-card__detail-label">Quantity</div>
+              <div class="buyer-card__detail-value">100 Quintals</div>
+            </div>
+            <div class="buyer-card__detail">
+              <div class="buyer-card__detail-label">Offer Price</div>
+              <div class="buyer-card__detail-value">₹2,780/q</div>
+            </div>
+            <div class="buyer-card__detail">
+              <div class="buyer-card__detail-label">Location</div>
+              <div class="buyer-card__detail-value">Nashik</div>
+            </div>
+          </div>
+          <div class="buyer-card__reliability">
+            <div class="buyer-card__reliability-bar">
+              <div class="buyer-card__reliability-fill" data-width="98"></div>
+            </div>
+            <span class="buyer-card__reliability-text">98% Reliability</span>
+          </div>
+        </div>
+
+        <div class="buyer-card">
+          <div class="buyer-card__top">
+            <h3 class="buyer-card__name">XYZ Foods Pvt Ltd</h3>
+            <span class="buyer-card__verified">✓ Verified</span>
+          </div>
+          <div class="buyer-card__details">
+            <div class="buyer-card__detail">
+              <div class="buyer-card__detail-label">Crop</div>
+              <div class="buyer-card__detail-value">Onion</div>
+            </div>
+            <div class="buyer-card__detail">
+              <div class="buyer-card__detail-label">Quantity</div>
+              <div class="buyer-card__detail-value">250 Quintals</div>
+            </div>
+            <div class="buyer-card__detail">
+              <div class="buyer-card__detail-label">Offer Price</div>
+              <div class="buyer-card__detail-value">₹2,820/q</div>
+            </div>
+            <div class="buyer-card__detail">
+              <div class="buyer-card__detail-label">Location</div>
+              <div class="buyer-card__detail-value">Pune</div>
+            </div>
+          </div>
+          <div class="buyer-card__reliability">
+            <div class="buyer-card__reliability-bar">
+              <div class="buyer-card__reliability-fill" data-width="96"></div>
+            </div>
+            <span class="buyer-card__reliability-text">96% Reliability</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-buyers__cta">
+        <a href="#" class="btn btn--outline-dark" id="btn-marketplace">
+          View Marketplace
+          <span class="btn-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       SECTION 7 — COMPLETE TRANSACTION
+       ════════════════════════════════════════ -->
+  <section class="section-transaction" id="transaction">
+    <div class="container">
+      <div class="section-transaction__header">
+        <p class="t-label" style="color: var(--ks-gold); margin-bottom: 16px;">End-to-End Process</p>
+        <h2 class="section-transaction__title">
+          From farm gate to final payment.
+        </h2>
+        <p class="section-transaction__subtitle">Transparent transaction records at every step.</p>
+      </div>
+
+      <div class="transaction-flow" id="transaction-flow">
+        <div class="txn-step">
+          <div class="txn-step__icon">🌾</div>
+          <div class="txn-step__label">Crop</div>
+        </div>
+        <div class="txn-connector">→</div>
+        <div class="txn-step">
+          <div class="txn-step__icon">📦</div>
+          <div class="txn-step__label">Lot Created</div>
+        </div>
+        <div class="txn-connector">→</div>
+        <div class="txn-step">
+          <div class="txn-step__icon">💬</div>
+          <div class="txn-step__label">Buyer Offer</div>
+        </div>
+        <div class="txn-connector">→</div>
+        <div class="txn-step">
+          <div class="txn-step__icon">✅</div>
+          <div class="txn-step__label">Accepted</div>
+        </div>
+        <div class="txn-connector">→</div>
+        <div class="txn-step">
+          <div class="txn-step__icon">🚛</div>
+          <div class="txn-step__label">Logistics</div>
+        </div>
+        <div class="txn-connector">→</div>
+        <div class="txn-step">
+          <div class="txn-step__icon">📋</div>
+          <div class="txn-step__label">Delivery</div>
+        </div>
+        <div class="txn-connector">→</div>
+        <div class="txn-step">
+          <div class="txn-step__icon">💰</div>
+          <div class="txn-step__label">Payment</div>
+        </div>
+      </div>
+
+      <p class="section-transaction__note" id="txn-note">
+        Every step recorded. Every transaction <strong>transparent</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       SECTION 8 — FPO
+       ════════════════════════════════════════ -->
+  <section class="section-fpo" id="fpo">
+    <div class="container">
+      <div class="section-fpo__header">
+        <p class="section-fpo__label">For Farmer Groups</p>
+        <h2 class="section-fpo__title">
+          Stronger together. Better prices as a collective.
+        </h2>
+      </div>
+
+      <div class="fpo-showcase" id="fpo-showcase">
+        <div class="fpo-card">
+          <h3 class="fpo-card__name">Nashik Onion Farmers FPO</h3>
+          <div class="fpo-card__stats">
+            <div class="fpo-stat">
+              <div class="fpo-stat__value" data-count="248">0</div>
+              <div class="fpo-stat__label">Farmers</div>
+            </div>
+            <div class="fpo-stat">
+              <div class="fpo-stat__value" data-count="1240">0</div>
+              <div class="fpo-stat__label">Quintals</div>
+            </div>
+            <div class="fpo-stat">
+              <div class="fpo-stat__value" data-count="12">0</div>
+              <div class="fpo-stat__label">Markets</div>
+            </div>
+          </div>
+          <div class="fpo-card__realization">
+            <div class="fpo-card__realization-label">Potential Net Realization</div>
+            <div class="fpo-card__realization-value">₹2,610</div>
+            <div class="fpo-card__realization-unit">/quintal</div>
+          </div>
+        </div>
+
+        <div class="fpo-workflow" id="fpo-workflow">
+          <div class="fpo-workflow__step">
+            <div class="fpo-workflow__number">1</div>
+            <div class="fpo-workflow__text">Aggregate</div>
+          </div>
+          <div class="fpo-workflow__step">
+            <div class="fpo-workflow__number">2</div>
+            <div class="fpo-workflow__text">Compare</div>
+          </div>
+          <div class="fpo-workflow__step">
+            <div class="fpo-workflow__number">3</div>
+            <div class="fpo-workflow__text">Negotiate</div>
+          </div>
+          <div class="fpo-workflow__step">
+            <div class="fpo-workflow__number">4</div>
+            <div class="fpo-workflow__text">Sell</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       FINAL CTA
+       ════════════════════════════════════════ -->
+  <section class="section-final" id="final-cta">
+    <div class="section-final__bg">
+      <img src="assets/images/sunset-farm.jpg" alt="Beautiful Indian agricultural landscape at sunset">
+      <div class="section-final__overlay"></div>
+    </div>
+
+    <div class="section-final__content container">
+      <h2 class="section-final__title" id="final-title">
+        Better information.<br>
+        Better decisions.<br>
+        Better farmer <em>realization.</em>
+      </h2>
+      <div class="section-final__actions">
+        <button class="btn btn--gold btn--lg" id="btn-enter-final">
+          Enter KrishiShetra
+          <span class="btn-arrow">→</span>
+        </button>
+        <a href="#buyers" class="btn btn--secondary" id="btn-marketplace-final">
+          Explore the Marketplace
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div>
+          <div class="footer__brand">KrishiShetra</div>
+          <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
+        </div>
+        <div class="footer__links">
+          <a href="#" class="footer__link">About</a>
+          <a href="#" class="footer__link">Contact</a>
+          <a href="#" class="footer__link">Privacy</a>
+          <a href="#" class="footer__link">Terms</a>
+        </div>
+      </div>
+      <div class="footer__copyright">
+        © 2026 KrishiShetra. All rights reserved. Market data for reference purposes only.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════════════════════════════════════
+       LOGIN MODAL
+       ════════════════════════════════════════ -->
+  <div class="login-overlay" id="login-overlay">
+    <div class="login-overlay__bg" id="login-overlay-bg"></div>
+    <div class="login-card">
+      <button class="login-card__close" id="login-close">✕</button>
+      <div class="login-card__logo">
+        <div class="login-card__logo-text">🌾 KrishiShetra</div>
+        <div class="login-card__tagline">Your market intelligence platform</div>
+      </div>
+
+      <form class="login-card__form" id="login-form">
+        <div class="login-card__field">
+          <label class="login-card__label" for="login-phone">Phone Number</label>
+          <input class="login-card__input" type="tel" id="login-phone" placeholder="+91 98765 43210">
+        </div>
+
+        <div class="login-card__field">
+          <label class="login-card__label">I am a</label>
+          <div class="login-card__role-select" id="role-select">
+            <button type="button" class="login-card__role active" data-role="farmer">🌾 Farmer</button>
+            <button type="button" class="login-card__role" data-role="fpo">👥 FPO</button>
+            <button type="button" class="login-card__role" data-role="buyer">🏪 Buyer</button>
+            <button type="button" class="login-card__role" data-role="admin">⚙️ Admin</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn--primary login-card__submit" id="login-submit">
+          Enter KrishiShetra
+          <span class="btn-arrow">→</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       SCRIPTS
+       ════════════════════════════════════════ -->
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+  <!-- Main Script -->
+  <script src="js/main.js"></script>
+</body>
+</html>
