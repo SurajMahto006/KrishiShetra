@@ -446,14 +446,31 @@ function initLoginModal() {
   const form = document.getElementById('login-form');
   const roleSelect = document.getElementById('role-select');
 
-  // Direct navigation to login.html
-  const openTriggers = ['btn-login-nav', 'btn-enter-nav', 'btn-enter-final'];
-  openTriggers.forEach(id => {
+  // Direct navigation
+  const loginNavBtn = document.getElementById('btn-login-nav');
+  if (loginNavBtn) {
+    if (localStorage.getItem('krishi_is_logged_in') === 'true') {
+      loginNavBtn.textContent = 'Dashboard';
+      loginNavBtn.href = 'dashboard.html';
+      loginNavBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'dashboard.html';
+      });
+    } else {
+      loginNavBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'login.html';
+      });
+    }
+  }
+
+  const enterTriggers = ['btn-enter-nav', 'btn-enter-final'];
+  enterTriggers.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('click', (e) => {
-        // Direct navigation to login page
-        window.location.href = 'login.html';
+        e.preventDefault();
+        window.location.href = 'dashboard.html';
       });
     }
   });

@@ -202,11 +202,21 @@ class KrishiStore {
   loadState() {
     try {
       const saved = localStorage.getItem(this.storageKey);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const state = JSON.parse(saved);
+        const userPhone = localStorage.getItem('krishi_user_phone');
+        if (userPhone && state.profile) {
+          state.profile.phone = userPhone;
+        }
+        return state;
+      }
     } catch (e) {
       console.warn('LocalStorage error, using defaults', e);
     }
-    return this.getDefaultState();
+    const def = this.getDefaultState();
+    const userPhone = localStorage.getItem('krishi_user_phone');
+    if (userPhone) def.profile.phone = userPhone;
+    return def;
   }
 
   saveState() {
@@ -1691,6 +1701,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const menuHelp = document.getElementById('menu-help');
   if (menuHelp) menuHelp.onclick = (e) => { e.preventDefault(); openHelpModal(); };
+
+  const menuLogout = document.querySelector('.dash-profile-dropdown__item--danger');
+  if (menuLogout) {
+    menuLogout.addEventListener('click', () => {
+      localStorage.removeItem('krishi_is_logged_in');
+    });
+  }
 
   // Mobile navigation toggle
   const mobileToggle = document.getElementById('dash-nav-toggle');
