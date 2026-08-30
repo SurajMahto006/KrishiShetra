@@ -206,3 +206,9 @@ function initGlobalSearch() {
     }
   });
 }
+
+function setLanguage(lang) {
+  if (window.KrishiI18n) {
+    window.KrishiI18n.setLanguage(lang);
+  }
+}

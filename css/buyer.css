@@ -33,8 +33,8 @@
   --kl-card-white: #FFFFFF;
 
   /* Typography */
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Playfair Display', 'Noto Sans Devanagari', Georgia, serif;
 
   /* Layout */
   --nav-height: 72px;

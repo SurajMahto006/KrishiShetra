@@ -15,6 +15,9 @@ let kycCurrentStep = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('hashchange', handleRouteUpdate);
+  window.addEventListener('krishi:language-change', () => {
+    handleRouteUpdate();
+  });
   initSearchDropdown();
   initNotificationPanel();
   handleRouteUpdate();

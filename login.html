@@ -8,18 +8,18 @@
   <meta name="description"
     content="Access KrishiShetra AgriTech platform to discover live mandi prices, AI-driven crop forecasting, and verified buyer networks.">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts (Inter + Playfair Display + Noto Sans Devanagari) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- i18n Multilingual Engine -->
+  <script src="js/i18n.js"></script>
 </head>
 
 <body>
@@ -78,6 +78,15 @@
     <main class="auth-content">
 
       <div class="auth-card-box">
+
+        <!-- Top Language Selector Pills -->
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+          <div class="dash-header__lang-pills" role="group" aria-label="Language selector" style="background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.1); border-radius: 9999px; padding: 2px; display: flex; gap: 2px;">
+            <button class="lang-pill-btn lang-pill-btn--active" data-lang="en" onclick="setLanguage('en')" title="Switch to English" style="color: #2e5a3c;">EN</button>
+            <button class="lang-pill-btn" data-lang="hi" onclick="setLanguage('hi')" title="हिंदी में बदलें" style="color: #2e5a3c;">हिं</button>
+            <button class="lang-pill-btn" data-lang="mr" onclick="setLanguage('mr')" title="मराठी मध्ये बदला" style="color: #2e5a3c;">म</button>
+          </div>
+        </div>
 
         <!-- Header Text -->
         <header class="auth-header">

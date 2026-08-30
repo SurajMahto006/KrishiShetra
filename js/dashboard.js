@@ -1431,12 +1431,22 @@ function initProfileForm() {
   }
 }
 
-// 14. Help & Language Modals
+// 14. Help Modal
 function openHelpModal() {
   const closeBtn = document.getElementById('help-modal-close');
   if (closeBtn) closeBtn.onclick = () => closeModal('help-modal-overlay');
   openModal('help-modal-overlay');
 }
+
+// Re-render dynamic dashboard and market views when language changes
+window.addEventListener('krishi:language-change', () => {
+  if (typeof renderMarketGrid === 'function') renderMarketGrid();
+  if (typeof renderLotsPanel === 'function') renderLotsPanel();
+  if (typeof renderOffersPanel === 'function') renderOffersPanel();
+  if (typeof renderOrdersGrid === 'function') renderOrdersGrid();
+  if (typeof renderAlertsGrid === 'function') renderAlertsGrid();
+  if (typeof renderFarmerListings === 'function') renderFarmerListings();
+});
 
 
 
