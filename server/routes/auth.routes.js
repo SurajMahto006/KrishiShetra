@@ -9,7 +9,9 @@ const {
   forgotPassword,
   verifyResetOtp,
   resetPassword,
-  resendResetOtp
+  resendResetOtp,
+  updateProfile,
+  changePassword
 } = require('../controllers/auth.controller');
 const { protect } = require('../middleware/auth.middleware');
 
@@ -25,9 +27,12 @@ router.post('/verify-reset-otp', verifyResetOtp);
 router.post('/reset-password', resetPassword);
 router.post('/resend-reset-otp', resendResetOtp);
 
-// Protected routes
+// Protected profile & account routes
 router.get('/me', protect, getMe);
+router.put('/profile', protect, updateProfile);
+router.put('/change-password', protect, changePassword);
 
 module.exports = router;
+
 
 

@@ -384,8 +384,10 @@ const getMe = async (req, res) => {
         id: req.user._id,
         name: req.user.name,
         email: req.user.email,
+        phone: req.user.phone || '',
         role: req.user.role,
-        emailVerified: req.user.emailVerified
+        emailVerified: req.user.emailVerified,
+        createdAt: req.user.createdAt
       }
     });
   } catch (error) {
@@ -683,6 +685,138 @@ const resendResetOtp = async (req, res) => {
   }
 };
 
+// @desc    Update user profile (name and phone only)
+// @route   PUT /api/auth/profile
+// @access  Private (Protected by JWT)
+const updateProfile = async (req, res) => {
+  try {
+    const { name, phone } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name is required'
+      });
+    }
+
+    const trimmedName = name.trim();
+    if (trimmedName.length < 2 || trimmedName.length > 50) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name must be between 2 and 50 characters'
+      });
+    }
+
+    let normalizedPhone = '';
+    if (phone !== undefined && phone !== null && String(phone).trim() !== '') {
+      const cleanPhone = String(phone).trim().replace(/\D/g, '');
+      // Validate 10-digit Indian phone number starting with 6-9
+      if (cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Please provide a valid 10-digit Indian mobile number starting with 6-9'
+        });
+      }
+      normalizedPhone = cleanPhone;
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    user.name = trimmedName;
+    if (phone !== undefined) {
+      user.phone = normalizedPhone;
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone || '',
+        role: user.role,
+        emailVerified: user.emailVerified,
+        updatedAt: user.updatedAt
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error while updating profile'
+    });
+  }
+};
+
+// @desc    Change user password
+// @route   PUT /api/auth/change-password
+// @access  Private (Protected by JWT)
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide both current and new password'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password must be at least 6 characters long'
+      });
+    }
+
+    if (currentPassword === newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password must be different from current password'
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Verify current password
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: 'Incorrect current password'
+      });
+    }
+
+    // Update password (hashed automatically via pre-save hook)
+    user.password = newPassword;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Password changed successfully'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error while changing password'
+    });
+  }
+};
+
 module.exports = {
   register,
   verifyEmail,
@@ -692,6 +826,9 @@ module.exports = {
   forgotPassword,
   verifyResetOtp,
   resetPassword,
-  resendResetOtp
+  resendResetOtp,
+  updateProfile,
+  changePassword
 };
+
 
