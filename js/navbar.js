@@ -133,8 +133,14 @@ function initProfileDropdown() {
 
     const menuLogout = wrap.querySelector('.dash-profile-dropdown__item--danger');
     if (menuLogout) {
-      menuLogout.addEventListener('click', () => {
-        localStorage.removeItem('krishi_is_logged_in');
+      menuLogout.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.Auth) {
+          window.Auth.logout();
+        } else {
+          localStorage.removeItem('krishi_is_logged_in');
+          window.location.href = 'login.html';
+        }
       });
     }
   }

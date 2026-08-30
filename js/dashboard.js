@@ -1628,7 +1628,28 @@ function initPriceTrendChart() {
 // 10. INITIALIZATION
 // ═════════════════════════════════════════════════════════════════════
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Authentication State Verification
+  if (window.Auth) {
+    const authenticatedUser = await window.Auth.verifyAuth();
+    if (!authenticatedUser) {
+      return; // verifyAuth redirects to login.html
+    }
+    // Update displayed username in header if available
+    if (authenticatedUser.name) {
+      const headerName = document.getElementById('header-user-name');
+      const dropdownName = document.getElementById('dropdown-user-name');
+      const headerAvatar = document.getElementById('header-avatar');
+      const dropdownAvatar = document.getElementById('dropdown-avatar');
+      
+      if (headerName) headerName.textContent = authenticatedUser.name.split(' ')[0];
+      if (dropdownName) dropdownName.textContent = authenticatedUser.name;
+      const initial = authenticatedUser.name.charAt(0).toUpperCase();
+      if (headerAvatar) headerAvatar.textContent = initial;
+      if (dropdownAvatar) dropdownAvatar.textContent = initial;
+    }
+  }
+
   // 1. Date Display in Hero
   const dateEl = document.getElementById('dash-date-display');
   if (dateEl) {
@@ -1697,8 +1718,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const menuLogout = document.querySelector('.dash-profile-dropdown__item--danger');
   if (menuLogout) {
-    menuLogout.addEventListener('click', () => {
-      localStorage.removeItem('krishi_is_logged_in');
+    menuLogout.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.Auth) {
+        window.Auth.logout();
+      } else {
+        localStorage.removeItem('krishi_is_logged_in');
+        window.location.href = 'login.html';
+      }
     });
   }
 

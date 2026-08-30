@@ -16,6 +16,105 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* Auth Form Specific Utilities */
+    .auth-tabs {
+      display: flex;
+      background: #F5F8F6;
+      border: 1.5px solid #DCE6DF;
+      border-radius: var(--radius-md, 12px);
+      padding: 4px;
+      margin-bottom: 22px;
+      gap: 4px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #6F7F75;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all var(--duration-fast, 0.2s) ease;
+      font-family: var(--font-body);
+    }
+    .auth-tab-btn.active {
+      background: #FFFFFF;
+      color: #12372A;
+      box-shadow: 0 2px 8px rgba(18, 55, 42, 0.08);
+    }
+    .auth-alert {
+      padding: 12px 16px;
+      border-radius: var(--radius-md, 12px);
+      font-size: 13.5px;
+      font-weight: 500;
+      margin-bottom: 18px;
+      display: none;
+      line-height: 1.45;
+    }
+    .auth-alert--error {
+      background: #FDF2F0;
+      color: #C96D5B;
+      border: 1px solid #F5C6CB;
+    }
+    .auth-alert--success {
+      background: #EBF7EE;
+      color: #2D5A3D;
+      border: 1px solid #C3E6CB;
+    }
+    .auth-text-box {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DF;
+      border-radius: var(--radius-md, 12px);
+      transition: all var(--duration-fast, 0.2s);
+      overflow: hidden;
+    }
+    .auth-text-box:focus-within {
+      border-color: #5B9A72;
+      box-shadow: 0 0 0 3px rgba(91, 154, 114, 0.2);
+    }
+    .auth-text-box__input {
+      flex: 1;
+      padding: 14px 16px;
+      background: transparent;
+      border: none;
+      color: #17221D;
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      font-family: var(--font-body);
+    }
+    .auth-text-box__input::placeholder {
+      color: #6F7F75;
+      opacity: 0.7;
+      font-weight: 400;
+    }
+    .auth-switch-prompt {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: #6F7F75;
+    }
+    .auth-switch-link {
+      color: #5B9A72;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 14px;
+    }
+    .auth-switch-link:hover {
+      text-decoration: underline;
+      color: #12372A;
+    }
+  </style>
 </head>
 <body>
 
@@ -91,12 +190,65 @@
         <!-- Header Text -->
         <header class="auth-header">
           <h2 class="auth-header__title" id="auth-title">Welcome back</h2>
-          <p class="auth-header__subtitle" id="auth-subtitle">Enter your details to access your account</p>
+          <p class="auth-header__subtitle" id="auth-subtitle">Enter your credentials to access your account</p>
         </header>
 
-        <!-- ── Step 1: Mobile & Role Form ── -->
-        <form id="auth-phone-form" class="auth-phone-form" onsubmit="return false;" novalidate>
-          
+        <!-- Mode Toggle Tabs (Login / Register) -->
+        <div class="auth-tabs" id="auth-tabs-container">
+          <button type="button" class="auth-tab-btn active" id="tab-btn-login">Log In</button>
+          <button type="button" class="auth-tab-btn" id="tab-btn-register">Register</button>
+        </div>
+
+        <!-- ── TAB 1: LOGIN FORM ── -->
+        <form id="auth-login-form" class="auth-form" novalidate>
+          <div id="login-alert" class="auth-alert"></div>
+
+          <!-- Email Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="login-email" id="label-login-email">EMAIL ADDRESS</label>
+            <div class="auth-text-box">
+              <input 
+                type="email" 
+                id="login-email" 
+                class="auth-text-box__input" 
+                placeholder="farmer@example.com" 
+                autocomplete="email" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="login-password" id="label-login-password">PASSWORD</label>
+            <div class="auth-text-box">
+              <input 
+                type="password" 
+                id="login-password" 
+                class="auth-text-box__input" 
+                placeholder="Enter your password" 
+                autocomplete="current-password" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Login Action Button -->
+          <button type="submit" class="auth-btn-primary" id="btn-login">
+            <span id="btn-login-text">Log In</span>
+            <span class="auth-btn-arrow">→</span>
+          </button>
+
+          <p class="auth-switch-prompt">
+            <span id="text-no-account">Don't have an account?</span> 
+            <button type="button" class="auth-switch-link" id="link-to-register">Create an account</button>
+          </p>
+        </form>
+
+        <!-- ── TAB 2: REGISTRATION FORM ── -->
+        <form id="auth-register-form" class="auth-form" style="display: none;" novalidate>
+          <div id="register-alert" class="auth-alert"></div>
+
           <!-- Role Selector -->
           <div class="auth-roles-group">
             <label class="auth-roles-label" id="label-role">I AM A...</label>
@@ -123,9 +275,39 @@
             </div>
           </div>
 
+          <!-- Full Name Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="register-name" id="label-register-name">FULL NAME</label>
+            <div class="auth-text-box">
+              <input 
+                type="text" 
+                id="register-name" 
+                class="auth-text-box__input" 
+                placeholder="e.g. Rajesh Patil" 
+                autocomplete="name" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Email Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="register-email" id="label-register-email">EMAIL ADDRESS</label>
+            <div class="auth-text-box">
+              <input 
+                type="email" 
+                id="register-email" 
+                class="auth-text-box__input" 
+                placeholder="farmer@example.com" 
+                autocomplete="email" 
+                required
+              >
+            </div>
+          </div>
+
           <!-- Mobile Number Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="phone-input" id="label-phone">MOBILE NUMBER</label>
+            <label class="auth-input-label" for="register-phone" id="label-phone">MOBILE NUMBER</label>
             <div class="auth-phone-box">
               <div class="auth-phone-box__prefix">
                 <span>🇮🇳</span>
@@ -133,35 +315,57 @@
               </div>
               <input 
                 type="tel" 
-                id="phone-input" 
+                id="register-phone" 
                 class="auth-phone-box__input" 
-                placeholder="Enter 10-digit number" 
+                placeholder="10-digit number" 
                 maxlength="10" 
                 inputmode="numeric" 
                 pattern="[0-9]{10}"
-                autocomplete="tel-national" 
+                autocomplete="tel-national"
+              >
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="register-password" id="label-register-password">PASSWORD</label>
+            <div class="auth-text-box">
+              <input 
+                type="password" 
+                id="register-password" 
+                class="auth-text-box__input" 
+                placeholder="Minimum 6 characters" 
+                autocomplete="new-password" 
                 required
               >
             </div>
-            <p id="phone-error" style="color: #C96D5B; font-size: 13px; margin-top: 6px; display: none; font-weight: 500;">Please enter a valid 10-digit mobile number.</p>
           </div>
 
-          <!-- Action Button -->
-          <button type="submit" class="auth-btn-primary" id="btn-get-otp">
-            <span id="btn-otp-text">Get OTP</span>
+          <!-- Register Action Button -->
+          <button type="submit" class="auth-btn-primary" id="btn-register">
+            <span id="btn-register-text">Register & Send OTP</span>
             <span class="auth-btn-arrow">→</span>
           </button>
+
+          <p class="auth-switch-prompt">
+            <span id="text-have-account">Already have an account?</span> 
+            <button type="button" class="auth-switch-link" id="link-to-login">Log In</button>
+          </p>
         </form>
 
-        <!-- ── Step 2: OTP Verification Form (Hidden Initially) ── -->
+        <!-- ── STEP 3: OTP VERIFICATION STEP (Hidden Initially) ── -->
         <div class="auth-otp-step" id="otp-step-container">
-          
+          <div id="otp-alert" class="auth-alert"></div>
+
           <div style="margin-bottom: 20px;">
-            <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT OTP</label>
+            <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT EMAIL OTP</label>
             <div style="font-size: 14px; color: #6F7F75; margin-bottom: 12px;">
-              <span id="otp-sent-text">Code sent to</span>
-              <strong id="display-phone-number" style="color: #12372A; margin: 0 4px;">+91 98765 43210</strong>
-              <button type="button" class="auth-otp-change-num" id="btn-change-phone"><i data-lucide="edit-3" style="width:12px;height:12px;vertical-align:middle;"></i> <span id="btn-edit-text">Edit</span></button>
+              <span id="otp-sent-text">Verification code sent to</span>
+              <strong id="display-user-email" style="color: #12372A; margin: 0 4px; word-break: break-all;">user@example.com</strong>
+              <button type="button" class="auth-otp-change-num" id="btn-change-email">
+                <i data-lucide="edit-3" style="width:12px;height:12px;vertical-align:middle;"></i> 
+                <span id="btn-edit-text">Change</span>
+              </button>
             </div>
 
             <!-- 6-box OTP entry -->
@@ -173,18 +377,11 @@
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
             </div>
-            <p id="otp-error" style="color: #C96D5B; font-size: 13px; margin-bottom: 12px; display: none; font-weight: 500;">Invalid OTP code. Try entering 123456.</p>
-          </div>
-
-          <!-- Demo Quick Fill helper for Evaluators -->
-          <div class="auth-demo-pill">
-            <span><i data-lucide="sparkles" style="width:13px;height:13px;color:#D6A84F;vertical-align:middle;margin-right:3px;"></i> Demo OTP: <strong>123456</strong></span>
-            <button type="button" id="btn-autofill-otp">Auto Fill</button>
           </div>
 
           <!-- OTP Timer and Resend -->
           <div class="auth-otp-meta">
-            <span class="auth-otp-timer" id="otp-timer-display">Resend OTP in <strong id="timer-count">30</strong>s</span>
+            <span class="auth-otp-timer" id="otp-timer-display">Resend OTP in <strong id="timer-count">60</strong>s</span>
             <button type="button" class="auth-otp-resend-btn" id="btn-resend-otp" disabled>Resend Code</button>
           </div>
 
@@ -193,6 +390,10 @@
             <span id="btn-verify-text">Verify & Continue</span>
             <span class="auth-btn-arrow">→</span>
           </button>
+
+          <p class="auth-switch-prompt" style="margin-top: 18px;">
+            <button type="button" class="auth-switch-link" id="link-back-to-login">← Back to Log In</button>
+          </p>
         </div>
 
         <!-- Trust & Security Footer -->
@@ -214,37 +415,74 @@
 
   </div>
 
+  <!-- Central Auth Configuration -->
+  <script src="js/auth.js"></script>
+
   <!-- ════════════════════════════════════════
-       JAVASCRIPT INTERACTION & TRANSLATIONS
+       JAVASCRIPT INTERACTION & API INTEGRATION
        ════════════════════════════════════════ -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
 
       // Elements
-      const phoneForm = document.getElementById('auth-phone-form');
+      const tabsContainer = document.getElementById('auth-tabs-container');
+      const tabBtnLogin = document.getElementById('tab-btn-login');
+      const tabBtnRegister = document.getElementById('tab-btn-register');
+      const loginForm = document.getElementById('auth-login-form');
+      const registerForm = document.getElementById('auth-register-form');
       const otpStepContainer = document.getElementById('otp-step-container');
-      const phoneInput = document.getElementById('phone-input');
-      const phoneError = document.getElementById('phone-error');
-      const btnGetOtp = document.getElementById('btn-get-otp');
-      const displayPhoneNumber = document.getElementById('display-phone-number');
-      const btnChangePhone = document.getElementById('btn-change-phone');
+
+      // Login elements
+      const loginEmail = document.getElementById('login-email');
+      const loginPassword = document.getElementById('login-password');
+      const btnLogin = document.getElementById('btn-login');
+      const loginAlert = document.getElementById('login-alert');
+      const linkToRegister = document.getElementById('link-to-register');
+
+      // Register elements
+      const registerName = document.getElementById('register-name');
+      const registerEmail = document.getElementById('register-email');
+      const registerPhone = document.getElementById('register-phone');
+      const registerPassword = document.getElementById('register-password');
+      const btnRegister = document.getElementById('btn-register');
+      const registerAlert = document.getElementById('register-alert');
+      const linkToLogin = document.getElementById('link-to-login');
+      const roleCards = document.querySelectorAll('.auth-role-card');
+
+      // OTP elements
+      const displayUserEmail = document.getElementById('display-user-email');
+      const btnChangeEmail = document.getElementById('btn-change-email');
       const otpBoxes = Array.from(document.querySelectorAll('.auth-otp-box'));
-      const otpError = document.getElementById('otp-error');
+      const otpAlert = document.getElementById('otp-alert');
       const btnVerifyOtp = document.getElementById('btn-verify-otp');
-      const btnAutofillOtp = document.getElementById('btn-autofill-otp');
       const timerCount = document.getElementById('timer-count');
       const btnResendOtp = document.getElementById('btn-resend-otp');
       const otpTimerDisplay = document.getElementById('otp-timer-display');
+      const linkBackToLogin = document.getElementById('link-back-to-login');
+
+      // Language elements
       const langMenuBtn = document.getElementById('lang-menu-btn');
       const langMenu = document.getElementById('lang-menu');
       const currentLangText = document.getElementById('current-lang-text');
-      const roleCards = document.querySelectorAll('.auth-role-card');
 
       let currentRole = 'farmer';
       let currentLang = 'en';
-      let countdown = 30;
+      let countdown = 60;
       let timerInterval = null;
+      let activeOtpEmail = '';
+
+      // ── UI Alert Helpers ──
+      function showAlert(element, message, type = 'error') {
+        element.textContent = message;
+        element.className = `auth-alert auth-alert--${type}`;
+        element.style.display = 'block';
+      }
+
+      function hideAlert(element) {
+        element.style.display = 'none';
+        element.textContent = '';
+      }
 
       // ── Translations Dictionary ──
       const translations = {
@@ -255,24 +493,36 @@
           badgeFarmers: '50,000+ Active Farmers',
           badgeMandis: '120+ APMC Mandis',
           badgeVerified: '100% Verified Buyers',
-          authTitle: 'Welcome back',
-          authSubtitle: 'Enter your details to access your account',
+          authTitleLogin: 'Welcome back',
+          authSubtitleLogin: 'Enter your credentials to access your account',
+          authTitleRegister: 'Create Account',
+          authSubtitleRegister: 'Join KrishiShetra and discover better market rates',
+          authTitleOtp: 'Verify Email',
+          authSubtitleOtp: 'Enter the 6-digit OTP sent to your email inbox',
+          tabLogin: 'Log In',
+          tabRegister: 'Register',
+          labelLoginEmail: 'EMAIL ADDRESS',
+          labelLoginPassword: 'PASSWORD',
+          btnLogin: 'Log In',
+          btnRegister: 'Register & Send OTP',
           labelRole: 'I AM A...',
           roleFarmer: 'Farmer',
           roleFpo: 'FPO',
           roleBuyer: 'Buyer',
+          labelRegisterName: 'FULL NAME',
           labelPhone: 'MOBILE NUMBER',
-          phonePlaceholder: 'Enter 10-digit number',
-          btnGetOtp: 'Get OTP',
-          labelOtp: 'ENTER 6-DIGIT OTP',
-          otpSent: 'Code sent to',
-          btnEdit: 'Edit',
+          labelRegisterPassword: 'PASSWORD',
+          labelOtp: 'ENTER 6-DIGIT EMAIL OTP',
+          otpSent: 'Verification code sent to',
+          btnChange: 'Change',
           btnVerify: 'Verify & Continue',
           btnResend: 'Resend Code',
           trustSecure: 'Secure',
           trustSimple: 'Simple',
           trustTransparent: 'Transparent',
-          textPrivacy: 'Your data is secure and protected under AgriStack guidelines.'
+          textPrivacy: 'Your data is secure and protected under AgriStack guidelines.',
+          textNoAccount: "Don't have an account?",
+          textHaveAccount: "Already have an account?"
         },
         hi: {
           langName: 'हिन्दी',
@@ -281,24 +531,36 @@
           badgeFarmers: '५०,०००+ सक्रिय किसान',
           badgeMandis: '१२०+ एपीएमसी मंडियां',
           badgeVerified: '१००% सत्यापित खरीदार',
-          authTitle: 'कृषि क्षेत्र में स्वागत है',
-          authSubtitle: 'अपने खाते में प्रवेश करने के लिए विवरण दर्ज करें',
+          authTitleLogin: 'कृषि क्षेत्र में स्वागत है',
+          authSubtitleLogin: 'अपने खाते में प्रवेश करने के लिए विवरण दर्ज करें',
+          authTitleRegister: 'नया खाता बनाएं',
+          authSubtitleRegister: 'कृषि क्षेत्र से जुड़ें और बेहतर मंडी भाव पाएं',
+          authTitleOtp: 'ईमेल सत्यापित करें',
+          authSubtitleOtp: 'अपने ईमेल इनबॉक्स में भेजा गया ६-अंकों का ओटीपी दर्ज करें',
+          tabLogin: 'लॉग इन',
+          tabRegister: 'पंजीकरण',
+          labelLoginEmail: 'ईमेल पता',
+          labelLoginPassword: 'पासवर्ड',
+          btnLogin: 'लॉग इन करें',
+          btnRegister: 'खाता बनाएं एवं ओटीपी भेजें',
           labelRole: 'मेरी भूमिका...',
           roleFarmer: 'किसान',
           roleFpo: 'एफपीओ (FPO)',
           roleBuyer: 'खरीदार',
+          labelRegisterName: 'पूरा नाम',
           labelPhone: 'मोबाइल नंबर',
-          phonePlaceholder: '१० अंकों का मोबाइल नंबर दर्ज करें',
-          btnGetOtp: 'ओटीपी प्राप्त करें',
+          labelRegisterPassword: 'पासवर्ड',
           labelOtp: '६ अंकों का ओटीपी दर्ज करें',
           otpSent: 'ओटीपी भेजा गया:',
-          btnEdit: 'बदलें',
+          btnChange: 'बदलें',
           btnVerify: 'सत्यापित करें और आगे बढ़ें',
           btnResend: 'पुनः ओटीपी भेजें',
           trustSecure: 'सुरक्षित',
           trustSimple: 'सरल',
           trustTransparent: 'पारदर्शी',
-          textPrivacy: 'आपका डेटा एग्रीस्टैक दिशानिर्देशों के तहत पूरी तरह सुरक्षित है।'
+          textPrivacy: 'आपका डेटा एग्रीस्टैक दिशानिर्देशों के तहत पूरी तरह सुरक्षित है।',
+          textNoAccount: 'खाता नहीं है?',
+          textHaveAccount: 'पहले से खाता है?'
         },
         mr: {
           langName: 'मराठी',
@@ -307,24 +569,36 @@
           badgeFarmers: '५०,०००+ शेतकरी',
           badgeMandis: '१२०+ कृषी उत्पन्न बाजार',
           badgeVerified: '१००% खात्रीशीर व्यापारी',
-          authTitle: 'कृषिक्षेत्र मध्ये आपले स्वागत',
-          authSubtitle: 'तुमच्या खात्यात लॉग इन करण्यासाठी माहिती भरा',
+          authTitleLogin: 'कृषिक्षेत्र मध्ये आपले स्वागत',
+          authSubtitleLogin: 'तुमच्या खात्यात लॉग इन करण्यासाठी माहिती भरा',
+          authTitleRegister: 'नवीन खाते तयार करा',
+          authSubtitleRegister: 'कृषिक्षेत्रशी जोडा आणि उत्तम बाजारभाव मिळवा',
+          authTitleOtp: 'ईमेल पडताळणी करा',
+          authSubtitleOtp: 'तुमच्या ईमेलवर पाठवलेला ६-अंकी ओटीपी प्रविष्ट करा',
+          tabLogin: 'लॉग इन',
+          tabRegister: 'नोंदणी',
+          labelLoginEmail: 'ईमेल पत्ता',
+          labelLoginPassword: 'पासवर्ड',
+          btnLogin: 'लॉग इन करा',
+          btnRegister: 'नोंदणी करा व ओटीपी पाठवा',
           labelRole: 'मी आहे...',
           roleFarmer: 'शेतकरी',
           roleFpo: 'एफपीओ',
           roleBuyer: 'खरेदीदार',
+          labelRegisterName: 'पूर्ण नाव',
           labelPhone: 'मोबाईल नंबर',
-          phonePlaceholder: '१० अंकी मोबाईल नंबर टाका',
-          btnGetOtp: 'ओटीपी मिळवा',
+          labelRegisterPassword: 'पासवर्ड',
           labelOtp: '६-अंकी ओटीपी प्रविष्ट करा',
           otpSent: 'ओटीपी पाठवला आहे:',
-          btnEdit: 'बदला',
+          btnChange: 'बदला',
           btnVerify: 'पडताळणी करा व पुढे जा',
           btnResend: 'पुन्हा ओटीपी पाठवा',
           trustSecure: 'सुरक्षित',
           trustSimple: 'सोपे',
           trustTransparent: 'पारदर्शक',
-          textPrivacy: 'आपला डेटा ॲग्रीस्टॅक नियमांनुसार पूर्णपणे सुरक्षित आहे.'
+          textPrivacy: 'आपला डेटा ॲग्रीस्टॅक नियमांनुसार पूर्णपणे सुरक्षित आहे.',
+          textNoAccount: 'खाते नाही का?',
+          textHaveAccount: 'आधीच खाते आहे?'
         }
       };
 
@@ -339,29 +613,95 @@
         document.getElementById('badge-farmers').textContent = t.badgeFarmers;
         document.getElementById('badge-mandis').textContent = t.badgeMandis;
         document.getElementById('badge-verified').textContent = t.badgeVerified;
-        document.getElementById('auth-title').textContent = t.authTitle;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitle;
+        
+        tabBtnLogin.textContent = t.tabLogin;
+        tabBtnRegister.textContent = t.tabRegister;
+        document.getElementById('label-login-email').textContent = t.labelLoginEmail;
+        document.getElementById('label-login-password').textContent = t.labelLoginPassword;
+        document.getElementById('btn-login-text').textContent = t.btnLogin;
+        
         document.getElementById('label-role').textContent = t.labelRole;
         document.getElementById('role-name-farmer').textContent = t.roleFarmer;
         document.getElementById('role-name-fpo').textContent = t.roleFpo;
         document.getElementById('role-name-buyer').textContent = t.roleBuyer;
+        document.getElementById('label-register-name').textContent = t.labelRegisterName;
+        document.getElementById('label-register-email').textContent = t.labelLoginEmail;
         document.getElementById('label-phone').textContent = t.labelPhone;
-        phoneInput.placeholder = t.phonePlaceholder;
-        document.getElementById('btn-otp-text').textContent = t.btnGetOtp;
+        document.getElementById('label-register-password').textContent = t.labelRegisterPassword;
+        document.getElementById('btn-register-text').textContent = t.btnRegister;
+
         document.getElementById('label-otp').textContent = t.labelOtp;
         document.getElementById('otp-sent-text').textContent = t.otpSent;
-        document.getElementById('btn-edit-text').textContent = t.btnEdit;
+        document.getElementById('btn-edit-text').textContent = t.btnChange;
         document.getElementById('btn-verify-text').textContent = t.btnVerify;
         btnResendOtp.textContent = t.btnResend;
+
         document.getElementById('trust-secure').textContent = t.trustSecure;
         document.getElementById('trust-simple').textContent = t.trustSimple;
         document.getElementById('trust-transparent').textContent = t.trustTransparent;
         document.getElementById('text-privacy').textContent = t.textPrivacy;
 
+        document.getElementById('text-no-account').textContent = t.textNoAccount;
+        document.getElementById('text-have-account').textContent = t.textHaveAccount;
+
         document.querySelectorAll('.auth-lang-menu__item').forEach(item => {
           item.classList.toggle('active', item.dataset.lang === lang);
         });
       }
+
+      // ── Tab Switching Handlers ──
+      function showLoginTab() {
+        tabBtnLogin.classList.add('active');
+        tabBtnRegister.classList.remove('active');
+        tabsContainer.style.display = 'flex';
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        otpStepContainer.classList.remove('active');
+        
+        const t = translations[currentLang] || translations.en;
+        document.getElementById('auth-title').textContent = t.authTitleLogin;
+        document.getElementById('auth-subtitle').textContent = t.authSubtitleLogin;
+        hideAlert(loginAlert);
+      }
+
+      function showRegisterTab() {
+        tabBtnRegister.classList.add('active');
+        tabBtnLogin.classList.remove('active');
+        tabsContainer.style.display = 'flex';
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        otpStepContainer.classList.remove('active');
+
+        const t = translations[currentLang] || translations.en;
+        document.getElementById('auth-title').textContent = t.authTitleRegister;
+        document.getElementById('auth-subtitle').textContent = t.authSubtitleRegister;
+        hideAlert(registerAlert);
+      }
+
+      function showOtpStep(email) {
+        activeOtpEmail = email;
+        displayUserEmail.textContent = email;
+        tabsContainer.style.display = 'none';
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'none';
+        otpStepContainer.classList.add('active');
+
+        const t = translations[currentLang] || translations.en;
+        document.getElementById('auth-title').textContent = t.authTitleOtp;
+        document.getElementById('auth-subtitle').textContent = t.authSubtitleOtp;
+
+        hideAlert(otpAlert);
+        startResendTimer();
+        otpBoxes.forEach(b => b.value = '');
+        otpBoxes[0].focus();
+      }
+
+      tabBtnLogin.addEventListener('click', showLoginTab);
+      tabBtnRegister.addEventListener('click', showRegisterTab);
+      linkToRegister.addEventListener('click', showRegisterTab);
+      linkToLogin.addEventListener('click', showLoginTab);
+      linkBackToLogin.addEventListener('click', showLoginTab);
+      btnChangeEmail.addEventListener('click', showRegisterTab);
 
       // ── Language Dropdown Toggle ──
       langMenuBtn.addEventListener('click', (e) => {
@@ -402,19 +742,16 @@
         });
       });
 
-      // ── Phone Input Validation & Formatting ──
-      phoneInput.addEventListener('input', (e) => {
+      // Phone Input Formatting
+      registerPhone.addEventListener('input', (e) => {
         let val = e.target.value.replace(/\D/g, '');
         if (val.length > 10) val = val.slice(0, 10);
         e.target.value = val;
-        if (val.length === 10) {
-          phoneError.style.display = 'none';
-        }
       });
 
-      // ── Timer Handler ──
+      // ── Timer Handler (60s Cooldown) ──
       function startResendTimer() {
-        countdown = 30;
+        countdown = 60;
         btnResendOtp.disabled = true;
         otpTimerDisplay.style.display = 'inline';
         timerCount.textContent = countdown;
@@ -431,53 +768,16 @@
         }, 1000);
       }
 
-      // ── Step 1: Submit to Get OTP ──
-      phoneForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const rawPhone = phoneInput.value.replace(/\D/g, '');
-        if (rawPhone.length !== 10) {
-          phoneError.style.display = 'block';
-          phoneInput.focus();
-          return;
-        }
-
-        phoneError.style.display = 'none';
-        btnGetOtp.disabled = true;
-        btnGetOtp.innerHTML = 'Sending OTP… <span class="auth-btn-arrow">⏳</span>';
-
-        setTimeout(() => {
-          const formattedNumber = `+91 ${rawPhone.slice(0, 5)} ${rawPhone.slice(5)}`;
-          displayPhoneNumber.textContent = formattedNumber;
-
-          // Switch steps
-          phoneForm.style.display = 'none';
-          otpStepContainer.classList.add('active');
-          btnGetOtp.disabled = false;
-          btnGetOtp.innerHTML = `<span id="btn-otp-text">${translations[currentLang].btnGetOtp}</span> <span class="auth-btn-arrow">→</span>`;
-
-          startResendTimer();
-          otpBoxes[0].focus();
-        }, 600);
-      });
-
-      // ── Change Phone Number ──
-      btnChangePhone.addEventListener('click', () => {
-        otpStepContainer.classList.remove('active');
-        phoneForm.style.display = 'block';
-        phoneInput.focus();
-      });
-
       // ── 6-Box OTP Input Handling ──
       otpBoxes.forEach((box, idx) => {
         box.addEventListener('input', (e) => {
           const val = e.target.value.replace(/\D/g, '');
           e.target.value = val ? val[val.length - 1] : '';
-          otpError.style.display = 'none';
+          hideAlert(otpAlert);
 
           if (e.target.value && idx < otpBoxes.length - 1) {
             otpBoxes[idx + 1].focus();
           }
-          checkAndTriggerVerify();
         });
 
         box.addEventListener('keydown', (e) => {
@@ -495,7 +795,6 @@
             });
             const nextFocus = Math.min(pasted.length, 5);
             otpBoxes[nextFocus].focus();
-            checkAndTriggerVerify();
           }
         });
       });
@@ -504,60 +803,201 @@
         return otpBoxes.map(b => b.value).join('');
       }
 
-      function checkAndTriggerVerify() {
-        if (getEnteredOtp().length === 6) {
-          // Ready for auto or manual click
+      // ── 1. LOGIN API HANDLER ──
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert(loginAlert);
+
+        const email = loginEmail.value.trim();
+        const password = loginPassword.value;
+
+        if (!email || !password) {
+          showAlert(loginAlert, 'Please enter both email and password.');
+          return;
         }
-      }
 
-      // ── Autofill Demo Helper ──
-      btnAutofillOtp.addEventListener('click', () => {
-        '123456'.split('').forEach((char, i) => {
-          if (otpBoxes[i]) otpBoxes[i].value = char;
-        });
-        otpError.style.display = 'none';
-        otpBoxes[5].focus();
+        btnLogin.disabled = true;
+        btnLogin.innerHTML = 'Signing in… <span class="auth-btn-arrow">⏳</span>';
+
+        try {
+          const res = await fetch(`${window.API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            // Save token and user in session
+            window.Auth.setToken(data.token);
+            window.Auth.setUser(data.user);
+
+            btnLogin.innerHTML = 'Login Successful! ✓';
+            btnLogin.style.background = '#5B9A72';
+
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 600);
+          } else {
+            btnLogin.disabled = false;
+            btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(loginAlert, data.message || 'Invalid email or password');
+
+            // If unverified, provide helpful action to verify
+            if (data.message && data.message.includes('verify your email')) {
+              activeOtpEmail = email;
+              setTimeout(() => {
+                showOtpStep(email);
+                showAlert(otpAlert, 'Please enter your verification OTP to activate your account.');
+              }, 1200);
+            }
+          }
+        } catch (err) {
+          btnLogin.disabled = false;
+          btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
+          showAlert(loginAlert, 'Network error. Please check your backend connection.');
+        }
       });
 
-      // ── Resend Code ──
-      btnResendOtp.addEventListener('click', () => {
-        btnResendOtp.textContent = 'Sending…';
-        setTimeout(() => {
-          btnResendOtp.textContent = translations[currentLang].btnResend;
-          startResendTimer();
-        }, 500);
+      // ── 2. REGISTER API HANDLER ──
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert(registerAlert);
+
+        const name = registerName.value.trim();
+        const email = registerEmail.value.trim();
+        const phone = registerPhone.value.trim();
+        const password = registerPassword.value;
+
+        if (!name || !email || !password) {
+          showAlert(registerAlert, 'Please fill in all required fields.');
+          return;
+        }
+
+        if (password.length < 6) {
+          showAlert(registerAlert, 'Password must be at least 6 characters.');
+          return;
+        }
+
+        btnRegister.disabled = true;
+        btnRegister.innerHTML = 'Sending OTP… <span class="auth-btn-arrow">⏳</span>';
+
+        try {
+          const res = await fetch(`${window.API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              email,
+              phone,
+              password,
+              role: currentRole
+            })
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            btnRegister.disabled = false;
+            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            
+            // Switch to OTP verification step
+            showOtpStep(email);
+            showAlert(otpAlert, data.message || 'Registration successful. Check your email for the OTP.', 'success');
+          } else {
+            btnRegister.disabled = false;
+            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(registerAlert, data.message || 'Registration failed. Please try again.');
+          }
+        } catch (err) {
+          btnRegister.disabled = false;
+          btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+          showAlert(registerAlert, 'Network error. Please check your backend connection.');
+        }
       });
 
-      // ── Verify & Login Redirect ──
-      btnVerifyOtp.addEventListener('click', () => {
+      // ── 3. VERIFY OTP API HANDLER ──
+      btnVerifyOtp.addEventListener('click', async () => {
+        hideAlert(otpAlert);
         const otp = getEnteredOtp();
+
         if (otp.length < 6) {
-          otpError.textContent = 'Please enter all 6 digits.';
-          otpError.style.display = 'block';
+          showAlert(otpAlert, 'Please enter all 6 digits.');
           return;
         }
 
         btnVerifyOtp.disabled = true;
-        btnVerifyOtp.innerHTML = 'Verifying… <span class="auth-btn-arrow">✓</span>';
+        btnVerifyOtp.innerHTML = 'Verifying… <span class="auth-btn-arrow">⏳</span>';
 
-        setTimeout(() => {
-          // Save user session in localStorage
-          localStorage.setItem('krishi_user_role', currentRole);
-          localStorage.setItem('krishi_user_phone', phoneInput.value);
-          localStorage.setItem('krishi_user_lang', currentLang);
-          localStorage.setItem('krishi_is_logged_in', 'true');
+        try {
+          const res = await fetch(`${window.API_BASE_URL}/auth/verify-email`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: activeOtpEmail,
+              otp: otp
+            })
+          });
 
-          btnVerifyOtp.innerHTML = 'Logged In Successfully! ✓';
-          btnVerifyOtp.style.background = '#5B9A72';
+          const data = await res.json();
 
-          setTimeout(() => {
-            if (currentRole === 'buyer') {
-              window.location.href = 'buyer.html';
-            } else {
-              window.location.href = 'dashboard.html';
-            }
-          }, 800);
-        }, 800);
+          if (res.ok && data.success) {
+            btnVerifyOtp.innerHTML = 'Email Verified! ✓';
+            btnVerifyOtp.style.background = '#5B9A72';
+
+            showAlert(otpAlert, 'Email verified successfully! Redirecting to login…', 'success');
+
+            setTimeout(() => {
+              btnVerifyOtp.disabled = false;
+              btnVerifyOtp.style.background = '';
+              btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+              
+              showLoginTab();
+              loginEmail.value = activeOtpEmail;
+              showAlert(loginAlert, 'Email verified successfully. Please log in with your password.', 'success');
+            }, 1200);
+          } else {
+            btnVerifyOtp.disabled = false;
+            btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(otpAlert, data.message || 'Invalid or expired OTP.');
+          }
+        } catch (err) {
+          btnVerifyOtp.disabled = false;
+          btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+          showAlert(otpAlert, 'Network error. Please check your backend connection.');
+        }
+      });
+
+      // ── 4. RESEND OTP API HANDLER ──
+      btnResendOtp.addEventListener('click', async () => {
+        hideAlert(otpAlert);
+        btnResendOtp.disabled = true;
+        btnResendOtp.textContent = 'Sending…';
+
+        try {
+          const res = await fetch(`${window.API_BASE_URL}/auth/resend-verification`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: activeOtpEmail })
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            btnResendOtp.textContent = translations[currentLang].btnResend;
+            showAlert(otpAlert, data.message || 'A new verification OTP has been sent.', 'success');
+            startResendTimer();
+          } else {
+            btnResendOtp.disabled = false;
+            btnResendOtp.textContent = translations[currentLang].btnResend;
+            showAlert(otpAlert, data.message || 'Failed to resend OTP.');
+          }
+        } catch (err) {
+          btnResendOtp.disabled = false;
+          btnResendOtp.textContent = translations[currentLang].btnResend;
+          showAlert(otpAlert, 'Network error. Please check your backend connection.');
+        }
       });
 
     });

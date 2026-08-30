@@ -1,0 +1,405 @@
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const { sendVerificationEmail } = require('../services/email.service');
+
+// Helper to generate JWT
+const generateToken = (userId, role) => {
+  return jwt.sign(
+    { userId, role },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
+  );
+};
+
+// Helper to hash OTP using SHA-256
+const hashOtp = (otp) => {
+  return crypto.createHash('sha256').update(String(otp).trim()).digest('hex');
+};
+
+// Helper to generate a cryptographically secure 6-digit OTP
+const generateOtp = () => {
+  return crypto.randomInt(100000, 1000000).toString();
+};
+
+// @desc    Register a new user & send OTP verification email
+// @route   POST /api/auth/register
+// @access  Public
+const register = async (req, res) => {
+  try {
+    const { name, email, phone, password, role } = req.body;
+
+    // Input validation
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, email, and password are required'
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters long'
+      });
+    }
+
+    // Normalize email
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Check if email already exists
+    const existingUser = await User.findOne({ email: normalizedEmail });
+    if (existingUser) {
+      if (existingUser.emailVerified) {
+        return res.status(400).json({
+          success: false,
+          message: 'A user with this email already exists'
+        });
+      }
+
+      // If user exists but is not verified, update their info and resend verification OTP
+      const otp = generateOtp();
+      const otpHash = hashOtp(otp);
+      const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+      existingUser.name = name.trim();
+      existingUser.password = password; // Will be hashed via pre-save hook
+      existingUser.phone = phone ? String(phone).trim() : '';
+      if (role) existingUser.role = role;
+      existingUser.emailVerificationOtpHash = otpHash;
+      existingUser.emailVerificationExpiresAt = otpExpiresAt;
+      existingUser.emailVerificationAttempts = 0;
+      existingUser.emailVerificationLastSentAt = new Date();
+
+      await existingUser.save();
+
+      // Send real email via Resend
+      await sendVerificationEmail(normalizedEmail, otp);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Registration successful. Please check your email for the verification OTP.'
+      });
+    }
+
+    // Generate secure 6-digit OTP
+    const otp = generateOtp();
+    const otpHash = hashOtp(otp);
+    const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+    // Validate role
+    const validRoles = ['farmer', 'fpo', 'buyer', 'admin'];
+    const assignedRole = role && validRoles.includes(role.toLowerCase().trim())
+      ? role.toLowerCase().trim()
+      : 'farmer';
+
+    // Create user in database (password is hashed via User schema pre-save hook)
+    await User.create({
+      name: name.trim(),
+      email: normalizedEmail,
+      phone: phone ? String(phone).trim() : '',
+      password,
+      role: assignedRole,
+      emailVerified: false,
+      emailVerificationOtpHash: otpHash,
+      emailVerificationExpiresAt: otpExpiresAt,
+      emailVerificationAttempts: 0,
+      emailVerificationLastSentAt: new Date()
+    });
+
+    // Send real email via Resend
+    await sendVerificationEmail(normalizedEmail, otp);
+
+    return res.status(201).json({
+      success: true,
+      message: 'Registration successful. Please check your email for the verification OTP.'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error during registration'
+    });
+  }
+};
+
+// @desc    Verify email using OTP
+// @route   POST /api/auth/verify-email
+// @access  Public
+const verifyEmail = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide email and verification OTP'
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await User.findOne({ email: normalizedEmail });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'User with this email does not exist'
+      });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is already verified. You can log in.'
+      });
+    }
+
+    // Check if OTP was set and not expired
+    if (!user.emailVerificationOtpHash || !user.emailVerificationExpiresAt) {
+      return res.status(400).json({
+        success: false,
+        message: 'No active OTP verification found. Please request a new OTP.'
+      });
+    }
+
+    // Check expiration (5 minutes)
+    if (Date.now() > user.emailVerificationExpiresAt.getTime()) {
+      user.emailVerificationOtpHash = undefined;
+      user.emailVerificationExpiresAt = undefined;
+      await user.save();
+
+      return res.status(400).json({
+        success: false,
+        message: 'OTP has expired. Please request a new one.'
+      });
+    }
+
+    // Check attempt limit (max 5)
+    if (user.emailVerificationAttempts >= 5) {
+      user.emailVerificationOtpHash = undefined;
+      user.emailVerificationExpiresAt = undefined;
+      user.emailVerificationAttempts = 0;
+      await user.save();
+
+      return res.status(400).json({
+        success: false,
+        message: 'Maximum verification attempts exceeded. Please request a new OTP.'
+      });
+    }
+
+    // Verify OTP hash
+    const candidateHash = hashOtp(otp);
+    if (candidateHash !== user.emailVerificationOtpHash) {
+      user.emailVerificationAttempts += 1;
+
+      // Invalidate if reached 5 attempts
+      if (user.emailVerificationAttempts >= 5) {
+        user.emailVerificationOtpHash = undefined;
+        user.emailVerificationExpiresAt = undefined;
+        user.emailVerificationAttempts = 0;
+        await user.save();
+
+        return res.status(400).json({
+          success: false,
+          message: 'Maximum verification attempts exceeded. Please request a new OTP.'
+        });
+      }
+
+      await user.save();
+
+      return res.status(400).json({
+        success: false,
+        message: `Invalid verification OTP. ${5 - user.emailVerificationAttempts} attempts remaining.`
+      });
+    }
+
+    // Valid OTP: mark as verified and clear OTP data
+    user.emailVerified = true;
+    user.emailVerificationOtpHash = undefined;
+    user.emailVerificationExpiresAt = undefined;
+    user.emailVerificationAttempts = 0;
+    user.emailVerificationLastSentAt = undefined;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Email verified successfully'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Server error during email verification'
+    });
+  }
+};
+
+// @desc    Resend OTP verification email
+// @route   POST /api/auth/resend-verification
+// @access  Public
+const resendVerification = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide your email'
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await User.findOne({ email: normalizedEmail });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'User with this email does not exist'
+      });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is already verified. You can log in.'
+      });
+    }
+
+    // 60-second cooldown check
+    if (user.emailVerificationLastSentAt) {
+      const timeSinceLastSent = Date.now() - user.emailVerificationLastSentAt.getTime();
+      const cooldownMs = 60 * 1000;
+
+      if (timeSinceLastSent < cooldownMs) {
+        const secondsRemaining = Math.ceil((cooldownMs - timeSinceLastSent) / 1000);
+        return res.status(429).json({
+          success: false,
+          message: `Please wait ${secondsRemaining} seconds before requesting a new OTP.`
+        });
+      }
+    }
+
+    // Generate new OTP & hash
+    const otp = generateOtp();
+    const otpHash = hashOtp(otp);
+    const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+    user.emailVerificationOtpHash = otpHash;
+    user.emailVerificationExpiresAt = otpExpiresAt;
+    user.emailVerificationAttempts = 0;
+    user.emailVerificationLastSentAt = new Date();
+    await user.save();
+
+    // Send real email via Resend
+    await sendVerificationEmail(normalizedEmail, otp);
+
+    return res.status(200).json({
+      success: true,
+      message: 'A new verification OTP has been sent to your email.'
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error while resending verification OTP'
+    });
+  }
+};
+
+// @desc    Authenticate user & get token
+// @route   POST /api/auth/login
+// @access  Public
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Input validation
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide email and password'
+      });
+    }
+
+    // Normalize email
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Find user by normalized email
+    const user = await User.findOne({ email: normalizedEmail });
+
+    // Generic error if user not found
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Compare password
+    const isMatch = await user.matchPassword(password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Check if email is verified
+    if (!user.emailVerified) {
+      return res.status(403).json({
+        success: false,
+        message: 'Please verify your email before logging in.'
+      });
+    }
+
+    // Generate JWT token
+    const token = generateToken(user._id, user.role);
+
+    // Return safe user information and token
+    return res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        emailVerified: user.emailVerified
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Server error during login'
+    });
+  }
+};
+
+// @desc    Get currently logged-in user profile
+// @route   GET /api/auth/me
+// @access  Private (Protected by JWT)
+const getMe = async (req, res) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+        emailVerified: req.user.emailVerified
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Server error retrieving user profile'
+    });
+  }
+};
+
+module.exports = {
+  register,
+  verifyEmail,
+  resendVerification,
+  login,
+  getMe
+};
