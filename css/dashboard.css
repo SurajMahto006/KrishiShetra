@@ -500,6 +500,11 @@ body.dashboard-body {
   padding-bottom: 60px;
 }
 
+.dash-page-header {
+  padding-top: calc(var(--nav-height) + 24px);
+  margin-bottom: 24px;
+}
+
 /* ── 1. WELCOME / HERO ── */
 .dash-welcome {
   position: relative;
