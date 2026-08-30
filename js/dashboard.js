@@ -1577,11 +1577,17 @@ function initPriceTrendChart() {
     const crop = CROPS_DATA.find(c => c.id === cropId) || CROPS_DATA[0];
     const base = crop.price;
 
-    document.getElementById('chart-stat-current').textContent = `₹${base.toLocaleString('en-IN')}`;
-    document.getElementById('chart-stat-high').textContent = `₹${(base + 80).toLocaleString('en-IN')}`;
-    document.getElementById('chart-stat-low').textContent = `₹${(base - 180).toLocaleString('en-IN')}`;
-    document.getElementById('chart-stat-avg').textContent = `₹${(base - 40).toLocaleString('en-IN')}`;
-    document.getElementById('chart-title').textContent = `${crop.name} Price Trend (${range}D)`;
+    const elCurrent = document.getElementById('chart-stat-current');
+    const elHigh = document.getElementById('chart-stat-high');
+    const elLow = document.getElementById('chart-stat-low');
+    const elAvg = document.getElementById('chart-stat-avg');
+    const elTitle = document.getElementById('chart-title');
+
+    if (elCurrent) elCurrent.textContent = `₹${base.toLocaleString('en-IN')}`;
+    if (elHigh) elHigh.textContent = `₹${(base + 80).toLocaleString('en-IN')}`;
+    if (elLow) elLow.textContent = `₹${(base - 180).toLocaleString('en-IN')}`;
+    if (elAvg) elAvg.textContent = `₹${(base - 40).toLocaleString('en-IN')}`;
+    if (elTitle) elTitle.textContent = `${crop.name} Price Trend (${range}D)`;
 
     // Simple smooth curve coordinates
     const points = [
@@ -1694,7 +1700,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (menuProfile) menuProfile.onclick = (e) => { e.preventDefault(); openProfileModal(); };
 
   const menuLots = document.getElementById('menu-lots');
-  if (menuLots) menuLots.onclick = (e) => { e.preventDefault(); location.href = '#dash-lots-offers'; };
+  if (menuLots) menuLots.onclick = (e) => { e.preventDefault(); location.href = 'lots.html'; };
 
   const menuAlerts = document.getElementById('menu-alerts');
   if (menuAlerts) menuAlerts.onclick = (e) => { e.preventDefault(); openAlertModal(); };

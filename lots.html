@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — KrishiShetra</title>
-  <meta name="description" content="KrishiShetra Farmer Dashboard — Track market prices, manage crop lots, view AI forecasts, and sell to verified buyers.">
+  <title>My Lots — KrishiShetra</title>
+  <meta name="description" content="Manage your listed crop lots, track status, view incoming buyer quotes, and negotiate prices on KrishiShetra.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,19 +25,16 @@
     <div class="dash-ambient-bg__img"></div>
     <div class="dash-ambient-bg__overlay"></div>
     <div class="dash-ambient-bg__sunlight-glow"></div>
-    <div class="dash-ambient-bg__particles"></div>
   </div>
 
   <!-- HEADER / NAVBAR -->
   <header class="dash-header" id="dash-header">
     <div class="dash-header__inner">
-      <!-- Brand Logo -->
       <a href="index.html" class="dash-header__logo" id="dash-logo">
         <span class="dash-header__logo-icon">🌾</span>
         <span class="dash-header__logo-text">KrishiShetra</span>
       </a>
 
-      <!-- Global Search -->
       <div class="dash-search" id="dash-search">
         <i data-lucide="search" class="dash-search__icon"></i>
         <input type="text" id="dash-search-input" class="dash-search__input" placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
@@ -45,12 +42,11 @@
         <div class="dash-search__results" id="dash-search-results"></div>
       </div>
 
-      <!-- Navigation Links -->
       <nav class="dash-header__nav" id="dash-nav">
-        <a href="dashboard.html" class="dash-header__link dash-header__link--active" id="nav-dashboard">
+        <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
           <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
         </a>
-        <a href="lots.html" class="dash-header__link" id="nav-lots">
+        <a href="lots.html" class="dash-header__link dash-header__link--active" id="nav-lots">
           <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
         </a>
         <a href="market.html" class="dash-header__link" id="nav-market">
@@ -67,7 +63,6 @@
         </a>
       </nav>
 
-      <!-- Right Actions -->
       <div class="dash-header__actions">
         <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
           <i data-lucide="bell"></i>
@@ -79,7 +74,6 @@
         <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
           <i data-lucide="help-circle"></i>
         </button>
-        <!-- Profile -->
         <div class="dash-profile-wrap" id="dash-profile-wrap">
           <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
             <div class="dash-header__avatar" id="header-avatar">R</div>
@@ -105,7 +99,6 @@
         </div>
       </div>
 
-      <!-- Mobile Toggle -->
       <button class="dash-header__toggle" id="dash-nav-toggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
@@ -115,139 +108,69 @@
   <!-- Mobile Slide Nav -->
   <div class="dash-mobile-nav" id="dash-mobile-nav">
     <div class="dash-mobile-nav__links">
-      <a href="dashboard.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
+      <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+      <a href="lots.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
       <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market Prices</a>
       <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI Forecast</a>
       <a href="buyers.html" class="dash-mobile-nav__link" id="mnav-buyers"><i data-lucide="users"></i> Buyers</a>
       <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i> Orders</a>
-      <a href="#" class="dash-mobile-nav__link" id="mobile-nav-profile"><i data-lucide="user"></i> Profile Settings</a>
     </div>
   </div>
 
   <!-- MAIN CONTENT -->
-  <main class="dash-main" id="dash-main">
+  <main class="dash-main container" style="padding-top: 30px; padding-bottom: 50px;">
 
-    <!-- ── 1. WELCOME / HERO ── -->
-    <section class="dash-welcome" id="dash-welcome">
-      <div class="dash-welcome__bg">
-        <img src="assets/images/farmer-sunlight-bg.jpg" alt="Indian farmer in lush green fields at sunrise with warm sunlight" id="dash-welcome-bg">
-        <div class="dash-welcome__overlay"></div>
+    <!-- Page Header Banner -->
+    <div class="dash-section__header" style="margin-bottom: 24px;">
+      <div>
+        <h1 class="dash-section__title" style="font-size: 28px;">📦 My Crop Lots & Buyer Offers</h1>
+        <p class="dash-section__subtitle">Manage your active harvest listings, create new lots, and negotiate buyer bids.</p>
       </div>
-      <div class="dash-welcome__content container">
-        <div class="dash-welcome__text">
-          <p class="dash-welcome__greeting" id="dash-greeting">Good Morning, Rajesh 👋</p>
-          <h1 class="dash-welcome__headline" id="dash-headline">Make smarter selling decisions with <em>KrishiShetra.</em></h1>
-          <p class="dash-welcome__sub">Track live mandi prices, get AI forecasts, and sell directly to verified institutional buyers.</p>
-          <div class="dash-welcome__ctas">
-            <button class="btn btn--primary dash-welcome__btn" id="btn-sell-crop"><i data-lucide="plus-circle"></i> + Sell Your Crop</button>
-            <a href="market.html" class="btn btn--secondary dash-welcome__btn" id="btn-view-prices"><i data-lucide="trending-up"></i> View Market Prices</a>
-          </div>
-        </div>
-        <div class="dash-welcome__meta">
-          <span class="dash-welcome__meta-item" id="dash-location"><i data-lucide="map-pin"></i> Maharashtra (Pune APMC)</span>
-          <span class="dash-welcome__meta-item" id="dash-weather"><i data-lucide="cloud-sun"></i> 29°C · Clear Sky</span>
-          <span class="dash-welcome__meta-item" id="dash-date-display"></span>
-        </div>
-      </div>
-    </section>
+      <button class="btn btn--primary" id="btn-create-lot-page" onclick="openCreateLotModal()"><i data-lucide="plus"></i> + Create New Crop Lot</button>
+    </div>
 
-    <!-- ── 2. QUICK STATS ── -->
-    <section class="dash-stats" id="dash-stats">
-      <div class="container">
-        <div class="dash-stats__grid">
-          <div class="dash-stat" id="stat-active-lots" onclick="location.href='lots.html'">
-            <div class="dash-stat__icon dash-stat__icon--green"><i data-lucide="package"></i></div>
-            <div class="dash-stat__body">
-              <div class="dash-stat__label">Active Lots</div>
-              <div class="dash-stat__value" id="stat-lots-val" data-count="3">3</div>
-              <div class="dash-stat__sub" id="stat-lots-sub">2 crops currently listed</div>
-            </div>
-            <div class="dash-stat__trend dash-stat__trend--up"><i data-lucide="arrow-up-right"></i> Live</div>
-          </div>
-          <div class="dash-stat" id="stat-best-price" onclick="location.href='market.html'">
-            <div class="dash-stat__icon dash-stat__icon--gold"><i data-lucide="trending-up"></i></div>
-            <div class="dash-stat__body">
-              <div class="dash-stat__label">Best Market Price</div>
-              <div class="dash-stat__value" id="stat-best-val">₹2,920/q</div>
-              <div class="dash-stat__sub">Mumbai APMC · ↑ 6.1% this week</div>
-            </div>
-            <div class="dash-stat__trend dash-stat__trend--up"><i data-lucide="arrow-up-right"></i> 6.1%</div>
-          </div>
-          <div class="dash-stat" id="stat-buyer-offers" onclick="location.href='buyers.html'">
-            <div class="dash-stat__icon dash-stat__icon--blue"><i data-lucide="handshake"></i></div>
-            <div class="dash-stat__body">
-              <div class="dash-stat__label">Buyer Offers</div>
-              <div class="dash-stat__value" id="stat-offers-val" data-count="4">4</div>
-              <div class="dash-stat__sub">₹2,17,700 total offered</div>
-            </div>
-            <div class="dash-stat__trend dash-stat__trend--up"><i data-lucide="arrow-up-right"></i> Active</div>
-          </div>
-          <div class="dash-stat" id="stat-pending-orders" onclick="location.href='orders.html'">
-            <div class="dash-stat__icon dash-stat__icon--orange"><i data-lucide="clock"></i></div>
-            <div class="dash-stat__body">
-              <div class="dash-stat__label">Pending Orders</div>
-              <div class="dash-stat__value" id="stat-orders-val" data-count="2">2</div>
-              <div class="dash-stat__sub">₹99,500 in progress</div>
-            </div>
-            <div class="dash-stat__trend dash-stat__trend--neutral"><i data-lucide="truck"></i> Pickup</div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Active Lots & Offers 2-Column Section -->
+    <section class="dash-section" id="dash-lots-offers">
+      <div class="dash-two-col">
 
-    <!-- ── 3. QUICK ACTIONS ── -->
-    <section class="dash-section dash-actions-section" id="dash-quick-actions">
-      <div class="container">
-        <div class="dash-actions__grid">
-          <button class="dash-action" id="action-sell"><div class="dash-action__icon dash-action__icon--green"><i data-lucide="plus-circle"></i></div><span class="dash-action__label">Sell Crop</span><span class="dash-action__desc">Add new crop lot</span></button>
-          <button class="dash-action" id="action-prices" onclick="location.href='market.html'"><div class="dash-action__icon dash-action__icon--gold"><i data-lucide="indian-rupee"></i></div><span class="dash-action__label">Market Prices</span><span class="dash-action__desc">15 APMC mandis</span></button>
-          <button class="dash-action" id="action-buyers" onclick="location.href='buyers.html'"><div class="dash-action__icon dash-action__icon--blue"><i data-lucide="users"></i></div><span class="dash-action__label">Find Buyers</span><span class="dash-action__desc">Verified procurement</span></button>
-          <button class="dash-action" id="action-forecast" onclick="location.href='ai-forecast.html'"><div class="dash-action__icon dash-action__icon--purple"><i data-lucide="brain"></i></div><span class="dash-action__label">AI Forecast</span><span class="dash-action__desc">Price predictions</span></button>
-          <button class="dash-action" id="action-alerts" onclick="openAlertModal()"><div class="dash-action__icon dash-action__icon--orange"><i data-lucide="bell-ring"></i></div><span class="dash-action__label">Price Alerts</span><span class="dash-action__desc">SMS & App alerts</span></button>
-          <button class="dash-action" id="action-lots" onclick="location.href='lots.html'"><div class="dash-action__icon dash-action__icon--teal"><i data-lucide="list-checks"></i></div><span class="dash-action__label">My Lots</span><span class="dash-action__desc">Manage listings</span></button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── 4. SMART SELLING OPPORTUNITY ── -->
-    <section class="dash-section" id="dash-selling-opp">
-      <div class="container">
-        <div class="dash-opp-card" id="opp-card">
-          <div class="dash-opp-card__icon">💡</div>
-          <div class="dash-opp-card__content">
-            <h3 class="dash-opp-card__title">Smart Selling Opportunity</h3>
-            <p class="dash-opp-card__desc">Your listed rice inventory is currently worth approximately:</p>
-            <div class="dash-opp-card__value" id="opp-total-val">₹71,250</div>
-            <div class="dash-opp-card__details">
-              <div class="dash-opp-card__detail"><span>Current Market</span><strong id="opp-cur-price">₹2,850/q</strong></div>
-              <div class="dash-opp-card__detail"><span>Recommended Target</span><strong id="opp-rec-price">₹2,950/q</strong></div>
-              <div class="dash-opp-card__detail dash-opp-card__detail--highlight"><span>Potential Extra Income</span><strong class="dash-opp-card__extra" id="opp-extra-val">+₹2,500</strong></div>
+        <!-- MY ACTIVE LOTS PANEL -->
+        <div class="dash-card dash-panel" id="dash-active-lots">
+          <div class="dash-panel__header">
+            <div>
+              <h3 class="dash-panel__title">My Active Lots</h3>
+              <p class="dash-panel__subtitle">Manage listed crops & track status</p>
+            </div>
+            <div class="dash-panel__lot-filters">
+              <button class="dash-lot-filter-btn dash-lot-filter-btn--active" data-filter="all">All</button>
+              <button class="dash-lot-filter-btn" data-filter="listed">Listed</button>
+              <button class="dash-lot-filter-btn" data-filter="paused">Paused</button>
             </div>
           </div>
-          <div class="dash-opp-card__action">
-            <button class="btn btn--primary" id="btn-find-buyer" onclick="location.href='buyers.html'"><i data-lucide="search"></i> Find Best Buyer</button>
+          <div class="dash-panel__body" id="lots-panel-body">
+            <!-- Rendered dynamically by JS -->
+          </div>
+          <div class="dash-panel__footer">
+            <button class="btn btn--primary dash-panel__cta" id="btn-create-lot" onclick="openCreateLotModal()"><i data-lucide="plus"></i> + Add New Crop Lot</button>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- ── 5. MARKET INSIGHTS SUMMARY ── -->
-    <section class="dash-section" id="dash-market-insights">
-      <div class="container">
-        <div class="dash-section__header">
-          <div>
-            <h2 class="dash-section__title">Market Intelligence & Insights</h2>
-            <p class="dash-section__subtitle">Real-time alerts for better selling decisions</p>
+        <!-- BUYER OFFERS PANEL -->
+        <div class="dash-card dash-panel" id="dash-buyer-offers">
+          <div class="dash-panel__header">
+            <div>
+              <h3 class="dash-panel__title">Received Buyer Offers</h3>
+              <p class="dash-panel__subtitle">Direct quotes from verified corporate procurement companies</p>
+            </div>
+            <a href="buyers.html" class="dash-panel__action">Browse All Buyers <i data-lucide="arrow-right"></i></a>
           </div>
-          <a href="market.html" class="dash-section__action">Full Market Overview <i data-lucide="arrow-right"></i></a>
+          <div class="dash-panel__body" id="offers-panel-body">
+            <!-- Rendered dynamically by JS -->
+          </div>
+          <div class="dash-panel__footer">
+            <a href="buyers.html" class="btn btn--secondary dash-panel__cta" id="btn-all-buyers"><i data-lucide="users"></i> View All Buyers</a>
+          </div>
         </div>
-        <div class="dash-insights__grid" id="insights-grid">
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji">📈</span><p>Rice demand is <strong>increasing by 14%</strong> across Maharashtra mandis due to institutional buying.</p></div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji">🔥</span><p>Onion prices are <strong>rising in Pune & Nashik</strong>. Current price is ₹2,850/q, 12% above seasonal average.</p></div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji">📉</span><p>Tomato market arrivals are <strong>up by 20%</strong> in Solapur. Recommended to sell fresh harvest within 2 days.</p></div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji">🏆</span><p><strong>Mumbai APMC</strong> currently offers highest realization on premium grade grains.</p></div>
-        </div>
+
       </div>
     </section>
 
@@ -272,17 +195,17 @@
     </div>
   </footer>
 
-  <!-- MOBILE BOTTOM NAVIGATION -->
+  <!-- MOBILE BOTTOM NAV -->
   <nav class="dash-bottom-nav" id="dash-bottom-nav">
-    <a href="dashboard.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-home"><i data-lucide="home"></i><span>Home</span></a>
+    <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i data-lucide="home"></i><span>Home</span></a>
     <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i data-lucide="bar-chart-3"></i><span>Market</span></a>
-    <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span>My Lots</span></a>
+    <a href="lots.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-lots"><i data-lucide="package"></i><span>My Lots</span></a>
     <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i data-lucide="brain"></i><span>Forecast</span></a>
     <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i data-lucide="users"></i><span>Buyers</span></a>
     <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i data-lucide="clipboard-list"></i><span>Orders</span></a>
   </nav>
 
-  <!-- MODALS -->
+  <!-- MODALS REQUIRED ON LOTS PAGE -->
   <!-- CREATE LOT MODAL -->
   <div class="dash-modal-overlay" id="create-lot-modal-overlay">
     <div class="dash-modal" id="create-lot-modal">
@@ -343,21 +266,136 @@
     </div>
   </div>
 
-  <!-- NOTIFICATIONS MODAL -->
+  <!-- EDIT LOT MODAL -->
+  <div class="dash-modal-overlay" id="edit-lot-modal-overlay">
+    <div class="dash-modal" id="edit-lot-modal">
+      <div class="dash-modal__header">
+        <h3>Edit Crop Lot</h3>
+        <button class="dash-modal__close" id="edit-lot-modal-close" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+      <form class="dash-modal__form" id="edit-lot-form">
+        <input type="hidden" id="edit-lot-id">
+        <div class="dash-modal__field">
+          <label id="edit-lot-crop-name" style="font-weight:700; color:var(--ks-evergreen); font-size:15px;"></label>
+        </div>
+        <div class="dash-form-row">
+          <div class="dash-modal__field">
+            <label for="edit-lot-qty">Quantity (Quintals)</label>
+            <input type="number" id="edit-lot-qty" class="dash-form-input" required>
+          </div>
+          <div class="dash-modal__field">
+            <label for="edit-lot-price">Expected Price (₹/q)</label>
+            <input type="number" id="edit-lot-price" class="dash-form-input" required>
+          </div>
+        </div>
+        <div class="dash-form-row">
+          <div class="dash-modal__field">
+            <label for="edit-lot-grade">Quality / Grade</label>
+            <select id="edit-lot-grade" class="dash-filter-select">
+              <option value="Grade A">Grade A</option>
+              <option value="Grade B">Grade B</option>
+              <option value="Export Quality">Export Quality</option>
+            </select>
+          </div>
+          <div class="dash-modal__field">
+            <label for="edit-lot-location">Location</label>
+            <input type="text" id="edit-lot-location" class="dash-form-input" required>
+          </div>
+        </div>
+        <div class="dash-modal__field">
+          <label for="edit-lot-desc">Description</label>
+          <textarea id="edit-lot-desc" class="dash-form-textarea" rows="2"></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PAUSE LOT MODAL -->
+  <div class="dash-modal-overlay" id="pause-lot-modal-overlay">
+    <div class="dash-modal dash-modal--sm" id="pause-lot-modal">
+      <div class="dash-modal__header">
+        <h3 id="pause-modal-title">Pause Listing?</h3>
+        <button class="dash-modal__close" id="pause-lot-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <p id="pause-modal-desc">Paused listings will temporarily be hidden from buyers on the marketplace. You can resume anytime.</p>
+        <div class="dash-modal__actions-row">
+          <button class="btn btn--secondary" id="btn-cancel-pause">Cancel</button>
+          <button class="btn btn--primary" id="btn-confirm-pause">Confirm Pause</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE LOT MODAL -->
+  <div class="dash-modal-overlay" id="delete-lot-modal-overlay">
+    <div class="dash-modal dash-modal--sm" id="delete-lot-modal">
+      <div class="dash-modal__header">
+        <h3>Delete Crop Lot</h3>
+        <button class="dash-modal__close" id="delete-lot-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <p>Are you sure you want to remove this crop listing from KrishiShetra? This action cannot be undone.</p>
+        <div class="dash-modal__actions-row">
+          <button class="btn btn--secondary" id="btn-cancel-delete">Cancel</button>
+          <button class="btn btn--danger" id="btn-confirm-delete"><i data-lucide="trash-2"></i> Delete Lot</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEGOTIATE OFFER MODAL -->
+  <div class="dash-modal-overlay" id="negotiate-modal-overlay">
+    <div class="dash-modal dash-modal--sm" id="negotiate-modal">
+      <div class="dash-modal__header">
+        <h3>Negotiate Price</h3>
+        <button class="dash-modal__close" id="negotiate-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <form class="dash-modal__form" id="negotiate-form">
+        <input type="hidden" id="negotiate-offer-id">
+        <div class="dash-modal__field">
+          <label>Buyer Offer Details</label>
+          <div id="negotiate-buyer-info" style="font-size:13px; font-weight:600; color:var(--ks-charcoal); background:var(--ks-bg-ivory); padding:10px; border-radius:var(--radius-sm);"></div>
+        </div>
+        <div class="dash-modal__field">
+          <label for="negotiate-price-input">Your Counter Offer Price (₹/q)</label>
+          <input type="number" id="negotiate-price-input" class="dash-form-input" required>
+        </div>
+        <div class="dash-modal__field">
+          <label for="negotiate-note-input">Message / Note to Buyer</label>
+          <textarea id="negotiate-note-input" class="dash-form-textarea" rows="2" placeholder="e.g. Can provide delivery to Pune warehouse within 48 hours."></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="send"></i> Send Counter Offer</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- OFFERS LIST MODAL -->
+  <div class="dash-modal-overlay" id="offers-modal-overlay">
+    <div class="dash-modal dash-modal--lg" id="offers-modal">
+      <div class="dash-modal__header">
+        <div>
+          <h3 id="offers-modal-title">Buyer Offers</h3>
+          <span class="dash-crop-modal__sub" id="offers-modal-sub">Active procurement offers</span>
+        </div>
+        <button class="dash-modal__close" id="offers-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad" id="offers-modal-list"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE / HELPLINE / LANG / NOTIF MODALS -->
   <div class="dash-modal-overlay" id="notifications-modal-overlay">
     <div class="dash-modal dash-modal--sm" id="notifications-modal">
       <div class="dash-modal__header">
-        <div>
-          <h3>Notifications</h3>
-          <span class="dash-crop-modal__sub">Real-time alerts & buyer messages</span>
-        </div>
+        <div><h3>Notifications</h3></div>
         <button class="dash-modal__close" id="notifications-modal-close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad" id="notifications-list"></div>
     </div>
   </div>
 
-  <!-- PROFILE MODAL -->
   <div class="dash-modal-overlay" id="profile-modal-overlay">
     <div class="dash-modal" id="profile-modal">
       <div class="dash-modal__header">
@@ -379,20 +417,11 @@
             <input type="number" id="prof-land" class="dash-form-input" value="12" required>
           </div>
         </div>
-        <div class="dash-modal__field">
-          <label for="prof-mandi">Primary Preferred Mandi</label>
-          <select id="prof-mandi" class="dash-filter-select">
-            <option value="Pune APMC" selected>Pune APMC (Maharashtra)</option>
-            <option value="Nashik APMC">Nashik APMC</option>
-            <option value="Mumbai APMC">Mumbai APMC</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save Profile Settings</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save Settings</button>
       </form>
     </div>
   </div>
 
-  <!-- KISAN HELPLINE MODAL -->
   <div class="dash-modal-overlay" id="help-modal-overlay">
     <div class="dash-modal" id="help-modal">
       <div class="dash-modal__header">
@@ -405,18 +434,16 @@
           <div>
             <div style="font-weight:700; color:var(--ks-evergreen);">Kisan Call Center (Toll Free)</div>
             <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
-            <div style="font-size:11px; color:var(--ks-text-muted);">Available 6:00 AM to 10:00 PM all 7 days</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- LANGUAGE MODAL -->
   <div class="dash-modal-overlay" id="language-modal-overlay">
     <div class="dash-modal dash-modal--sm" id="language-modal">
       <div class="dash-modal__header">
-        <h3>Select Language / भाषा निवडा</h3>
+        <h3>Select Language</h3>
         <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad">
