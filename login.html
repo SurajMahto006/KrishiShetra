@@ -546,7 +546,11 @@
           btnVerifyOtp.style.background = '#5B9A72';
 
           setTimeout(() => {
-            window.location.href = 'dashboard.html';
+            if (currentRole === 'buyer') {
+              window.location.href = 'buyer.html';
+            } else {
+              window.location.href = 'dashboard.html';
+            }
           }, 800);
         }, 800);
       });
