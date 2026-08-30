@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiShetra — Admin Reports</title>
+  <meta name="description" content="KrishiShetra Admin Reports — Platform analytics, GMV trends, crop performance and regional insights.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       TOP HEADER
+       ═══════════════════════════════════════════ -->
+  <header class="admin-header" id="adminHeader">
+    <div class="admin-header-inner">
+      <a href="index.html" class="admin-brand">
+        <span class="brand-icon">🌾</span>
+        <span class="brand-text">KrishiShetra</span>
+        <span class="brand-badge">Admin</span>
+      </a>
+
+      <nav>
+        <ul class="admin-nav-menu" id="adminNavMenu">
+          <li><a href="dashboard.html" class="admin-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="users.html" class="admin-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Users</a></li>
+          <li><a href="farmers.html" class="admin-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Farmers</a></li>
+          <li><a href="reports.html" class="admin-nav-link active"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Reports</a></li>
+          <li><a href="settings.html" class="admin-nav-link"><i data-lucide="settings" style="width:16px;height:16px;"></i> Settings</a></li>
+        </ul>
+      </nav>
+
+      <div class="admin-header-actions">
+        <button class="admin-icon-btn" title="Notifications" onclick="showToast('3 new notifications')">
+          <i data-lucide="bell" style="width:18px;height:18px;"></i>
+          <span class="notif-dot"></span>
+        </button>
+        <div class="admin-header-user">
+          <div class="admin-header-avatar">AD</div>
+          <div class="admin-header-user-info">
+            <span class="admin-header-user-name">Admin User</span>
+            <span class="admin-header-user-role">Super Admin</span>
+          </div>
+        </div>
+        <button class="admin-hamburger" id="adminHamburger" onclick="toggleMobileNav()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════ -->
+  <main class="admin-main">
+
+    <!-- Page Header -->
+    <div class="admin-page-header">
+      <div>
+        <h1 class="admin-page-title">Reports & Analytics</h1>
+        <p class="admin-page-subtitle">Platform performance, GMV trends, crop data and regional insights</p>
+      </div>
+      <div class="admin-page-actions">
+        <select class="settings-select" id="dateRange" onchange="showToast('Updating report range...')">
+          <option>Last 7 days</option>
+          <option selected>Last 30 days</option>
+          <option>Last 3 months</option>
+          <option>Last 6 months</option>
+          <option>This Year</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="showToast('Generating full report PDF...')">
+          <i data-lucide="download" style="width:14px;height:14px;"></i>
+          Export Report
+        </button>
+      </div>
+    </div>
+
+    <!-- Key Metric Highlights -->
+    <div class="metric-highlight-grid">
+      <div class="metric-highlight-card green-accent">
+        <div class="metric-highlight-label">Total GMV (30 days)</div>
+        <div class="metric-highlight-value">₹3.84 Cr</div>
+        <div class="metric-highlight-sub">
+          <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+          +18.4% vs last month
+        </div>
+      </div>
+      <div class="metric-highlight-card amber-accent">
+        <div class="metric-highlight-label">Transactions Completed</div>
+        <div class="metric-highlight-value">1,247</div>
+        <div class="metric-highlight-sub">
+          <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+          +24 today
+        </div>
+      </div>
+      <div class="metric-highlight-card blue-accent">
+        <div class="metric-highlight-label">Avg. Price Realisation</div>
+        <div class="metric-highlight-value">₹2,840/qt</div>
+        <div class="metric-highlight-sub">
+          <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+          +6.2% above APMC mandi
+        </div>
+      </div>
+    </div>
+
+    <!-- GMV Chart + Crop Performance -->
+    <div class="dashboard-grid" style="margin-bottom:1.5rem;">
+
+      <!-- GMV Monthly Chart -->
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">GMV Trend</h2>
+            <p class="glass-card-subtitle">Gross Merchandise Value — monthly (₹ Lakhs)</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting GMV data...')">
+            <i data-lucide="download" style="width:14px;height:14px;"></i> Export
+          </button>
+        </div>
+        <div class="chart-container">
+          <canvas id="gmvChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Transaction Volume -->
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">Transaction Volume</h2>
+            <p class="glass-card-subtitle">Number of completed deals per month</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="txnChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Top Crops + Regional Breakdown -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+
+      <!-- Top Crops by Volume -->
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">Top Crops by Volume</h2>
+            <p class="glass-card-subtitle">Total metric tons traded this month</p>
+          </div>
+        </div>
+
+        <div class="crop-rank-row">
+          <div class="crop-rank-num">1</div>
+          <div style="font-size:1.1rem;">🧅</div>
+          <div class="crop-rank-name">Onion</div>
+          <div class="crop-rank-bar-wrap">
+            <div class="crop-rank-bar">
+              <div class="crop-rank-bar-fill" style="width:100%;"></div>
+            </div>
+          </div>
+          <div class="crop-rank-value">842 MT</div>
+        </div>
+        <div class="crop-rank-row">
+          <div class="crop-rank-num">2</div>
+          <div style="font-size:1.1rem;">🌾</div>
+          <div class="crop-rank-name">Wheat</div>
+          <div class="crop-rank-bar-wrap">
+            <div class="crop-rank-bar">
+              <div class="crop-rank-bar-fill amber" style="width:72%;"></div>
+            </div>
+          </div>
+          <div class="crop-rank-value">608 MT</div>
+        </div>
+        <div class="crop-rank-row">
+          <div class="crop-rank-num">3</div>
+          <div style="font-size:1.1rem;">🍅</div>
+          <div class="crop-rank-name">Tomato</div>
+          <div class="crop-rank-bar-wrap">
+            <div class="crop-rank-bar">
+              <div class="crop-rank-bar-fill red" style="width:52%;"></div>
+            </div>
+          </div>
+          <div class="crop-rank-value">440 MT</div>
+        </div>
+        <div class="crop-rank-row">
+          <div class="crop-rank-num">4</div>
+          <div style="font-size:1.1rem;">🌾</div>
+          <div class="crop-rank-name">Rice</div>
+          <div class="crop-rank-bar-wrap">
+            <div class="crop-rank-bar">
+              <div class="crop-rank-bar-fill blue" style="width:38%;"></div>
+            </div>
+          </div>
+          <div class="crop-rank-value">318 MT</div>
+        </div>
+        <div class="crop-rank-row">
+          <div class="crop-rank-num">5</div>
+          <div style="font-size:1.1rem;">🎋</div>
+          <div class="crop-rank-name">Sugarcane</div>
+          <div class="crop-rank-bar-wrap">
+            <div class="crop-rank-bar">
+              <div class="crop-rank-bar-fill mint" style="width:28%;"></div>
+            </div>
+          </div>
+          <div class="crop-rank-value">236 MT</div>
+        </div>
+        <div class="crop-rank-row">
+          <div class="crop-rank-num">6</div>
+          <div style="font-size:1.1rem;">🥔</div>
+          <div class="crop-rank-name">Potato</div>
+          <div class="crop-rank-bar-wrap">
+            <div class="crop-rank-bar">
+              <div class="crop-rank-bar-fill" style="width:18%;opacity:0.6;"></div>
+            </div>
+          </div>
+          <div class="crop-rank-value">152 MT</div>
+        </div>
+      </div>
+
+      <!-- Regional GMV Breakdown -->
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">Regional Breakdown</h2>
+            <p class="glass-card-subtitle">GMV by taluka — Nashik district</p>
+          </div>
+        </div>
+        <div class="chart-container" style="height:290px;">
+          <canvas id="regionalChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Price Realisation Table -->
+    <div class="glass-card" style="margin-bottom:1.5rem;">
+      <div class="glass-card-header">
+        <div>
+          <h2 class="glass-card-title">Price Realisation vs APMC Mandi</h2>
+          <p class="glass-card-subtitle">Comparing KrishiShetra prices against open market — last 30 days</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting price data...')">
+          <i data-lucide="download" style="width:14px;height:14px;"></i> Export
+        </button>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Crop</th>
+              <th>KrishiShetra Avg (₹/qt)</th>
+              <th>APMC Mandi Avg (₹/qt)</th>
+              <th>Difference</th>
+              <th>Transactions</th>
+              <th>Total Volume</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>🧅 Onion</strong></td>
+              <td style="color:var(--green-mid);font-weight:700;">₹2,840</td>
+              <td>₹2,620</td>
+              <td><span class="badge badge-success">+₹220 (+8.4%)</span></td>
+              <td>342</td>
+              <td>842 MT</td>
+            </tr>
+            <tr>
+              <td><strong>🌾 Wheat</strong></td>
+              <td style="color:var(--green-mid);font-weight:700;">₹2,180</td>
+              <td>₹2,050</td>
+              <td><span class="badge badge-success">+₹130 (+6.3%)</span></td>
+              <td>218</td>
+              <td>608 MT</td>
+            </tr>
+            <tr>
+              <td><strong>🍅 Tomato</strong></td>
+              <td style="color:var(--green-mid);font-weight:700;">₹1,640</td>
+              <td>₹1,580</td>
+              <td><span class="badge badge-success">+₹60 (+3.8%)</span></td>
+              <td>187</td>
+              <td>440 MT</td>
+            </tr>
+            <tr>
+              <td><strong>🌾 Rice</strong></td>
+              <td style="color:var(--green-mid);font-weight:700;">₹3,240</td>
+              <td>₹3,100</td>
+              <td><span class="badge badge-success">+₹140 (+4.5%)</span></td>
+              <td>124</td>
+              <td>318 MT</td>
+            </tr>
+            <tr>
+              <td><strong>🎋 Sugarcane</strong></td>
+              <td style="color:var(--amber);font-weight:700;">₹3,420</td>
+              <td>₹3,450</td>
+              <td><span class="badge badge-warning">-₹30 (-0.9%)</span></td>
+              <td>89</td>
+              <td>236 MT</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Platform Health KPIs -->
+    <div class="glass-card">
+      <div class="glass-card-header">
+        <div>
+          <h2 class="glass-card-title">Platform Health KPIs</h2>
+          <p class="glass-card-subtitle">Key metrics tracking platform efficiency and farmer outcomes</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('Refreshing metrics...')">
+          <i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Refresh
+        </button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;">
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">KYC Verification Rate</span>
+            <span class="progress-label-value">92%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill green" style="width:92%"></div></div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Order Fulfilment Rate</span>
+            <span class="progress-label-value">85%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill green" style="width:85%"></div></div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Farmer Onboarding Completion</span>
+            <span class="progress-label-value">78%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill amber" style="width:78%"></div></div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Payment Disbursement Rate</span>
+            <span class="progress-label-value">96%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill green" style="width:96%"></div></div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Platform Uptime (30 days)</span>
+            <span class="progress-label-value">99.2%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill green" style="width:99%"></div></div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Buyer Offer Acceptance Rate</span>
+            <span class="progress-label-value">64%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill amber" style="width:64%"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      const iconName = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info';
+      const iconColor = type === 'success' ? 'var(--green-bright)' : type === 'error' ? 'var(--terracotta)' : 'var(--amber)';
+      toast.innerHTML = `<i data-lucide="${iconName}" style="width:16px;height:16px;color:${iconColor};flex-shrink:0;"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => toast.classList.add('show'), 50);
+      setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3000);
+    }
+
+    function toggleMobileNav() {
+      document.getElementById('adminNavMenu').classList.toggle('open');
+    }
+
+    // Chart defaults
+    const chartDefaults = {
+      plugins: {
+        legend: {
+          labels: {
+            color: '#7A8880',
+            font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+            boxWidth: 12, boxHeight: 12, padding: 16,
+            usePointStyle: true, pointStyle: 'circle',
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(26, 58, 40, 0.95)',
+          titleColor: '#FFFFFF',
+          bodyColor: 'rgba(255,255,255,0.75)',
+          borderColor: 'rgba(255,255,255,0.15)',
+          borderWidth: 1,
+          cornerRadius: 10,
+          padding: 12,
+          titleFont: { family: "'Plus Jakarta Sans'", weight: '600' },
+          bodyFont: { family: "'Plus Jakarta Sans'" },
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+          ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+          ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } },
+          beginAtZero: true
+        }
+      }
+    };
+
+    // GMV Chart
+    new Chart(document.getElementById('gmvChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+        datasets: [{
+          label: 'GMV (₹ Lakhs)',
+          data: [142, 218, 285, 312, 356, 384],
+          backgroundColor: 'rgba(91, 154, 114, 0.5)',
+          borderColor: '#5B9A72',
+          borderWidth: 2,
+          borderRadius: 8,
+          borderSkipped: false,
+        }, {
+          label: 'Target (₹ Lakhs)',
+          data: [160, 200, 270, 300, 340, 380],
+          type: 'line',
+          borderColor: '#D6A84F',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          tension: 0.4,
+          pointRadius: 3,
+          pointBackgroundColor: '#D6A84F',
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        ...chartDefaults
+      }
+    });
+
+    // Transaction Volume Chart
+    new Chart(document.getElementById('txnChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+        datasets: [{
+          label: 'Transactions',
+          data: [320, 485, 620, 780, 940, 1247],
+          borderColor: '#6BC48F',
+          backgroundColor: 'rgba(107, 196, 143, 0.12)',
+          borderWidth: 2.5,
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: '#6BC48F',
+          pointBorderColor: '#FFFFFF',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        ...chartDefaults
+      }
+    });
+
+    // Regional Chart (Horizontal Bar)
+    new Chart(document.getElementById('regionalChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Niphad', 'Dindori', 'Pimpalgaon', 'Lasalgaon', 'Sinnar', 'Igatpuri', 'Malegaon'],
+        datasets: [{
+          label: 'GMV (₹ Lakhs)',
+          data: [84, 72, 62, 56, 48, 36, 26],
+          backgroundColor: [
+            'rgba(91, 154, 114, 0.7)',
+            'rgba(91, 154, 114, 0.6)',
+            'rgba(91, 154, 114, 0.55)',
+            'rgba(214, 168, 79, 0.6)',
+            'rgba(214, 168, 79, 0.5)',
+            'rgba(107, 163, 247, 0.55)',
+            'rgba(107, 163, 247, 0.45)',
+          ],
+          borderColor: [
+            '#5B9A72','#5B9A72','#5B9A72',
+            '#D6A84F','#D6A84F',
+            '#6BA3F7','#6BA3F7',
+          ],
+          borderWidth: 1.5,
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(26, 58, 40, 0.95)',
+            titleColor: '#FFFFFF',
+            bodyColor: 'rgba(255,255,255,0.75)',
+            borderColor: 'rgba(255,255,255,0.15)',
+            borderWidth: 1,
+            cornerRadius: 10,
+            padding: 12,
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(0,0,0,0.06)' },
+            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+          }
+        }
+      }
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
