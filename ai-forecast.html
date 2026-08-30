@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Forecast — KrishiShetra</title>
-  <meta name="description" content="AI-powered mandi price forecasts, crop demand projections, confidence indicators, and smart selling window recommendations.">
+  <meta name="description"
+    content="AI-powered mandi price forecasts, crop demand projections, confidence indicators, and smart selling window recommendations.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap"
+    rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -18,6 +22,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
+
 <body class="dashboard-body">
 
   <!-- AMBIENT FARMER SUNLIGHT BACKGROUND -->
@@ -37,7 +42,8 @@
 
       <div class="dash-search" id="dash-search">
         <i data-lucide="search" class="dash-search__icon"></i>
-        <input type="text" id="dash-search-input" class="dash-search__input" placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
+        <input type="text" id="dash-search-input" class="dash-search__input"
+          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="dash-search__results" id="dash-search-results"></div>
       </div>
@@ -89,12 +95,17 @@
               </div>
             </div>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-profile"><i data-lucide="user"></i> My Profile & Farm</a>
-            <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> Manage My Lots</a>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-alerts"><i data-lucide="bell-ring"></i> Price Alerts</a>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan Helpline</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-profile"><i data-lucide="user"></i> My Profile &
+              Farm</a>
+            <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> Manage
+              My Lots</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-alerts"><i data-lucide="bell-ring"></i> Price
+              Alerts</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan
+              Helpline</a>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
+            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
+                data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
       </div>
@@ -108,12 +119,16 @@
   <!-- Mobile Slide Nav -->
   <div class="dash-mobile-nav" id="dash-mobile-nav">
     <div class="dash-mobile-nav__links">
-      <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+      <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i>
+        Dashboard</a>
       <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
-      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market Prices</a>
-      <a href="ai-forecast.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-forecast"><i data-lucide="brain"></i> AI Forecast</a>
+      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market
+        Prices</a>
+      <a href="ai-forecast.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-forecast"><i
+          data-lucide="brain"></i> AI Forecast</a>
       <a href="buyers.html" class="dash-mobile-nav__link" id="mnav-buyers"><i data-lucide="users"></i> Buyers</a>
-      <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i> Orders</a>
+      <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i>
+        Orders</a>
     </div>
   </div>
 
@@ -121,25 +136,18 @@
   <main class="dash-main" id="dash-main">
 
     <!-- ── 1. AI MARKET FORECAST ENGINE ── -->
-    <section class="dash-section" id="dash-ai-forecast-section" style="padding-top: calc(var(--nav-height) + 24px);">
+    <section class="dash-section" id="dash-ai-forecast-section" style="padding-top: 30px;">
       <div class="container">
-        
-        <!-- Hero Header -->
-        <div class="ai-hero-header">
-          <div class="ai-hero-header__glow" aria-hidden="true"></div>
-          <div class="ai-eyebrow">
-            <span class="ai-eyebrow__pulse"></span> LIVE MARKET INTELLIGENCE · AI PREDICTION ENGINE
+        <div class="dash-section__header">
+          <div>
+            <h1 class="dash-section__title" style="font-size: 28px;">🤖 AI Market Price Forecast Engine</h1>
+            <p class="dash-section__subtitle">Predict price trends across 42 mandis using historical seasonality,
+              weather radar, and buyer demand trends.</p>
           </div>
-          <h1 class="ai-hero-header__title">Predict the Market <em>Before It Moves.</em></h1>
-          <p class="ai-hero-header__subtitle">AI-powered price forecasting across 42 mandis using historical seasonality, weather signals, market arrivals, and buyer demand.</p>
         </div>
 
-        <!-- Forecast Control Center Card -->
+        <!-- Interactive Forecast Control Bar -->
         <div class="dash-card dash-forecast-controls-card">
-          <div class="ai-control-header">
-            <span class="ai-control-header__tag"><i data-lucide="sliders" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Forecast Control Center</span>
-            <span class="ai-control-header__sub">Configure your prediction parameters</span>
-          </div>
           <div class="dash-forecast-form">
             <div class="dash-forecast-field">
               <label for="forecast-crop-select">Select Crop</label>
@@ -179,51 +187,15 @@
               </div>
             </div>
             <div class="dash-forecast-btn-wrap">
-              <button class="btn btn--primary dash-forecast-btn btn-shimmer" id="btn-generate-forecast">
-                <i data-lucide="sparkles"></i> <span>✦ Generate AI Forecast</span>
+              <button class="btn btn--primary dash-forecast-btn" id="btn-generate-forecast">
+                <i data-lucide="sparkles"></i> <span>Generate Forecast</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Market Signals Grid -->
-        <div class="ai-signals-grid" id="ai-signals-grid">
-          <div class="ai-signal-card">
-            <div class="ai-signal-card__icon ai-signal-card__icon--weather">🌦</div>
-            <div>
-              <div class="ai-signal-card__label">Weather Radar</div>
-              <div class="ai-signal-card__value" id="signal-weather-val">Favorable</div>
-              <div class="ai-signal-card__sub">Normal Monsoon Activity</div>
-            </div>
-          </div>
-          <div class="ai-signal-card">
-            <div class="ai-signal-card__icon ai-signal-card__icon--trend">📈</div>
-            <div>
-              <div class="ai-signal-card__label">Historical Trend</div>
-              <div class="ai-signal-card__value" id="signal-trend-val">Bullish (+4.2%)</div>
-              <div class="ai-signal-card__sub">5-Yr Seasonality Index</div>
-            </div>
-          </div>
-          <div class="ai-signal-card">
-            <div class="ai-signal-card__icon ai-signal-card__icon--arrivals">🚚</div>
-            <div>
-              <div class="ai-signal-card__label">Mandi Arrivals</div>
-              <div class="ai-signal-card__value" id="signal-arrivals-val">Moderate</div>
-              <div class="ai-signal-card__sub">Down 8% Volume</div>
-            </div>
-          </div>
-          <div class="ai-signal-card">
-            <div class="ai-signal-card__icon ai-signal-card__icon--demand">🛒</div>
-            <div>
-              <div class="ai-signal-card__label">Buyer Demand</div>
-              <div class="ai-signal-card__value" id="signal-demand-val">High ↑</div>
-              <div class="ai-signal-card__sub">Up 14% Corporate Bids</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- AI Forecast Hero Intelligence Panel -->
-        <div class="dash-ai-card" id="ai-insight-card">
+        <!-- AI Forecast Results Card -->
+        <div class="dash-ai-card" id="ai-insight-card" style="margin-top: 24px;">
           <div class="dash-ai-card__glow"></div>
           <div class="dash-ai-card__inner">
             <div class="dash-ai-card__badge" id="forecast-badge">
@@ -232,12 +204,13 @@
 
             <div class="dash-ai-card__content" id="forecast-result-content">
               <div class="dash-ai-card__left">
-                <h3 class="dash-ai-card__headline" id="forecast-headline">Rice — Pune APMC / 7-Day AI Price Forecast</h3>
+                <h3 class="dash-ai-card__headline" id="forecast-headline">Rice — Pune APMC Forecast</h3>
                 <p class="dash-ai-card__insight" id="forecast-insight-text">
-                  "Rice prices are projected to <em>rise by +4.2%</em> over the next 7 days due to reduced arrivals and strong procurement demand."
+                  "Rice prices are projected to <em>rise by +4.2%</em> over the next 7 days due to reduced arrivals and
+                  strong procurement demand."
                 </p>
                 <div class="dash-ai-card__recommendation">
-                  <div class="dash-ai-card__rec-badge" id="forecast-rec-badge">RECOMMENDATION: HOLD INVENTORY 3-5 DAYS</div>
+                  <div class="dash-ai-card__rec-badge" id="forecast-rec-badge">WAIT 3 DAYS</div>
                   <div class="dash-ai-card__rec-details">
                     <div class="dash-ai-card__rec-detail">
                       <span class="dash-ai-card__rec-label">Current Price</span>
@@ -249,28 +222,35 @@
                     </div>
                     <div class="dash-ai-card__rec-detail">
                       <span class="dash-ai-card__rec-label">Projected Change</span>
-                      <span class="dash-ai-card__rec-value dash-ai-card__rec-value--highlight" id="forecast-change-val">+4.2% (↑ ₹120/q)</span>
+                      <span class="dash-ai-card__rec-value dash-ai-card__rec-value--highlight"
+                        id="forecast-change-val">+4.2% (↑ ₹120/q)</span>
                     </div>
                     <div class="dash-ai-card__rec-detail">
                       <span class="dash-ai-card__rec-label">Confidence</span>
-                      <span class="dash-ai-card__rec-value dash-ai-card__rec-value--highlight" id="forecast-confidence-val">87%</span>
+                      <span class="dash-ai-card__rec-value dash-ai-card__rec-value--highlight"
+                        id="forecast-confidence-val">87%</span>
                     </div>
                   </div>
                   <p class="dash-ai-card__reason" id="forecast-reason-text">
-                    <i data-lucide="info"></i> "Buyer demand is rising by 14% while regional mandi arrivals dropped 8% this week. Signal strength: High."
+                    <i data-lucide="info"></i> "Buyer demand is rising by 14% while regional mandi arrivals dropped 8%
+                    this week."
                   </p>
                 </div>
                 <div class="dash-ai-card__btns">
-                  <a href="lots.html" class="btn btn--primary" id="btn-forecast-sell-action"><i data-lucide="plus-circle"></i> Create Lot at Target Price</a>
-                  <button class="btn btn--secondary" id="btn-set-alert-ai" onclick="openAlertModal()"><i data-lucide="bell-ring"></i> Set Target Alert (₹2,970)</button>
+                  <a href="lots.html" class="btn btn--primary" id="btn-forecast-sell-action"><i
+                      data-lucide="plus-circle"></i> Create Lot at Target Price</a>
+                  <button class="btn btn--secondary" id="btn-set-alert-ai" onclick="openAlertModal()"><i
+                      data-lucide="bell-ring"></i> Set Target Alert (₹2,970)</button>
                 </div>
               </div>
 
               <div class="dash-ai-card__right">
                 <div class="dash-ai-card__ring">
                   <svg viewBox="0 0 120 120">
-                    <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="8"/>
-                    <circle cx="60" cy="60" r="52" fill="none" stroke="var(--ks-mint)" stroke-width="8" stroke-dasharray="326.73" stroke-dashoffset="42.47" stroke-linecap="round" transform="rotate(-90 60 60)" class="dash-ai-card__ring-progress" id="forecast-ring-circle"/>
+                    <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="8" />
+                    <circle cx="60" cy="60" r="52" fill="none" stroke="var(--ks-mint)" stroke-width="8"
+                      stroke-dasharray="326.73" stroke-dashoffset="42.47" stroke-linecap="round"
+                      transform="rotate(-90 60 60)" class="dash-ai-card__ring-progress" id="forecast-ring-circle" />
                   </svg>
                   <div class="dash-ai-card__ring-label">
                     <span class="dash-ai-card__ring-value" id="forecast-ring-text">87%</span>
@@ -300,28 +280,6 @@
           </div>
         </div>
 
-        <!-- Price Range Estimation Card -->
-        <div class="ai-range-card" id="ai-range-card">
-          <div class="ai-range-card__title">
-            <span><i data-lucide="bar-chart-2" style="width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i> Expected Price Range Estimation</span>
-            <span style="font-size:12px; font-weight:600; color:var(--ks-sage);">87% Statistical Confidence Band</span>
-          </div>
-          <div class="ai-range-bar-wrap">
-            <div class="ai-range-item">
-              <div class="ai-range-item__label">Lower Bound</div>
-              <div class="ai-range-item__val" id="range-lower-val">₹2,910/q</div>
-            </div>
-            <div class="ai-range-item">
-              <div class="ai-range-item__label">Expected AI Price</div>
-              <div class="ai-range-item__val ai-range-item__val--expected" id="range-expected-val">₹2,970/q</div>
-            </div>
-            <div class="ai-range-item">
-              <div class="ai-range-item__label">Upper Bound</div>
-              <div class="ai-range-item__val" id="range-upper-val">₹3,040/q</div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
 
@@ -335,13 +293,17 @@
             <p class="dash-opp-card__desc">Your listed rice inventory is currently worth approximately:</p>
             <div class="dash-opp-card__value" id="opp-total-val">₹71,250</div>
             <div class="dash-opp-card__details">
-              <div class="dash-opp-card__detail"><span>Current Market</span><strong id="opp-cur-price">₹2,850/q</strong></div>
-              <div class="dash-opp-card__detail"><span>Recommended Target</span><strong id="opp-rec-price">₹2,950/q</strong></div>
-              <div class="dash-opp-card__detail dash-opp-card__detail--highlight"><span>Potential Extra Income</span><strong class="dash-opp-card__extra" id="opp-extra-val">+₹2,500</strong></div>
+              <div class="dash-opp-card__detail"><span>Current Market</span><strong id="opp-cur-price">₹2,850/q</strong>
+              </div>
+              <div class="dash-opp-card__detail"><span>Recommended Target</span><strong
+                  id="opp-rec-price">₹2,950/q</strong></div>
+              <div class="dash-opp-card__detail dash-opp-card__detail--highlight"><span>Potential Extra
+                  Income</span><strong class="dash-opp-card__extra" id="opp-extra-val">+₹2,500</strong></div>
             </div>
           </div>
           <div class="dash-opp-card__action">
-            <a href="buyers.html" class="btn btn--primary" id="btn-find-buyer"><i data-lucide="search"></i> Find Best Buyer</a>
+            <a href="buyers.html" class="btn btn--primary" id="btn-find-buyer"><i data-lucide="search"></i> Find Best
+              Buyer</a>
           </div>
         </div>
       </div>
@@ -370,12 +332,18 @@
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="dash-bottom-nav" id="dash-bottom-nav">
-    <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i data-lucide="home"></i><span>Home</span></a>
-    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i data-lucide="bar-chart-3"></i><span>Market</span></a>
-    <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span>My Lots</span></a>
-    <a href="ai-forecast.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-forecast"><i data-lucide="brain"></i><span>Forecast</span></a>
-    <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i data-lucide="users"></i><span>Buyers</span></a>
-    <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i data-lucide="clipboard-list"></i><span>Orders</span></a>
+    <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i
+        data-lucide="home"></i><span>Home</span></a>
+    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i
+        data-lucide="bar-chart-3"></i><span>Market</span></a>
+    <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span>My
+        Lots</span></a>
+    <a href="ai-forecast.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-forecast"><i
+        data-lucide="brain"></i><span>Forecast</span></a>
+    <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i
+        data-lucide="users"></i><span>Buyers</span></a>
+    <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i
+        data-lucide="clipboard-list"></i><span>Orders</span></a>
   </nav>
 
   <!-- MODALS -->
@@ -400,7 +368,8 @@
           <label for="alert-price-input">Target Price (₹/quintal)</label>
           <input type="number" id="alert-price-input" class="dash-form-input" placeholder="e.g. 3000" required>
         </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="bell-ring"></i> Set Price Alert</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="bell-ring"></i> Set Price
+          Alert</button>
       </form>
     </div>
   </div>
@@ -409,7 +378,9 @@
   <div class="dash-modal-overlay" id="notifications-modal-overlay">
     <div class="dash-modal dash-modal--sm" id="notifications-modal">
       <div class="dash-modal__header">
-        <div><h3>Notifications</h3></div>
+        <div>
+          <h3>Notifications</h3>
+        </div>
         <button class="dash-modal__close" id="notifications-modal-close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad" id="notifications-list"></div>
@@ -427,7 +398,8 @@
           <label for="prof-name">Full Name</label>
           <input type="text" id="prof-name" class="dash-form-input" value="Rajesh Patil" required>
         </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save Settings</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save
+          Settings</button>
       </form>
     </div>
   </div>
@@ -458,7 +430,8 @@
       </div>
       <div class="dash-modal__body-pad">
         <div class="dash-lang-list">
-          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span> <strong>Active</strong></button>
+          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span>
+            <strong>Active</strong></button>
           <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
         </div>
       </div>
@@ -469,4 +442,76 @@
   <script src="js/navbar.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
+
+</html>
+
+<!-- NOTIFICATIONS / PROFILE / HELPLINE / LANG MODALS -->
+<div class="dash-modal-overlay" id="notifications-modal-overlay">
+  <div class="dash-modal dash-modal--sm" id="notifications-modal">
+    <div class="dash-modal__header">
+      <div>
+        <h3>Notifications</h3>
+      </div>
+      <button class="dash-modal__close" id="notifications-modal-close"><i data-lucide="x"></i></button>
+    </div>
+    <div class="dash-modal__body-pad" id="notifications-list"></div>
+  </div>
+</div>
+
+<div class="dash-modal-overlay" id="profile-modal-overlay">
+  <div class="dash-modal" id="profile-modal">
+    <div class="dash-modal__header">
+      <h3>Farmer Profile & Settings</h3>
+      <button class="dash-modal__close" id="profile-modal-close"><i data-lucide="x"></i></button>
+    </div>
+    <form class="dash-modal__form" id="profile-form">
+      <div class="dash-modal__field">
+        <label for="prof-name">Full Name</label>
+        <input type="text" id="prof-name" class="dash-form-input" value="Rajesh Patil" required>
+      </div>
+      <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save
+        Settings</button>
+    </form>
+  </div>
+</div>
+
+<div class="dash-modal-overlay" id="help-modal-overlay">
+  <div class="dash-modal" id="help-modal">
+    <div class="dash-modal__header">
+      <h3>Kisan Support & Helpline</h3>
+      <button class="dash-modal__close" id="help-modal-close"><i data-lucide="x"></i></button>
+    </div>
+    <div class="dash-modal__body-pad">
+      <div class="dash-help-banner">
+        <i data-lucide="phone-call"></i>
+        <div>
+          <div style="font-weight:700; color:var(--ks-evergreen);">Kisan Call Center (Toll Free)</div>
+          <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dash-modal-overlay" id="language-modal-overlay">
+  <div class="dash-modal dash-modal--sm" id="language-modal">
+    <div class="dash-modal__header">
+      <h3>Select Language</h3>
+      <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
+    </div>
+    <div class="dash-modal__body-pad">
+      <div class="dash-lang-list">
+        <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span>
+          <strong>Active</strong></button>
+        <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="js/navbar.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+
 </html>

@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Lots — KrishiShetra</title>
-  <meta name="description" content="Manage your listed crop lots, track status, view incoming buyer quotes, and negotiate prices on KrishiShetra.">
+  <meta name="description"
+    content="Manage your listed crop lots, track status, view incoming buyer quotes, and negotiate prices on KrishiShetra.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap"
+    rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -18,6 +22,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
+
 <body class="dashboard-body">
 
   <!-- AMBIENT FARMER SUNLIGHT BACKGROUND -->
@@ -37,7 +42,8 @@
 
       <div class="dash-search" id="dash-search">
         <i data-lucide="search" class="dash-search__icon"></i>
-        <input type="text" id="dash-search-input" class="dash-search__input" placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
+        <input type="text" id="dash-search-input" class="dash-search__input"
+          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="dash-search__results" id="dash-search-results"></div>
       </div>
@@ -89,12 +95,17 @@
               </div>
             </div>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-profile"><i data-lucide="user"></i> My Profile & Farm</a>
-            <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> Manage My Lots</a>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-alerts"><i data-lucide="bell-ring"></i> Price Alerts</a>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan Helpline</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-profile"><i data-lucide="user"></i> My Profile &
+              Farm</a>
+            <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> Manage
+              My Lots</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-alerts"><i data-lucide="bell-ring"></i> Price
+              Alerts</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan
+              Helpline</a>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
+            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
+                data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
       </div>
@@ -108,25 +119,32 @@
   <!-- Mobile Slide Nav -->
   <div class="dash-mobile-nav" id="dash-mobile-nav">
     <div class="dash-mobile-nav__links">
-      <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-      <a href="lots.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
-      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market Prices</a>
-      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI Forecast</a>
+      <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i>
+        Dashboard</a>
+      <a href="lots.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-lots"><i
+          data-lucide="package"></i> My Lots</a>
+      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market
+        Prices</a>
+      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI
+        Forecast</a>
       <a href="buyers.html" class="dash-mobile-nav__link" id="mnav-buyers"><i data-lucide="users"></i> Buyers</a>
-      <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i> Orders</a>
+      <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i>
+        Orders</a>
     </div>
   </div>
 
   <!-- MAIN CONTENT -->
-  <main class="dash-main container" style="padding-top: calc(var(--nav-height) + 28px); padding-bottom: 50px;">
+  <main class="dash-main container" style="padding-top: 30px; padding-bottom: 50px;">
 
     <!-- Page Header Banner -->
     <div class="dash-section__header" style="margin-bottom: 24px;">
       <div>
         <h1 class="dash-section__title" style="font-size: 28px;">📦 My Crop Lots & Buyer Offers</h1>
-        <p class="dash-section__subtitle">Manage your active harvest listings, create new lots, and negotiate buyer bids.</p>
+        <p class="dash-section__subtitle">Manage your active harvest listings, create new lots, and negotiate buyer
+          bids.</p>
       </div>
-      <button class="btn btn--primary" id="btn-create-lot-page" onclick="openCreateLotModal()"><i data-lucide="plus"></i> + Create New Crop Lot</button>
+      <button class="btn btn--primary" id="btn-create-lot-page" onclick="openCreateLotModal()"><i
+          data-lucide="plus"></i> + Create New Crop Lot</button>
     </div>
 
     <!-- Active Lots & Offers 2-Column Section -->
@@ -150,7 +168,8 @@
             <!-- Rendered dynamically by JS -->
           </div>
           <div class="dash-panel__footer">
-            <button class="btn btn--primary dash-panel__cta" id="btn-create-lot" onclick="openCreateLotModal()"><i data-lucide="plus"></i> + Add New Crop Lot</button>
+            <button class="btn btn--primary dash-panel__cta" id="btn-create-lot" onclick="openCreateLotModal()"><i
+                data-lucide="plus"></i> + Add New Crop Lot</button>
           </div>
         </div>
 
@@ -167,7 +186,8 @@
             <!-- Rendered dynamically by JS -->
           </div>
           <div class="dash-panel__footer">
-            <a href="buyers.html" class="btn btn--secondary dash-panel__cta" id="btn-all-buyers"><i data-lucide="users"></i> View All Buyers</a>
+            <a href="buyers.html" class="btn btn--secondary dash-panel__cta" id="btn-all-buyers"><i
+                data-lucide="users"></i> View All Buyers</a>
           </div>
         </div>
 
@@ -197,12 +217,18 @@
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="dash-bottom-nav" id="dash-bottom-nav">
-    <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i data-lucide="home"></i><span>Home</span></a>
-    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i data-lucide="bar-chart-3"></i><span>Market</span></a>
-    <a href="lots.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-lots"><i data-lucide="package"></i><span>My Lots</span></a>
-    <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i data-lucide="brain"></i><span>Forecast</span></a>
-    <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i data-lucide="users"></i><span>Buyers</span></a>
-    <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i data-lucide="clipboard-list"></i><span>Orders</span></a>
+    <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i
+        data-lucide="home"></i><span>Home</span></a>
+    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i
+        data-lucide="bar-chart-3"></i><span>Market</span></a>
+    <a href="lots.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-lots"><i
+        data-lucide="package"></i><span>My Lots</span></a>
+    <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i
+        data-lucide="brain"></i><span>Forecast</span></a>
+    <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i
+        data-lucide="users"></i><span>Buyers</span></a>
+    <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i
+        data-lucide="clipboard-list"></i><span>Orders</span></a>
   </nav>
 
   <!-- MODALS REQUIRED ON LOTS PAGE -->
@@ -211,7 +237,8 @@
     <div class="dash-modal" id="create-lot-modal">
       <div class="dash-modal__header">
         <h3>+ Create New Crop Lot</h3>
-        <button class="dash-modal__close" id="create-lot-modal-close" aria-label="Close"><i data-lucide="x"></i></button>
+        <button class="dash-modal__close" id="create-lot-modal-close" aria-label="Close"><i
+            data-lucide="x"></i></button>
       </div>
       <form class="dash-modal__form" id="create-lot-form">
         <div class="dash-modal__field">
@@ -231,11 +258,13 @@
         <div class="dash-form-row">
           <div class="dash-modal__field">
             <label for="lot-qty-input">Quantity (Quintals)</label>
-            <input type="number" id="lot-qty-input" class="dash-form-input" placeholder="e.g. 25" min="1" max="10000" required>
+            <input type="number" id="lot-qty-input" class="dash-form-input" placeholder="e.g. 25" min="1" max="10000"
+              required>
           </div>
           <div class="dash-modal__field">
             <label for="lot-price-input">Expected Price (₹/q)</label>
-            <input type="number" id="lot-price-input" class="dash-form-input" placeholder="e.g. 3000" min="100" required>
+            <input type="number" id="lot-price-input" class="dash-form-input" placeholder="e.g. 3000" min="100"
+              required>
           </div>
         </div>
         <div class="dash-form-row">
@@ -255,13 +284,16 @@
         </div>
         <div class="dash-modal__field">
           <label for="lot-location-input">Farm Location / Mandi</label>
-          <input type="text" id="lot-location-input" class="dash-form-input" value="Pune, Maharashtra" placeholder="Village, Taluka, District" required>
+          <input type="text" id="lot-location-input" class="dash-form-input" value="Pune, Maharashtra"
+            placeholder="Village, Taluka, District" required>
         </div>
         <div class="dash-modal__field">
           <label for="lot-desc-input">Description / Moisture / Variety</label>
-          <textarea id="lot-desc-input" class="dash-form-textarea" rows="2" placeholder="e.g. Basmati variety, moisture below 10%, clean machine cleaned grain."></textarea>
+          <textarea id="lot-desc-input" class="dash-form-textarea" rows="2"
+            placeholder="e.g. Basmati variety, moisture below 10%, clean machine cleaned grain."></textarea>
         </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-submit-lot"><i data-lucide="check"></i> Create & List Lot</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-submit-lot"><i
+            data-lucide="check"></i> Create & List Lot</button>
       </form>
     </div>
   </div>
@@ -306,7 +338,8 @@
           <label for="edit-lot-desc">Description</label>
           <textarea id="edit-lot-desc" class="dash-form-textarea" rows="2"></textarea>
         </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save Changes</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save
+          Changes</button>
       </form>
     </div>
   </div>
@@ -319,7 +352,8 @@
         <button class="dash-modal__close" id="pause-lot-modal-close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad">
-        <p id="pause-modal-desc">Paused listings will temporarily be hidden from buyers on the marketplace. You can resume anytime.</p>
+        <p id="pause-modal-desc">Paused listings will temporarily be hidden from buyers on the marketplace. You can
+          resume anytime.</p>
         <div class="dash-modal__actions-row">
           <button class="btn btn--secondary" id="btn-cancel-pause">Cancel</button>
           <button class="btn btn--primary" id="btn-confirm-pause">Confirm Pause</button>
@@ -356,7 +390,9 @@
         <input type="hidden" id="negotiate-offer-id">
         <div class="dash-modal__field">
           <label>Buyer Offer Details</label>
-          <div id="negotiate-buyer-info" style="font-size:13px; font-weight:600; color:var(--ks-charcoal); background:var(--ks-bg-ivory); padding:10px; border-radius:var(--radius-sm);"></div>
+          <div id="negotiate-buyer-info"
+            style="font-size:13px; font-weight:600; color:var(--ks-charcoal); background:var(--ks-bg-ivory); padding:10px; border-radius:var(--radius-sm);">
+          </div>
         </div>
         <div class="dash-modal__field">
           <label for="negotiate-price-input">Your Counter Offer Price (₹/q)</label>
@@ -364,9 +400,11 @@
         </div>
         <div class="dash-modal__field">
           <label for="negotiate-note-input">Message / Note to Buyer</label>
-          <textarea id="negotiate-note-input" class="dash-form-textarea" rows="2" placeholder="e.g. Can provide delivery to Pune warehouse within 48 hours."></textarea>
+          <textarea id="negotiate-note-input" class="dash-form-textarea" rows="2"
+            placeholder="e.g. Can provide delivery to Pune warehouse within 48 hours."></textarea>
         </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="send"></i> Send Counter Offer</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="send"></i> Send Counter
+          Offer</button>
       </form>
     </div>
   </div>
@@ -389,7 +427,9 @@
   <div class="dash-modal-overlay" id="notifications-modal-overlay">
     <div class="dash-modal dash-modal--sm" id="notifications-modal">
       <div class="dash-modal__header">
-        <div><h3>Notifications</h3></div>
+        <div>
+          <h3>Notifications</h3>
+        </div>
         <button class="dash-modal__close" id="notifications-modal-close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad" id="notifications-list"></div>
@@ -417,7 +457,8 @@
             <input type="number" id="prof-land" class="dash-form-input" value="12" required>
           </div>
         </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save Settings</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save
+          Settings</button>
       </form>
     </div>
   </div>
@@ -448,7 +489,8 @@
       </div>
       <div class="dash-modal__body-pad">
         <div class="dash-lang-list">
-          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span> <strong>Active</strong></button>
+          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span>
+            <strong>Active</strong></button>
           <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
           <button class="dash-lang-btn" onclick="setLanguage('hi')"><span>हिन्दी (Hindi)</span></button>
         </div>
@@ -460,4 +502,5 @@
   <script src="js/navbar.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
+
 </html>
