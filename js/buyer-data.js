@@ -1,13 +1,11 @@
 /**
- * KRISHILINK — B2B BUYER MODULE DATA SERVICES
- * API-Ready Abstraction Services for Buyer Dashboard, Marketplace,
- * Lot Intelligence, Offer Negotiations, Orders, Logistics, and Payments.
+ * KRISHILINK — B2B BUYER MODULE DATA SERVICES v2.0
+ * Production-Grade API-Ready Abstraction Services
  */
 
-// ═════════════════════════════════════════════════════════════════════
-// 1. MOCK DATASETS (Realistic Indian Agricultural Sourcing Data)
-// ═════════════════════════════════════════════════════════════════════
-
+// ═══════════════════════════════════════════════
+// 1. BUYER PROFILE
+// ═══════════════════════════════════════════════
 const BUYER_PROFILE_DEMO = {
   id: 'buyer-901',
   companyName: 'ABC Foods Pvt Ltd',
@@ -22,7 +20,7 @@ const BUYER_PROFILE_DEMO = {
   district: 'Pune',
   state: 'Maharashtra',
   pincode: '410501',
-  kycStatus: 'VERIFIED', // VERIFIED | PENDING | NOT_SUBMITTED
+  kycStatus: 'VERIFIED',
   kycSubmittedAt: '2026-08-10',
   bankDetails: {
     accountHolder: 'ABC Foods Pvt Ltd',
@@ -40,294 +38,360 @@ const BUYER_PROFILE_DEMO = {
     preferredRegion: 'Maharashtra (Nashik / Pune)',
     targetPriceMin: 2700,
     targetPriceMax: 2850
+  },
+  preferences: {
+    notifications: true,
+    language: 'English',
+    currency: 'INR',
+    autoNegotiate: false
   }
 };
 
+// ═══════════════════════════════════════════════
+// 2. LOTS DATA (8 realistic lots)
+// ═══════════════════════════════════════════════
 const B2B_LOTS_DATA = [
   {
-    id: 'lot-101',
-    crop: 'Onion',
-    variety: 'Red Garwa',
-    emoji: '🧅',
-    grade: 'Grade A',
-    quantity: 100,
-    unit: 'Quintals',
-    sellerAskPrice: 2750,
-    marketRefPrice: 2650,
-    marketRangeMin: 2600,
-    marketRangeMax: 2800,
-    mandiCessPerQ: 15,
-    location: 'Nashik, Maharashtra',
-    mandi: 'Nashik APMC',
-    distanceKm: 42,
-    estimatedTransportTotal: 4000,
-    otherCostTotal: 1500,
+    id: 'lot-101', crop: 'Onion', variety: 'Red Garwa', emoji: '🧅',
+    grade: 'Grade A', quantity: 100, unit: 'Quintals',
+    sellerAskPrice: 2750, marketRefPrice: 2650,
+    marketRangeMin: 2600, marketRangeMax: 2800,
+    mandiCessPerQ: 15, location: 'Nashik, Maharashtra',
+    mandi: 'Nashik APMC', distanceKm: 42,
+    estimatedTransportTotal: 4000, otherCostTotal: 1500,
     sellerName: 'Nashik Farmer Producer Co (FPO)',
-    sellerVerified: true,
-    sellerTrustScore: 92,
-    sellerCompletedOrders: 48,
-    disputeRate: '0.4%',
-    aiMatchPct: 94,
-    harvestDate: '2026-08-24',
+    sellerVerified: true, sellerTrustScore: 92,
+    sellerCompletedOrders: 48, disputeRate: '0.4%',
+    aiMatchPct: 94, harvestDate: '2026-08-24',
     availableUntil: '2026-09-05',
     image: 'assets/images/crop-onion.jpg',
-    lat: 19.9975,
-    lng: 73.7898,
-    qualityMetrics: {
-      moisturePct: '12%',
-      sizeMm: '45–60mm',
-      defectsPct: 'Low (< 1.5%)',
-      aiConfidencePct: 91
-    }
+    lat: 19.9975, lng: 73.7898,
+    qualityMetrics: { moisturePct: '12%', sizeMm: '45–60mm', defectsPct: 'Low (< 1.5%)', aiConfidencePct: 91 },
+    trustBreakdown: { verification: 95, paymentReliability: 90, orderCompletion: 94, transactionHistory: 88 }
   },
   {
-    id: 'lot-102',
-    crop: 'Wheat',
-    variety: 'Lokwan Premium',
-    emoji: '🌾',
-    grade: 'Grade A',
-    quantity: 250,
-    unit: 'Quintals',
-    sellerAskPrice: 2680,
-    marketRefPrice: 2650,
-    marketRangeMin: 2580,
-    marketRangeMax: 2720,
-    mandiCessPerQ: 12,
-    location: 'Nashik, Maharashtra',
-    mandi: 'Nashik APMC',
-    distanceKm: 65,
-    estimatedTransportTotal: 8500,
-    otherCostTotal: 2200,
+    id: 'lot-102', crop: 'Wheat', variety: 'Lokwan Premium', emoji: '🌾',
+    grade: 'Grade A', quantity: 250, unit: 'Quintals',
+    sellerAskPrice: 2680, marketRefPrice: 2650,
+    marketRangeMin: 2580, marketRangeMax: 2720,
+    mandiCessPerQ: 12, location: 'Nashik, Maharashtra',
+    mandi: 'Nashik APMC', distanceKm: 65,
+    estimatedTransportTotal: 8500, otherCostTotal: 2200,
     sellerName: 'Sahyadri Agro Farmers Union',
-    sellerVerified: true,
-    sellerTrustScore: 96,
-    sellerCompletedOrders: 112,
-    disputeRate: '0.1%',
-    aiMatchPct: 89,
-    harvestDate: '2026-08-20',
+    sellerVerified: true, sellerTrustScore: 96,
+    sellerCompletedOrders: 112, disputeRate: '0.1%',
+    aiMatchPct: 89, harvestDate: '2026-08-20',
     availableUntil: '2026-09-10',
     image: 'assets/images/crop-wheat.jpg',
-    lat: 20.0050,
-    lng: 73.7700,
-    qualityMetrics: {
-      moisturePct: '8.5%',
-      sizeMm: 'Clean Bold Grains',
-      defectsPct: 'Nil (< 0.5%)',
-      aiConfidencePct: 95
-    }
+    lat: 20.0050, lng: 73.7700,
+    qualityMetrics: { moisturePct: '8.5%', sizeMm: 'Clean Bold Grains', defectsPct: 'Nil (< 0.5%)', aiConfidencePct: 95 },
+    trustBreakdown: { verification: 98, paymentReliability: 96, orderCompletion: 97, transactionHistory: 94 }
   },
   {
-    id: 'lot-103',
-    crop: 'Soybean',
-    variety: 'JS 335 Organic',
-    emoji: '🫘',
-    grade: 'Grade A+',
-    quantity: 300,
-    unit: 'Quintals',
-    sellerAskPrice: 4700,
-    marketRefPrice: 4650,
-    marketRangeMin: 4550,
-    marketRangeMax: 4800,
-    mandiCessPerQ: 20,
-    location: 'Indore, Madhya Pradesh',
-    mandi: 'Indore Mandi',
-    distanceKm: 520,
-    estimatedTransportTotal: 32000,
-    otherCostTotal: 4500,
+    id: 'lot-103', crop: 'Soybean', variety: 'JS 335 Organic', emoji: '🫘',
+    grade: 'Grade A+', quantity: 300, unit: 'Quintals',
+    sellerAskPrice: 4700, marketRefPrice: 4650,
+    marketRangeMin: 4550, marketRangeMax: 4800,
+    mandiCessPerQ: 20, location: 'Indore, Madhya Pradesh',
+    mandi: 'Indore Mandi', distanceKm: 520,
+    estimatedTransportTotal: 32000, otherCostTotal: 4500,
     sellerName: 'Malwa Organic Sourcing Co-op',
-    sellerVerified: true,
-    sellerTrustScore: 95,
-    sellerCompletedOrders: 86,
-    disputeRate: '0.2%',
-    aiMatchPct: 92,
-    harvestDate: '2026-08-18',
+    sellerVerified: true, sellerTrustScore: 95,
+    sellerCompletedOrders: 86, disputeRate: '0.2%',
+    aiMatchPct: 92, harvestDate: '2026-08-18',
     availableUntil: '2026-09-15',
     image: 'assets/images/crop-soybean.jpg',
-    lat: 22.7196,
-    lng: 75.8577,
-    qualityMetrics: {
-      moisturePct: '9.2%',
-      oilContentPct: '19.8%',
-      defectsPct: 'Low (< 1.0%)',
-      aiConfidencePct: 93
-    }
+    lat: 22.7196, lng: 75.8577,
+    qualityMetrics: { moisturePct: '9.2%', sizeMm: '19.8% Oil', defectsPct: 'Low (< 1.0%)', aiConfidencePct: 93 },
+    trustBreakdown: { verification: 96, paymentReliability: 94, orderCompletion: 95, transactionHistory: 92 }
   },
   {
-    id: 'lot-104',
-    crop: 'Rice',
-    variety: 'Sona Masoori Raw',
-    emoji: '🌾',
-    grade: 'Grade A',
-    quantity: 400,
-    unit: 'Quintals',
-    sellerAskPrice: 2890,
-    marketRefPrice: 2850,
-    marketRangeMin: 2800,
-    marketRangeMax: 2950,
-    mandiCessPerQ: 14,
-    location: 'Pune, Maharashtra',
-    mandi: 'Pune APMC',
-    distanceKm: 18,
-    estimatedTransportTotal: 4500,
-    otherCostTotal: 1800,
+    id: 'lot-104', crop: 'Rice', variety: 'Sona Masoori Raw', emoji: '🍚',
+    grade: 'Grade A', quantity: 400, unit: 'Quintals',
+    sellerAskPrice: 2890, marketRefPrice: 2850,
+    marketRangeMin: 2800, marketRangeMax: 2950,
+    mandiCessPerQ: 14, location: 'Pune, Maharashtra',
+    mandi: 'Pune APMC', distanceKm: 18,
+    estimatedTransportTotal: 4500, otherCostTotal: 1800,
     sellerName: 'Deccan Grain Growers FPO',
-    sellerVerified: true,
-    sellerTrustScore: 94,
-    sellerCompletedOrders: 64,
-    disputeRate: '0.3%',
-    aiMatchPct: 96,
-    harvestDate: '2026-08-22',
+    sellerVerified: true, sellerTrustScore: 94,
+    sellerCompletedOrders: 64, disputeRate: '0.3%',
+    aiMatchPct: 96, harvestDate: '2026-08-22',
     availableUntil: '2026-09-08',
     image: 'assets/images/crop-rice.jpg',
-    lat: 18.5204,
-    lng: 73.8567,
-    qualityMetrics: {
-      moisturePct: '11.0%',
-      brokenPct: '< 3%',
-      defectsPct: 'Nil',
-      aiConfidencePct: 94
-    }
+    lat: 18.5204, lng: 73.8567,
+    qualityMetrics: { moisturePct: '11.0%', sizeMm: 'Broken < 3%', defectsPct: 'Nil', aiConfidencePct: 94 },
+    trustBreakdown: { verification: 94, paymentReliability: 93, orderCompletion: 96, transactionHistory: 90 }
   },
   {
-    id: 'lot-105',
-    crop: 'Chilli',
-    variety: 'Teja Red Dry',
-    emoji: '🌶️',
-    grade: 'Export Grade',
-    quantity: 80,
-    unit: 'Quintals',
-    sellerAskPrice: 8650,
-    marketRefPrice: 8500,
-    marketRangeMin: 8300,
-    marketRangeMax: 8850,
-    mandiCessPerQ: 35,
-    location: 'Guntur, Andhra Pradesh',
-    mandi: 'Guntur APMC',
-    distanceKm: 720,
-    estimatedTransportTotal: 28000,
-    otherCostTotal: 3800,
+    id: 'lot-105', crop: 'Chilli', variety: 'Teja Red Dry', emoji: '🌶️',
+    grade: 'Export Grade', quantity: 80, unit: 'Quintals',
+    sellerAskPrice: 8650, marketRefPrice: 8500,
+    marketRangeMin: 8300, marketRangeMax: 8850,
+    mandiCessPerQ: 35, location: 'Guntur, Andhra Pradesh',
+    mandi: 'Guntur APMC', distanceKm: 720,
+    estimatedTransportTotal: 28000, otherCostTotal: 3800,
     sellerName: 'Guntur Spice Traders Association',
-    sellerVerified: true,
-    sellerTrustScore: 97,
-    sellerCompletedOrders: 140,
-    disputeRate: '0.1%',
-    aiMatchPct: 88,
-    harvestDate: '2026-08-15',
+    sellerVerified: true, sellerTrustScore: 97,
+    sellerCompletedOrders: 140, disputeRate: '0.1%',
+    aiMatchPct: 88, harvestDate: '2026-08-15',
     availableUntil: '2026-09-20',
     image: 'assets/images/crop-chilli.jpg',
-    lat: 16.3067,
-    lng: 80.4365,
-    qualityMetrics: {
-      moisturePct: '9.0%',
-      colorASTA: '120+',
-      pungencySHU: '45,000',
-      aiConfidencePct: 96
-    }
+    lat: 16.3067, lng: 80.4365,
+    qualityMetrics: { moisturePct: '9.0%', sizeMm: 'ASTA 120+', defectsPct: 'SHU 45,000', aiConfidencePct: 96 },
+    trustBreakdown: { verification: 98, paymentReliability: 97, orderCompletion: 98, transactionHistory: 96 }
+  },
+  {
+    id: 'lot-106', crop: 'Potato', variety: 'Kufri Jyoti', emoji: '🥔',
+    grade: 'Grade A', quantity: 200, unit: 'Quintals',
+    sellerAskPrice: 1950, marketRefPrice: 1900,
+    marketRangeMin: 1850, marketRangeMax: 2000,
+    mandiCessPerQ: 10, location: 'Pune, Maharashtra',
+    mandi: 'Pune APMC', distanceKm: 22,
+    estimatedTransportTotal: 3200, otherCostTotal: 1200,
+    sellerName: 'Western Maharashtra FPO Alliance',
+    sellerVerified: true, sellerTrustScore: 91,
+    sellerCompletedOrders: 56, disputeRate: '0.5%',
+    aiMatchPct: 85, harvestDate: '2026-08-26',
+    availableUntil: '2026-09-12',
+    image: 'assets/images/crop-potato.jpg',
+    lat: 18.5204, lng: 73.8567,
+    qualityMetrics: { moisturePct: '78% (fresh)', sizeMm: '40–60mm', defectsPct: 'Low (< 2%)', aiConfidencePct: 88 },
+    trustBreakdown: { verification: 92, paymentReliability: 89, orderCompletion: 93, transactionHistory: 87 }
+  },
+  {
+    id: 'lot-107', crop: 'Tomato', variety: 'Hybrid Abhinav', emoji: '🍅',
+    grade: 'Grade A', quantity: 150, unit: 'Quintals',
+    sellerAskPrice: 2800, marketRefPrice: 2700,
+    marketRangeMin: 2600, marketRangeMax: 2900,
+    mandiCessPerQ: 12, location: 'Ahmednagar, Maharashtra',
+    mandi: 'Ahmednagar APMC', distanceKm: 95,
+    estimatedTransportTotal: 7800, otherCostTotal: 2000,
+    sellerName: 'Ahmednagar Tomato Growers FPO',
+    sellerVerified: true, sellerTrustScore: 89,
+    sellerCompletedOrders: 38, disputeRate: '0.6%',
+    aiMatchPct: 91, harvestDate: '2026-08-28',
+    availableUntil: '2026-09-04',
+    image: 'assets/images/crop-tomato.jpg',
+    lat: 19.0955, lng: 74.7496,
+    qualityMetrics: { moisturePct: '92% (fresh)', sizeMm: '55–75mm', defectsPct: 'Low (< 1.8%)', aiConfidencePct: 90 },
+    trustBreakdown: { verification: 90, paymentReliability: 87, orderCompletion: 91, transactionHistory: 85 }
+  },
+  {
+    id: 'lot-108', crop: 'Cotton', variety: 'Shankar-6 MCU', emoji: '🏵️',
+    grade: 'Grade A', quantity: 500, unit: 'Quintals',
+    sellerAskPrice: 6800, marketRefPrice: 6700,
+    marketRangeMin: 6500, marketRangeMax: 7000,
+    mandiCessPerQ: 25, location: 'Nagpur, Maharashtra',
+    mandi: 'Nagpur APMC', distanceKm: 680,
+    estimatedTransportTotal: 42000, otherCostTotal: 5500,
+    sellerName: 'Vidarbha Cotton Farmers Consortium',
+    sellerVerified: true, sellerTrustScore: 93,
+    sellerCompletedOrders: 72, disputeRate: '0.3%',
+    aiMatchPct: 82, harvestDate: '2026-08-12',
+    availableUntil: '2026-10-01',
+    image: 'assets/images/crop-cotton.jpg',
+    lat: 21.1458, lng: 79.0882,
+    qualityMetrics: { moisturePct: '7.5%', sizeMm: 'Staple 28mm+', defectsPct: 'Nil (< 0.5%)', aiConfidencePct: 92 },
+    trustBreakdown: { verification: 94, paymentReliability: 92, orderCompletion: 95, transactionHistory: 91 }
   }
 ];
 
+// ═══════════════════════════════════════════════
+// 3. OFFERS DATA
+// ═══════════════════════════════════════════════
 const INITIAL_OFFERS_DATA = [
   {
-    id: 'off-501',
-    lotId: 'lot-101',
-    crop: 'Onion',
-    quantity: 100,
+    id: 'off-501', lotId: 'lot-101', crop: 'Onion', quantity: 100,
     sellerName: 'Nashik Farmer Producer Co (FPO)',
-    sellerAsk: 2750,
-    currentBuyerOffer: 2800,
-    status: 'NEGOTIATING', // NEGOTIATING | ACCEPTED | REJECTED | WITHDRAWN
-    updatedAt: '10 mins ago',
+    sellerAsk: 2750, currentBuyerOffer: 2725,
+    status: 'NEGOTIATING', updatedAt: '10 mins ago',
     history: [
       { party: 'Seller', price: 2750, note: 'Listed ask price for 100Q Grade A Onion' },
       { party: 'Buyer', price: 2700, note: 'Initial procurement bid' },
-      { party: 'Seller', price: 2735, note: 'Counter offer: High demand in Nashik mandi' },
+      { party: 'Seller', price: 2735, note: 'Counter: High demand in Nashik mandi this week' },
       { party: 'Buyer', price: 2725, note: 'Final revised counter offer' }
+    ]
+  },
+  {
+    id: 'off-502', lotId: 'lot-104', crop: 'Rice', quantity: 200,
+    sellerName: 'Deccan Grain Growers FPO',
+    sellerAsk: 2890, currentBuyerOffer: 2870,
+    status: 'ACCEPTED', updatedAt: '2 hours ago',
+    history: [
+      { party: 'Seller', price: 2890, note: 'Listed ask price for 200Q Sona Masoori' },
+      { party: 'Buyer', price: 2850, note: 'Procurement bid for 200Q' },
+      { party: 'Seller', price: 2870, note: 'Final counter offer' },
+      { party: 'Buyer', price: 2870, note: 'Accepted seller counter offer' }
+    ]
+  },
+  {
+    id: 'off-503', lotId: 'lot-106', crop: 'Potato', quantity: 200,
+    sellerName: 'Western Maharashtra FPO Alliance',
+    sellerAsk: 1950, currentBuyerOffer: 1880,
+    status: 'REJECTED', updatedAt: '1 day ago',
+    history: [
+      { party: 'Seller', price: 1950, note: 'Listed price for 200Q Kufri Jyoti' },
+      { party: 'Buyer', price: 1880, note: 'Bid below market range' },
+      { party: 'Seller', price: 0, note: 'Rejected: Offer below acceptable range' }
+    ]
+  },
+  {
+    id: 'off-504', lotId: 'lot-107', crop: 'Tomato', quantity: 150,
+    sellerName: 'Ahmednagar Tomato Growers FPO',
+    sellerAsk: 2800, currentBuyerOffer: 2780,
+    status: 'NEGOTIATING', updatedAt: '35 mins ago',
+    history: [
+      { party: 'Seller', price: 2800, note: 'Listed ask price for 150Q Hybrid Abhinav' },
+      { party: 'Buyer', price: 2750, note: 'Initial procurement bid' },
+      { party: 'Seller', price: 2790, note: 'Counter: Perishable lot, premium quality' },
+      { party: 'Buyer', price: 2780, note: 'Revised counter offer' }
     ]
   }
 ];
 
+// ═══════════════════════════════════════════════
+// 4. ORDERS DATA
+// ═══════════════════════════════════════════════
 const INITIAL_ORDERS_DATA = [
   {
-    id: 'ord-10245',
-    lotId: 'lot-101',
-    crop: 'Onion',
-    variety: 'Red Garwa',
-    quantity: 100,
-    pricePerQ: 2800,
-    productTotal: 280000,
-    transportCost: 4000,
-    taxesTotal: 1500,
+    id: 'ord-10245', lotId: 'lot-101', crop: 'Onion', variety: 'Red Garwa',
+    quantity: 100, pricePerQ: 2800,
+    productTotal: 280000, transportCost: 4000, taxesTotal: 1500,
     grandTotal: 285500,
     sellerName: 'Nashik Farmer Producer Co (FPO)',
-    status: 'IN_TRANSIT', // CONFIRMED | PICKUP | IN_TRANSIT | DELIVERED | COMPLETED
-    paymentStatus: 'ESCROW_PAID', // PENDING | ESCROW_PAID | RELEASED
+    status: 'IN_TRANSIT', paymentStatus: 'ESCROW_PAID',
     pickupAddress: 'Nashik APMC Yard No 4',
     deliveryAddress: 'ABC Foods Warehouse, Chakan, Pune',
     orderedAt: '2026-08-29 14:30',
     logistics: {
-      truckNumber: 'MH 04 AB 1234',
-      driverName: 'Suresh Shinde',
+      truckNumber: 'MH 04 AB 1234', driverName: 'Suresh Shinde',
       driverPhone: '+91 97654 32109',
       currentLocation: 'Khed Toll Plaza, Pune Highway',
-      distanceRemainingKm: 42,
-      eta: '2h 20m',
-      status: 'ON TIME'
+      distanceRemainingKm: 42, eta: '2h 20m', status: 'ON TIME'
     },
     timeline: [
-      { stage: 'ORDER_CREATED', time: '29 Aug 14:30', done: true, party: 'Buyer' },
-      { stage: 'OFFER_ACCEPTED', time: '29 Aug 14:35', done: true, party: 'Seller' },
-      { stage: 'ORDER_CONFIRMED', time: '29 Aug 14:40', done: true, party: 'System Escrow' },
-      { stage: 'LOGISTICS_ASSIGNED', time: '29 Aug 16:00', done: true, party: 'KrishiExpress Transport' },
-      { stage: 'PICKUP_COMPLETED', time: '30 Aug 09:15', done: true, party: 'Truck MH 04 AB 1234' },
-      { stage: 'IN_TRANSIT', time: '30 Aug 11:30', done: true, party: 'In Transit' },
-      { stage: 'DELIVERED', time: 'Pending', done: false, party: 'Chakan Warehouse' },
-      { stage: 'QUALITY_CONFIRMED', time: 'Pending', done: false, party: 'Quality Inspector' },
-      { stage: 'PAYMENT_RELEASED', time: 'Pending', done: false, party: 'Escrow System' }
+      { stage: 'ORDER_CREATED', label: 'Order Created', time: '29 Aug 14:30', done: true, party: 'Buyer' },
+      { stage: 'OFFER_ACCEPTED', label: 'Offer Accepted', time: '29 Aug 14:35', done: true, party: 'Seller' },
+      { stage: 'ORDER_CONFIRMED', label: 'Order Confirmed', time: '29 Aug 14:40', done: true, party: 'Escrow System' },
+      { stage: 'LOGISTICS_ASSIGNED', label: 'Logistics Assigned', time: '29 Aug 16:00', done: true, party: 'KrishiExpress' },
+      { stage: 'PICKUP_COMPLETED', label: 'Pickup Completed', time: '30 Aug 09:15', done: true, party: 'Truck MH 04 AB 1234' },
+      { stage: 'IN_TRANSIT', label: 'In Transit', time: '30 Aug 11:30', done: true, active: true, party: 'In Transit' },
+      { stage: 'DELIVERED', label: 'Delivered', time: 'Pending', done: false, party: 'Chakan Warehouse' },
+      { stage: 'QUALITY_CONFIRMED', label: 'Quality Confirmed', time: 'Pending', done: false, party: 'Inspector' },
+      { stage: 'PAYMENT_RELEASED', label: 'Payment Released', time: 'Pending', done: false, party: 'Escrow System' }
+    ]
+  },
+  {
+    id: 'ord-10112', lotId: 'lot-104', crop: 'Rice', variety: 'Sona Masoori',
+    quantity: 200, pricePerQ: 2870,
+    productTotal: 574000, transportCost: 4500, taxesTotal: 2800,
+    grandTotal: 581300,
+    sellerName: 'Deccan Grain Growers FPO',
+    status: 'DELIVERED', paymentStatus: 'RELEASED',
+    pickupAddress: 'Pune APMC Yard No 2',
+    deliveryAddress: 'ABC Foods Warehouse, Chakan, Pune',
+    orderedAt: '2026-08-15 10:00',
+    logistics: {
+      truckNumber: 'MH 12 EF 5678', driverName: 'Ramesh Sawant',
+      driverPhone: '+91 98111 22334',
+      currentLocation: 'Delivered',
+      distanceRemainingKm: 0, eta: 'Delivered', status: 'DELIVERED'
+    },
+    timeline: [
+      { stage: 'ORDER_CREATED', label: 'Order Created', time: '15 Aug 10:00', done: true, party: 'Buyer' },
+      { stage: 'OFFER_ACCEPTED', label: 'Offer Accepted', time: '15 Aug 10:05', done: true, party: 'Seller' },
+      { stage: 'ORDER_CONFIRMED', label: 'Order Confirmed', time: '15 Aug 10:10', done: true, party: 'Escrow' },
+      { stage: 'LOGISTICS_ASSIGNED', label: 'Logistics Assigned', time: '15 Aug 12:00', done: true, party: 'KrishiExpress' },
+      { stage: 'PICKUP_COMPLETED', label: 'Pickup Completed', time: '16 Aug 08:30', done: true, party: 'MH 12 EF 5678' },
+      { stage: 'IN_TRANSIT', label: 'In Transit', time: '16 Aug 09:00', done: true, party: 'In Transit' },
+      { stage: 'DELIVERED', label: 'Delivered', time: '16 Aug 11:45', done: true, party: 'Chakan Warehouse' },
+      { stage: 'QUALITY_CONFIRMED', label: 'Quality Confirmed', time: '16 Aug 14:00', done: true, party: 'Inspector' },
+      { stage: 'PAYMENT_RELEASED', label: 'Payment Released', time: '17 Aug 10:00', done: true, party: 'Escrow System' }
+    ]
+  },
+  {
+    id: 'ord-10340', lotId: 'lot-102', crop: 'Wheat', variety: 'Lokwan Premium',
+    quantity: 250, pricePerQ: 2680,
+    productTotal: 670000, transportCost: 8500, taxesTotal: 3000,
+    grandTotal: 681500,
+    sellerName: 'Sahyadri Agro Farmers Union',
+    status: 'CONFIRMED', paymentStatus: 'ESCROW_PAID',
+    pickupAddress: 'Nashik APMC Yard No 7',
+    deliveryAddress: 'ABC Foods Warehouse, Chakan, Pune',
+    orderedAt: '2026-08-30 09:00',
+    logistics: {
+      truckNumber: 'Pending Assignment', driverName: '—',
+      driverPhone: '—',
+      currentLocation: 'Awaiting pickup',
+      distanceRemainingKm: 65, eta: 'Pending', status: 'ASSIGNED'
+    },
+    timeline: [
+      { stage: 'ORDER_CREATED', label: 'Order Created', time: '30 Aug 09:00', done: true, party: 'Buyer' },
+      { stage: 'OFFER_ACCEPTED', label: 'Offer Accepted', time: '30 Aug 09:05', done: true, party: 'Seller' },
+      { stage: 'ORDER_CONFIRMED', label: 'Order Confirmed', time: '30 Aug 09:10', done: true, active: true, party: 'Escrow' },
+      { stage: 'LOGISTICS_ASSIGNED', label: 'Logistics Assigned', time: 'Pending', done: false, party: 'KrishiExpress' },
+      { stage: 'PICKUP_COMPLETED', label: 'Pickup Completed', time: 'Pending', done: false, party: 'Carrier' },
+      { stage: 'IN_TRANSIT', label: 'In Transit', time: 'Pending', done: false, party: 'In Transit' },
+      { stage: 'DELIVERED', label: 'Delivered', time: 'Pending', done: false, party: 'Warehouse' },
+      { stage: 'QUALITY_CONFIRMED', label: 'Quality Confirmed', time: 'Pending', done: false, party: 'Inspector' },
+      { stage: 'PAYMENT_RELEASED', label: 'Payment Released', time: 'Pending', done: false, party: 'Escrow' }
     ]
   }
 ];
 
+// ═══════════════════════════════════════════════
+// 5. TRANSACTIONS DATA
+// ═══════════════════════════════════════════════
 const INITIAL_TRANSACTIONS_DATA = [
-  {
-    id: 'tx-88901',
-    orderId: 'ord-10245',
-    date: '2026-08-29',
-    seller: 'Nashik Farmer Producer Co',
-    crop: 'Onion (100 Q)',
-    amount: 285500,
-    type: 'Escrow Deposit',
-    status: 'COMPLETED',
-    invoiceId: 'INV-2026-88901'
-  },
-  {
-    id: 'tx-88742',
-    orderId: 'ord-10112',
-    date: '2026-08-15',
-    seller: 'Deccan Grain Growers FPO',
-    crop: 'Rice (200 Q)',
-    amount: 574000,
-    type: 'Bank Transfer',
-    status: 'COMPLETED',
-    invoiceId: 'INV-2026-88742'
-  }
+  { id: 'tx-88901', orderId: 'ord-10245', date: '2026-08-29', seller: 'Nashik Farmer Producer Co', crop: 'Onion (100 Q)', amount: 285500, type: 'Escrow Deposit', status: 'HELD', invoiceId: 'INV-2026-88901' },
+  { id: 'tx-88742', orderId: 'ord-10112', date: '2026-08-17', seller: 'Deccan Grain Growers FPO', crop: 'Rice (200 Q)', amount: 581300, type: 'Bank Transfer', status: 'COMPLETED', invoiceId: 'INV-2026-88742' },
+  { id: 'tx-88850', orderId: 'ord-10340', date: '2026-08-30', seller: 'Sahyadri Agro Farmers Union', crop: 'Wheat (250 Q)', amount: 681500, type: 'Escrow Deposit', status: 'HELD', invoiceId: 'INV-2026-88850' },
+  { id: 'tx-87610', orderId: 'ord-10050', date: '2026-08-01', seller: 'Pune Vegetable Growers FPO', crop: 'Potato (150 Q)', amount: 292500, type: 'Bank Transfer', status: 'COMPLETED', invoiceId: 'INV-2026-87610' },
+  { id: 'tx-87520', orderId: 'ord-10002', date: '2026-07-25', seller: 'Nashik Onion Traders', crop: 'Onion (200 Q)', amount: 540000, type: 'Bank Transfer', status: 'COMPLETED', invoiceId: 'INV-2026-87520' }
 ];
 
-// ═════════════════════════════════════════════════════════════════════
-// 2. SERVICE ABSTRACTION LAYER (API Ready)
-// ═════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// 6. NOTIFICATIONS DATA
+// ═══════════════════════════════════════════════
+const NOTIFICATIONS_DATA = [
+  { id: 'n1', type: 'lot', icon: '🧅', text: '12 new Onion lots matching your requirements posted in Nashik APMC', time: '5 min ago' },
+  { id: 'n2', type: 'offer', icon: '💬', text: 'Seller counter-offered ₹2,735/Q on your Onion bid (Lot #101)', time: '10 min ago' },
+  { id: 'n3', type: 'order', icon: '🚛', text: 'Order ORD-10245 is now In Transit — ETA 2h 20m', time: '30 min ago' },
+  { id: 'n4', type: 'lot', icon: '🌾', text: 'Wheat prices dropped 2.1% in Nashik APMC today', time: '1 hour ago' },
+  { id: 'n5', type: 'order', icon: '✅', text: 'Payment released for Order ORD-10112 (Rice 200Q)', time: '2 hours ago' }
+];
+
+// ═══════════════════════════════════════════════
+// 7. SEARCH INDEX
+// ═══════════════════════════════════════════════
+const SEARCH_INDEX = [
+  { type: 'crop', label: 'Onion — Red Garwa', icon: '🧅', route: '#/buyer/lots/lot-101' },
+  { type: 'crop', label: 'Wheat — Lokwan Premium', icon: '🌾', route: '#/buyer/lots/lot-102' },
+  { type: 'crop', label: 'Soybean — JS 335', icon: '🫘', route: '#/buyer/lots/lot-103' },
+  { type: 'crop', label: 'Rice — Sona Masoori', icon: '🍚', route: '#/buyer/lots/lot-104' },
+  { type: 'crop', label: 'Potato — Kufri Jyoti', icon: '🥔', route: '#/buyer/lots/lot-106' },
+  { type: 'crop', label: 'Tomato — Hybrid Abhinav', icon: '🍅', route: '#/buyer/lots/lot-107' },
+  { type: 'crop', label: 'Cotton — Shankar-6', icon: '🏵️', route: '#/buyer/lots/lot-108' },
+  { type: 'location', label: 'Nashik APMC, Maharashtra', icon: '📍', route: '#/buyer/marketplace' },
+  { type: 'location', label: 'Pune APMC, Maharashtra', icon: '📍', route: '#/buyer/marketplace' },
+  { type: 'location', label: 'Indore Mandi, Madhya Pradesh', icon: '📍', route: '#/buyer/marketplace' },
+  { type: 'seller', label: 'Nashik Farmer Producer Co', icon: '🏢', route: '#/buyer/lots/lot-101' },
+  { type: 'seller', label: 'Sahyadri Agro Farmers Union', icon: '🏢', route: '#/buyer/lots/lot-102' },
+  { type: 'seller', label: 'Deccan Grain Growers FPO', icon: '🏢', route: '#/buyer/lots/lot-104' }
+];
+
+// ═══════════════════════════════════════════════
+// 8. SERVICES
+// ═══════════════════════════════════════════════
 
 const buyerService = {
-  getProfile() {
-    return BUYER_PROFILE_DEMO;
-  },
-  updateProfile(data) {
-    Object.assign(BUYER_PROFILE_DEMO, data);
-    return BUYER_PROFILE_DEMO;
-  },
+  getProfile() { return BUYER_PROFILE_DEMO; },
+  updateProfile(data) { Object.assign(BUYER_PROFILE_DEMO, data); return BUYER_PROFILE_DEMO; },
   submitKyc(formData) {
     BUYER_PROFILE_DEMO.kycStatus = 'PENDING';
     BUYER_PROFILE_DEMO.kycSubmittedAt = new Date().toISOString().split('T')[0];
-    return { success: true, status: 'PENDING', message: 'KYC submitted successfully and is currently under prototype review.' };
+    return { success: true, status: 'PENDING', message: 'KYC submitted. Prototype verification mode enabled.' };
   },
   approveDemoKyc() {
     BUYER_PROFILE_DEMO.kycStatus = 'VERIFIED';
@@ -340,31 +404,34 @@ const marketService = {
     return {
       activeRequirements: 12,
       newMatchingLots: B2B_LOTS_DATA.length,
-      offersPending: INITIAL_OFFERS_DATA.length,
-      activeOrders: INITIAL_ORDERS_DATA.length,
+      offersPending: INITIAL_OFFERS_DATA.filter(o => o.status === 'NEGOTIATING').length,
+      activeOrders: INITIAL_ORDERS_DATA.filter(o => o.status !== 'DELIVERED').length,
       monthlyProcurement: '₹42.8L'
     };
+  },
+  getMarketSnapshot() {
+    return [
+      { crop: 'Onion', emoji: '🧅', grade: 'Grade A', price: '₹2,650/Q', trend: '↑ 8.2%', trendUp: true, demand: 'High Demand', lots: 12 },
+      { crop: 'Potato', emoji: '🥔', grade: 'Grade A', price: '₹1,950/Q', trend: '↓ 2.1%', trendUp: false, demand: 'Stable', lots: 8 },
+      { crop: 'Tomato', emoji: '🍅', grade: 'Grade A', price: '₹2,800/Q', trend: '↑ 4.4%', trendUp: true, demand: 'High Demand', lots: 10 },
+      { crop: 'Wheat', emoji: '🌾', grade: 'Grade A', price: '₹2,650/Q', trend: '↑ 1.8%', trendUp: true, demand: 'Medium', lots: 18 },
+      { crop: 'Rice', emoji: '🍚', grade: 'Grade A', price: '₹2,850/Q', trend: '↑ 3.5%', trendUp: true, demand: 'High Demand', lots: 15 }
+    ];
   },
   getMarketplaceLots(filters = {}) {
     let lots = [...B2B_LOTS_DATA];
     if (filters.search) {
       const q = filters.search.toLowerCase();
-      lots = lots.filter(l => l.crop.toLowerCase().includes(q) || l.location.toLowerCase().includes(q) || l.sellerName.toLowerCase().includes(q));
+      lots = lots.filter(l => l.crop.toLowerCase().includes(q) || l.location.toLowerCase().includes(q) || l.sellerName.toLowerCase().includes(q) || l.variety.toLowerCase().includes(q));
     }
-    if (filters.crop && filters.crop !== 'all') {
-      lots = lots.filter(l => l.crop.toLowerCase() === filters.crop.toLowerCase());
-    }
-    if (filters.grade && filters.grade !== 'all') {
-      lots = lots.filter(l => l.grade.toLowerCase().includes(filters.grade.toLowerCase()));
-    }
+    if (filters.crop && filters.crop !== 'all') lots = lots.filter(l => l.crop.toLowerCase() === filters.crop.toLowerCase());
+    if (filters.grade && filters.grade !== 'all') lots = lots.filter(l => l.grade.toLowerCase().includes(filters.grade.toLowerCase()));
     return lots;
   }
 };
 
 const lotService = {
-  getLotById(lotId) {
-    return B2B_LOTS_DATA.find(l => l.id === lotId) || B2B_LOTS_DATA[0];
-  },
+  getLotById(lotId) { return B2B_LOTS_DATA.find(l => l.id === lotId) || B2B_LOTS_DATA[0]; },
   calculateLandedCost(lot, customPricePerQ = null) {
     const pPerQ = customPricePerQ || lot.sellerAskPrice;
     const prodCost = pPerQ * lot.quantity;
@@ -372,35 +439,23 @@ const lotService = {
     const cess = lot.mandiCessPerQ * lot.quantity;
     const grand = prodCost + transport + cess;
     const effectivePerQ = Math.round(grand / lot.quantity);
-
-    return {
-      quantity: lot.quantity,
-      pricePerQ: pPerQ,
-      productCost: prodCost,
-      transportCost: transport,
-      mandiCess: cess,
-      grandTotal: grand,
-      effectiveCostPerQ: effectivePerQ
-    };
+    return { quantity: lot.quantity, pricePerQ: pPerQ, productCost: prodCost, transportCost: transport, mandiCess: cess, grandTotal: grand, effectiveCostPerQ: effectivePerQ };
   }
 };
 
 const offerService = {
-  getOffers() {
-    return INITIAL_OFFERS_DATA;
+  getOffers(statusFilter = 'all') {
+    if (statusFilter === 'all') return INITIAL_OFFERS_DATA;
+    return INITIAL_OFFERS_DATA.filter(o => o.status === statusFilter);
   },
   createOffer(lotId, offerPricePerQ, note = '') {
     const lot = lotService.getLotById(lotId);
     const newOffer = {
       id: `off-${Date.now().toString().slice(-4)}`,
-      lotId: lot.id,
-      crop: lot.crop,
-      quantity: lot.quantity,
-      sellerName: lot.sellerName,
-      sellerAsk: lot.sellerAskPrice,
+      lotId: lot.id, crop: lot.crop, quantity: lot.quantity,
+      sellerName: lot.sellerName, sellerAsk: lot.sellerAskPrice,
       currentBuyerOffer: parseFloat(offerPricePerQ),
-      status: 'NEGOTIATING',
-      updatedAt: 'Just now',
+      status: 'NEGOTIATING', updatedAt: 'Just now',
       history: [
         { party: 'Seller', price: lot.sellerAskPrice, note: `Listed ask for ${lot.quantity}Q ${lot.crop}` },
         { party: 'Buyer', price: parseFloat(offerPricePerQ), note: note || 'Digital procurement bid submitted' }
@@ -413,81 +468,76 @@ const offerService = {
     const off = INITIAL_OFFERS_DATA.find(o => o.id === offerId);
     if (!off) return null;
     off.status = 'ACCEPTED';
-    
-    // Automatically create Order
     const lot = lotService.getLotById(off.lotId);
     const landed = lotService.calculateLandedCost(lot, off.currentBuyerOffer);
-
     const newOrder = {
       id: `ord-${Math.floor(10000 + Math.random() * 90000)}`,
-      lotId: lot.id,
-      crop: lot.crop,
-      variety: lot.variety,
-      quantity: lot.quantity,
-      pricePerQ: off.currentBuyerOffer,
-      productTotal: landed.productCost,
-      transportCost: landed.transportCost,
-      taxesTotal: landed.mandiCess,
-      grandTotal: landed.grandTotal,
-      sellerName: lot.sellerName,
-      status: 'CONFIRMED',
+      lotId: lot.id, crop: lot.crop, variety: lot.variety,
+      quantity: lot.quantity, pricePerQ: off.currentBuyerOffer,
+      productTotal: landed.productCost, transportCost: landed.transportCost,
+      taxesTotal: landed.mandiCess, grandTotal: landed.grandTotal,
+      sellerName: lot.sellerName, status: 'CONFIRMED',
       paymentStatus: 'ESCROW_PAID',
       pickupAddress: `${lot.mandi} Yard No 2`,
       deliveryAddress: 'ABC Foods Warehouse, Chakan, Pune',
       orderedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
       logistics: {
-        truckNumber: 'MH 12 CD 5678',
-        driverName: 'Ramesh Patil',
-        driverPhone: '+91 98111 22334',
-        currentLocation: 'Mandi Pickup Terminal',
-        distanceRemainingKm: lot.distanceKm,
-        eta: '3h 10m',
-        status: 'ASSIGNED'
+        truckNumber: 'MH 12 CD 5678', driverName: 'Ramesh Patil',
+        driverPhone: '+91 98111 22334', currentLocation: 'Mandi Pickup Terminal',
+        distanceRemainingKm: lot.distanceKm, eta: '3h 10m', status: 'ASSIGNED'
       },
       timeline: [
-        { stage: 'ORDER_CREATED', time: 'Just now', done: true, party: 'Buyer' },
-        { stage: 'OFFER_ACCEPTED', time: 'Just now', done: true, party: 'Seller' },
-        { stage: 'ORDER_CONFIRMED', time: 'Just now', done: true, party: 'Escrow System' },
-        { stage: 'LOGISTICS_ASSIGNED', time: 'Pending', done: false, party: 'KrishiExpress' },
-        { stage: 'PICKUP_COMPLETED', time: 'Pending', done: false, party: 'Carrier' },
-        { stage: 'IN_TRANSIT', time: 'Pending', done: false, party: 'In Transit' },
-        { stage: 'DELIVERED', time: 'Pending', done: false, party: 'Warehouse' },
-        { stage: 'QUALITY_CONFIRMED', time: 'Pending', done: false, party: 'Inspector' },
-        { stage: 'PAYMENT_RELEASED', time: 'Pending', done: false, party: 'Escrow System' }
+        { stage: 'ORDER_CREATED', label: 'Order Created', time: 'Just now', done: true, party: 'Buyer' },
+        { stage: 'OFFER_ACCEPTED', label: 'Offer Accepted', time: 'Just now', done: true, party: 'Seller' },
+        { stage: 'ORDER_CONFIRMED', label: 'Order Confirmed', time: 'Just now', done: true, active: true, party: 'Escrow' },
+        { stage: 'LOGISTICS_ASSIGNED', label: 'Logistics Assigned', time: 'Pending', done: false, party: 'KrishiExpress' },
+        { stage: 'PICKUP_COMPLETED', label: 'Pickup Completed', time: 'Pending', done: false, party: 'Carrier' },
+        { stage: 'IN_TRANSIT', label: 'In Transit', time: 'Pending', done: false, party: 'In Transit' },
+        { stage: 'DELIVERED', label: 'Delivered', time: 'Pending', done: false, party: 'Warehouse' },
+        { stage: 'QUALITY_CONFIRMED', label: 'Quality Confirmed', time: 'Pending', done: false, party: 'Inspector' },
+        { stage: 'PAYMENT_RELEASED', label: 'Payment Released', time: 'Pending', done: false, party: 'Escrow' }
       ]
     };
-
     INITIAL_ORDERS_DATA.unshift(newOrder);
     return { offer: off, order: newOrder };
   }
 };
 
 const orderService = {
-  getOrders() {
-    return INITIAL_ORDERS_DATA;
-  },
-  getOrderById(orderId) {
-    return INITIAL_ORDERS_DATA.find(o => o.id === orderId) || INITIAL_ORDERS_DATA[0];
-  }
+  getOrders() { return INITIAL_ORDERS_DATA; },
+  getOrderById(orderId) { return INITIAL_ORDERS_DATA.find(o => o.id === orderId) || INITIAL_ORDERS_DATA[0]; }
 };
 
 const logisticsService = {
   getTrackingInfo(orderId) {
     const order = orderService.getOrderById(orderId);
-    return order ? order.logistics : INITIAL_ORDERS_DATA[0].logistics;
+    return order ? { ...order.logistics, orderId: order.id, crop: order.crop, sellerName: order.sellerName, pickupAddress: order.pickupAddress, deliveryAddress: order.deliveryAddress } : null;
   }
 };
 
 const paymentService = {
   getSummary() {
+    const completed = INITIAL_TRANSACTIONS_DATA.filter(t => t.status === 'COMPLETED');
+    const held = INITIAL_TRANSACTIONS_DATA.filter(t => t.status === 'HELD');
     return {
       totalProcurement: '₹42.8L',
-      pendingEscrow: '₹2.85L',
-      paidCompleted: '₹39.95L',
+      pendingEscrow: `₹${(held.reduce((s,t) => s + t.amount, 0) / 100000).toFixed(1)}L`,
+      paidCompleted: `₹${(completed.reduce((s,t) => s + t.amount, 0) / 100000).toFixed(1)}L`,
       transactionCount: INITIAL_TRANSACTIONS_DATA.length
     };
   },
-  getTransactions() {
-    return INITIAL_TRANSACTIONS_DATA;
+  getTransactions() { return INITIAL_TRANSACTIONS_DATA; }
+};
+
+const searchService = {
+  search(query) {
+    if (!query || query.length < 2) return [];
+    const q = query.toLowerCase();
+    return SEARCH_INDEX.filter(item => item.label.toLowerCase().includes(q));
   }
+};
+
+const notificationService = {
+  getNotifications() { return NOTIFICATIONS_DATA; },
+  getCount() { return NOTIFICATIONS_DATA.length; }
 };

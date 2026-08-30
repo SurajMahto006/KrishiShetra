@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KrishiLink — B2B Agricultural Procurement Platform</title>
-  <meta name="description" content="Production-grade agricultural procurement, lot discovery, quality analytics, digital offer negotiation, order tracking, and escrow payments for verified buyers and food processors.">
+  <meta name="description" content="Production-grade agricultural procurement, lot discovery, quality analytics, digital offer negotiation, order tracking, and escrow payments for verified buyers.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 
-  <!-- Leaflet CSS for GPS Logistics Map -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <!-- Design System CSS -->
@@ -19,25 +19,24 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body class="buyer-body">
 
-  <!-- Ambient Visual Atmosphere -->
+  <!-- Ambient Background -->
   <div class="buyer-ambient-bg" aria-hidden="true"></div>
 
   <!-- APPLICATION SHELL -->
   <div class="buyer-layout">
 
-    <!-- Persistent Sidebar Navigation -->
-    <aside class="buyer-sidebar">
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="buyer-sidebar" id="buyer-sidebar">
       <div class="buyer-sidebar__brand">
         <div class="buyer-sidebar__logo-icon">🌿</div>
         <span class="buyer-sidebar__brand-name">KrishiLink</span>
-        <span class="buyer-sidebar__badge">PROCURER</span>
+        <span class="buyer-sidebar__badge">BUYER</span>
       </div>
 
       <nav class="buyer-sidebar__nav">
@@ -48,68 +47,76 @@
           <i data-lucide="store"></i> Marketplace
         </a>
         <a href="#/buyer/lots" class="buyer-nav-item" data-route="/buyer/lots">
-          <i data-lucide="package-search"></i> My Saved Lots
+          <i data-lucide="package-search"></i> My Lots
         </a>
         <a href="#/buyer/offers" class="buyer-nav-item" data-route="/buyer/offers">
           <i data-lucide="message-square"></i> Offers & Bids
         </a>
         <a href="#/buyer/orders" class="buyer-nav-item" data-route="/buyer/orders">
-          <i data-lucide="clipboard-check"></i> Orders & Shipments
+          <i data-lucide="clipboard-check"></i> Orders
         </a>
         <a href="#/buyer/logistics" class="buyer-nav-item" data-route="/buyer/logistics">
-          <i data-lucide="map-pin"></i> GPS Logistics
+          <i data-lucide="map-pin"></i> Logistics
         </a>
         <a href="#/buyer/payments" class="buyer-nav-item" data-route="/buyer/payments">
-          <i data-lucide="credit-card"></i> Escrow Payments
+          <i data-lucide="credit-card"></i> Payments
         </a>
-        
-        <div style="margin-top:auto; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
-          <a href="#/buyer/profile" class="buyer-nav-item" data-route="/buyer/profile">
-            <i data-lucide="user-check"></i> Profile & Settings
-          </a>
-        </div>
+
+        <hr class="buyer-sidebar__divider">
+
+        <a href="#/buyer/profile" class="buyer-nav-item" data-route="/buyer/profile">
+          <i data-lucide="user-check"></i> Profile
+        </a>
       </nav>
 
-      <!-- Sidebar KYC Card -->
+      <!-- KYC Status Card -->
       <div class="buyer-sidebar__kyc-box">
         <div class="buyer-sidebar__kyc-status">
-          <i data-lucide="shield-check" style="width:14px;height:14px;"></i> KYC VERIFIED
+          <i data-lucide="shield-check" style="width:13px;height:13px;"></i> KYC VERIFIED
         </div>
         <div class="buyer-sidebar__kyc-sub">ABC Foods Pvt Ltd<br>Escrow Limit: ₹50,00,000</div>
-        <a href="#/buyer/kyc-verification" style="font-size:10px; color:var(--kl-mint); font-weight:700; margin-top:6px; display:inline-block; text-decoration:none;">View Verification Docs →</a>
+        <a href="#/buyer/kyc-verification" class="buyer-sidebar__kyc-link">View Verification →</a>
       </div>
     </aside>
 
-    <!-- Main Wrapper -->
+    <!-- ═══ MAIN WRAPPER ═══ -->
     <div class="buyer-main-wrapper">
 
       <!-- Top Header -->
       <header class="buyer-header">
-        <div class="buyer-search-bar">
-          <i data-lucide="search"></i>
-          <input type="text" id="global-buyer-search" placeholder="Search crops, mandis, lot IDs, or sellers...">
+        <div class="buyer-header__left">
+          <button class="buyer-hamburger" id="buyer-hamburger" aria-label="Toggle sidebar menu" onclick="toggleMobileSidebar()">
+            <i data-lucide="menu" style="width:20px;height:20px;"></i>
+          </button>
+          <div class="buyer-search-bar" id="buyer-search-wrapper">
+            <i data-lucide="search"></i>
+            <input type="text" id="global-buyer-search" placeholder="Search crops, mandis, lots, sellers..." autocomplete="off" aria-label="Global search">
+            <div class="kl-search-results" id="kl-search-results"></div>
+          </div>
         </div>
 
         <div class="buyer-header__right">
-          <button class="buyer-icon-btn" title="Notifications" onclick="alert('KrishiLink Alert: 2 new matching Onion lots posted in Nashik APMC.')">
-            <i data-lucide="bell" style="width:18px;height:18px;"></i>
-            <span class="buyer-icon-btn__badge"></span>
-          </button>
-          
-          <a href="#/buyer/profile" class="buyer-profile-pill" style="text-decoration:none;">
+          <div style="position:relative;">
+            <button class="buyer-icon-btn" id="btn-notifications" title="Notifications" aria-label="Notifications">
+              <i data-lucide="bell"></i>
+              <span class="buyer-icon-btn__badge"></span>
+            </button>
+            <div class="kl-notification-panel" id="kl-notification-panel"></div>
+          </div>
+
+          <a href="#/buyer/profile" class="buyer-profile-pill">
             <div class="buyer-profile-avatar">RP</div>
             <span class="buyer-profile-name">Rajesh Patil</span>
           </a>
         </div>
       </header>
 
-      <!-- Main Page Content Container -->
+      <!-- Dynamic Page Content -->
       <main class="buyer-page-container" id="buyer-page-content">
-        <!-- Dynamic Views Injected Here by buyer-app.js -->
+        <!-- Views injected by buyer-app.js -->
       </main>
 
     </div>
-
   </div>
 
   <!-- Mobile Bottom Navigation -->
@@ -130,6 +137,24 @@
       <i data-lucide="user"></i> Profile
     </a>
   </nav>
+
+  <!-- ═══ MODAL OVERLAY ═══ -->
+  <div class="kl-modal-overlay" id="kl-modal-overlay" onclick="closeModalOnBackdrop(event)">
+    <div class="kl-modal" id="kl-modal">
+      <div class="kl-modal__header">
+        <h3 class="kl-modal__title" id="kl-modal-title"></h3>
+        <button class="kl-modal__close" onclick="closeModal()" aria-label="Close modal">✕</button>
+      </div>
+      <div class="kl-modal__body" id="kl-modal-body"></div>
+      <div class="kl-modal__footer" id="kl-modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- ═══ TOAST CONTAINER ═══ -->
+  <div class="kl-toast-container" id="kl-toast-container"></div>
+
+  <!-- Sidebar Mobile Overlay -->
+  <div id="sidebar-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;display:none;" onclick="toggleMobileSidebar()"></div>
 
   <!-- JS Modules -->
   <script src="js/buyer-data.js"></script>
