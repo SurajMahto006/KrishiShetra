@@ -9,6 +9,7 @@ const farmerRoutes = require('./routes/farmer.routes');
 const buyerRoutes = require('./routes/buyer.routes');
 const lotRoutes = require('./routes/lot.routes');
 const marketRoutes = require('./routes/market.routes');
+const offerRoutes = require('./routes/offer.routes');
 const connectDB = require('./config/db');
 
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/farmer', farmerRoutes);
 app.use('/api/buyer', buyerRoutes);
 app.use('/api/lots', lotRoutes);
 app.use('/api/market', marketRoutes);
+app.use('/api/offers', offerRoutes);
 app.use('/api/test', testRoutes);
 
 
