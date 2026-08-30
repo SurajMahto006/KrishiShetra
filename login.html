@@ -56,16 +56,49 @@
       line-height: 1.45;
     }
     .auth-alert--error {
-      background: #FDF2F0;
+      background: #FDF0EE;
       color: #C96D5B;
-      border: 1px solid #F5C6CB;
+      border: 1px solid #E8A89C;
     }
     .auth-alert--success {
-      background: #EBF7EE;
-      color: #2D5A3D;
-      border: 1px solid #C3E6CB;
+      background: #E8F5EC;
+      color: #2E7246;
+      border: 1px solid #8FCB9B;
     }
-    .auth-text-box {
+    .auth-input-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .auth-input-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #12372A;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .auth-input-label-row .auth-input-label {
+      margin-bottom: 0;
+    }
+    .auth-forgot-link {
+      background: none;
+      border: none;
+      color: #5B9A72;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      font-family: var(--font-body);
+      transition: color var(--duration-fast, 0.2s);
+    }
+    .auth-forgot-link:hover {
+      text-decoration: underline;
+      color: #12372A;
+    }
+    .auth-text-box, .auth-phone-box {
       display: flex;
       align-items: center;
       background: #FFFFFF;
@@ -73,14 +106,28 @@
       border-radius: var(--radius-md, 12px);
       transition: all var(--duration-fast, 0.2s);
       overflow: hidden;
+      height: 48px;
     }
-    .auth-text-box:focus-within {
+    .auth-text-box:focus-within, .auth-phone-box:focus-within {
       border-color: #5B9A72;
       box-shadow: 0 0 0 3px rgba(91, 154, 114, 0.2);
     }
-    .auth-text-box__input {
+    .auth-phone-box__prefix {
+      padding: 0 14px;
+      color: #12372A;
+      font-size: 14px;
+      font-weight: 600;
+      border-right: 1.5px solid #DCE6DF;
+      user-select: none;
+      background: #F5F4ED;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+    }
+    .auth-phone-box__input {
       flex: 1;
-      padding: 14px 16px;
+      padding: 0 14px;
       background: transparent;
       border: none;
       color: #17221D;
@@ -88,11 +135,40 @@
       font-weight: 500;
       outline: none;
       font-family: var(--font-body);
+      height: 100%;
     }
-    .auth-text-box__input::placeholder {
+    .auth-text-box__input {
+      flex: 1;
+      padding: 0 14px;
+      background: transparent;
+      border: none;
+      color: #17221D;
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      font-family: var(--font-body);
+      height: 100%;
+    }
+    .auth-text-box__input::placeholder, .auth-phone-box__input::placeholder {
       color: #6F7F75;
-      opacity: 0.7;
+      opacity: 0.75;
       font-weight: 400;
+      font-size: 14px;
+    }
+    .auth-toggle-pass-btn {
+      background: none;
+      border: none;
+      padding: 0 14px;
+      color: #6F7F75;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      transition: color var(--duration-fast, 0.2s);
+    }
+    .auth-toggle-pass-btn:hover {
+      color: #12372A;
     }
     .auth-switch-prompt {
       text-align: center;
@@ -109,6 +185,7 @@
       border: none;
       padding: 0;
       font-size: 14px;
+      font-family: var(--font-body);
     }
     .auth-switch-link:hover {
       text-decoration: underline;
@@ -220,7 +297,10 @@
 
           <!-- Password Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="login-password" id="label-login-password">PASSWORD</label>
+            <div class="auth-input-label-row">
+              <label class="auth-input-label" for="login-password" id="label-login-password">PASSWORD</label>
+              <button type="button" class="auth-forgot-link" id="link-to-forgot">Forgot Password?</button>
+            </div>
             <div class="auth-text-box">
               <input 
                 type="password" 
@@ -230,6 +310,9 @@
                 autocomplete="current-password" 
                 required
               >
+              <button type="button" class="auth-toggle-pass-btn" data-target="login-password" aria-label="Toggle password visibility">
+                <i data-lucide="eye" style="width:16px;height:16px;"></i>
+              </button>
             </div>
           </div>
 
@@ -344,6 +427,9 @@
                 autocomplete="new-password" 
                 required
               >
+              <button type="button" class="auth-toggle-pass-btn" data-target="register-password" aria-label="Toggle password visibility">
+                <i data-lucide="eye" style="width:16px;height:16px;"></i>
+              </button>
             </div>
           </div>
 
@@ -356,6 +442,66 @@
           <p class="auth-switch-prompt">
             <span id="text-have-account">Already have an account?</span> 
             <button type="button" class="auth-switch-link" id="link-to-login">Log In</button>
+          </p>
+        </form>
+
+        <!-- ── TAB 3: FORGOT PASSWORD FORM (Hidden Initially) ── -->
+        <form id="auth-forgot-form" class="auth-form" style="display: none;" novalidate>
+          <div id="forgot-alert" class="auth-alert"></div>
+
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="forgot-email" id="label-forgot-email">EMAIL ADDRESS</label>
+            <div class="auth-text-box">
+              <input 
+                type="email" 
+                id="forgot-email" 
+                class="auth-text-box__input" 
+                placeholder="farmer@example.com" 
+                autocomplete="email" 
+                required
+              >
+            </div>
+          </div>
+
+          <button type="submit" class="auth-btn-primary" id="btn-forgot-submit">
+            <span id="btn-forgot-text">Send Reset OTP</span>
+            <span class="auth-btn-arrow">→</span>
+          </button>
+
+          <p class="auth-switch-prompt">
+            <button type="button" class="auth-switch-link" id="link-forgot-to-login">← Back to Log In</button>
+          </p>
+        </form>
+
+        <!-- ── TAB 4: SET NEW PASSWORD FORM (Hidden Initially) ── -->
+        <form id="auth-reset-pass-form" class="auth-form" style="display: none;" novalidate>
+          <div id="reset-pass-alert" class="auth-alert"></div>
+
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="reset-new-password" id="label-reset-password">NEW PASSWORD</label>
+            <div class="auth-text-box">
+              <input 
+                type="password" 
+                id="reset-new-password" 
+                class="auth-text-box__input" 
+                placeholder="Minimum 6 characters" 
+                autocomplete="new-password" 
+                minlength="6"
+                required
+              >
+              <button type="button" class="auth-toggle-pass-btn" data-target="reset-new-password" aria-label="Toggle password visibility">
+                <i data-lucide="eye" style="width:16px;height:16px;"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="auth-btn-primary" id="btn-reset-pass-submit">
+            <span id="btn-reset-text">Reset Password</span>
+            <span class="auth-btn-arrow">→</span>
+          </button>
+
+          <p class="auth-switch-prompt">
+            <button type="button" class="auth-switch-link" id="link-reset-to-login">← Back to Log In</button>
           </p>
         </form>
 
@@ -437,6 +583,8 @@
       const tabBtnRegister = document.getElementById('tab-btn-register');
       const loginForm = document.getElementById('auth-login-form');
       const registerForm = document.getElementById('auth-register-form');
+      const forgotForm = document.getElementById('auth-forgot-form');
+      const resetPassForm = document.getElementById('auth-reset-pass-form');
       const otpStepContainer = document.getElementById('otp-step-container');
 
       // Login elements
@@ -445,6 +593,7 @@
       const btnLogin = document.getElementById('btn-login');
       const loginAlert = document.getElementById('login-alert');
       const linkToRegister = document.getElementById('link-to-register');
+      const linkToForgot = document.getElementById('link-to-forgot');
 
       // Register elements
       const registerName = document.getElementById('register-name');
@@ -455,6 +604,17 @@
       const registerAlert = document.getElementById('register-alert');
       const linkToLogin = document.getElementById('link-to-login');
       const roleCards = document.querySelectorAll('.auth-role-card');
+
+      // Forgot & Reset elements
+      const forgotEmail = document.getElementById('forgot-email');
+      const btnForgotSubmit = document.getElementById('btn-forgot-submit');
+      const forgotAlert = document.getElementById('forgot-alert');
+      const linkForgotToLogin = document.getElementById('link-forgot-to-login');
+
+      const resetNewPassword = document.getElementById('reset-new-password');
+      const btnResetPassSubmit = document.getElementById('btn-reset-pass-submit');
+      const resetPassAlert = document.getElementById('reset-pass-alert');
+      const linkResetToLogin = document.getElementById('link-reset-to-login');
 
       // OTP elements
       const displayUserEmail = document.getElementById('display-user-email');
@@ -477,6 +637,8 @@
       let countdown = 60;
       let timerInterval = null;
       let activeOtpEmail = '';
+      let isResetFlow = false;
+      let activeResetToken = '';
 
       // ── UI Alert Helpers ──
       function showAlert(element, message, type = 'error') {
@@ -489,6 +651,20 @@
         element.style.display = 'none';
         element.textContent = '';
       }
+
+      // ── Password Visibility Toggle ──
+      document.querySelectorAll('.auth-toggle-pass-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.dataset.target;
+          const input = document.getElementById(targetId);
+          if (input) {
+            const isPass = input.type === 'password';
+            input.type = isPass ? 'text' : 'password';
+            btn.innerHTML = `<i data-lucide="${isPass ? 'eye-off' : 'eye'}" style="width:16px;height:16px;"></i>`;
+            if (window.lucide) lucide.createIcons();
+          }
+        });
+      });
 
       // ── Translations Dictionary ──
       const translations = {
@@ -503,6 +679,10 @@
           authSubtitleLogin: 'Enter your credentials to access your account',
           authTitleRegister: 'Create Account',
           authSubtitleRegister: 'Join KrishiShetra and discover better market rates',
+          authTitleForgot: 'Reset Password',
+          authSubtitleForgot: 'Enter your registered email to receive a recovery OTP',
+          authTitleResetPass: 'Set New Password',
+          authSubtitleResetPass: 'Create a new secure password for your account',
           authTitleOtp: 'Verify Email',
           authSubtitleOtp: 'Enter the 6-digit OTP sent to your email inbox',
           tabLogin: 'Log In',
@@ -542,6 +722,10 @@
           authSubtitleLogin: 'अपने खाते में प्रवेश करने के लिए विवरण दर्ज करें',
           authTitleRegister: 'नया खाता बनाएं',
           authSubtitleRegister: 'कृषि क्षेत्र से जुड़ें और बेहतर मंडी भाव पाएं',
+          authTitleForgot: 'पासवर्ड रीसेट करें',
+          authSubtitleForgot: 'ओटीपी प्राप्त करने के लिए अपना पंजीकृत ईमेल दर्ज करें',
+          authTitleResetPass: 'नया पासवर्ड बनाएं',
+          authSubtitleResetPass: 'अपने खाते के लिए एक नया सुरक्षित पासवर्ड सेट करें',
           authTitleOtp: 'ईमेल सत्यापित करें',
           authSubtitleOtp: 'अपने ईमेल इनबॉक्स में भेजा गया ६-अंकों का ओटीपी दर्ज करें',
           tabLogin: 'लॉग इन',
@@ -581,6 +765,10 @@
           authSubtitleLogin: 'तुमच्या खात्यात लॉग इन करण्यासाठी माहिती भरा',
           authTitleRegister: 'नवीन खाते तयार करा',
           authSubtitleRegister: 'कृषिक्षेत्रशी जोडा आणि उत्तम बाजारभाव मिळवा',
+          authTitleForgot: 'पासवर्ड रीसेट करा',
+          authSubtitleForgot: 'ओटीपी मिळवण्यासाठी आपला नोंदणीकृत ईमेल भरा',
+          authTitleResetPass: 'नवीन पासवर्ड सेट करा',
+          authSubtitleResetPass: 'आपल्या खात्यासाठी नवीन सुरक्षित पासवर्ड तयार करा',
           authTitleOtp: 'ईमेल पडताळणी करा',
           authSubtitleOtp: 'तुमच्या ईमेलवर पाठवलेला ६-अंकी ओटीपी प्रविष्ट करा',
           tabLogin: 'लॉग इन',
@@ -660,13 +848,16 @@
         });
       }
 
-      // ── Tab Switching Handlers ──
+      // ── Tab & View Switching Handlers ──
       function showLoginTab() {
+        isResetFlow = false;
         tabBtnLogin.classList.add('active');
         tabBtnRegister.classList.remove('active');
         tabsContainer.style.display = 'flex';
         loginForm.style.display = 'block';
         registerForm.style.display = 'none';
+        forgotForm.style.display = 'none';
+        resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
         
         const t = translations[currentLang] || translations.en;
@@ -676,11 +867,14 @@
       }
 
       function showRegisterTab() {
+        isResetFlow = false;
         tabBtnRegister.classList.add('active');
         tabBtnLogin.classList.remove('active');
         tabsContainer.style.display = 'flex';
         loginForm.style.display = 'none';
         registerForm.style.display = 'block';
+        forgotForm.style.display = 'none';
+        resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
 
         const t = translations[currentLang] || translations.en;
@@ -689,17 +883,54 @@
         hideAlert(registerAlert);
       }
 
-      function showOtpStep(email) {
+      function showForgotTab() {
+        isResetFlow = true;
+        tabsContainer.style.display = 'none';
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'none';
+        forgotForm.style.display = 'block';
+        resetPassForm.style.display = 'none';
+        otpStepContainer.classList.remove('active');
+
+        const t = translations[currentLang] || translations.en;
+        document.getElementById('auth-title').textContent = t.authTitleForgot;
+        document.getElementById('auth-subtitle').textContent = t.authSubtitleForgot;
+        hideAlert(forgotAlert);
+        if (loginEmail.value.trim()) {
+          forgotEmail.value = loginEmail.value.trim();
+        }
+      }
+
+      function showResetPassStep() {
+        tabsContainer.style.display = 'none';
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'none';
+        forgotForm.style.display = 'none';
+        resetPassForm.style.display = 'block';
+        otpStepContainer.classList.remove('active');
+
+        const t = translations[currentLang] || translations.en;
+        document.getElementById('auth-title').textContent = t.authTitleResetPass;
+        document.getElementById('auth-subtitle').textContent = t.authSubtitleResetPass;
+        hideAlert(resetPassAlert);
+        resetNewPassword.value = '';
+        resetNewPassword.focus();
+      }
+
+      function showOtpStep(email, forReset = false) {
+        isResetFlow = forReset;
         activeOtpEmail = email;
         displayUserEmail.textContent = email;
         tabsContainer.style.display = 'none';
         loginForm.style.display = 'none';
         registerForm.style.display = 'none';
+        forgotForm.style.display = 'none';
+        resetPassForm.style.display = 'none';
         otpStepContainer.classList.add('active');
 
         const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleOtp;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleOtp;
+        document.getElementById('auth-title').textContent = forReset ? t.authTitleForgot : t.authTitleOtp;
+        document.getElementById('auth-subtitle').textContent = forReset ? 'Enter the recovery OTP sent to your inbox' : t.authSubtitleOtp;
 
         hideAlert(otpAlert);
         startResendTimer();
@@ -712,7 +943,13 @@
       linkToRegister.addEventListener('click', showRegisterTab);
       linkToLogin.addEventListener('click', showLoginTab);
       linkBackToLogin.addEventListener('click', showLoginTab);
-      btnChangeEmail.addEventListener('click', showRegisterTab);
+      linkToForgot.addEventListener('click', showForgotTab);
+      linkForgotToLogin.addEventListener('click', showLoginTab);
+      linkResetToLogin.addEventListener('click', showLoginTab);
+      btnChangeEmail.addEventListener('click', () => {
+        if (isResetFlow) showForgotTab();
+        else showRegisterTab();
+      });
 
       // ── Language Dropdown Toggle ──
       langMenuBtn.addEventListener('click', (e) => {
@@ -840,7 +1077,6 @@
           const data = await res.json();
 
           if (res.ok && data.success) {
-            // Save token and user in session
             window.Auth.setToken(data.token);
             window.Auth.setUser(data.user);
 
@@ -866,11 +1102,10 @@
             btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
             showAlert(loginAlert, data.message || 'Invalid email or password');
 
-            // If unverified, provide helpful action to verify
             if (data.message && data.message.includes('verify your email')) {
               activeOtpEmail = email;
               setTimeout(() => {
-                showOtpStep(email);
+                showOtpStep(email, false);
                 showAlert(otpAlert, 'Please enter your verification OTP to activate your account.');
               }, 1200);
             }
@@ -924,8 +1159,7 @@
             btnRegister.disabled = false;
             btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
             
-            // Switch to OTP verification step
-            showOtpStep(email);
+            showOtpStep(email, false);
             showAlert(otpAlert, data.message || 'Registration successful. Check your email for the OTP.', 'success');
           } else {
             btnRegister.disabled = false;
@@ -939,7 +1173,46 @@
         }
       });
 
-      // ── 3. VERIFY OTP API HANDLER ──
+      // ── 3. FORGOT PASSWORD API HANDLER ──
+      forgotForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert(forgotAlert);
+
+        const email = forgotEmail.value.trim();
+        if (!email) {
+          showAlert(forgotAlert, 'Please enter your email address.');
+          return;
+        }
+
+        btnForgotSubmit.disabled = true;
+        btnForgotSubmit.innerHTML = 'Sending Recovery OTP… <span class="auth-btn-arrow">⏳</span>';
+
+        try {
+          const res = await fetch(`${window.API_BASE_URL}/auth/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+
+          const data = await res.json();
+
+          btnForgotSubmit.disabled = false;
+          btnForgotSubmit.innerHTML = '<span id="btn-forgot-text">Send Reset OTP</span> <span class="auth-btn-arrow">→</span>';
+
+          if (res.ok && data.success) {
+            showOtpStep(email, true);
+            showAlert(otpAlert, 'If an account exists, a reset OTP has been sent to your inbox.', 'success');
+          } else {
+            showAlert(forgotAlert, data.message || 'Failed to process password reset.');
+          }
+        } catch (err) {
+          btnForgotSubmit.disabled = false;
+          btnForgotSubmit.innerHTML = '<span id="btn-forgot-text">Send Reset OTP</span> <span class="auth-btn-arrow">→</span>';
+          showAlert(forgotAlert, 'Network error. Please check your backend connection.');
+        }
+      });
+
+      // ── 4. VERIFY OTP API HANDLER ──
       btnVerifyOtp.addEventListener('click', async () => {
         hideAlert(otpAlert);
         const otp = getEnteredOtp();
@@ -952,8 +1225,10 @@
         btnVerifyOtp.disabled = true;
         btnVerifyOtp.innerHTML = 'Verifying… <span class="auth-btn-arrow">⏳</span>';
 
+        const endpoint = isResetFlow ? '/auth/verify-reset-otp' : '/auth/verify-email';
+
         try {
-          const res = await fetch(`${window.API_BASE_URL}/auth/verify-email`, {
+          const res = await fetch(`${window.API_BASE_URL}${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -965,20 +1240,30 @@
           const data = await res.json();
 
           if (res.ok && data.success) {
-            btnVerifyOtp.innerHTML = 'Email Verified! ✓';
+            btnVerifyOtp.innerHTML = 'Verified! ✓';
             btnVerifyOtp.style.background = '#5B9A72';
 
-            showAlert(otpAlert, 'Email verified successfully! Redirecting to login…', 'success');
+            if (isResetFlow) {
+              activeResetToken = data.resetToken;
+              setTimeout(() => {
+                btnVerifyOtp.disabled = false;
+                btnVerifyOtp.style.background = '';
+                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+                showResetPassStep();
+              }, 800);
+            } else {
+              showAlert(otpAlert, 'Email verified successfully! Redirecting to login…', 'success');
 
-            setTimeout(() => {
-              btnVerifyOtp.disabled = false;
-              btnVerifyOtp.style.background = '';
-              btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
-              
-              showLoginTab();
-              loginEmail.value = activeOtpEmail;
-              showAlert(loginAlert, 'Email verified successfully. Please log in with your password.', 'success');
-            }, 1200);
+              setTimeout(() => {
+                btnVerifyOtp.disabled = false;
+                btnVerifyOtp.style.background = '';
+                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+                
+                showLoginTab();
+                loginEmail.value = activeOtpEmail;
+                showAlert(loginAlert, 'Email verified successfully. Please log in with your password.', 'success');
+              }, 1200);
+            }
           } else {
             btnVerifyOtp.disabled = false;
             btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
@@ -991,14 +1276,69 @@
         }
       });
 
-      // ── 4. RESEND OTP API HANDLER ──
+      // ── 5. SET NEW PASSWORD HANDLER ──
+      resetPassForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert(resetPassAlert);
+
+        const newPassword = resetNewPassword.value;
+        if (!newPassword || newPassword.length < 6) {
+          showAlert(resetPassAlert, 'Password must be at least 6 characters long.');
+          return;
+        }
+
+        btnResetPassSubmit.disabled = true;
+        btnResetPassSubmit.innerHTML = 'Resetting Password… <span class="auth-btn-arrow">⏳</span>';
+
+        try {
+          const res = await fetch(`${window.API_BASE_URL}/auth/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              resetToken: activeResetToken,
+              newPassword
+            })
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            btnResetPassSubmit.innerHTML = 'Password Reset! ✓';
+            btnResetPassSubmit.style.background = '#5B9A72';
+
+            showAlert(resetPassAlert, 'Password reset successfully! Redirecting to login…', 'success');
+
+            setTimeout(() => {
+              btnResetPassSubmit.disabled = false;
+              btnResetPassSubmit.style.background = '';
+              btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
+              
+              showLoginTab();
+              loginEmail.value = activeOtpEmail;
+              showAlert(loginAlert, 'Password reset successfully. Please log in with your new password.', 'success');
+            }, 1200);
+          } else {
+            btnResetPassSubmit.disabled = false;
+            btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
+            showAlert(resetPassAlert, data.message || 'Failed to reset password.');
+          }
+        } catch (err) {
+          btnResetPassSubmit.disabled = false;
+          btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
+          showAlert(resetPassAlert, 'Network error. Please check your backend connection.');
+        }
+      });
+
+      // ── 6. RESEND OTP API HANDLER ──
       btnResendOtp.addEventListener('click', async () => {
         hideAlert(otpAlert);
         btnResendOtp.disabled = true;
         btnResendOtp.textContent = 'Sending…';
 
+        const endpoint = isResetFlow ? '/auth/resend-reset-otp' : '/auth/resend-verification';
+
         try {
-          const res = await fetch(`${window.API_BASE_URL}/auth/resend-verification`, {
+          const res = await fetch(`${window.API_BASE_URL}${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: activeOtpEmail })
@@ -1021,6 +1361,17 @@
           showAlert(otpAlert, 'Network error. Please check your backend connection.');
         }
       });
+
+      // ── Initial Tab Setup based on URL Parameter or Hash ──
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
+      if (tabParam === 'register' || tabParam === 'signup') {
+        showRegisterTab();
+      } else if (tabParam === 'forgot' || tabParam === 'reset') {
+        showForgotTab();
+      } else {
+        showLoginTab();
+      }
 
     });
   </script>
