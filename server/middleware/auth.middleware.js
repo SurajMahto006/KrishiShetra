@@ -23,7 +23,9 @@ const protect = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Get user from token payload (excluding sensitive fields)
-      const user = await User.findById(decoded.userId).select('-password -emailVerificationOtpHash');
+      const user = await User.findById(decoded.userId).select(
+        '-password -emailVerificationOtpHash -passwordResetOtpHash -passwordResetTokenHash'
+      );
 
       if (!user) {
         return res.status(401).json({
