@@ -1381,13 +1381,87 @@ function openNotificationsModal() {
   openModal('notifications-modal-overlay');
 }
 
-// 13. Profile Modal
+// 13. Profile Modal & Authentication UI
+function showModalAlert(elementId, message, type = 'error') {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = message;
+  el.className = `dash-modal-alert dash-modal-alert--${type}`;
+  el.style.display = 'block';
+}
+
+function hideModalAlert(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.style.display = 'none';
+  el.textContent = '';
+}
+
+function updateUserUI(user) {
+  if (!user) return;
+  const firstName = user.name ? user.name.split(' ')[0] : 'Farmer';
+  const initial = user.name ? user.name.charAt(0).toUpperCase() : 'F';
+  
+  // Header Avatar & Name
+  const headerAvatar = document.getElementById('header-avatar');
+  const headerName = document.getElementById('header-user-name');
+  if (headerAvatar) headerAvatar.textContent = initial;
+  if (headerName) headerName.textContent = firstName;
+
+  // Dropdown Avatar, Name, Phone
+  const dropdownAvatar = document.getElementById('dropdown-avatar');
+  const dropdownName = document.getElementById('dropdown-user-name');
+  const dropdownPhone = document.getElementById('dropdown-user-phone');
+  if (dropdownAvatar) dropdownAvatar.textContent = initial;
+  if (dropdownName) dropdownName.textContent = user.name;
+  if (dropdownPhone) dropdownPhone.textContent = user.phone ? `+91 ${user.phone}` : (user.email || '');
+
+  // Welcome Hero Greeting
+  const greetingEl = document.getElementById('dash-greeting');
+  if (greetingEl) {
+    const hour = new Date().getHours();
+    let timeGreeting = 'Good Morning';
+    if (hour >= 12 && hour < 17) timeGreeting = 'Good Afternoon';
+    else if (hour >= 17) timeGreeting = 'Good Evening';
+    greetingEl.textContent = `${timeGreeting}, ${firstName} 👋`;
+  }
+}
+
 function openProfileModal() {
-  const profile = krishiStore.getProfile();
-  document.getElementById('prof-name').value = profile.name;
-  document.getElementById('prof-phone').value = profile.phone;
-  document.getElementById('prof-land').value = profile.landSize;
-  document.getElementById('prof-mandi').value = profile.preferredMandi;
+  const user = (window.Auth && window.Auth.getUser()) || krishiStore.getProfile();
+  
+  // Set modal badge card
+  const modalAvatar = document.getElementById('modal-avatar');
+  const modalName = document.getElementById('modal-user-name');
+  const modalEmail = document.getElementById('modal-user-email');
+  const modalRole = document.getElementById('modal-user-role');
+  const modalVerified = document.getElementById('modal-user-verified');
+
+  if (modalAvatar) modalAvatar.textContent = (user.name ? user.name.charAt(0).toUpperCase() : 'F');
+  if (modalName) modalName.textContent = user.name || 'Farmer';
+  if (modalEmail) modalEmail.textContent = user.email || '';
+  if (modalRole) modalRole.textContent = (user.role || 'farmer').toUpperCase();
+  if (modalVerified) {
+    if (user.emailVerified) {
+      modalVerified.textContent = '✓ VERIFIED';
+      modalVerified.className = 'dash-profile-tag dash-profile-tag--verified';
+    } else {
+      modalVerified.textContent = 'UNVERIFIED';
+      modalVerified.className = 'dash-profile-tag';
+      modalVerified.style.background = '#FDF0EE';
+      modalVerified.style.color = '#C96D5B';
+    }
+  }
+
+  // Populate form fields
+  const profNameInput = document.getElementById('prof-name');
+  const profPhoneInput = document.getElementById('prof-phone');
+  if (profNameInput) profNameInput.value = user.name || '';
+  if (profPhoneInput) profPhoneInput.value = user.phone || '';
+
+  // Clear alerts
+  hideModalAlert('profile-alert');
+  hideModalAlert('password-alert');
 
   const closeBtn = document.getElementById('profile-modal-close');
   if (closeBtn) closeBtn.onclick = () => closeModal('profile-modal-overlay');
@@ -1396,25 +1470,97 @@ function openProfileModal() {
 
 function initProfileForm() {
   const form = document.getElementById('profile-form');
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('prof-name').value;
-      const phone = document.getElementById('prof-phone').value;
-      const landSize = document.getElementById('prof-land').value;
-      const preferredMandi = document.getElementById('prof-mandi').value;
+  const submitBtn = document.getElementById('btn-save-profile');
+  if (!form) return;
 
-      krishiStore.updateProfile({ name, phone, landSize, preferredMandi });
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideModalAlert('profile-alert');
 
-      const headerName = document.getElementById('header-user-name');
-      const dropName = document.getElementById('dropdown-user-name');
-      if (headerName) headerName.textContent = name.split(' ')[0];
-      if (dropName) dropName.textContent = name;
+    const name = document.getElementById('prof-name').value.trim();
+    const phone = document.getElementById('prof-phone').value.trim();
 
-      closeModal('profile-modal-overlay');
+    if (!name) {
+      showModalAlert('profile-alert', 'Please enter your full name.', 'error');
+      return;
+    }
+
+    if (phone && (!/^[6-9]\d{9}$/.test(phone))) {
+      showModalAlert('profile-alert', 'Please provide a valid 10-digit Indian mobile number starting with 6-9.', 'error');
+      return;
+    }
+
+    // Disable button during submission
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="dash-spinner" style="width:14px;height:14px;border-width:2px;margin:0;display:inline-block;vertical-align:middle;margin-right:6px;"></div> Saving...';
+
+    const result = await window.Auth.updateProfile({ name, phone });
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalText;
+    if (window.lucide) lucide.createIcons();
+
+    if (result && result.success && result.user) {
+      updateUserUI(result.user);
+      showModalAlert('profile-alert', 'Profile updated successfully!', 'success');
       showToast('Profile updated successfully.');
-    });
-  }
+      setTimeout(() => {
+        hideModalAlert('profile-alert');
+      }, 3000);
+    } else {
+      showModalAlert('profile-alert', (result && result.message) || 'Failed to update profile.', 'error');
+    }
+  });
+}
+
+function initPasswordForm() {
+  const form = document.getElementById('password-form');
+  const submitBtn = document.getElementById('btn-save-password');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideModalAlert('password-alert');
+
+    const currentPassword = document.getElementById('prof-current-pass').value;
+    const newPassword = document.getElementById('prof-new-pass').value;
+
+    if (!currentPassword || !newPassword) {
+      showModalAlert('password-alert', 'Please enter both current and new password.', 'error');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      showModalAlert('password-alert', 'New password must be at least 6 characters.', 'error');
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      showModalAlert('password-alert', 'New password must be different from current password.', 'error');
+      return;
+    }
+
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="dash-spinner" style="width:14px;height:14px;border-width:2px;margin:0;display:inline-block;vertical-align:middle;margin-right:6px;"></div> Updating...';
+
+    const result = await window.Auth.changePassword({ currentPassword, newPassword });
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalText;
+    if (window.lucide) lucide.createIcons();
+
+    if (result && result.success) {
+      showModalAlert('password-alert', 'Password changed successfully!', 'success');
+      showToast('Password changed successfully.');
+      document.getElementById('prof-current-pass').value = '';
+      document.getElementById('prof-new-pass').value = '';
+      setTimeout(() => {
+        hideModalAlert('password-alert');
+      }, 3000);
+    } else {
+      showModalAlert('password-alert', (result && result.message) || 'Failed to change password.', 'error');
+    }
+  });
 }
 
 // 14. Help & Language Modals
@@ -1635,19 +1781,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!authenticatedUser) {
       return; // verifyAuth redirects to login.html
     }
-    // Update displayed username in header if available
-    if (authenticatedUser.name) {
-      const headerName = document.getElementById('header-user-name');
-      const dropdownName = document.getElementById('dropdown-user-name');
-      const headerAvatar = document.getElementById('header-avatar');
-      const dropdownAvatar = document.getElementById('dropdown-avatar');
-      
-      if (headerName) headerName.textContent = authenticatedUser.name.split(' ')[0];
-      if (dropdownName) dropdownName.textContent = authenticatedUser.name;
-      const initial = authenticatedUser.name.charAt(0).toUpperCase();
-      if (headerAvatar) headerAvatar.textContent = initial;
-      if (dropdownAvatar) dropdownAvatar.textContent = initial;
-    }
+    updateUserUI(authenticatedUser);
   }
 
   // 1. Date Display in Hero
@@ -1681,6 +1815,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initNegotiateForm();
   initAlertForm();
   initProfileForm();
+  initPasswordForm();
 
   // 5. Header quick buttons
   const notifBtn = document.getElementById('btn-notifications');

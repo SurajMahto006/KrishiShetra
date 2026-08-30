@@ -69,6 +69,51 @@ const Auth = {
       this.logout();
       return null;
     }
+  },
+  async updateProfile(profileData) {
+    const token = this.getToken();
+    if (!token) {
+      this.logout();
+      return { success: false, message: 'Session expired. Please log in again.' };
+    }
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(profileData)
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.user) {
+        this.setUser(data.user);
+      }
+      return data;
+    } catch (err) {
+      return { success: false, message: err.message || 'Network error updating profile' };
+    }
+  },
+  async changePassword(passwordData) {
+    const token = this.getToken();
+    if (!token) {
+      this.logout();
+      return { success: false, message: 'Session expired. Please log in again.' };
+    }
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/change-password`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(passwordData)
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      return { success: false, message: err.message || 'Network error changing password' };
+    }
   }
 };
 

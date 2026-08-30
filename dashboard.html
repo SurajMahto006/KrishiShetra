@@ -645,36 +645,68 @@
 
   <!-- PROFILE MODAL -->
   <div class="dash-modal-overlay" id="profile-modal-overlay">
-    <div class="dash-modal" id="profile-modal">
+    <div class="dash-modal" id="profile-modal" style="max-width: 480px;">
       <div class="dash-modal__header">
-        <h3>Farmer Profile & Settings</h3>
+        <h3>My Profile & Account Settings</h3>
         <button class="dash-modal__close" id="profile-modal-close"><i data-lucide="x"></i></button>
       </div>
-      <form class="dash-modal__form" id="profile-form">
-        <div class="dash-modal__field">
-          <label for="prof-name">Full Name</label>
-          <input type="text" id="prof-name" class="dash-form-input" value="Rajesh Patil" required>
-        </div>
-        <div class="dash-form-row">
-          <div class="dash-modal__field">
-            <label for="prof-phone">Phone Number</label>
-            <input type="text" id="prof-phone" class="dash-form-input" value="+91 98765 43210" required>
+      
+      <div class="dash-modal__body-pad" style="max-height: 80vh; overflow-y: auto;">
+        <!-- User Info Badge Card -->
+        <div class="dash-profile-badge-card">
+          <div class="dash-profile-badge-card__avatar" id="modal-avatar">R</div>
+          <div class="dash-profile-badge-card__meta">
+            <div class="dash-profile-badge-card__name" id="modal-user-name">Farmer</div>
+            <div class="dash-profile-badge-card__email" id="modal-user-email">user@example.com</div>
+            <div class="dash-profile-badge-card__tags">
+              <span class="dash-profile-tag dash-profile-tag--role" id="modal-user-role">FARMER</span>
+              <span class="dash-profile-tag dash-profile-tag--verified" id="modal-user-verified">✓ VERIFIED</span>
+            </div>
           </div>
+        </div>
+
+        <!-- Section 1: Edit Profile -->
+        <form class="dash-modal__form" id="profile-form">
+          <h4 style="font-size: 14px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 10px;">Personal Information</h4>
+          <div id="profile-alert" class="dash-modal-alert"></div>
+          
           <div class="dash-modal__field">
-            <label for="prof-land">Land Size (Acres)</label>
-            <input type="number" id="prof-land" class="dash-form-input" value="12" required>
+            <label for="prof-name">Full Name</label>
+            <input type="text" id="prof-name" class="dash-form-input" placeholder="Your Full Name" required>
           </div>
-        </div>
-        <div class="dash-modal__field">
-          <label for="prof-mandi">Primary Preferred Mandi</label>
-          <select id="prof-mandi" class="dash-filter-select">
-            <option value="Pune APMC" selected>Pune APMC (Maharashtra)</option>
-            <option value="Nashik APMC">Nashik APMC</option>
-            <option value="Mumbai APMC">Mumbai APMC</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save Profile Settings</button>
-      </form>
+          
+          <div class="dash-modal__field">
+            <label for="prof-phone">Mobile Number (10 digits)</label>
+            <input type="tel" id="prof-phone" class="dash-form-input" placeholder="9876543210" maxlength="10">
+          </div>
+
+          <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-save-profile">
+            <i data-lucide="save"></i> Save Profile
+          </button>
+        </form>
+
+        <hr class="dash-profile-divider">
+
+        <!-- Section 2: Change Password -->
+        <form class="dash-modal__form" id="password-form">
+          <h4 style="font-size: 14px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 10px;">Change Password</h4>
+          <div id="password-alert" class="dash-modal-alert"></div>
+          
+          <div class="dash-modal__field">
+            <label for="prof-current-pass">Current Password</label>
+            <input type="password" id="prof-current-pass" class="dash-form-input" placeholder="••••••••" required>
+          </div>
+          
+          <div class="dash-modal__field">
+            <label for="prof-new-pass">New Password</label>
+            <input type="password" id="prof-new-pass" class="dash-form-input" placeholder="•••••••• (Min 6 characters)" minlength="6" required>
+          </div>
+
+          <button type="submit" class="btn btn--secondary dash-modal__submit" id="btn-save-password" style="width: 100%;">
+            <i data-lucide="lock"></i> Update Password
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 
