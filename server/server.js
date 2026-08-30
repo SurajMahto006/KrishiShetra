@@ -7,6 +7,7 @@ const testRoutes = require('./routes/test.routes');
 const authRoutes = require('./routes/auth.routes');
 const farmerRoutes = require('./routes/farmer.routes');
 const lotRoutes = require('./routes/lot.routes');
+const marketRoutes = require('./routes/market.routes');
 const connectDB = require('./config/db');
 
 const app = express();
@@ -24,6 +25,7 @@ app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/farmer', farmerRoutes);
 app.use('/api/lots', lotRoutes);
+app.use('/api/market', marketRoutes);
 app.use('/api/test', testRoutes);
 
 

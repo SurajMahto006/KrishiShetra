@@ -158,6 +158,11 @@ const produceLotSchema = new mongoose.Schema(
   }
 );
 
+// Compound indexes for marketplace querying and filtering
+produceLotSchema.index({ status: 1, cropName: 1, createdAt: -1 });
+produceLotSchema.index({ status: 1, state: 1, district: 1 });
+produceLotSchema.index({ status: 1, askingPrice: 1 });
+
 // Format JSON response
 produceLotSchema.set('toJSON', {
   transform: (doc, ret) => {
