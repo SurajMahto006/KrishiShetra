@@ -147,8 +147,8 @@
       <div class="container">
         <div class="dash-section__header">
           <div>
-            <h2 class="dash-section__title">Market Overview</h2>
-            <p class="dash-section__subtitle">Live prices from verified nearby mandis</p>
+            <h2 class="dash-section__title" data-i18n="marketPage.title">Market Overview</h2>
+            <p class="dash-section__subtitle" data-i18n="marketPage.subtitle">Live prices from verified nearby mandis</p>
           </div>
           <button class="dash-section__action" id="btn-refresh-market"><i data-lucide="refresh-cw"></i> Refresh Prices</button>
         </div>
@@ -158,7 +158,7 @@
           <div class="dash-filter-bar__search">
             <i data-lucide="search"></i>
             <input type="text" id="market-search-input" placeholder="Search crop or mandi (e.g. Rice, Pune, Tomato)..."
-              aria-label="Search crops">
+              data-i18n-placeholder="marketPage.searchPlaceholder" aria-label="Search crops">
           </div>
           <div class="dash-filter-bar__filters">
             <select id="filter-crop" class="dash-filter-select" aria-label="Filter by crop">

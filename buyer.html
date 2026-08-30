@@ -6,10 +6,10 @@
   <title>KrishiLink — B2B Agricultural Procurement Platform</title>
   <meta name="description" content="Production-grade agricultural procurement, lot discovery, quality analytics, digital offer negotiation, order tracking, and escrow payments for verified buyers.">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts (Inter + Playfair Display + Noto Sans Devanagari) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -43,26 +43,26 @@
       <!-- Global Search -->
       <div class="dash-search" id="buyer-search-wrapper">
         <i data-lucide="search" class="dash-search__icon"></i>
-        <input type="text" id="global-buyer-search" class="dash-search__input" placeholder="Search crops, mandis, lots..." autocomplete="off" aria-label="Global search">
+        <input type="text" id="global-buyer-search" class="dash-search__input" placeholder="Search crops, mandis, lots..." data-i18n-placeholder="nav.searchPlaceholder" autocomplete="off" aria-label="Global search">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="kl-search-results" id="kl-search-results"></div>
       </div>
 
       <!-- Top Navigation Links -->
       <nav class="dash-header__nav" id="buyer-nav">
-        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard">
+        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard" data-i18n="nav.dashboard">
           <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
         </a>
         <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace">
           <i data-lucide="store" class="dash-header__link-icon"></i> Marketplace
         </a>
-        <a href="#/buyer/lots" class="dash-header__link" data-route="/buyer/lots">
+        <a href="#/buyer/lots" class="dash-header__link" data-route="/buyer/lots" data-i18n="nav.lots">
           <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
         </a>
         <a href="#/buyer/offers" class="dash-header__link" data-route="/buyer/offers">
           <i data-lucide="message-square" class="dash-header__link-icon"></i> Offers
         </a>
-        <a href="#/buyer/orders" class="dash-header__link" data-route="/buyer/orders">
+        <a href="#/buyer/orders" class="dash-header__link" data-route="/buyer/orders" data-i18n="nav.orders">
           <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
         </a>
         <a href="#/buyer/logistics" class="dash-header__link" data-route="/buyer/logistics">
@@ -73,8 +73,15 @@
         </a>
       </nav>
 
-      <!-- Right Actions (KYC Pill, Notifications, Profile Dropdown) -->
+      <!-- Right Actions (KYC Pill, Lang, Notifications, Profile Dropdown) -->
       <div class="dash-header__actions">
+        <!-- Quick Language Switcher Pills -->
+        <div class="dash-header__lang-pills" role="group" aria-label="Language selector">
+          <button class="lang-pill-btn lang-pill-btn--active" data-lang="en" onclick="setLanguage('en')" title="Switch to English">EN</button>
+          <button class="lang-pill-btn" data-lang="hi" onclick="setLanguage('hi')" title="हिंदी में बदलें">हिं</button>
+          <button class="lang-pill-btn" data-lang="mr" onclick="setLanguage('mr')" title="मराठी मध्ये बदला">म</button>
+        </div>
+
         <!-- KYC Verification Status Pill -->
         <a href="#/buyer/kyc-verification" class="buyer-kyc-header-pill" title="Verification Status">
           <i data-lucide="shield-check"></i>
@@ -179,6 +186,7 @@
   <div class="kl-toast-container" id="kl-toast-container"></div>
 
   <!-- JS Modules -->
+  <script src="js/i18n.js"></script>
   <script src="js/buyer-data.js"></script>
   <script src="js/buyer-app.js"></script>
 </body>

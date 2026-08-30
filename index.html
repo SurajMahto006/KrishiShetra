@@ -10,9 +10,10 @@
   <!-- Preload critical assets -->
   <link rel="preload" href="assets/images/hero-farm.jpg" as="image">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts (Inter + Playfair Display + Noto Sans Devanagari) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -32,15 +33,22 @@
       </a>
 
       <div class="navbar__nav" id="nav-menu">
-        <a href="#solution" class="navbar__link">Product</a>
-        <a href="#scroll-transition" class="navbar__link">How It Works</a>
-        <a href="#intelligence" class="navbar__link">Market Intelligence</a>
-        <a href="#buyers" class="navbar__link">For Buyers</a>
-        <a href="#fpo" class="navbar__link">For FPOs</a>
+        <a href="#solution" class="navbar__link" data-i18n="nav.product">Product</a>
+        <a href="#scroll-transition" class="navbar__link" data-i18n="nav.howItWorks">How It Works</a>
+        <a href="#intelligence" class="navbar__link" data-i18n="nav.intelligence">Market Intelligence</a>
+        <a href="#buyers" class="navbar__link" data-i18n="nav.forBuyers">For Buyers</a>
+        <a href="#fpo" class="navbar__link" data-i18n="nav.forFpos">For FPOs</a>
       </div>
 
-      <div class="navbar__actions">
-        <a href="login.html" class="navbar__cta" id="btn-login-nav">Login</a>
+      <div class="navbar__actions" style="display: flex; align-items: center; gap: 10px;">
+        <!-- Language Switcher Pills -->
+        <div class="dash-header__lang-pills" role="group" aria-label="Language selector">
+          <button class="lang-pill-btn lang-pill-btn--active" data-lang="en" onclick="setLanguage('en')" title="Switch to English">EN</button>
+          <button class="lang-pill-btn" data-lang="hi" onclick="setLanguage('hi')" title="हिंदी में बदलें">हिं</button>
+          <button class="lang-pill-btn" data-lang="mr" onclick="setLanguage('mr')" title="मराठी मध्ये बदला">म</button>
+        </div>
+
+        <a href="login.html" class="navbar__cta" id="btn-login-nav" data-i18n="nav.login">Login</a>
       </div>
 
       <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle menu">
@@ -63,22 +71,21 @@
     <div class="hero__content">
       <div class="hero__text">
         <h1 class="hero__headline" id="hero-headline">
-          <span class="line"><span class="line-inner">Your Crop.</span></span>
-          <span class="line"><span class="line-inner">Your Market.</span></span>
-          <span class="line"><span class="line-inner">Your <em class="highlight">Best Price.</em></span></span>
+          <span class="line"><span class="line-inner" data-i18n="landing.heroTitle1">Your Crop.</span></span>
+          <span class="line"><span class="line-inner" data-i18n="landing.heroTitle2">Your Market.</span></span>
+          <span class="line"><span class="line-inner"><span data-i18n="landing.heroTitle3">Your Best Price.</span></span></span>
         </h1>
 
-        <p class="hero__subtitle" id="hero-subtitle">
-          KrishiShetra connects farmers with market intelligence,
-          AI-powered price insights and verified buyers.
+        <p class="hero__subtitle" id="hero-subtitle" data-i18n="landing.heroSubtitle">
+          KrishiShetra connects Indian farmers directly with live APMC mandi intelligence, AI-powered price forecasting, and verified institutional buyers.
         </p>
 
         <div class="hero__actions" id="hero-actions">
           <a href="login.html" class="btn btn--primary" id="btn-explore">
-            Login / Get Started
+            <span data-i18n="landing.btnGetStarted">Login / Get Started</span>
             <span class="btn-arrow">→</span>
           </a>
-          <a href="#scroll-transition" class="btn btn--secondary" id="btn-how">
+          <a href="#scroll-transition" class="btn btn--secondary" id="btn-how" data-i18n="landing.btnExploreFeatures">
             Explore Features
           </a>
         </div>
@@ -86,19 +93,19 @@
         <div class="hero__trust" id="hero-trust">
           <span class="hero__trust-item">
             <span class="hero__trust-dot"></span>
-            Market Intelligence
+            <span data-i18n="landing.trustMarketIntel">Live Mandi Intel</span>
           </span>
           <span class="hero__trust-item">
             <span class="hero__trust-dot"></span>
-            AI Insights
+            <span data-i18n="landing.trustAiInsights">AI Forecasts</span>
           </span>
           <span class="hero__trust-item">
             <span class="hero__trust-dot"></span>
-            Verified Buyers
+            <span data-i18n="landing.trustVerifiedBuyers">Verified Buyers</span>
           </span>
           <span class="hero__trust-item">
             <span class="hero__trust-dot"></span>
-            Transparent Transactions
+            <span data-i18n="landing.trustInstantPay">Escrow Payment</span>
           </span>
         </div>
       </div>
@@ -720,7 +727,8 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
   <!-- Lenis Smooth Scroll -->
   <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-  <!-- Main Script -->
+  <!-- Main Scripts -->
+  <script src="js/i18n.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

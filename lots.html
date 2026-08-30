@@ -146,12 +146,10 @@
     <!-- Page Header Banner -->
     <div class="dash-section__header" style="margin-bottom: 24px;">
       <div>
-        <h1 class="dash-section__title" style="font-size: 28px;"><i data-lucide="package" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i> My Crop Lots & Buyer Offers</h1>
-        <p class="dash-section__subtitle">Manage your active harvest listings, create new lots, and negotiate buyer
-          bids.</p>
+        <h1 class="dash-section__title" style="font-size: 28px;"><i data-lucide="package" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i> <span data-i18n="lotsPage.title">My Crop Lots</span></h1>
+        <p class="dash-section__subtitle" data-i18n="lotsPage.subtitle">Manage your active harvest listings, create new lots, and negotiate buyer bids.</p>
       </div>
-      <button class="btn btn--primary" id="btn-create-lot-page" onclick="openCreateLotModal()"><i
-          data-lucide="plus"></i> + Create New Crop Lot</button>
+      <button class="btn btn--primary" id="btn-create-lot-page" onclick="openCreateLotModal()"><i data-lucide="plus"></i> <span data-i18n="lotsPage.btnCreate">+ Create New Crop Lot</span></button>
     </div>
 
     <!-- Active Lots & Offers 2-Column Section -->
@@ -162,21 +160,20 @@
         <div class="dash-card dash-panel" id="dash-active-lots">
           <div class="dash-panel__header">
             <div>
-              <h3 class="dash-panel__title">My Active Lots</h3>
-              <p class="dash-panel__subtitle">Manage listed crops & track status</p>
+              <h3 class="dash-panel__title" data-i18n="lotsPage.title">My Active Lots</h3>
+              <p class="dash-panel__subtitle" data-i18n="lotsPage.subtitle">Manage listed crops & track status</p>
             </div>
             <div class="dash-panel__lot-filters">
-              <button class="dash-lot-filter-btn dash-lot-filter-btn--active" data-filter="all">All</button>
-              <button class="dash-lot-filter-btn" data-filter="listed">Listed</button>
-              <button class="dash-lot-filter-btn" data-filter="paused">Paused</button>
+              <button class="dash-lot-filter-btn dash-lot-filter-btn--active" data-filter="all" data-i18n="lotsPage.tabAll">All</button>
+              <button class="dash-lot-filter-btn" data-filter="listed" data-i18n="lotsPage.tabListed">Listed</button>
+              <button class="dash-lot-filter-btn" data-filter="paused" data-i18n="lotsPage.tabPaused">Paused</button>
             </div>
           </div>
           <div class="dash-panel__body" id="lots-panel-body">
             <!-- Rendered dynamically by JS -->
           </div>
           <div class="dash-panel__footer">
-            <button class="btn btn--primary dash-panel__cta" id="btn-create-lot" onclick="openCreateLotModal()"><i
-                data-lucide="plus"></i> + Add New Crop Lot</button>
+            <button class="btn btn--primary dash-panel__cta" id="btn-create-lot" onclick="openCreateLotModal()"><i data-lucide="plus"></i> <span data-i18n="lotsPage.btnCreate">+ Add New Crop Lot</span></button>
           </div>
         </div>
 

@@ -242,7 +242,7 @@
       const roleCards = document.querySelectorAll('.auth-role-card');
 
       let currentRole = 'farmer';
-      let currentLang = 'en';
+      let currentLang = localStorage.getItem('krishi_lang') || localStorage.getItem('krishi_user_lang') || 'en';
       let countdown = 30;
       let timerInterval = null;
 
@@ -361,7 +361,15 @@
         document.querySelectorAll('.auth-lang-menu__item').forEach(item => {
           item.classList.toggle('active', item.dataset.lang === lang);
         });
+
+        try {
+          localStorage.setItem('krishi_lang', lang);
+          localStorage.setItem('krishi_user_lang', lang);
+        } catch(e) {}
       }
+
+      // Initialize language immediately on load
+      setLanguage(currentLang);
 
       // ── Language Dropdown Toggle ──
       langMenuBtn.addEventListener('click', (e) => {
