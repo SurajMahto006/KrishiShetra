@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiShetra — Transporter Profile & Credentials</title>
+  <meta name="description" content="Manage your transporter identity, Gold Carrier badges, operational corridors, bank escrow details, and notification preferences.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/transporter.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="trans-header">
+    <div class="trans-header-inner">
+      <a href="dashboard.html" class="trans-brand">
+        <span class="trans-brand-icon">🌾</span>
+        <span class="trans-brand-text">
+          KrishiShetra
+          <span class="trans-brand-badge">Profile</span>
+        </span>
+      </a>
+
+      <nav>
+        <ul class="trans-nav-menu" id="transNavMenu">
+          <li><a href="dashboard.html" class="trans-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search" style="width:16px;height:16px;"></i> Available Loads</a></li>
+          <li><a href="active-trips.html" class="trans-nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> Active Trips</a></li>
+          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Fleet</a></li>
+          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
+          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
+          <li><a href="profile.html" class="trans-nav-link active"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
+        </ul>
+      </nav>
+
+      <div class="trans-header-actions">
+        <a href="onboarding.html" class="btn btn-amber btn-sm"><i data-lucide="award" style="width:14px;height:14px;"></i> View KYC Docs</a>
+        <button class="trans-hamburger" id="transHamburger">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="trans-main">
+    <div class="trans-container" style="max-width:1120px;">
+      
+      <!-- Profile Header Hero Card -->
+      <div class="trans-hero-card" style="padding:32px;">
+        <div class="trans-hero-glow"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;position:relative;z-index:1;">
+          <div style="display:flex;align-items:center;gap:20px;">
+            <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--amber-light));color:#17231A;font-weight:800;font-size:28px;display:flex;align-items:center;justify-content:center;border:3px solid #FFF;box-shadow:var(--shadow-md);">
+              KE
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <h1 style="font-family:var(--font-serif);font-size:26px;color:#FFF;margin-bottom:2px;">Kisan Express Logistics Pvt Ltd</h1>
+                <span class="badge-tag" style="background:#DCF3E5;color:#1E6B40;padding:3px 10px;border-radius:var(--radius-full);font-size:12px;font-weight:700;">
+                  <i data-lucide="check-circle" style="width:13px;height:13px;display:inline;"></i> Gold Carrier Tier
+                </span>
+              </div>
+              <p style="font-size:13.5px;color:rgba(255,255,255,0.85);margin-top:2px;">ID: <strong>TR-MH-8902</strong> · Hub: Nashik, Maharashtra · GSTIN: 27AAECK1298P1Z8</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;">
+            <button class="btn btn-amber btn-sm" onclick="showToast('Profile updated successfully!')"><i data-lucide="save" style="width:14px;height:14px;"></i> Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE SECTIONS GRID -->
+      <div class="dashboard-grid-2">
+        
+        <!-- Left Column: Business & Contact Details -->
+        <div>
+          <div class="card-panel">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <div class="panel-icon-box"><i data-lucide="building"></i></div>
+                <div>
+                  <h2 class="panel-title">Business & Legal Credentials</h2>
+                  <div class="panel-subtitle">Government compliance and tax registrations</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Managing Director / Partner</label>
+                <input type="text" class="form-input" value="Virendra Patil">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Primary Mobile</label>
+                <input type="tel" class="form-input" value="+91 98230 45891">
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Official Email</label>
+                <input type="email" class="form-input" value="ops@kisanexpress.in">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Company PAN</label>
+                <input type="text" class="form-input" value="AAECK1298P" readonly>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Registered Hub & Yard Location</label>
+              <textarea class="form-textarea" rows="2">Plot 42, Transport Nagar, Peth Road, Nashik, Maharashtra 422003</textarea>
+            </div>
+          </div>
+
+          <!-- Operational Agri Corridors -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <div class="panel-icon-box"><i data-lucide="map-pin"></i></div>
+                <div>
+                  <h2 class="panel-title">Preferred Agri-Freight Corridors</h2>
+                  <div class="panel-subtitle">Routes where your fleet gets priority load notifications</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+              <span class="spec-chip" style="background:var(--green-pale);color:var(--green-primary);font-weight:700;padding:6px 12px;">Nashik ➔ Mumbai Vashi APMC ✕</span>
+              <span class="spec-chip" style="background:var(--green-pale);color:var(--green-primary);font-weight:700;padding:6px 12px;">Pune ➔ Surat APMC ✕</span>
+              <span class="spec-chip" style="background:var(--green-pale);color:var(--green-primary);font-weight:700;padding:6px 12px;">Indore ➔ Ahmedabad ✕</span>
+              <span class="spec-chip" style="background:var(--green-pale);color:var(--green-primary);font-weight:700;padding:6px 12px;">Ratnagiri ➔ Delhi Azadpur ✕</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Add New Highway Corridor</label>
+              <div style="display:flex;gap:10px;">
+                <input type="text" class="form-input" placeholder="e.g. Nagpur ➔ Hyderabad ORR">
+                <button class="btn btn-secondary btn-sm" onclick="showToast('New corridor route added!')">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Bank Details & Service Badges -->
+        <div>
+          
+          <!-- Bank & Payouts -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <div class="panel-icon-box"><i data-lucide="credit-card"></i></div>
+                <div>
+                  <h2 class="panel-title">Bank Payout & Escrow Account</h2>
+                  <div class="panel-subtitle">Direct NEFT / UPI settlement details</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:14px;">
+              <label class="form-label">Account Beneficiary Name</label>
+              <input type="text" class="form-input" value="Kisan Express Logistics Pvt Ltd">
+            </div>
+
+            <div class="form-group" style="margin-bottom:14px;">
+              <label class="form-label">Bank Name & Branch</label>
+              <input type="text" class="form-input" value="HDFC Bank (Nashik City Branch)">
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Account Number</label>
+                <input type="text" class="form-input" value="50200049281729">
+              </div>
+              <div class="form-group">
+                <label class="form-label">IFSC Code</label>
+                <input type="text" class="form-input" value="HDFC0001048">
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:14px;">
+              <label class="form-label">Settlement UPI ID</label>
+              <input type="text" class="form-input" value="kisanlogistics@hdfcbank">
+            </div>
+          </div>
+
+          <!-- Trust & Performance Badges -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <div class="panel-icon-box"><i data-lucide="award"></i></div>
+                <div>
+                  <h2 class="panel-title">Platform Rating & Badges</h2>
+                  <div class="panel-subtitle">Trusted by 140+ registered Farmer Producer Organizations</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-surface);border-radius:var(--radius-md);margin-bottom:12px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:24px;">⭐</span>
+                <div>
+                  <div style="font-weight:800;font-size:16px;">4.9 / 5.0 (486 Ratings)</div>
+                  <div style="font-size:12px;color:var(--text-secondary);">Top 2% carrier on KrishiShetra</div>
+                </div>
+              </div>
+              <span class="doc-status-tag valid">Gold Star</span>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-surface);border-radius:var(--radius-md);">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:24px;">❄️</span>
+                <div>
+                  <div style="font-weight:800;font-size:16px;">Cold Chain Certified</div>
+                  <div style="font-size:12px;color:var(--text-secondary);">Compliant with APEDA mango/perishables export standards</div>
+                </div>
+              </div>
+              <span class="doc-status-tag valid">APEDA Ready</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="trans-footer">
+    <div class="trans-container trans-footer-inner">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:20px;">🌾</span>
+        <span style="font-weight:700;color:#FFF;">KrishiShetra Transporter Hub</span>
+      </div>
+      <div>
+        <span>© 2026 KrishiShetra Agri-Tech Platform · Gold Carrier Network</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/transporter-data.js"></script>
+  <script src="js/transporter.js"></script>
+</body>
+</html>

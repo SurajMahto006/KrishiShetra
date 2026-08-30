@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiShetra — Admin Login</title>
+  <meta name="description" content="KrishiShetra Admin Portal — Secure access for platform administrators to manage farmers, users, and operations.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <!-- Background Image -->
+    <div class="login-bg">
+      <img src="assets/images/admin-login-bg.jpg" alt="Golden wheat fields at sunset in rural India">
+      <div class="login-bg-overlay"></div>
+    </div>
+
+    <!-- Decorative Orbs -->
+    <div class="login-decoration">
+      <div class="deco-orb deco-orb-1"></div>
+      <div class="deco-orb deco-orb-2"></div>
+      <div class="deco-orb deco-orb-3"></div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-brand">
+          <span class="brand-icon">🌾</span>
+          <span class="brand-text">KrishiShetra</span>
+        </div>
+        <h1 class="login-title">Admin Portal</h1>
+        <p class="login-subtitle">Sign in to manage the platform</p>
+      </div>
+
+      <form class="login-form" id="adminLoginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="adminEmail">Email Address</label>
+          <div class="input-icon-wrap">
+            <i data-lucide="mail" style="width:18px;height:18px;"></i>
+            <input type="email" id="adminEmail" class="form-input" placeholder="admin@krishishetra.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="adminPassword">Password</label>
+          <div class="input-icon-wrap">
+            <i data-lucide="lock" style="width:18px;height:18px;"></i>
+            <input type="password" id="adminPassword" class="form-input" placeholder="Enter your password" required>
+          </div>
+        </div>
+
+        <div class="form-row-between">
+          <label class="checkbox-label">
+            <input type="checkbox" id="rememberMe">
+            Remember me
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full">
+          <i data-lucide="log-in" style="width:18px;height:18px;"></i>
+          Sign In
+        </button>
+
+        <div class="login-footer-text">
+          <i data-lucide="shield-check" style="width:14px;height:14px;color:var(--green-mid);"></i>
+          <span>Protected by enterprise-grade security</span>
+        </div>
+      </form>
+
+      <div class="login-back-link">
+        <a href="../KrishiShetra/index.html">
+          <i data-lucide="arrow-left" style="width:14px;height:14px;"></i>
+          Back to KrishiShetra
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('adminEmail').value;
+      const password = document.getElementById('adminPassword').value;
+
+      if (email && password) {
+        showToast('Login successful! Redirecting to dashboard...', 'success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1200);
+      }
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      const iconName = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info';
+      toast.innerHTML = `
+        <i data-lucide="${iconName}" style="width:16px;height:16px;color:var(--green-mid);flex-shrink:0;"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => toast.classList.add('show'), 50);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

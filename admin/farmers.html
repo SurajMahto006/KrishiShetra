@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiShetra — Admin Farmers</title>
+  <meta name="description" content="KrishiShetra Admin — Manage registered farmers, verify KYC documents, and track crop listings.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       TOP HEADER
+       ═══════════════════════════════════════════ -->
+  <header class="admin-header" id="adminHeader">
+    <div class="admin-header-inner">
+      <a href="index.html" class="admin-brand">
+        <span class="brand-icon">🌾</span>
+        <span class="brand-text">KrishiShetra</span>
+        <span class="brand-badge">Admin</span>
+      </a>
+
+      <nav>
+        <ul class="admin-nav-menu" id="adminNavMenu">
+          <li><a href="dashboard.html" class="admin-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="users.html" class="admin-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Users</a></li>
+          <li><a href="farmers.html" class="admin-nav-link active"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Farmers</a></li>
+          <li><a href="reports.html" class="admin-nav-link"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Reports</a></li>
+          <li><a href="settings.html" class="admin-nav-link"><i data-lucide="settings" style="width:16px;height:16px;"></i> Settings</a></li>
+        </ul>
+      </nav>
+
+      <div class="admin-header-actions">
+        <button class="admin-icon-btn" title="Notifications" onclick="showToast('3 new notifications')">
+          <i data-lucide="bell" style="width:18px;height:18px;"></i>
+          <span class="notif-dot"></span>
+        </button>
+
+        <div class="admin-header-user">
+          <div class="admin-header-avatar">AD</div>
+          <div class="admin-header-user-info">
+            <span class="admin-header-user-name">Admin User</span>
+            <span class="admin-header-user-role">Super Admin</span>
+          </div>
+        </div>
+
+        <button class="admin-hamburger" id="adminHamburger" onclick="toggleMobileNav()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════ -->
+  <main class="admin-main">
+
+    <!-- Page Header -->
+    <div class="admin-page-header">
+      <div>
+        <h1 class="admin-page-title">Farmer Management</h1>
+        <p class="admin-page-subtitle">Manage farmer registrations, KYC, and crop listings</p>
+      </div>
+      <div class="admin-page-actions">
+        <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting farmer data...')">
+          <i data-lucide="download" style="width:14px;height:14px;"></i>
+          Export
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="showToast('Add farmer modal would open here')">
+          <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
+          Add Farmer
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <i data-lucide="users" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-label">Total Farmers</div>
+        <div class="stat-value">856</div>
+        <div class="stat-trend">
+          <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+          +24 this week
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber">
+          <i data-lucide="check-circle" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-label">Verified</div>
+        <div class="stat-value">792</div>
+        <div class="stat-trend">
+          <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
+          92% verification rate
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <i data-lucide="map-pin" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-label">Villages Covered</div>
+        <div class="stat-value">64</div>
+        <div class="stat-trend">
+          <i data-lucide="map" style="width:14px;height:14px;"></i>
+          Across 12 talukas
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red">
+          <i data-lucide="alert-circle" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-label">Pending KYC</div>
+        <div class="stat-value">64</div>
+        <div class="stat-trend negative">
+          <i data-lucide="clock" style="width:14px;height:14px;"></i>
+          Needs review
+        </div>
+      </div>
+    </div>
+
+    <!-- KYC Progress Overview -->
+    <div class="glass-card mb-3">
+      <div class="glass-card-header">
+        <div>
+          <h2 class="glass-card-title">KYC Verification Overview</h2>
+          <p class="glass-card-subtitle">Overall progress of farmer verification</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showToast('Opening KYC review queue...')">
+          <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
+          Review Pending KYC
+        </button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;">
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Aadhaar Verified</span>
+            <span class="progress-label-value">92%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill green" style="width:92%"></div>
+          </div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Land Records Submitted</span>
+            <span class="progress-label-value">78%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill amber" style="width:78%"></div>
+          </div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Bank Account Linked</span>
+            <span class="progress-label-value">85%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill green" style="width:85%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crop Distribution Chart -->
+    <div class="dashboard-grid mb-3">
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">Crop Distribution</h2>
+            <p class="glass-card-subtitle">Farmer count by primary crop</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="cropDistChart"></canvas>
+        </div>
+      </div>
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">Monthly Registrations</h2>
+            <p class="glass-card-subtitle">New farmer onboarding trend</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="farmerTrendChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Farmers Table Card -->
+    <div class="glass-card">
+      <div class="glass-card-header">
+        <div>
+          <h2 class="glass-card-title">Registered Farmers</h2>
+          <p class="glass-card-subtitle">856 farmers across Nashik district</p>
+        </div>
+        <div class="search-box">
+          <i data-lucide="search" style="width:16px;height:16px;"></i>
+          <input type="text" placeholder="Search farmers..." id="farmerSearch" onkeyup="filterFarmers()">
+        </div>
+      </div>
+
+      <!-- Crop Filter Pills -->
+      <div class="filter-pills mb-3">
+        <button class="filter-pill active" onclick="filterByCrop('all', this)">All Crops</button>
+        <button class="filter-pill" onclick="filterByCrop('Wheat', this)">🌾 Wheat</button>
+        <button class="filter-pill" onclick="filterByCrop('Onion', this)">🧅 Onion</button>
+        <button class="filter-pill" onclick="filterByCrop('Tomato', this)">🍅 Tomato</button>
+        <button class="filter-pill" onclick="filterByCrop('Rice', this)">🌾 Rice</button>
+        <button class="filter-pill" onclick="filterByCrop('Sugarcane', this)">🎋 Sugarcane</button>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table" id="farmersTable">
+          <thead>
+            <tr>
+              <th>Farmer</th>
+              <th>Village</th>
+              <th>Crop</th>
+              <th>Quantity</th>
+              <th>Status</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-crop="Wheat">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">RP</div>
+                  <strong>Rameshwar Patil</strong>
+                </div>
+              </td>
+              <td>Dindori, Nashik</td>
+              <td>🌾 Wheat</td>
+              <td>3.5 Tons</td>
+              <td><span class="badge badge-success">Verified</span></td>
+              <td style="text-align:right;">
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Viewing farmer: Rameshwar Patil')">
+                  <i data-lucide="eye" style="width:13px;height:13px;"></i> View
+                </button>
+              </td>
+            </tr>
+            <tr data-crop="Onion">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">SD</div>
+                  <strong>Sunita Deshmukh</strong>
+                </div>
+              </td>
+              <td>Niphad, Nashik</td>
+              <td>🧅 Onion</td>
+              <td>4.2 Tons</td>
+              <td><span class="badge badge-success">Verified</span></td>
+              <td style="text-align:right;">
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Viewing farmer: Sunita Deshmukh')">
+                  <i data-lucide="eye" style="width:13px;height:13px;"></i> View
+                </button>
+              </td>
+            </tr>
+            <tr data-crop="Wheat">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">BS</div>
+                  <strong>Bhausaheb Shinde</strong>
+                </div>
+              </td>
+              <td>Pimpalgaon, Nashik</td>
+              <td>🌾 Wheat</td>
+              <td>2.8 Tons</td>
+              <td><span class="badge badge-success">Verified</span></td>
+              <td style="text-align:right;">
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Viewing farmer: Bhausaheb Shinde')">
+                  <i data-lucide="eye" style="width:13px;height:13px;"></i> View
+                </button>
+              </td>
+            </tr>
+            <tr data-crop="Onion">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar amber-avatar">AG</div>
+                  <strong>Ananda Gholap</strong>
+                </div>
+              </td>
+              <td>Lasalgaon, Nashik</td>
+              <td>🧅 Onion</td>
+              <td>3.0 Tons</td>
+              <td><span class="badge badge-warning">Pending</span></td>
+              <td style="text-align:right;">
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Viewing farmer: Ananda Gholap')">
+                  <i data-lucide="eye" style="width:13px;height:13px;"></i> View
+                </button>
+              </td>
+            </tr>
+            <tr data-crop="Tomato">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">KJ</div>
+                  <strong>Kalpana Jadhav</strong>
+                </div>
+              </td>
+              <td>Girnare, Nashik</td>
+              <td>🍅 Tomato</td>
+              <td>1.8 Tons</td>
+              <td><span class="badge badge-success">Verified</span></td>
+              <td style="text-align:right;">
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Viewing farmer: Kalpana Jadhav')">
+                  <i data-lucide="eye" style="width:13px;height:13px;"></i> View
+                </button>
+              </td>
+            </tr>
+            <tr data-crop="Rice">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">VS</div>
+                  <strong>Vitthal Shirsat</strong>
+                </div>
+              </td>
+              <td>Igatpuri, Nashik</td>
+              <td>🌾 Rice</td>
+              <td>5.0 Tons</td>
+              <td><span class="badge badge-success">Verified</span></td>
+              <td style="text-align:right;">
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Viewing farmer: Vitthal Shirsat')">
+                  <i data-lucide="eye" style="width:13px;height:13px;"></i> View
+                </button>
+              </td>
+            </tr>
+            <tr data-crop="Sugarcane">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">GM</div>
+                  <strong>Ganesh Marathe</strong>
+                </div>
+              </td>
+              <td>Sinnar, Nashik</td>
+              <td>🎋 Sugarcane</td>
+              <td>8.5 Tons</td>
+              <td><span class="badge badge-success">Verified</span></td>
+              <td style="text-align:right;">
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Viewing farmer: Ganesh Marathe')">
+                  <i data-lucide="eye" style="width:13px;height:13px;"></i> View
+                </button>
+              </td>
+            </tr>
+            <tr data-crop="Onion">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar amber-avatar">PK</div>
+                  <strong>Priya Kulkarni</strong>
+                </div>
+              </td>
+              <td>Malegaon, Nashik</td>
+              <td>🧅 Onion</td>
+              <td>2.5 Tons</td>
+              <td><span class="badge badge-warning">Pending</span></td>
+              <td style="text-align:right;">
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Viewing farmer: Priya Kulkarni')">
+                  <i data-lucide="eye" style="width:13px;height:13px;"></i> View
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Region Coverage -->
+    <div class="glass-card" style="margin-top:1.5rem;">
+      <div class="glass-card-header">
+        <div>
+          <h2 class="glass-card-title">Region Coverage</h2>
+          <p class="glass-card-subtitle">Farmer distribution across Nashik talukas</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;">
+        <div class="region-tile">
+          <div class="region-tile-value">142</div>
+          <div class="region-tile-label">Niphad</div>
+        </div>
+        <div class="region-tile">
+          <div class="region-tile-value">128</div>
+          <div class="region-tile-label">Dindori</div>
+        </div>
+        <div class="region-tile">
+          <div class="region-tile-value">115</div>
+          <div class="region-tile-label">Pimpalgaon</div>
+        </div>
+        <div class="region-tile">
+          <div class="region-tile-value">98</div>
+          <div class="region-tile-label">Lasalgaon</div>
+        </div>
+        <div class="region-tile">
+          <div class="region-tile-value">87</div>
+          <div class="region-tile-label">Sinnar</div>
+        </div>
+        <div class="region-tile">
+          <div class="region-tile-value">76</div>
+          <div class="region-tile-label">Igatpuri</div>
+        </div>
+        <div class="region-tile">
+          <div class="region-tile-value">65</div>
+          <div class="region-tile-label">Malegaon</div>
+        </div>
+        <div class="region-tile">
+          <div class="region-tile-value">45</div>
+          <div class="region-tile-label">Girnare</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // ── Toast ──
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      const iconName = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info';
+      const iconColor = type === 'success' ? 'var(--green-bright)' : type === 'error' ? 'var(--terracotta)' : 'var(--amber)';
+      toast.innerHTML = `
+        <i data-lucide="${iconName}" style="width:16px;height:16px;color:${iconColor};flex-shrink:0;"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => toast.classList.add('show'), 50);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    // ── Mobile Nav ──
+    function toggleMobileNav() {
+      document.getElementById('adminNavMenu').classList.toggle('open');
+    }
+
+    // ── Search Filter ──
+    function filterFarmers() {
+      const query = document.getElementById('farmerSearch').value.toLowerCase();
+      const rows = document.querySelectorAll('#farmersTable tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    // ── Crop Filter Pills ──
+    function filterByCrop(crop, btn) {
+      // Update active pill
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Filter table rows
+      const rows = document.querySelectorAll('#farmersTable tbody tr');
+      rows.forEach(row => {
+        if (crop === 'all') {
+          row.style.display = '';
+        } else {
+          row.style.display = row.dataset.crop === crop ? '' : 'none';
+        }
+      });
+
+      lucide.createIcons();
+    }
+
+    lucide.createIcons();
+
+    // ── Crop Distribution Doughnut ──
+    const cropCtx = document.getElementById('cropDistChart').getContext('2d');
+    new Chart(cropCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Onion', 'Wheat', 'Tomato', 'Rice', 'Sugarcane', 'Other'],
+        datasets: [{
+          data: [312, 248, 154, 86, 34, 22],
+          backgroundColor: ['#5B9A72','#D6A84F','#C96D5B','#6BA3F7','#8FCB9B','rgba(255,255,255,0.15)'],
+          borderColor: 'rgba(255,255,255,0.9)',
+          borderWidth: 3,
+          hoverOffset: 8,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: '#7A8880',
+              font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+              boxWidth: 12, boxHeight: 12, padding: 16,
+              usePointStyle: true, pointStyle: 'circle',
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(26, 58, 40, 0.95)',
+            titleColor: '#FFFFFF',
+            bodyColor: 'rgba(255,255,255,0.75)',
+            borderColor: 'rgba(255,255,255,0.15)',
+            borderWidth: 1,
+            cornerRadius: 10,
+            padding: 12,
+            callbacks: {
+              label(ctx) {
+                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                const pct = ((ctx.parsed / total) * 100).toFixed(1);
+                return ` ${ctx.label}: ${ctx.parsed} farmers (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // ── Farmer Registration Trend ──
+    const trendCtx = document.getElementById('farmerTrendChart').getContext('2d');
+    new Chart(trendCtx, {
+      type: 'line',
+      data: {
+        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+        datasets: [{
+          label: 'New Farmers',
+          data: [62, 84, 110, 128, 148, 156],
+          borderColor: '#5B9A72',
+          backgroundColor: 'rgba(91,154,114,0.1)',
+          borderWidth: 2.5,
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: '#5B9A72',
+          pointBorderColor: '#FFFFFF',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+        }, {
+          label: 'KYC Verified',
+          data: [54, 74, 96, 112, 136, 148],
+          borderColor: '#D6A84F',
+          backgroundColor: 'rgba(214,168,79,0.07)',
+          borderWidth: 2.5,
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: '#D6A84F',
+          pointBorderColor: '#FFFFFF',
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            position: 'top', align: 'end',
+            labels: {
+              color: '#7A8880',
+              font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+              boxWidth: 12, boxHeight: 12, padding: 16,
+              usePointStyle: true, pointStyle: 'circle',
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(26, 58, 40, 0.95)',
+            titleColor: '#FFFFFF',
+            bodyColor: 'rgba(255,255,255,0.75)',
+            borderColor: 'rgba(255,255,255,0.15)',
+            borderWidth: 1,
+            cornerRadius: 10,
+            padding: 12,
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+          },
+          y: {
+            grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
