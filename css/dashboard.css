@@ -137,7 +137,7 @@ body.dashboard-body {
 
 .container {
   width: 100%;
-  max-width: 1240px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 0 24px;
   position: relative;
@@ -1118,13 +1118,7 @@ body.dashboard-body {
   align-items: stretch;
 }
 
-@media (max-width: 1380px) {
-  .dash-market__grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (max-width: 1080px) {
+@media (max-width: 1024px) {
   .dash-market__grid {
     grid-template-columns: repeat(3, 1fr);
   }
