@@ -172,11 +172,12 @@ function initSearchDropdown() {
       html += `<div class="kl-search-results__group-title">${typeLabels[type] || type}</div>`;
       grouped[type].forEach(item => {
         html += `<a href="${item.route}" class="kl-search-results__item" onclick="document.getElementById('kl-search-results').classList.remove('is-open')">
-          <span class="kl-search-results__item-icon">${item.icon}</span>${item.label}</a>`;
+          <span class="kl-search-results__item-icon"><i data-lucide="${item.iconName || 'leaf'}"></i></span>${item.label}</a>`;
       });
     });
     panel.innerHTML = html;
     panel.classList.add('is-open');
+    if (window.lucide) lucide.createIcons();
   });
   input.addEventListener('blur', () => setTimeout(() => panel.classList.remove('is-open'), 200));
   input.addEventListener('keydown', e => { if (e.key === 'Enter') { panel.classList.remove('is-open'); window.location.hash = '/buyer/marketplace'; } });
@@ -199,7 +200,7 @@ function initNotificationPanel() {
       </div>
       ${notifications.map(n => `
         <div class="kl-notification-item">
-          <div class="kl-notification-item__icon kl-notification-item__icon--${typeClass[n.type] || 'lot'}">${n.icon}</div>
+          <div class="kl-notification-item__icon kl-notification-item__icon--${typeClass[n.type] || 'lot'}"><i data-lucide="${n.iconName || 'sprout'}"></i></div>
           <div class="kl-notification-item__body">
             <div class="kl-notification-item__text">${n.text}</div>
             <div class="kl-notification-item__time">${n.time}</div>
@@ -207,6 +208,7 @@ function initNotificationPanel() {
         </div>
       `).join('')}`;
     panel.classList.add('is-open');
+    if (window.lucide) lucide.createIcons();
   });
   document.addEventListener('click', e => { if (!btn.contains(e.target) && !panel.contains(e.target)) panel.classList.remove('is-open'); });
 }
@@ -228,10 +230,10 @@ function renderKycView() {
           <h1 class="kl-kyc-visual__title">Verify Your Business to Start Sourcing</h1>
           <p class="kl-kyc-visual__subtitle">Complete KYC verification to access verified agricultural lots, escrow contracts, and procurement tools.</p>
           <div class="kl-kyc-visual__features">
-            <div class="kl-kyc-visual__feature"><span class="kl-kyc-visual__feature-icon">🔒</span> Secure escrow payment protection</div>
-            <div class="kl-kyc-visual__feature"><span class="kl-kyc-visual__feature-icon">✓</span> Access verified FPO & farmer lots</div>
-            <div class="kl-kyc-visual__feature"><span class="kl-kyc-visual__feature-icon">📊</span> AI-powered price intelligence</div>
-            <div class="kl-kyc-visual__feature"><span class="kl-kyc-visual__feature-icon">🚛</span> GPS logistics tracking</div>
+            <div class="kl-kyc-visual__feature"><span class="kl-kyc-visual__feature-icon"><i data-lucide="shield-check"></i></span> Secure escrow payment protection</div>
+            <div class="kl-kyc-visual__feature"><span class="kl-kyc-visual__feature-icon"><i data-lucide="check-circle-2"></i></span> Access verified FPO & farmer lots</div>
+            <div class="kl-kyc-visual__feature"><span class="kl-kyc-visual__feature-icon"><i data-lucide="trending-up"></i></span> AI-powered price intelligence</div>
+            <div class="kl-kyc-visual__feature"><span class="kl-kyc-visual__feature-icon"><i data-lucide="truck"></i></span> GPS logistics tracking</div>
           </div>
         </div>
       </div>
@@ -351,13 +353,13 @@ function renderDashboardView() {
         <div class="kl-procurement-card__row">
           <div>
             <span class="kl-procurement-card__eyebrow">YOUR CURRENT SOURCING REQUIREMENT</span>
-            <h2 class="kl-procurement-card__title">🧅 ${req.crop} (${req.grade})</h2>
+            <h2 class="kl-procurement-card__title">${req.crop} (${req.grade})</h2>
             <p class="kl-procurement-card__meta">Target Volume: <strong>${req.minQty}–${req.maxQty} ${req.unit}</strong> &nbsp;|&nbsp; Target Price: <strong>₹${fmt(req.targetPriceMin)}–₹${fmt(req.targetPriceMax)}/Q</strong> &nbsp;|&nbsp; Region: <strong>${req.preferredRegion}</strong></p>
           </div>
           <a href="#/buyer/marketplace" class="kl-btn kl-btn--lg" style="background:#FFF;color:var(--kl-evergreen);border:none;white-space:nowrap;">Explore ${s.newMatchingLots} Matched Lots <i data-lucide="arrow-right"></i></a>
         </div>
         <div class="kl-procurement-card__ai">
-          <span>🤖</span>
+          <span><i data-lucide="sparkles" style="width:15px;height:15px;color:var(--kl-amber);vertical-align:middle;margin-right:4px;"></i></span>
           <span><strong>AI Intelligence:</strong> 12 lots currently match your exact requirements in Nashik APMC with Grade A moisture certification. Prices trending up 8.2% this week.</span>
         </div>
       </div>
@@ -373,7 +375,7 @@ function renderDashboardView() {
         <thead><tr><th>Produce</th><th>Current Price</th><th>Weekly Trend</th><th>Demand</th><th>Lots</th><th></th></tr></thead>
         <tbody>
           ${snap.map(item => `<tr>
-            <td><strong>${item.emoji} ${item.crop} (${item.grade})</strong></td>
+            <td><strong>${item.crop} (${item.grade})</strong></td>
             <td><strong>${item.price}</strong></td>
             <td><span style="color:${item.trendUp ? 'var(--kl-mint)' : 'var(--kl-terracotta)'};font-weight:700;">${item.trend}</span></td>
             <td><span class="kl-badge ${item.demand === 'High Demand' ? 'kl-badge--verified' : 'kl-badge--neutral'}">${item.demand}</span></td>
@@ -443,7 +445,7 @@ function renderMarketplaceView() {
 
 function renderLotCards(lots) {
   if (!lots.length) return `<div class="kl-empty-state" style="grid-column:1/-1;">
-    <div class="kl-empty-state__icon">📦</div>
+    <div class="kl-empty-state__icon"><i data-lucide="package-open" style="width:48px;height:48px;color:var(--kl-muted);"></i></div>
     <h3 class="kl-empty-state__title">No matching lots found</h3>
     <p class="kl-empty-state__text">Try adjusting your filters or expanding the search radius to discover more produce lots.</p>
     <button class="kl-btn kl-btn--secondary" onclick="resetMarketplaceFilters()">Clear Filters</button>
@@ -457,14 +459,14 @@ function renderLotCards(lots) {
       </div>
       <div class="kl-lot-card__body">
         <div class="kl-lot-card__header-row">
-          <span class="kl-lot-card__crop">${l.emoji} ${l.crop}</span>
+          <span class="kl-lot-card__crop">${l.crop}</span>
           <span class="kl-lot-card__price">₹${fmt(l.sellerAskPrice)}/Q</span>
         </div>
         <div class="kl-lot-card__variety">${l.variety} · ${l.grade} · ${l.quantity} ${l.unit}</div>
         <div class="kl-lot-card__details">
-          <div class="kl-lot-card__detail"><span class="kl-lot-card__detail-icon">📍</span> ${l.location} (${l.distanceKm} km)</div>
-          <div class="kl-lot-card__detail"><span class="kl-lot-card__detail-icon">🏢</span> ${l.sellerName} <span class="kl-text-mint kl-fw-700">✓</span></div>
-          <div class="kl-lot-card__detail"><span class="kl-lot-card__detail-icon">🤖</span> Trust Score: <strong>${l.sellerTrustScore}/100</strong></div>
+          <div class="kl-lot-card__detail"><span class="kl-lot-card__detail-icon"><i data-lucide="map-pin" style="width:13px;height:13px;color:var(--kl-mint);"></i></span> ${l.location} (${l.distanceKm} km)</div>
+          <div class="kl-lot-card__detail"><span class="kl-lot-card__detail-icon"><i data-lucide="building-2" style="width:13px;height:13px;color:var(--kl-slate);"></i></span> ${l.sellerName} <span class="kl-text-mint kl-fw-700">✓</span></div>
+          <div class="kl-lot-card__detail"><span class="kl-lot-card__detail-icon"><i data-lucide="shield-check" style="width:13px;height:13px;color:var(--kl-amber);"></i></span> Trust Score: <strong>${l.sellerTrustScore}/100</strong></div>
         </div>
         <div class="kl-lot-card__footer">
           <a href="#/buyer/lots/${l.id}" class="kl-btn kl-btn--primary kl-btn--full">View Lot & Make Offer</a>
@@ -512,8 +514,8 @@ function renderLotDetailView(lotId) {
               <div class="kl-lot-hero__image"><img src="${l.image}" alt="${l.crop}"></div>
               <div class="kl-lot-hero__info">
                 <div class="kl-flex kl-flex-between kl-flex-center kl-mb-sm">
-                  <h1 class="kl-lot-hero__title">${l.emoji} ${l.crop} (${l.variety})</h1>
-                  <span class="kl-badge kl-badge--verified">✓ Verified Seller</span>
+                  <h1 class="kl-lot-hero__title">${l.crop} (${l.variety})</h1>
+                  <span class="kl-badge kl-badge--verified"><i data-lucide="shield-check" style="width:12px;height:12px;"></i> Verified Seller</span>
                 </div>
                 <p class="kl-lot-hero__meta">Lot ID: <strong>${l.id}</strong> &nbsp;|&nbsp; Mandi: <strong>${l.mandi}</strong> &nbsp;|&nbsp; Available: <strong>${l.quantity} ${l.unit}</strong></p>
                 <div class="kl-price-pair">
@@ -527,7 +529,7 @@ function renderLotDetailView(lotId) {
 
         <!-- Price Intelligence -->
         <div class="kl-card kl-mb-lg">
-          <div class="kl-card__header"><span class="kl-card__header-title">📊 Price Intelligence</span></div>
+          <div class="kl-card__header"><span class="kl-card__header-title"><i data-lucide="trending-up" style="width:15px;height:15px;vertical-align:middle;margin-right:6px;color:var(--kl-mint);"></i> Price Intelligence</span></div>
           <div class="kl-card__body">
             <p class="kl-text-sm kl-text-muted kl-mb-md">Seller price is <strong style="color:${priceDiff > 0 ? 'var(--kl-terracotta)' : 'var(--kl-mint)'};">${priceDiff > 0 ? '+' : ''}${priceDiff}%</strong> ${priceDiff > 0 ? 'above' : 'below'} the current market reference price.</p>
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
@@ -546,7 +548,7 @@ function renderLotDetailView(lotId) {
 
         <!-- Quality Analytics -->
         <div class="kl-card kl-mb-lg">
-          <div class="kl-card__header"><span class="kl-card__header-title">🔍 Quality & AI Grading</span><span class="kl-badge kl-badge--verified">AI Confidence: ${l.qualityMetrics.aiConfidencePct}%</span></div>
+          <div class="kl-card__header"><span class="kl-card__header-title"><i data-lucide="sparkles" style="width:15px;height:15px;vertical-align:middle;margin-right:6px;color:var(--kl-mint);"></i> Quality & AI Grading</span><span class="kl-badge kl-badge--verified">AI Confidence: ${l.qualityMetrics.aiConfidencePct}%</span></div>
           <div class="kl-card__body">
             <div class="kl-quality-grid">
               <div><div class="kl-quality-item__label">Moisture</div><div class="kl-quality-item__value">${l.qualityMetrics.moisturePct}</div></div>
@@ -560,7 +562,7 @@ function renderLotDetailView(lotId) {
 
         <!-- Seller Trust Score -->
         <div class="kl-card kl-mb-lg">
-          <div class="kl-card__header"><span class="kl-card__header-title">🏢 Seller Trust Score</span></div>
+          <div class="kl-card__header"><span class="kl-card__header-title"><i data-lucide="shield-check" style="width:15px;height:15px;vertical-align:middle;margin-right:6px;color:var(--kl-mint);"></i> Seller Trust Score</span></div>
           <div class="kl-card__body">
             <div class="kl-trust-score">
               <div class="kl-trust-score__circle" style="--score:${l.sellerTrustScore}">
@@ -574,8 +576,8 @@ function renderLotDetailView(lotId) {
               </div>
             </div>
             <div class="kl-flex kl-gap-lg kl-mt-md kl-text-sm kl-text-muted">
-              <span>📋 ${l.sellerCompletedOrders} orders completed</span>
-              <span>⚠️ Dispute rate: ${l.disputeRate}</span>
+              <span><i data-lucide="clipboard-check" style="width:13px;height:13px;vertical-align:middle;"></i> ${l.sellerCompletedOrders} orders completed</span>
+              <span><i data-lucide="alert-circle" style="width:13px;height:13px;vertical-align:middle;"></i> Dispute rate: ${l.disputeRate}</span>
             </div>
           </div>
         </div>
@@ -584,7 +586,7 @@ function renderLotDetailView(lotId) {
       <!-- Right Column: Landed Cost -->
       <div>
         <div class="kl-card kl-landed-cost">
-          <div class="kl-card__header"><span class="kl-card__header-title">🧮 Landed Cost Calculator</span></div>
+          <div class="kl-card__header"><span class="kl-card__header-title"><i data-lucide="calculator" style="width:15px;height:15px;vertical-align:middle;margin-right:6px;color:var(--kl-mint);"></i> Landed Cost Calculator</span></div>
           <div class="kl-card__body">
             <div class="kl-landed-cost__row"><span>Produce Cost (${l.quantity} Q × ₹${fmt(l.sellerAskPrice)})</span><strong>₹${fmt(landed.productCost)}</strong></div>
             <div class="kl-landed-cost__row"><span>Freight (${l.distanceKm} km)</span><strong>₹${fmt(landed.transportCost)}</strong></div>
@@ -595,19 +597,19 @@ function renderLotDetailView(lotId) {
               <span class="kl-landed-cost__total-label">Effective Cost/Q</span>
               <span class="kl-landed-cost__total-value">₹${fmt(landed.effectiveCostPerQ)}/Q</span>
             </div>
-            <button class="kl-btn kl-btn--primary kl-btn--full kl-btn--lg kl-mt-lg" onclick="openMakeOfferModal('${l.id}')">✦ Make Procurement Offer</button>
-            <button class="kl-btn kl-btn--secondary kl-btn--full kl-mt-sm">Add to Watchlist</button>
+            <button class="kl-btn kl-btn--primary kl-btn--full kl-btn--lg kl-mt-lg" onclick="openMakeOfferModal('${l.id}')"><i data-lucide="sparkles" style="width:15px;height:15px;"></i> Make Procurement Offer</button>
+            <button class="kl-btn kl-btn--secondary kl-btn--full kl-mt-sm"><i data-lucide="bookmark" style="width:14px;height:14px;"></i> Add to Watchlist</button>
           </div>
         </div>
 
         <!-- Logistics Estimate -->
         <div class="kl-card kl-mt-lg">
-          <div class="kl-card__header"><span class="kl-card__header-title">🚛 Logistics Estimate</span></div>
+          <div class="kl-card__header"><span class="kl-card__header-title"><i data-lucide="truck" style="width:15px;height:15px;vertical-align:middle;margin-right:6px;color:var(--kl-mint);"></i> Logistics Estimate</span></div>
           <div class="kl-card__body">
-            <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">📍</span> <span>Distance: <strong>${l.distanceKm} km</strong></span></div>
-            <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">💰</span> <span>Est. Transport: <strong>₹${fmt(l.estimatedTransportTotal)}</strong></span></div>
-            <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">⏱️</span> <span>Est. Delivery: <strong>${l.distanceKm < 50 ? '2–3 hours' : l.distanceKm < 200 ? '4–6 hours' : '1–2 days'}</strong></span></div>
-            <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">📦</span> <span>Buyer Pickup: <strong>Available</strong></span></div>
+            <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="map-pin" style="width:14px;height:14px;color:var(--kl-mint);"></i></span> <span>Distance: <strong>${l.distanceKm} km</strong></span></div>
+            <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="credit-card" style="width:14px;height:14px;color:var(--kl-mint);"></i></span> <span>Est. Transport: <strong>₹${fmt(l.estimatedTransportTotal)}</strong></span></div>
+            <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="clock" style="width:14px;height:14px;color:var(--kl-mint);"></i></span> <span>Est. Delivery: <strong>${l.distanceKm < 50 ? '2–3 hours' : l.distanceKm < 200 ? '4–6 hours' : '1–2 days'}</strong></span></div>
+            <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="package" style="width:14px;height:14px;color:var(--kl-mint);"></i></span> <span>Buyer Pickup: <strong>Available</strong></span></div>
           </div>
         </div>
       </div>
@@ -885,21 +887,21 @@ function renderLogisticsView() {
         <div class="kl-logistics-info-card">
           <div class="kl-logistics-info-card__title"><i data-lucide="truck" style="width:15px;height:15px;"></i> Shipment Status</div>
           <span class="kl-badge kl-badge--transit kl-mb-md">${tracking.status}</span>
-          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">🚛</span> <span>Truck: <strong>${tracking.truckNumber}</strong></span></div>
-          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">👤</span> <span>Driver: <strong>${tracking.driverName}</strong></span></div>
-          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">📞</span> <span>Phone: <strong>${tracking.driverPhone}</strong></span></div>
+          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="truck" style="width:14px;height:14px;color:var(--kl-mint);"></i></span> <span>Truck: <strong>${tracking.truckNumber}</strong></span></div>
+          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="user" style="width:14px;height:14px;color:var(--kl-slate);"></i></span> <span>Driver: <strong>${tracking.driverName}</strong></span></div>
+          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="phone" style="width:14px;height:14px;color:var(--kl-slate);"></i></span> <span>Phone: <strong>${tracking.driverPhone}</strong></span></div>
         </div>
         <div class="kl-logistics-info-card">
           <div class="kl-logistics-info-card__title"><i data-lucide="navigation" style="width:15px;height:15px;"></i> Route Details</div>
-          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">📍</span> <span>Current: <strong>${tracking.currentLocation}</strong></span></div>
-          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">⏱️</span> <span>ETA: <strong style="color:var(--kl-mint);">${tracking.eta}</strong></span></div>
-          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">🛣️</span> <span>Remaining: <strong>${tracking.distanceRemainingKm} km</strong></span></div>
+          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="map-pin" style="width:14px;height:14px;color:var(--kl-mint);"></i></span> <span>Current: <strong>${tracking.currentLocation}</strong></span></div>
+          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="clock" style="width:14px;height:14px;color:var(--kl-amber);"></i></span> <span>ETA: <strong style="color:var(--kl-mint);">${tracking.eta}</strong></span></div>
+          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="milestone" style="width:14px;height:14px;color:var(--kl-slate);"></i></span> <span>Remaining: <strong>${tracking.distanceRemainingKm} km</strong></span></div>
         </div>
         <div class="kl-logistics-info-card">
           <div class="kl-logistics-info-card__title"><i data-lucide="package" style="width:15px;height:15px;"></i> Consignment</div>
-          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">🧅</span> <span>Produce: <strong>${tracking.crop}</strong></span></div>
-          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">📦</span> <span>From: <strong>${tracking.pickupAddress}</strong></span></div>
-          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon">🏭</span> <span>To: <strong>${tracking.deliveryAddress}</strong></span></div>
+          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="sprout" style="width:14px;height:14px;color:var(--kl-mint);"></i></span> <span>Produce: <strong>${tracking.crop}</strong></span></div>
+          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="upload" style="width:14px;height:14px;color:var(--kl-slate);"></i></span> <span>From: <strong>${tracking.pickupAddress}</strong></span></div>
+          <div class="kl-logistics-detail"><span class="kl-logistics-detail__icon"><i data-lucide="building" style="width:14px;height:14px;color:var(--kl-slate);"></i></span> <span>To: <strong>${tracking.deliveryAddress}</strong></span></div>
         </div>
       </div>
     </div>
@@ -918,13 +920,13 @@ function initLogisticsMap() {
   activeMapInstance = L.map('buyer-logistics-map').setView(truck, 9);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(activeMapInstance);
 
-  const greenIcon = L.divIcon({ html: '📍', className: '', iconSize: [24, 24] });
-  const truckIcon = L.divIcon({ html: '🚛', className: '', iconSize: [28, 28] });
-  const destIcon = L.divIcon({ html: '🏭', className: '', iconSize: [24, 24] });
+  const greenIcon = L.divIcon({ html: '<div style="background:#5B9A72;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-size:12px;font-weight:700;">A</div>', className: '', iconSize: [28, 28] });
+  const truckIcon = L.divIcon({ html: '<div style="background:#0F3D2E;color:#5B9A72;border:2px solid #5B9A72;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,0.4);font-size:14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div>', className: '', iconSize: [34, 34] });
+  const destIcon = L.divIcon({ html: '<div style="background:#C96D5B;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-size:12px;font-weight:700;">B</div>', className: '', iconSize: [28, 28] });
 
   L.marker(nashik, { icon: greenIcon }).addTo(activeMapInstance).bindPopup('<b>Pickup:</b> Nashik APMC Yard');
   L.marker(pune, { icon: destIcon }).addTo(activeMapInstance).bindPopup('<b>Destination:</b> ABC Foods Warehouse, Chakan');
-  L.marker(truck, { icon: truckIcon }).addTo(activeMapInstance).bindPopup('🚛 <b>MH 04 AB 1234</b><br>Status: In Transit — On Time').openPopup();
+  L.marker(truck, { icon: truckIcon }).addTo(activeMapInstance).bindPopup('<b>MH 04 AB 1234</b><br>Status: In Transit — On Time').openPopup();
 
   L.polyline([nashik, truck, pune], { color: '#5B9A72', weight: 4, opacity: 0.8, dashArray: '8, 8' }).addTo(activeMapInstance);
 }

@@ -355,30 +355,30 @@ const INITIAL_TRANSACTIONS_DATA = [
 // 6. NOTIFICATIONS DATA
 // ═══════════════════════════════════════════════
 const NOTIFICATIONS_DATA = [
-  { id: 'n1', type: 'lot', icon: '🧅', text: '12 new Onion lots matching your requirements posted in Nashik APMC', time: '5 min ago' },
-  { id: 'n2', type: 'offer', icon: '💬', text: 'Seller counter-offered ₹2,735/Q on your Onion bid (Lot #101)', time: '10 min ago' },
-  { id: 'n3', type: 'order', icon: '🚛', text: 'Order ORD-10245 is now In Transit — ETA 2h 20m', time: '30 min ago' },
-  { id: 'n4', type: 'lot', icon: '🌾', text: 'Wheat prices dropped 2.1% in Nashik APMC today', time: '1 hour ago' },
-  { id: 'n5', type: 'order', icon: '✅', text: 'Payment released for Order ORD-10112 (Rice 200Q)', time: '2 hours ago' }
+  { id: 'n1', type: 'lot', iconName: 'sprout', text: '12 new Onion lots matching your requirements posted in Nashik APMC', time: '5 min ago' },
+  { id: 'n2', type: 'offer', iconName: 'message-square', text: 'Seller counter-offered ₹2,735/Q on your Onion bid (Lot #101)', time: '10 min ago' },
+  { id: 'n3', type: 'order', iconName: 'truck', text: 'Order ORD-10245 is now In Transit — ETA 2h 20m', time: '30 min ago' },
+  { id: 'n4', type: 'lot', iconName: 'trending-up', text: 'Wheat prices dropped 2.1% in Nashik APMC today', time: '1 hour ago' },
+  { id: 'n5', type: 'order', iconName: 'check-circle-2', text: 'Payment released for Order ORD-10112 (Rice 200Q)', time: '2 hours ago' }
 ];
 
 // ═══════════════════════════════════════════════
 // 7. SEARCH INDEX
 // ═══════════════════════════════════════════════
 const SEARCH_INDEX = [
-  { type: 'crop', label: 'Onion — Red Garwa', icon: '🧅', route: '#/buyer/lots/lot-101' },
-  { type: 'crop', label: 'Wheat — Lokwan Premium', icon: '🌾', route: '#/buyer/lots/lot-102' },
-  { type: 'crop', label: 'Soybean — JS 335', icon: '🫘', route: '#/buyer/lots/lot-103' },
-  { type: 'crop', label: 'Rice — Sona Masoori', icon: '🍚', route: '#/buyer/lots/lot-104' },
-  { type: 'crop', label: 'Potato — Kufri Jyoti', icon: '🥔', route: '#/buyer/lots/lot-106' },
-  { type: 'crop', label: 'Tomato — Hybrid Abhinav', icon: '🍅', route: '#/buyer/lots/lot-107' },
-  { type: 'crop', label: 'Cotton — Shankar-6', icon: '🏵️', route: '#/buyer/lots/lot-108' },
-  { type: 'location', label: 'Nashik APMC, Maharashtra', icon: '📍', route: '#/buyer/marketplace' },
-  { type: 'location', label: 'Pune APMC, Maharashtra', icon: '📍', route: '#/buyer/marketplace' },
-  { type: 'location', label: 'Indore Mandi, Madhya Pradesh', icon: '📍', route: '#/buyer/marketplace' },
-  { type: 'seller', label: 'Nashik Farmer Producer Co', icon: '🏢', route: '#/buyer/lots/lot-101' },
-  { type: 'seller', label: 'Sahyadri Agro Farmers Union', icon: '🏢', route: '#/buyer/lots/lot-102' },
-  { type: 'seller', label: 'Deccan Grain Growers FPO', icon: '🏢', route: '#/buyer/lots/lot-104' }
+  { type: 'crop', label: 'Onion — Red Garwa', iconName: 'leaf', route: '#/buyer/lots/lot-101' },
+  { type: 'crop', label: 'Wheat — Lokwan Premium', iconName: 'leaf', route: '#/buyer/lots/lot-102' },
+  { type: 'crop', label: 'Soybean — JS 335', iconName: 'leaf', route: '#/buyer/lots/lot-103' },
+  { type: 'crop', label: 'Rice — Sona Masoori', iconName: 'leaf', route: '#/buyer/lots/lot-104' },
+  { type: 'crop', label: 'Potato — Kufri Jyoti', iconName: 'leaf', route: '#/buyer/lots/lot-106' },
+  { type: 'crop', label: 'Tomato — Hybrid Abhinav', iconName: 'leaf', route: '#/buyer/lots/lot-107' },
+  { type: 'crop', label: 'Cotton — Shankar-6', iconName: 'leaf', route: '#/buyer/lots/lot-108' },
+  { type: 'location', label: 'Nashik APMC, Maharashtra', iconName: 'map-pin', route: '#/buyer/marketplace' },
+  { type: 'location', label: 'Pune APMC, Maharashtra', iconName: 'map-pin', route: '#/buyer/marketplace' },
+  { type: 'location', label: 'Indore Mandi, Madhya Pradesh', iconName: 'map-pin', route: '#/buyer/marketplace' },
+  { type: 'seller', label: 'Nashik Farmer Producer Co', iconName: 'building-2', route: '#/buyer/lots/lot-101' },
+  { type: 'seller', label: 'Sahyadri Agro Farmers Union', iconName: 'building-2', route: '#/buyer/lots/lot-102' },
+  { type: 'seller', label: 'Deccan Grain Growers FPO', iconName: 'building-2', route: '#/buyer/lots/lot-104' }
 ];
 
 // ═══════════════════════════════════════════════
@@ -411,11 +411,11 @@ const marketService = {
   },
   getMarketSnapshot() {
     return [
-      { crop: 'Onion', emoji: '🧅', grade: 'Grade A', price: '₹2,650/Q', trend: '↑ 8.2%', trendUp: true, demand: 'High Demand', lots: 12 },
-      { crop: 'Potato', emoji: '🥔', grade: 'Grade A', price: '₹1,950/Q', trend: '↓ 2.1%', trendUp: false, demand: 'Stable', lots: 8 },
-      { crop: 'Tomato', emoji: '🍅', grade: 'Grade A', price: '₹2,800/Q', trend: '↑ 4.4%', trendUp: true, demand: 'High Demand', lots: 10 },
-      { crop: 'Wheat', emoji: '🌾', grade: 'Grade A', price: '₹2,650/Q', trend: '↑ 1.8%', trendUp: true, demand: 'Medium', lots: 18 },
-      { crop: 'Rice', emoji: '🍚', grade: 'Grade A', price: '₹2,850/Q', trend: '↑ 3.5%', trendUp: true, demand: 'High Demand', lots: 15 }
+      { crop: 'Onion', iconName: 'sprout', grade: 'Grade A', price: '₹2,650/Q', trend: '↑ 8.2%', trendUp: true, demand: 'High Demand', lots: 12 },
+      { crop: 'Potato', iconName: 'sprout', grade: 'Grade A', price: '₹1,950/Q', trend: '↓ 2.1%', trendUp: false, demand: 'Stable', lots: 8 },
+      { crop: 'Tomato', iconName: 'sprout', grade: 'Grade A', price: '₹2,800/Q', trend: '↑ 4.4%', trendUp: true, demand: 'High Demand', lots: 10 },
+      { crop: 'Wheat', iconName: 'sprout', grade: 'Grade A', price: '₹2,650/Q', trend: '↑ 1.8%', trendUp: true, demand: 'Medium', lots: 18 },
+      { crop: 'Rice', iconName: 'sprout', grade: 'Grade A', price: '₹2,850/Q', trend: '↑ 3.5%', trendUp: true, demand: 'High Demand', lots: 15 }
     ];
   },
   getMarketplaceLots(filters = {}) {

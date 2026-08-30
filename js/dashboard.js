@@ -10,21 +10,21 @@
 // ═════════════════════════════════════════════════════════════════════
 
 const CROPS_DATA = [
-  { id: 'rice', name: 'Rice', emoji: '🌾', price: 2850, unit: '₹/q', change: 5.2, dir: 'up', market: 'Pune APMC', demand: 'high', image: 'assets/images/crop-rice.jpg', variety: 'Basmati / Sona Masoori' },
-  { id: 'wheat', name: 'Wheat', emoji: '🌾', price: 2650, unit: '₹/q', change: 6.2, dir: 'up', market: 'Nashik APMC', demand: 'medium', image: 'assets/images/crop-wheat.jpg', variety: 'Lokwan / Sharbati' },
-  { id: 'maize', name: 'Maize', emoji: '🌽', price: 2300, unit: '₹/q', change: 2.1, dir: 'up', market: 'Nashik APMC', demand: 'medium', image: 'assets/images/crop-maize.jpg', variety: 'Yellow Corn' },
-  { id: 'soybean', name: 'Soybean', emoji: '🫘', price: 4650, unit: '₹/q', change: 4.8, dir: 'up', market: 'Indore Mandi', demand: 'high', image: 'assets/images/crop-soybean.jpg', variety: 'JS 335 / JS 9560' },
-  { id: 'pulses', name: 'Pulses', emoji: '🥜', price: 5200, unit: '₹/q', change: 1.5, dir: 'up', market: 'Nagpur APMC', demand: 'medium', image: 'assets/images/crop-pulses.jpg', variety: 'Tur Dal / Chana' },
-  { id: 'onion', name: 'Onion', emoji: '🧅', price: 2850, unit: '₹/q', change: 3.8, dir: 'up', market: 'Nashik APMC', demand: 'high', image: 'assets/images/crop-onion.jpg', variety: 'Garwa / Red Onion' },
-  { id: 'tomato', name: 'Tomato', emoji: '🍅', price: 2400, unit: '₹/q', change: 1.4, dir: 'down', market: 'Pune APMC', demand: 'medium', image: 'assets/images/crop-tomato.jpg', variety: 'Hybrid Round / Roma' },
-  { id: 'potato', name: 'Potato', emoji: '🥔', price: 1800, unit: '₹/q', change: 0.8, dir: 'up', market: 'Pune APMC', demand: 'low', image: 'assets/images/crop-potato.jpg', variety: 'Jyoti / Pukhraj' },
-  { id: 'chilli', name: 'Chilli', emoji: '🌶️', price: 8500, unit: '₹/q', change: 7.2, dir: 'up', market: 'Guntur APMC', demand: 'high', image: 'assets/images/crop-chilli.jpg', variety: 'Teja / Byadgi' },
-  { id: 'groundnut', name: 'Groundnut', emoji: '🥜', price: 5600, unit: '₹/q', change: 2.9, dir: 'up', market: 'Rajkot APMC', demand: 'medium', image: 'assets/images/crop-groundnut.jpg', variety: 'TG 37A / Bold' },
-  { id: 'cotton', name: 'Cotton', emoji: '☁️', price: 6800, unit: '₹/q', change: 0.6, dir: 'down', market: 'Nagpur APMC', demand: 'medium', image: 'assets/images/crop-cotton.jpg', variety: 'Medium Staple' },
-  { id: 'sugarcane', name: 'Sugarcane', emoji: '🎋', price: 350, unit: '₹/q', change: 1.2, dir: 'up', market: 'Kolhapur APMC', demand: 'medium', image: 'assets/images/crop-sugarcane.jpg', variety: 'Co 86032' },
-  { id: 'mango', name: 'Mango', emoji: '🥭', price: 4500, unit: '₹/q', change: 3.5, dir: 'up', market: 'Ratnagiri', demand: 'high', image: 'assets/images/crop-mango.jpg', variety: 'Alphonso / Kesar' },
-  { id: 'banana', name: 'Banana', emoji: '🍌', price: 2200, unit: '₹/q', change: 2.1, dir: 'down', market: 'Jalgaon APMC', demand: 'low', image: 'assets/images/crop-banana.jpg', variety: 'Grand Naine (G9)' },
-  { id: 'grapes', name: 'Grapes', emoji: '🍇', price: 6200, unit: '₹/q', change: 4.1, dir: 'up', market: 'Nashik APMC', demand: 'high', image: 'assets/images/crop-grapes.jpg', variety: 'Thompson Seedless' }
+  { id: 'rice', name: 'Rice', iconName: 'sprout', price: 2850, unit: '₹/q', change: 5.2, dir: 'up', market: 'Pune APMC', demand: 'high', image: 'assets/images/crop-rice.jpg', variety: 'Basmati / Sona Masoori' },
+  { id: 'wheat', name: 'Wheat', iconName: 'wheat', price: 2650, unit: '₹/q', change: 6.2, dir: 'up', market: 'Nashik APMC', demand: 'medium', image: 'assets/images/crop-wheat.jpg', variety: 'Lokwan / Sharbati' },
+  { id: 'maize', name: 'Maize', iconName: 'corn', price: 2300, unit: '₹/q', change: 2.1, dir: 'up', market: 'Nashik APMC', demand: 'medium', image: 'assets/images/crop-maize.jpg', variety: 'Yellow Corn' },
+  { id: 'soybean', name: 'Soybean', iconName: 'leaf', price: 4650, unit: '₹/q', change: 4.8, dir: 'up', market: 'Indore Mandi', demand: 'high', image: 'assets/images/crop-soybean.jpg', variety: 'JS 335 / JS 9560' },
+  { id: 'pulses', name: 'Pulses', iconName: 'sprout', price: 5200, unit: '₹/q', change: 1.5, dir: 'up', market: 'Nagpur APMC', demand: 'medium', image: 'assets/images/crop-pulses.jpg', variety: 'Tur Dal / Chana' },
+  { id: 'onion', name: 'Onion', iconName: 'sprout', price: 2850, unit: '₹/q', change: 3.8, dir: 'up', market: 'Nashik APMC', demand: 'high', image: 'assets/images/crop-onion.jpg', variety: 'Garwa / Red Onion' },
+  { id: 'tomato', name: 'Tomato', iconName: 'sprout', price: 2400, unit: '₹/q', change: 1.4, dir: 'down', market: 'Pune APMC', demand: 'medium', image: 'assets/images/crop-tomato.jpg', variety: 'Hybrid Round / Roma' },
+  { id: 'potato', name: 'Potato', iconName: 'sprout', price: 1800, unit: '₹/q', change: 0.8, dir: 'up', market: 'Pune APMC', demand: 'low', image: 'assets/images/crop-potato.jpg', variety: 'Jyoti / Pukhraj' },
+  { id: 'chilli', name: 'Chilli', iconName: 'flame', price: 8500, unit: '₹/q', change: 7.2, dir: 'up', market: 'Guntur APMC', demand: 'high', image: 'assets/images/crop-chilli.jpg', variety: 'Teja / Byadgi' },
+  { id: 'groundnut', name: 'Groundnut', iconName: 'leaf', price: 5600, unit: '₹/q', change: 2.9, dir: 'up', market: 'Rajkot APMC', demand: 'medium', image: 'assets/images/crop-groundnut.jpg', variety: 'TG 37A / Bold' },
+  { id: 'cotton', name: 'Cotton', iconName: 'wind', price: 6800, unit: '₹/q', change: 0.6, dir: 'down', market: 'Nagpur APMC', demand: 'medium', image: 'assets/images/crop-cotton.jpg', variety: 'Medium Staple' },
+  { id: 'sugarcane', name: 'Sugarcane', iconName: 'tree-pine', price: 350, unit: '₹/q', change: 1.2, dir: 'up', market: 'Kolhapur APMC', demand: 'medium', image: 'assets/images/crop-sugarcane.jpg', variety: 'Co 86032' },
+  { id: 'mango', name: 'Mango', iconName: 'sun', price: 4500, unit: '₹/q', change: 3.5, dir: 'up', market: 'Ratnagiri', demand: 'high', image: 'assets/images/crop-mango.jpg', variety: 'Alphonso / Kesar' },
+  { id: 'banana', name: 'Banana', iconName: 'leaf', price: 2200, unit: '₹/q', change: 2.1, dir: 'down', market: 'Jalgaon APMC', demand: 'low', image: 'assets/images/crop-banana.jpg', variety: 'Grand Naine (G9)' },
+  { id: 'grapes', name: 'Grapes', iconName: 'sparkles', price: 6200, unit: '₹/q', change: 4.1, dir: 'up', market: 'Nashik APMC', demand: 'high', image: 'assets/images/crop-grapes.jpg', variety: 'Thompson Seedless' }
 ];
 
 const MANDIS_LIST = [
@@ -472,8 +472,9 @@ function showToast(message, type = 'success') {
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: auto;
   `;
-  toast.innerHTML = `<span>🌾</span> <span>${message}</span>`;
+  toast.innerHTML = `<i data-lucide="sprout" style="width:16px;height:16px;color:var(--ks-mint);"></i> <span>${message}</span>`;
   container.appendChild(toast);
+  if (window.lucide) lucide.createIcons({ root: toast });
 
   requestAnimationFrame(() => {
     toast.style.opacity = '1';
@@ -523,16 +524,14 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
   grid.innerHTML = crops.map(c => `
     <div class="dash-crop-card" onclick="openCropDetails('${c.id}')" data-crop-id="${c.id}">
       <div class="dash-crop-card__image-wrap">
-        <img src="${c.image}" alt="${c.name}" class="dash-crop-card__img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-        <div class="dash-crop-card__fallback" style="display:none;">${c.emoji}</div>
+        <img src="${c.image}" alt="${c.name}" class="dash-crop-card__img" loading="lazy" onerror="this.style.display='none';">
         <span class="dash-crop-card__demand-badge dash-crop-card__demand-badge--${c.demand}">
-          ${c.demand === 'high' ? '🔥 High Demand' : (c.demand === 'medium' ? '⚡ Medium' : 'Low Demand')}
+          ${c.demand === 'high' ? '<i data-lucide="trending-up" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> High Demand' : (c.demand === 'medium' ? '<i data-lucide="activity" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> Medium' : 'Low Demand')}
         </span>
       </div>
       <div class="dash-crop-card__body">
         <div class="dash-crop-card__header">
           <div class="dash-crop-card__title-row">
-            <span class="dash-crop-card__emoji">${c.emoji}</span>
             <span class="dash-crop-card__name">${c.name}</span>
           </div>
           <span class="dash-crop-card__market">${c.market}</span>
@@ -1271,11 +1270,12 @@ function openBuyersModal() {
         <div>
           <div style="font-size:15px; font-weight:700; color:var(--ks-charcoal);">${b.name} <span class="dash-offer-row__verified">✓ ${b.rating}</span></div>
           <div style="font-size:12px; color:var(--ks-text-muted); margin-top:2px;">Purchasing: ${b.crops.join(', ')} · Min ${b.minQty}</div>
-          <div style="font-size:11px; color:var(--ks-sage); margin-top:2px;">⚡ ${b.paymentDays}</div>
+          <div style="font-size:11px; color:var(--ks-sage); margin-top:2px;"><i data-lucide="zap" style="width:11px;height:11px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ${b.paymentDays}</div>
         </div>
         <button class="btn btn--primary btn--sm" onclick="closeModal('buyers-modal-overlay'); openCreateLotModal()">Sell Crop</button>
       </div>
     `).join('');
+    if (window.lucide) lucide.createIcons({ root: list });
   }
 
   const closeBtn = document.getElementById('buyers-modal-close');
