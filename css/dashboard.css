@@ -507,14 +507,16 @@ body.dashboard-body {
   border: 1px solid var(--ks-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  z-index: 200;
+  z-index: 1500;
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
   transition: all 0.2s ease;
 }
 
-.dash-profile-wrap.open .dash-profile-dropdown {
+.dash-profile-wrap.open .dash-profile-dropdown,
+.dash-profile-dropdown.open,
+.dash-profile-dropdown.active {
   opacity: 1;
   transform: translateY(0);
   pointer-events: all;

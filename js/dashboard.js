@@ -1661,20 +1661,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAlertForm();
   initProfileForm();
 
-  // 5. Header Profile Dropdown Toggle
-  const profBtn = document.getElementById('btn-profile');
-  const profWrap = document.getElementById('dash-profile-wrap');
-  if (profBtn && profWrap) {
-    profBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      profWrap.classList.toggle('open');
-    });
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('#dash-profile-wrap')) profWrap.classList.remove('open');
-    });
-  }
-
-  // Header quick buttons
+  // 5. Header quick buttons
   const notifBtn = document.getElementById('btn-notifications');
   if (notifBtn) notifBtn.onclick = openNotificationsModal;
 

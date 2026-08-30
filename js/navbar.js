@@ -1,6 +1,6 @@
 /**
  * KRISHISHETRA — SHARED NAVBAR & NAVIGATION CONTROLLER
- * Active route auto-detection, mobile nav drawer, profile dropdown, search bar.
+ * Active route auto-detection, mobile nav drawer, profile dropdown, header modals & search bar.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileNavDrawer();
   initProfileDropdown();
   initGlobalSearch();
+  initHeaderModalButtons();
 });
 
 /**
@@ -74,15 +75,18 @@ function initMobileNavDrawer() {
 }
 
 /**
- * 3. Profile dropdown menu toggle
+ * 3. Profile dropdown menu toggle & item actions
  */
 function initProfileDropdown() {
   const btnProfile = document.getElementById('btn-profile');
-  const dropdown = document.getElementById('dash-profile-dropdown');
   const wrap = document.getElementById('dash-profile-wrap');
 
-  if (btnProfile && dropdown && wrap) {
+  if (btnProfile && wrap) {
+    if (btnProfile.dataset.initialized) return;
+    btnProfile.dataset.initialized = 'true';
+
     btnProfile.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       wrap.classList.toggle('open');
     });
@@ -92,11 +96,104 @@ function initProfileDropdown() {
         wrap.classList.remove('open');
       }
     });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        wrap.classList.remove('open');
+      }
+    });
+
+    // Wire up dropdown items
+    const menuProfile = document.getElementById('menu-profile');
+    if (menuProfile) {
+      menuProfile.addEventListener('click', (e) => {
+        e.preventDefault();
+        wrap.classList.remove('open');
+        openModalById('profile-modal-overlay');
+      });
+    }
+
+    const menuAlerts = document.getElementById('menu-alerts');
+    if (menuAlerts) {
+      menuAlerts.addEventListener('click', (e) => {
+        e.preventDefault();
+        wrap.classList.remove('open');
+        openModalById('alert-modal-overlay');
+      });
+    }
+
+    const menuHelp = document.getElementById('menu-help');
+    if (menuHelp) {
+      menuHelp.addEventListener('click', (e) => {
+        e.preventDefault();
+        wrap.classList.remove('open');
+        openModalById('help-modal-overlay');
+      });
+    }
+
+    const menuLogout = wrap.querySelector('.dash-profile-dropdown__item--danger');
+    if (menuLogout) {
+      menuLogout.addEventListener('click', () => {
+        localStorage.removeItem('krishi_is_logged_in');
+      });
+    }
   }
 }
 
 /**
- * 4. Global Search shortcut (Ctrl + K) & input handler
+ * 4. Header quick action modal openers (Notifications, Language, Helpline)
+ */
+function initHeaderModalButtons() {
+  const notifBtn = document.getElementById('btn-notifications');
+  if (notifBtn) {
+    notifBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModalById('notifications-modal-overlay');
+    });
+  }
+
+  const langBtn = document.getElementById('btn-language');
+  if (langBtn) {
+    langBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModalById('language-modal-overlay');
+    });
+  }
+
+  const helpBtn = document.getElementById('btn-help');
+  if (helpBtn) {
+    helpBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModalById('help-modal-overlay');
+    });
+  }
+
+  // Universal close button and backdrop click handler for dash-modals
+  document.querySelectorAll('.dash-modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+      }
+    });
+
+    const closeBtn = overlay.querySelector('.dash-modal__close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        overlay.classList.remove('active');
+      });
+    }
+  });
+}
+
+function openModalById(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.classList.add('active');
+  }
+}
+
+/**
+ * 5. Global Search shortcut (Ctrl + K) & input handler
  */
 function initGlobalSearch() {
   const searchInput = document.getElementById('dash-search-input');
