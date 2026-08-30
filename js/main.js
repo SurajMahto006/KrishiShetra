@@ -5,6 +5,7 @@
 
 // ── Wait for DOM ──
 document.addEventListener('DOMContentLoaded', () => {
+  if (window.lucide) lucide.createIcons();
   initLenis();
   initGSAP();
   initNavbar();

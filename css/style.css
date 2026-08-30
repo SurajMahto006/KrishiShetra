@@ -450,14 +450,28 @@ input, textarea { font-family: inherit; }
 }
 
 .navbar__logo-icon {
-  width: 38px;
-  height: 38px;
-  background: linear-gradient(135deg, var(--ks-green-accent), var(--ks-gold));
-  border-radius: var(--radius-sm);
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--ks-green-accent), var(--ks-green-rich));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  box-shadow: 0 4px 16px rgba(74, 157, 110, 0.35);
+  transition: all var(--duration-fast);
+}
+
+.navbar__logo-icon svg {
+  width: 22px;
+  height: 22px;
+  color: var(--ks-white);
+  stroke-width: 2.2;
+}
+
+.navbar__logo:hover .navbar__logo-icon {
+  transform: rotate(-6deg) scale(1.08);
+  box-shadow: 0 6px 20px rgba(74, 157, 110, 0.5);
 }
 
 .navbar__nav {
@@ -1010,18 +1024,32 @@ input, textarea { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  background: var(--ks-glass);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: all 0.5s var(--ease-out);
+  background: linear-gradient(145deg, rgba(45, 90, 61, 0.6), rgba(13, 26, 20, 0.85));
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(74, 157, 110, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 16px rgba(74, 157, 110, 0.2);
+  transition: all 0.4s var(--ease-out);
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.flow-step__icon svg {
+  width: 26px;
+  height: 26px;
+  color: var(--ks-green-light);
+  stroke-width: 2.2;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .flow-step:hover .flow-step__icon {
-  transform: scale(1.15);
-  border-color: var(--ks-green-accent);
-  box-shadow: 0 0 30px rgba(74, 157, 110, 0.3);
-  background: rgba(74, 157, 110, 0.15);
+  transform: scale(1.15) translateY(-4px);
+  border-color: var(--ks-green-glow);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 35px rgba(61, 220, 132, 0.5);
+  background: linear-gradient(145deg, rgba(74, 157, 110, 0.4), rgba(26, 58, 42, 0.9));
+}
+
+.flow-step:hover .flow-step__icon svg {
+  color: #FFFFFF;
+  transform: scale(1.1);
 }
 
 .flow-step__label {
@@ -1878,21 +1906,35 @@ input, textarea { font-family: inherit; }
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: var(--ks-dark-surface);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(145deg, rgba(26, 51, 42, 0.8), rgba(13, 26, 20, 0.95));
+  border: 1.5px solid rgba(212, 168, 67, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px;
-  font-size: 24px;
-  transition: all 0.5s var(--ease-out);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 16px rgba(212, 168, 67, 0.15);
+  transition: all 0.4s var(--ease-out);
+  animation: glow-gold 4.5s ease-in-out infinite;
+}
+
+.txn-step__icon svg {
+  width: 26px;
+  height: 26px;
+  color: var(--ks-gold-light);
+  stroke-width: 2.2;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .txn-step:hover .txn-step__icon {
-  border-color: var(--ks-green-accent);
-  box-shadow: 0 0 30px rgba(74, 157, 110, 0.3), 0 0 60px rgba(74, 157, 110, 0.1);
-  background: rgba(74, 157, 110, 0.1);
-  transform: scale(1.15);
+  border-color: var(--ks-gold);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 35px rgba(212, 168, 67, 0.45);
+  background: linear-gradient(145deg, rgba(212, 168, 67, 0.25), rgba(20, 39, 32, 0.9));
+  transform: scale(1.15) translateY(-4px);
+}
+
+.txn-step:hover .txn-step__icon svg {
+  color: #FFFFFF;
+  transform: scale(1.1);
 }
 
 .txn-step:hover .txn-step__label {
@@ -2261,23 +2303,41 @@ input, textarea { font-family: inherit; }
 }
 
 .login-card__role {
-  padding: 12px;
+  padding: 12px 14px;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-sm);
-  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--ks-text-muted);
+  color: var(--ks-text-muted-light);
   cursor: pointer;
   transition: all var(--duration-fast);
+}
+
+.login-card__role svg {
+  width: 16px;
+  height: 16px;
+  color: var(--ks-green-light);
+  stroke-width: 2.2;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .login-card__role:hover,
 .login-card__role.active {
   border-color: var(--ks-green-accent);
   color: var(--ks-white);
-  background: rgba(74, 157, 110, 0.1);
+  background: rgba(74, 157, 110, 0.18);
+  box-shadow: 0 4px 16px rgba(74, 157, 110, 0.25);
+  transform: translateY(-1px);
+}
+
+.login-card__role.active svg {
+  color: #FFFFFF;
+  transform: scale(1.1);
 }
 
 .login-card__submit {
@@ -2880,19 +2940,27 @@ input, textarea { font-family: inherit; }
 }
 
 .auth-hero__logo-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  background: #12372A;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2D5A3D, #12372A);
+  border: 1px solid rgba(143, 203, 155, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.auth-hero__logo-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #8FCB9B;
+  stroke-width: 2.2;
 }
 
 .auth-hero__logo-text {
   font-family: var(--font-display);
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 700;
   color: #12372A;
   letter-spacing: 0.01em;
@@ -3057,12 +3125,38 @@ input, textarea { font-family: inherit; }
 }
 
 .auth-role-card__icon {
-  font-size: 26px;
-  transition: transform var(--duration-fast);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(91, 154, 114, 0.12);
+  border: 1px solid rgba(91, 154, 114, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast);
+  margin-bottom: 2px;
+}
+
+.auth-role-card__icon svg {
+  width: 22px;
+  height: 22px;
+  color: #2D5A3D;
+  stroke-width: 2.2;
+  transition: transform var(--duration-fast), color var(--duration-fast);
+}
+
+.auth-role-card.active .auth-role-card__icon {
+  background: #5B9A72;
+  border-color: #5B9A72;
+  box-shadow: 0 4px 14px rgba(91, 154, 114, 0.35);
+}
+
+.auth-role-card.active .auth-role-card__icon svg {
+  color: #FFFFFF;
 }
 
 .auth-role-card:hover .auth-role-card__icon {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .auth-role-card__name {
