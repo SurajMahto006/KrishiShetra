@@ -449,19 +449,10 @@ function initLoginModal() {
   // Direct navigation
   const loginNavBtn = document.getElementById('btn-login-nav');
   if (loginNavBtn) {
-    if (localStorage.getItem('krishi_is_logged_in') === 'true') {
-      loginNavBtn.textContent = 'Dashboard';
-      loginNavBtn.href = 'dashboard.html';
-      loginNavBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'dashboard.html';
-      });
-    } else {
-      loginNavBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'login.html';
-      });
-    }
+    loginNavBtn.addEventListener('click', (e) => {
+      // Allow default href or enforce login page
+      // window.location.href = 'login.html';
+    });
   }
 
   const enterTriggers = ['btn-enter-nav', 'btn-enter-final'];
