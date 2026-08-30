@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiShetra — Admin Dashboard</title>
+  <meta name="description" content="KrishiShetra Admin Dashboard — Monitor platform health, user growth, farmer registrations and system activity.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       TOP HEADER — Unified KrishiShetra Navigation
+       ═══════════════════════════════════════════ -->
+  <header class="admin-header" id="adminHeader">
+    <div class="admin-header-inner">
+      <!-- Brand -->
+      <a href="index.html" class="admin-brand">
+        <span class="brand-icon">🌾</span>
+        <span class="brand-text">KrishiShetra</span>
+        <span class="brand-badge">Admin</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav>
+        <ul class="admin-nav-menu" id="adminNavMenu">
+          <li><a href="dashboard.html" class="admin-nav-link active"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="users.html" class="admin-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Users</a></li>
+          <li><a href="farmers.html" class="admin-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Farmers</a></li>
+          <li><a href="reports.html" class="admin-nav-link"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Reports</a></li>
+          <li><a href="settings.html" class="admin-nav-link"><i data-lucide="settings" style="width:16px;height:16px;"></i> Settings</a></li>
+        </ul>
+      </nav>
+
+      <!-- Header Right -->
+      <div class="admin-header-actions">
+        <a href="../transporter/dashboard.html" class="portal-switch-btn" title="Transporter & Fleet Hub" style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:9999px;color:#F5F2EB;font-size:12.5px;font-weight:600;text-decoration:none;">
+          <i data-lucide="truck" style="width:14px;height:14px;color:#E8B96A;"></i> Transporter Hub
+        </a>
+
+        <button class="admin-icon-btn" title="Notifications" onclick="showToast('3 new notifications')">
+          <i data-lucide="bell" style="width:18px;height:18px;"></i>
+          <span class="notif-dot"></span>
+        </button>
+
+        <div class="admin-header-user">
+          <div class="admin-header-avatar">AD</div>
+          <div class="admin-header-user-info">
+            <span class="admin-header-user-name">Admin User</span>
+            <span class="admin-header-user-role">Super Admin</span>
+          </div>
+        </div>
+
+        <button class="admin-hamburger" id="adminHamburger" onclick="toggleMobileNav()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════ -->
+  <main class="admin-main">
+
+    <!-- Welcome Hero -->
+    <div class="welcome-hero">
+      <div class="welcome-hero-content">
+        <h1 class="welcome-hero-greeting">Good Evening, <em>Admin</em> 👋</h1>
+        <p class="welcome-hero-subtitle">Here's what's happening on the KrishiShetra platform today. You have 18 items requiring your attention.</p>
+      </div>
+      <div class="welcome-hero-quick-stats">
+        <div class="welcome-quick-stat">
+          <div class="welcome-quick-stat-value">₹12.4L</div>
+          <div class="welcome-quick-stat-label">GMV Today</div>
+        </div>
+        <div class="welcome-quick-stat">
+          <div class="welcome-quick-stat-value">94.2%</div>
+          <div class="welcome-quick-stat-label">Uptime</div>
+        </div>
+        <div class="welcome-quick-stat">
+          <div class="welcome-quick-stat-value">18</div>
+          <div class="welcome-quick-stat-label">Pending</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <i data-lucide="users" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-label">Total Users</div>
+        <div class="stat-value">1,248</div>
+        <div class="stat-trend">
+          <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+          +12% this month
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon amber">
+          <i data-lucide="user-check" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-label">Verified Farmers</div>
+        <div class="stat-value">856</div>
+        <div class="stat-trend">
+          <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+          +24 this week
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <i data-lucide="building-2" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-label">Active FPOs</div>
+        <div class="stat-value">42</div>
+        <div class="stat-trend">
+          <i data-lucide="plus" style="width:14px;height:14px;"></i>
+          3 new registrations
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon red">
+          <i data-lucide="alert-triangle" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-label">Pending Approvals</div>
+        <div class="stat-value">18</div>
+        <div class="stat-trend negative">
+          <i data-lucide="clock" style="width:14px;height:14px;"></i>
+          Requires attention
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Grid: Charts + Activity -->
+    <div class="dashboard-grid">
+
+      <!-- Registration Trends Chart -->
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">Registration Trends</h2>
+            <p class="glass-card-subtitle">Monthly user & farmer registrations</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting chart data...')">
+            <i data-lucide="download" style="width:14px;height:14px;"></i>
+            Export
+          </button>
+        </div>
+        <div class="chart-container">
+          <canvas id="registrationChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Platform Distribution Chart -->
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">User Distribution</h2>
+            <p class="glass-card-subtitle">Platform role breakdown</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="distributionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Recent Activity Timeline -->
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">Recent Activity</h2>
+            <p class="glass-card-subtitle">Latest platform events</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('Loading full activity log...')">
+            View All
+          </button>
+        </div>
+        <div class="activity-timeline">
+          <div class="activity-item">
+            <div class="activity-dot green"></div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Nashik Kisan Samriddhi FPC</strong> — New FPO registration approved</div>
+              <div class="activity-meta">
+                <span>2 hours ago</span>
+                <span class="badge badge-success">Approved</span>
+              </div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot green"></div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Rameshwar Patil</strong> — Farmer onboarding completed, KYC verified</div>
+              <div class="activity-meta">
+                <span>4 hours ago</span>
+                <span class="badge badge-success">Verified</span>
+              </div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot amber"></div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Sunita Deshmukh</strong> — Lot creation request submitted (4.2 Tons Onion)</div>
+              <div class="activity-meta">
+                <span>5 hours ago</span>
+                <span class="badge badge-warning">Pending</span>
+              </div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot blue"></div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>ABC Foods Pvt Ltd</strong> — Buyer offer submitted for ₹28/kg Onion</div>
+              <div class="activity-meta">
+                <span>6 hours ago</span>
+                <span class="badge badge-info">Under Review</span>
+              </div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot red"></div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>System Alert</strong> — User report filed, action required</div>
+              <div class="activity-meta">
+                <span>8 hours ago</span>
+                <span class="badge badge-error">Action Required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions + System Alerts -->
+      <div class="glass-card">
+        <div class="glass-card-header">
+          <div>
+            <h2 class="glass-card-title">Quick Actions</h2>
+            <p class="glass-card-subtitle">Common admin tasks</p>
+          </div>
+        </div>
+        <div class="quick-actions-grid mb-3">
+          <a href="farmers.html" class="quick-action-btn">
+            <div class="quick-action-icon green-bg">
+              <i data-lucide="user-plus" style="width:20px;height:20px;"></i>
+            </div>
+            <span class="quick-action-label">Add Farmer</span>
+          </a>
+          <a href="users.html" class="quick-action-btn">
+            <div class="quick-action-icon amber-bg">
+              <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
+            </div>
+            <span class="quick-action-label">Verify KYC</span>
+          </a>
+          <a href="#" class="quick-action-btn" onclick="showToast('Generating reports...')">
+            <div class="quick-action-icon blue-bg">
+              <i data-lucide="file-bar-chart" style="width:20px;height:20px;"></i>
+            </div>
+            <span class="quick-action-label">Export Report</span>
+          </a>
+        </div>
+
+        <!-- System Alerts -->
+        <h3 style="font-family:var(--font-sans);font-size:0.82rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.75rem;margin-top:0.5rem;">System Alerts</h3>
+        <div class="system-alert alert-warning">
+          <div class="alert-icon"><i data-lucide="alert-triangle" style="width:16px;height:16px;"></i></div>
+          <div class="alert-content">
+            <div class="alert-title">64 Pending KYC Verifications</div>
+            <div class="alert-desc">Farmers awaiting identity verification since past 7 days</div>
+          </div>
+        </div>
+        <div class="system-alert alert-info">
+          <div class="alert-icon"><i data-lucide="info" style="width:16px;height:16px;"></i></div>
+          <div class="alert-content">
+            <div class="alert-title">System Maintenance Scheduled</div>
+            <div class="alert-desc">Platform update on Sep 2, 2026 at 2:00 AM IST</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Platform Health Progress -->
+    <div class="glass-card" style="margin-bottom:2rem;">
+      <div class="glass-card-header">
+        <div>
+          <h2 class="glass-card-title">Platform Health</h2>
+          <p class="glass-card-subtitle">Key performance indicators</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('Refreshing data...')">
+          <i data-lucide="refresh-cw" style="width:14px;height:14px;"></i>
+          Refresh
+        </button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;">
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">KYC Verification Rate</span>
+            <span class="progress-label-value">92%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill green" style="width:92%"></div>
+          </div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Farmer Onboarding Completion</span>
+            <span class="progress-label-value">78%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill amber" style="width:78%"></div>
+          </div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-label">
+            <span class="progress-label-text">Order Fulfillment Rate</span>
+            <span class="progress-label-value">85%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill green" style="width:85%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // ── Toast Notification ──
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      const iconName = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info';
+      const iconColor = type === 'success' ? 'var(--green-bright)' : type === 'error' ? 'var(--terracotta)' : 'var(--amber)';
+      toast.innerHTML = `
+        <i data-lucide="${iconName}" style="width:16px;height:16px;color:${iconColor};flex-shrink:0;"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => toast.classList.add('show'), 50);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    // ── Mobile Navigation Toggle ──
+    function toggleMobileNav() {
+      const menu = document.getElementById('adminNavMenu');
+      menu.classList.toggle('open');
+    }
+
+    // ── Chart.js: Registration Trends ──
+    const regCtx = document.getElementById('registrationChart').getContext('2d');
+    new Chart(regCtx, {
+      type: 'line',
+      data: {
+        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+        datasets: [
+          {
+            label: 'Farmers',
+            data: [120, 185, 240, 310, 380, 456],
+            borderColor: '#5B9A72',
+            backgroundColor: 'rgba(91, 154, 114, 0.1)',
+            borderWidth: 2.5,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#5B9A72',
+            pointBorderColor: '#FFFFFF',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+          {
+            label: 'Users',
+            data: [200, 310, 420, 580, 720, 856],
+            borderColor: '#D6A84F',
+            backgroundColor: 'rgba(214, 168, 79, 0.08)',
+            borderWidth: 2.5,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#D6A84F',
+            pointBorderColor: '#FFFFFF',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            position: 'top',
+            align: 'end',
+            labels: {
+              color: '#7A8880',
+              font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+              boxWidth: 12, boxHeight: 12, borderRadius: 3, padding: 16,
+              usePointStyle: true, pointStyle: 'circle',
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(26, 58, 40, 0.95)',
+            titleColor: '#FFFFFF',
+            bodyColor: 'rgba(255,255,255,0.75)',
+            borderColor: 'rgba(255,255,255,0.15)',
+            borderWidth: 1,
+            cornerRadius: 10,
+            padding: 12,
+            titleFont: { family: "'Plus Jakarta Sans'", weight: '600' },
+            bodyFont: { family: "'Plus Jakarta Sans'" },
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+          },
+          y: {
+            grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // ── Chart.js: User Distribution (Doughnut) ──
+    const distCtx = document.getElementById('distributionChart').getContext('2d');
+    new Chart(distCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Farmers', 'FPOs', 'Buyers', 'Admins'],
+        datasets: [{
+          data: [856, 42, 340, 10],
+          backgroundColor: [
+            '#5B9A72',
+            '#D6A84F',
+            '#6BA3F7',
+            '#C96D5B'
+          ],
+          borderColor: 'rgba(255,255,255,0.9)',
+          borderWidth: 3,
+          hoverOffset: 8,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: '#7A8880',
+              font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+              boxWidth: 12, boxHeight: 12, padding: 20,
+              usePointStyle: true, pointStyle: 'circle',
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(26, 58, 40, 0.95)',
+            titleColor: '#FFFFFF',
+            bodyColor: 'rgba(255,255,255,0.75)',
+            borderColor: 'rgba(255,255,255,0.15)',
+            borderWidth: 1,
+            cornerRadius: 10,
+            padding: 12,
+            titleFont: { family: "'Plus Jakarta Sans'", weight: '600' },
+            bodyFont: { family: "'Plus Jakarta Sans'" },
+            callbacks: {
+              label: function(context) {
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const pct = ((context.parsed / total) * 100).toFixed(1);
+                return ` ${context.label}: ${context.parsed.toLocaleString()} (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // ── Initialize Lucide Icons ──
+    lucide.createIcons();
+  </script>
+</body>
+</html>
