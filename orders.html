@@ -133,26 +133,28 @@
   </div>
 
   <!-- MAIN CONTENT -->
-  <main class="dash-main container" style="padding-top: 30px; padding-bottom: 50px;">
+  <main class="dash-main" id="dash-main">
+    <div class="container" style="padding-top: 28px;">
 
-    <!-- Page Header Banner -->
-    <div class="dash-section__header" style="margin-bottom: 24px;">
-      <div>
-        <h1 class="dash-section__title" style="font-size: 28px;">📋 Active Orders, Logistics & Payouts</h1>
-        <p class="dash-section__subtitle">Track confirmed sales transactions, mandi pickups, logistics tracking, and
-          direct bank transfers.</p>
+      <!-- Page Header Banner -->
+      <div class="dash-section__header" style="margin-bottom: 24px;">
+        <div>
+          <h1 class="dash-section__title" style="font-size: 28px;">📋 Active Orders, Logistics & Payouts</h1>
+          <p class="dash-section__subtitle">Track confirmed sales transactions, mandi pickups, logistics tracking, and
+            direct bank transfers.</p>
+        </div>
+        <button class="btn btn--secondary btn--sm" onclick="openOrdersModal()"><i data-lucide="external-link"></i> Full
+          Order History</button>
       </div>
-      <button class="btn btn--secondary btn--sm" onclick="openOrdersModal()"><i data-lucide="external-link"></i> Full
-        Order History</button>
+
+      <!-- Active Orders Grid Panel -->
+      <section class="dash-section" id="dash-orders-panel">
+        <div class="dash-orders__grid" id="orders-grid">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </section>
+
     </div>
-
-    <!-- Active Orders Grid Panel -->
-    <section class="dash-section" id="dash-orders-panel">
-      <div class="dash-orders__grid" id="orders-grid">
-        <!-- Rendered dynamically by JS -->
-      </div>
-    </section>
-
   </main>
 
   <!-- FOOTER -->

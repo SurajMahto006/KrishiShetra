@@ -134,47 +134,49 @@
   </div>
 
   <!-- MAIN CONTENT -->
-  <main class="dash-main container" style="padding-top: 30px; padding-bottom: 50px;">
+  <main class="dash-main" id="dash-main">
+    <div class="container" style="padding-top: 28px;">
 
-    <!-- Page Header Banner -->
-    <div class="dash-section__header" style="margin-bottom: 24px;">
-      <div>
-        <h1 class="dash-section__title" style="font-size: 28px;">🤝 Verified Corporate & Institutional Buyers</h1>
-        <p class="dash-section__subtitle">Direct procurement partners offering verified credentials, fair pricing, and
-          24h bank transfers.</p>
-      </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a href="buyer.html#/buyer/dashboard" class="btn btn--primary" style="background:var(--ks-evergreen); color:#FFFFFF;"><i data-lucide="shield-check"></i> Open KrishiLink Buyer Portal</a>
-        <a href="lots.html" class="btn btn--secondary"><i data-lucide="plus-circle"></i> List Lot for Buyers</a>
-      </div>
-    </div>
-
-    <!-- Verified Corporate Buyers Grid -->
-    <section class="dash-section" id="dash-buyers-directory">
-      <div class="dash-card" style="padding: 24px; margin-bottom: 30px;">
-        <h3 style="font-size: 20px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 16px;">Active
-          Procurement Partners</h3>
-        <div id="buyers-directory-list">
-          <!-- Rendered dynamically by JS -->
+      <!-- Page Header Banner -->
+      <div class="dash-section__header" style="margin-bottom: 24px;">
+        <div>
+          <h1 class="dash-section__title" style="font-size: 28px;">🤝 Verified Corporate & Institutional Buyers</h1>
+          <p class="dash-section__subtitle">Direct procurement partners offering verified credentials, fair pricing, and
+            24h bank transfers.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="buyer.html#/buyer/dashboard" class="btn btn--primary" style="background:var(--ks-evergreen); color:#FFFFFF;"><i data-lucide="shield-check"></i> Open KrishiLink Buyer Portal</a>
+          <a href="lots.html" class="btn btn--secondary"><i data-lucide="plus-circle"></i> List Lot for Buyers</a>
         </div>
       </div>
-    </section>
 
-    <!-- Received Buyer Offers Panel -->
-    <section class="dash-section" id="dash-buyer-offers">
-      <div class="dash-card dash-panel">
-        <div class="dash-panel__header">
-          <div>
-            <h3 class="dash-panel__title">Incoming Bids & Direct Offers</h3>
-            <p class="dash-panel__subtitle">Quotes received for your active crop listings</p>
+      <!-- Verified Corporate Buyers Grid -->
+      <section class="dash-section" id="dash-buyers-directory">
+        <div class="dash-card" style="padding: 24px; margin-bottom: 30px;">
+          <h3 style="font-size: 20px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 16px;">Active
+            Procurement Partners</h3>
+          <div id="buyers-directory-list">
+            <!-- Rendered dynamically by JS -->
           </div>
         </div>
-        <div class="dash-panel__body" id="offers-panel-body">
-          <!-- Rendered dynamically by JS -->
-        </div>
-      </div>
-    </section>
+      </section>
 
+      <!-- Received Buyer Offers Panel -->
+      <section class="dash-section" id="dash-buyer-offers">
+        <div class="dash-card dash-panel">
+          <div class="dash-panel__header">
+            <div>
+              <h3 class="dash-panel__title">Incoming Bids & Direct Offers</h3>
+              <p class="dash-panel__subtitle">Quotes received for your active crop listings</p>
+            </div>
+          </div>
+          <div class="dash-panel__body" id="offers-panel-body">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </div>
+      </section>
+
+    </div>
   </main>
 
   <!-- FOOTER -->

@@ -138,7 +138,7 @@ button, input, select, textarea {
 /* Container */
 .container {
   width: 100%;
-  max-width: 1360px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
@@ -166,7 +166,7 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 74px;
+  height: 72px;
   gap: 1.5rem;
 }
 

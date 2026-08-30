@@ -149,7 +149,7 @@ button, input, select, textarea {
    ========================================================================== */
 .trans-container {
   width: 100%;
-  max-width: 1440px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 0 24px;
 }

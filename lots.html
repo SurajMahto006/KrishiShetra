@@ -134,66 +134,65 @@
   </div>
 
   <!-- MAIN CONTENT -->
-  <main class="dash-main container" style="padding-top: 30px; padding-bottom: 50px;">
+  <main class="dash-main" id="dash-main">
+    <div class="container" style="padding-top: 28px;">
 
-    <!-- Page Header Banner -->
-    <div class="dash-section__header" style="margin-bottom: 24px;">
-      <div>
-        <h1 class="dash-section__title" style="font-size: 28px;"><i data-lucide="package" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i> My Crop Lots & Buyer Offers</h1>
-        <p class="dash-section__subtitle">Manage your active harvest listings, create new lots, and negotiate buyer
-          bids.</p>
+      <!-- Page Header Banner -->
+      <div class="dash-section__header" style="margin-bottom: 24px;">
+        <div>
+          <h1 class="dash-section__title" style="font-size: 28px;"><i data-lucide="package" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i> My Crop Lots & Buyer Offers</h1>
+          <p class="dash-section__subtitle">Manage your active harvest listings, create new lots, and negotiate buyer
+            bids.</p>
+        </div>
+        <button class="btn btn--primary" id="btn-create-lot-page" onclick="openCreateLotModal()"><i
+            data-lucide="plus"></i> + Create New Crop Lot</button>
       </div>
-      <button class="btn btn--primary" id="btn-create-lot-page" onclick="openCreateLotModal()"><i
-          data-lucide="plus"></i> + Create New Crop Lot</button>
+
+      <!-- Active Lots & Offers 2-Column Section -->
+      <section class="dash-section" id="dash-lots-offers">
+        <div class="dash-two-col">
+
+          <!-- MY ACTIVE LOTS PANEL -->
+          <div class="dash-card dash-panel" id="dash-active-lots">
+            <div class="dash-panel__header">
+              <div>
+                <h3 class="dash-panel__title">My Active Lots</h3>
+                <p class="dash-panel__subtitle">Manage listed crops & track status</p>
+              </div>
+              <button class="btn btn--primary btn--sm" id="btn-create-lot" onclick="openCreateLotModal()"><i
+                  data-lucide="plus"></i> + New Lot</button>
+            </div>
+            <div class="dash-panel__body" id="lots-panel-body">
+              <!-- Rendered dynamically by JS -->
+            </div>
+            <div class="dash-panel__footer">
+              <button class="btn btn--secondary dash-panel__cta" id="btn-sell-now" onclick="openCreateLotModal()"><i
+                  data-lucide="package-plus"></i> List Another Lot</button>
+            </div>
+          </div>
+
+          <!-- RECEIVED BUYER OFFERS PANEL -->
+          <div class="dash-card dash-panel" id="dash-buyer-offers">
+            <div class="dash-panel__header">
+              <div>
+                <h3 class="dash-panel__title">Received Buyer Offers</h3>
+                <p class="dash-panel__subtitle">Direct quotes from verified corporate procurement companies</p>
+              </div>
+              <a href="buyers.html" class="dash-panel__action">Browse All Buyers <i data-lucide="arrow-right"></i></a>
+            </div>
+            <div class="dash-panel__body" id="offers-panel-body">
+              <!-- Rendered dynamically by JS -->
+            </div>
+            <div class="dash-panel__footer">
+              <a href="buyers.html" class="btn btn--secondary dash-panel__cta" id="btn-all-buyers"><i
+                  data-lucide="users"></i> View All Buyers</a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
     </div>
-
-    <!-- Active Lots & Offers 2-Column Section -->
-    <section class="dash-section" id="dash-lots-offers">
-      <div class="dash-two-col">
-
-        <!-- MY ACTIVE LOTS PANEL -->
-        <div class="dash-card dash-panel" id="dash-active-lots">
-          <div class="dash-panel__header">
-            <div>
-              <h3 class="dash-panel__title">My Active Lots</h3>
-              <p class="dash-panel__subtitle">Manage listed crops & track status</p>
-            </div>
-            <div class="dash-panel__lot-filters">
-              <button class="dash-lot-filter-btn dash-lot-filter-btn--active" data-filter="all">All</button>
-              <button class="dash-lot-filter-btn" data-filter="listed">Listed</button>
-              <button class="dash-lot-filter-btn" data-filter="paused">Paused</button>
-            </div>
-          </div>
-          <div class="dash-panel__body" id="lots-panel-body">
-            <!-- Rendered dynamically by JS -->
-          </div>
-          <div class="dash-panel__footer">
-            <button class="btn btn--primary dash-panel__cta" id="btn-create-lot" onclick="openCreateLotModal()"><i
-                data-lucide="plus"></i> + Add New Crop Lot</button>
-          </div>
-        </div>
-
-        <!-- BUYER OFFERS PANEL -->
-        <div class="dash-card dash-panel" id="dash-buyer-offers">
-          <div class="dash-panel__header">
-            <div>
-              <h3 class="dash-panel__title">Received Buyer Offers</h3>
-              <p class="dash-panel__subtitle">Direct quotes from verified corporate procurement companies</p>
-            </div>
-            <a href="buyers.html" class="dash-panel__action">Browse All Buyers <i data-lucide="arrow-right"></i></a>
-          </div>
-          <div class="dash-panel__body" id="offers-panel-body">
-            <!-- Rendered dynamically by JS -->
-          </div>
-          <div class="dash-panel__footer">
-            <a href="buyers.html" class="btn btn--secondary dash-panel__cta" id="btn-all-buyers"><i
-                data-lucide="users"></i> View All Buyers</a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
   </main>
 
   <!-- FOOTER -->

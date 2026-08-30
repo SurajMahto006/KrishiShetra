@@ -119,9 +119,9 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 1440px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
   gap: 8px;
 }
 
@@ -650,8 +650,8 @@ img { max-width: 100%; display: block; }
 }
 
 .buyer-page-container {
-  padding: calc(var(--nav-height) + 24px) 24px 60px;
-  max-width: 1360px;
+  padding: calc(var(--nav-height) + 28px) 24px 60px;
+  max-width: 1320px;
   width: 100%;
   margin: 0 auto;
   min-height: 100vh;
