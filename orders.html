@@ -8,12 +8,10 @@
   <meta name="description"
     content="Track active sales orders, transport pickup schedules, escrow payments, and bank payouts on KrishiShetra.">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts (Inter + Playfair Display + Noto Sans Devanagari) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -21,6 +19,8 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- i18n Multilingual Engine -->
+  <script src="js/i18n.js"></script>
 </head>
 
 <body class="dashboard-body">
@@ -50,22 +50,22 @@
 
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
-          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> <span data-i18n="nav.dashboard">Dashboard</span>
         </a>
         <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="nav.lots">My Lots</span>
         </a>
         <a href="market.html" class="dash-header__link" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
+          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="nav.market">Market</span>
         </a>
         <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
+          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="nav.forecast">AI Forecast</span>
         </a>
         <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
+          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="nav.buyers">Buyers</span>
         </a>
         <a href="orders.html" class="dash-header__link dash-header__link--active" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="nav.orders">Orders</span>
         </a>
       </nav>
 

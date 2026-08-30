@@ -3,17 +3,12 @@
  * English (EN) + हिंदी (HI) + मराठी (MR)
  * 
  * Central Internationalization Engine covering 100% of platform features:
- * - Landing page (Hero, Stats, Problem/Solution, 6-Step Flow, Bento Features, Testimonials, Footer)
- * - Authentication & Role Selection (Farmer, Institutional Buyer, FPO)
- * - Farmer Dashboard (Hero, KPIs, Quick Actions, AI Selling Opportunity, Market Intelligence Signals)
- * - My Lots Management (CRUD, Quality Grading, Listing Statuses)
- * - Live Market Prices (15 Mandis, Dynamic Search, Historical Trends, Mandi Comparison)
- * - AI Forecast Engine (Price Trajectory, Confidence Rating, Optimal Selling Window)
- * - Buyer Directory & Direct Linkage (Verified Procurement, Instant Offers, Negotiations)
- * - Orders, Logistics & Escrow Tracking (Pickup Schedule, Transit, Escrow Settlement, Grievances)
- * - Buyer Sourcing Portal
- * - Dynamic Entity Resolvers (Crops, Mandis, Statuses, Units)
- * - Locale-Aware Date, Indian Currency, and Number Formatting
+ * - Dynamic Document Titles for every page
+ * - MutationObserver for zero-latency auto-translation of dynamic SPA views
+ * - Cross-page permanent persistence via localStorage
+ * - Cross-tab real-time synchronization via storage event
+ * - Safe text replacement preserving nested icons and tags
+ * - Multi-language Crop & Mandi synonym search resolver
  */
 
 (function () {
@@ -22,6 +17,19 @@
   const TRANSLATIONS = {
     en: {
       meta: { name: 'English', native: 'English', code: 'en' },
+
+      // ── Page Titles for Browser Tab ──
+      pageTitles: {
+        index: 'KrishiShetra — Know the Price. Choose the Market. Sell Better.',
+        dashboard: 'Dashboard — KrishiShetra',
+        market: 'Live APMC Mandi Prices — KrishiShetra',
+        forecast: 'AI Price Forecast Engine — KrishiShetra',
+        lots: 'My Crop Lots & Listings — KrishiShetra',
+        buyers: 'Verified Corporate Buyers — KrishiShetra',
+        orders: 'Orders & Logistics Tracking — KrishiShetra',
+        login: 'Login & Access Platform — KrishiShetra',
+        buyerPortal: 'KrishiLink — B2B Agricultural Procurement Platform'
+      },
 
       // ── 1. GLOBAL NAVIGATION & COMMON ──
       nav: {
@@ -373,6 +381,19 @@
     hi: {
       meta: { name: 'Hindi', native: 'हिंदी', code: 'hi' },
 
+      // ── Page Titles for Browser Tab ──
+      pageTitles: {
+        index: 'KrishiShetra — भाव जानिए. सही मंडी चुनिए. बेहतर बेचिए.',
+        dashboard: 'किसान डैशबोर्ड — KrishiShetra',
+        market: 'लाइव मंडी भाव — KrishiShetra',
+        forecast: 'AI फसल भाव पूर्वानुमान — KrishiShetra',
+        lots: 'मेरी फसलें एवं लिस्टिंग — KrishiShetra',
+        buyers: 'सत्यापित संस्थागत खरीदार — KrishiShetra',
+        orders: 'ऑर्डर एवं लॉजिस्टिक्स ट्रैकिंग — KrishiShetra',
+        login: 'लॉग इन एवं प्रवेश — KrishiShetra',
+        buyerPortal: 'KrishiLink — संस्थागत कृषि खरीद पोर्टल'
+      },
+
       // ── 1. GLOBAL NAVIGATION & COMMON ──
       nav: {
         brand: 'KrishiShetra',
@@ -722,6 +743,19 @@
 
     mr: {
       meta: { name: 'Marathi', native: 'मराठी', code: 'mr' },
+
+      // ── Page Titles for Browser Tab ──
+      pageTitles: {
+        index: 'KrishiShetra — भाव जाणा. योग्य बाजार निवडा. उत्तम विका.',
+        dashboard: 'शेतकरी डॅशबोर्ड — KrishiShetra',
+        market: 'थेट बाजारभाव — KrishiShetra',
+        forecast: 'AI पीक भाव अंदाज — KrishiShetra',
+        lots: 'माझी पिके व नोंदणी — KrishiShetra',
+        buyers: 'सत्यापित खरेदीदार — KrishiShetra',
+        orders: 'ऑर्डर्स व वाहतूक ट्रॅकिंग — KrishiShetra',
+        login: 'लॉग इन व प्रवेश — KrishiShetra',
+        buyerPortal: 'KrishiLink — कृषी खरेदी प्लॅटफॉर्म'
+      },
 
       // ── 1. GLOBAL NAVIGATION & COMMON ──
       nav: {
@@ -1092,13 +1126,19 @@
 
   class KrishiI18n {
     constructor() {
-      this.currentLang = this.getSavedLanguage();
       this.translations = TRANSLATIONS;
+      this.currentLang = this.getSavedLanguage();
+      this.observer = null;
+
+      // Immediately set html lang attribute
+      if (document.documentElement) {
+        document.documentElement.lang = this.currentLang;
+      }
     }
 
     getSavedLanguage() {
       try {
-        const saved = localStorage.getItem('krishi_lang');
+        const saved = localStorage.getItem('krishi_lang') || localStorage.getItem('krishi_user_lang');
         if (saved && (saved === 'en' || saved === 'hi' || saved === 'mr')) {
           return saved;
         }
@@ -1115,9 +1155,14 @@
       this.currentLang = lang;
       try {
         localStorage.setItem('krishi_lang', lang);
+        localStorage.setItem('krishi_user_lang', lang);
       } catch (e) {}
 
-      document.documentElement.lang = lang;
+      if (document.documentElement) {
+        document.documentElement.lang = lang;
+      }
+
+      this.updatePageTitle();
       this.updateLanguageUIElements(lang);
       this.translatePage();
 
@@ -1125,10 +1170,27 @@
         detail: { lang, meta: this.translations[lang].meta }
       }));
 
-      const langNames = { en: 'English', hi: 'हिंदी (Hindi)', mr: 'मराठी (Marathi)' };
       if (typeof window.showToast === 'function') {
         const msg = lang === 'mr' ? 'भाषा बदलली: मराठी' : lang === 'hi' ? 'भाषा बदली गई: हिंदी' : 'Language changed to English';
         window.showToast(msg);
+      }
+    }
+
+    updatePageTitle() {
+      const path = (window.location.pathname || '').toLowerCase();
+      let pageKey = 'index';
+      if (path.includes('dashboard')) pageKey = 'dashboard';
+      else if (path.includes('market')) pageKey = 'market';
+      else if (path.includes('ai-forecast') || path.includes('forecast')) pageKey = 'forecast';
+      else if (path.includes('lots')) pageKey = 'lots';
+      else if (path.includes('buyers')) pageKey = 'buyers';
+      else if (path.includes('orders')) pageKey = 'orders';
+      else if (path.includes('login')) pageKey = 'login';
+      else if (path.includes('buyer')) pageKey = 'buyerPortal';
+
+      const customTitle = this.translations[this.currentLang]?.pageTitles?.[pageKey];
+      if (customTitle) {
+        document.title = customTitle;
       }
     }
 
@@ -1160,6 +1222,7 @@
     }
 
     t(keyPath, fallback = '') {
+      if (!keyPath) return fallback;
       const keys = keyPath.split('.');
       let val = this.translations[this.currentLang];
       
@@ -1241,7 +1304,6 @@
     setElementTextSafe(el, newText) {
       if (!el || typeof newText !== 'string') return;
 
-      // Check if element has child elements like icons (i, svg, span)
       const hasChildElements = el.children.length > 0;
 
       if (!hasChildElements) {
@@ -1249,14 +1311,12 @@
         return;
       }
 
-      // If element has a dedicated .i18n-text span, update it directly
       const dedicatedSpan = el.querySelector('.i18n-text');
       if (dedicatedSpan) {
         dedicatedSpan.textContent = newText;
         return;
       }
 
-      // Look for first text node to update
       let textNodeFound = false;
       for (let i = 0; i < el.childNodes.length; i++) {
         const node = el.childNodes[i];
@@ -1268,7 +1328,6 @@
       }
 
       if (!textNodeFound) {
-        // Create an i18n text wrapper so icons are preserved
         const span = document.createElement('span');
         span.className = 'i18n-text';
         span.textContent = ' ' + newText;
@@ -1277,7 +1336,10 @@
     }
 
     translatePage() {
-      // 1. Plain text replacement with [data-i18n] (Safe Icon Preservation)
+      // 0. Update Page Title
+      this.updatePageTitle();
+
+      // 1. Plain text replacement with [data-i18n]
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (key) {
@@ -1342,11 +1404,38 @@
         });
       });
 
-      // 6. Refresh Lucide Icons without flickering
+      // 6. Refresh Lucide Icons safely
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         try {
           window.lucide.createIcons();
         } catch(e) {}
+      }
+    }
+
+    initObserver() {
+      if (this.observer) return;
+      this.observer = new MutationObserver((mutations) => {
+        let shouldTranslate = false;
+        for (const m of mutations) {
+          if (m.addedNodes && m.addedNodes.length > 0) {
+            for (const node of m.addedNodes) {
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node.hasAttribute('data-i18n') || node.querySelector?.('[data-i18n]')) {
+                  shouldTranslate = true;
+                  break;
+                }
+              }
+            }
+          }
+          if (shouldTranslate) break;
+        }
+        if (shouldTranslate) {
+          this.translatePage();
+        }
+      });
+
+      if (document.body) {
+        this.observer.observe(document.body, { childList: true, subtree: true });
       }
     }
   }
@@ -1358,12 +1447,19 @@
 
   // Sync language across multiple open browser tabs
   window.addEventListener('storage', (e) => {
-    if (e.key === 'krishi_lang' && e.newValue && e.newValue !== window.KrishiI18n.currentLang) {
+    if ((e.key === 'krishi_lang' || e.key === 'krishi_user_lang') && e.newValue && e.newValue !== window.KrishiI18n.currentLang) {
       window.KrishiI18n.setLanguage(e.newValue);
     }
   });
 
-  document.addEventListener('DOMContentLoaded', () => {
+  // Apply immediately on DOM Ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      window.KrishiI18n.setLanguage(window.KrishiI18n.currentLang);
+      window.KrishiI18n.initObserver();
+    });
+  } else {
     window.KrishiI18n.setLanguage(window.KrishiI18n.currentLang);
-  });
+    window.KrishiI18n.initObserver();
+  }
 })();
