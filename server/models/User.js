@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: {
-        values: ['farmer', 'fpo', 'buyer', 'admin'],
+        values: ['farmer', 'fpo', 'buyer', 'transporter', 'admin'],
         message: '{VALUE} is not a valid role'
       },
       default: 'farmer'

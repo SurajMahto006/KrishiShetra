@@ -88,7 +88,7 @@ const register = async (req, res) => {
     const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
     // Validate role
-    const validRoles = ['farmer', 'fpo', 'buyer', 'admin'];
+    const validRoles = ['farmer', 'fpo', 'buyer', 'transporter', 'admin'];
     const assignedRole = role && validRoles.includes(role.toLowerCase().trim())
       ? role.toLowerCase().trim()
       : 'farmer';

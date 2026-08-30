@@ -272,6 +272,12 @@
                 <span class="auth-role-card__check">✓</span>
               </div>
 
+              <div class="auth-role-card" data-role="transporter" tabindex="0" role="radio" aria-checked="false">
+                <span class="auth-role-card__icon"><i data-lucide="truck"></i></span>
+                <span class="auth-role-card__name" id="role-name-transporter">Transporter</span>
+                <span class="auth-role-card__check">✓</span>
+              </div>
+
             </div>
           </div>
 
@@ -509,6 +515,7 @@
           roleFarmer: 'Farmer',
           roleFpo: 'FPO',
           roleBuyer: 'Buyer',
+          roleTransporter: 'Transporter',
           labelRegisterName: 'FULL NAME',
           labelPhone: 'MOBILE NUMBER',
           labelRegisterPassword: 'PASSWORD',
@@ -547,6 +554,7 @@
           roleFarmer: 'किसान',
           roleFpo: 'एफपीओ (FPO)',
           roleBuyer: 'खरीदार',
+          roleTransporter: 'ट्रांसपोर्टर',
           labelRegisterName: 'पूरा नाम',
           labelPhone: 'मोबाइल नंबर',
           labelRegisterPassword: 'पासवर्ड',
@@ -585,6 +593,7 @@
           roleFarmer: 'शेतकरी',
           roleFpo: 'एफपीओ',
           roleBuyer: 'खरेदीदार',
+          roleTransporter: 'वाहतूकदार',
           labelRegisterName: 'पूर्ण नाव',
           labelPhone: 'मोबाईल नंबर',
           labelRegisterPassword: 'पासवर्ड',
@@ -624,6 +633,8 @@
         document.getElementById('role-name-farmer').textContent = t.roleFarmer;
         document.getElementById('role-name-fpo').textContent = t.roleFpo;
         document.getElementById('role-name-buyer').textContent = t.roleBuyer;
+        const roleTransporterEl = document.getElementById('role-name-transporter');
+        if (roleTransporterEl) roleTransporterEl.textContent = t.roleTransporter;
         document.getElementById('label-register-name').textContent = t.labelRegisterName;
         document.getElementById('label-register-email').textContent = t.labelLoginEmail;
         document.getElementById('label-phone').textContent = t.labelPhone;
@@ -837,7 +848,18 @@
             btnLogin.style.background = '#5B9A72';
 
             setTimeout(() => {
-              window.location.href = 'dashboard.html';
+              const userRole = (data.user && data.user.role) ? data.user.role.toLowerCase() : 'farmer';
+              if (userRole === 'buyer') {
+                window.location.href = 'buyer.html';
+              } else if (userRole === 'fpo') {
+                window.location.href = 'fpo-dashboard.html';
+              } else if (userRole === 'transporter') {
+                window.location.href = 'transporter/dashboard.html';
+              } else if (userRole === 'admin') {
+                window.location.href = 'admin/dashboard.html';
+              } else {
+                window.location.href = 'dashboard.html';
+              }
             }, 600);
           } else {
             btnLogin.disabled = false;
