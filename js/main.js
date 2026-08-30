@@ -5,6 +5,7 @@
 
 // ── Wait for DOM ──
 document.addEventListener('DOMContentLoaded', () => {
+  if (window.lucide) lucide.createIcons();
   initLenis();
   initGSAP();
   initNavbar();
@@ -446,14 +447,22 @@ function initLoginModal() {
   const form = document.getElementById('login-form');
   const roleSelect = document.getElementById('role-select');
 
-  // Direct navigation to login.html
-  const openTriggers = ['btn-login-nav', 'btn-enter-nav', 'btn-enter-final'];
-  openTriggers.forEach(id => {
+  // Direct navigation
+  const loginNavBtn = document.getElementById('btn-login-nav');
+  if (loginNavBtn) {
+    loginNavBtn.addEventListener('click', (e) => {
+      // Allow default href or enforce login page
+      // window.location.href = 'login.html';
+    });
+  }
+
+  const enterTriggers = ['btn-enter-nav', 'btn-enter-final'];
+  enterTriggers.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('click', (e) => {
-        // Direct navigation to login page
-        window.location.href = 'login.html';
+        e.preventDefault();
+        window.location.href = 'dashboard.html';
       });
     }
   });

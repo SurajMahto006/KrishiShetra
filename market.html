@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Market Prices — KrishiShetra</title>
+  <meta name="description"
+    content="Live mandi market prices, crop price comparisons across APMC mandis, historical trend charts, and real-time agricultural market intelligence.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap"
+    rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+
+<body class="dashboard-body">
+
+  <!-- AMBIENT FARMER SUNLIGHT BACKGROUND -->
+  <div class="dash-ambient-bg" aria-hidden="true">
+    <div class="dash-ambient-bg__img"></div>
+    <div class="dash-ambient-bg__overlay"></div>
+    <div class="dash-ambient-bg__sunlight-glow"></div>
+  </div>
+
+  <!-- HEADER / NAVBAR -->
+  <header class="dash-header" id="dash-header">
+    <div class="dash-header__inner">
+      <a href="index.html" class="dash-header__logo" id="dash-logo">
+        <span class="dash-header__logo-icon"><i data-lucide="sprout"></i></span>
+        <span class="dash-header__logo-text">KrishiShetra</span>
+      </a>
+
+      <div class="dash-search" id="dash-search">
+        <i data-lucide="search" class="dash-search__icon"></i>
+        <input type="text" id="dash-search-input" class="dash-search__input"
+          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
+        <kbd class="dash-search__kbd">Ctrl K</kbd>
+        <div class="dash-search__results" id="dash-search-results"></div>
+      </div>
+
+      <nav class="dash-header__nav" id="dash-nav">
+        <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+        </a>
+        <a href="lots.html" class="dash-header__link" id="nav-lots">
+          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+        </a>
+        <a href="market.html" class="dash-header__link dash-header__link--active" id="nav-market">
+          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
+        </a>
+        <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
+          <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
+        </a>
+        <a href="buyers.html" class="dash-header__link" id="nav-buyers">
+          <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
+        </a>
+        <a href="orders.html" class="dash-header__link" id="nav-orders">
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+        </a>
+      </nav>
+
+      <div class="dash-header__actions">
+        <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+          <i data-lucide="bell"></i>
+          <span class="dash-header__badge" id="notifications-badge">3</span>
+        </button>
+        <button class="dash-header__action-btn" id="btn-language" aria-label="Language" title="Change Language">
+          <i data-lucide="globe"></i>
+        </button>
+        <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
+          <i data-lucide="help-circle"></i>
+        </button>
+        <div class="dash-profile-wrap" id="dash-profile-wrap">
+          <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
+            <div class="dash-header__avatar" id="header-avatar">R</div>
+            <span class="dash-header__profile-name" id="header-user-name">Rajesh</span>
+            <i data-lucide="chevron-down" class="dash-header__profile-chevron"></i>
+          </button>
+          <div class="dash-profile-dropdown" id="dash-profile-dropdown">
+            <div class="dash-profile-dropdown__header">
+              <div class="dash-header__avatar dash-header__avatar--lg" id="dropdown-avatar">R</div>
+              <div>
+                <div class="dash-profile-dropdown__name" id="dropdown-user-name">Rajesh Patil</div>
+                <div class="dash-profile-dropdown__phone" id="dropdown-user-phone">+91 98765 43210</div>
+              </div>
+            </div>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-profile"><i data-lucide="user"></i> My Profile &
+              Farm</a>
+            <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> Manage
+              My Lots</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-alerts"><i data-lucide="bell-ring"></i> Price
+              Alerts</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan
+              Helpline</a>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
+                data-lucide="log-out"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+
+      <button class="dash-header__toggle" id="dash-nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Slide Nav -->
+  <div class="dash-mobile-nav" id="dash-mobile-nav">
+    <div class="dash-mobile-nav__links">
+      <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i>
+        Dashboard</a>
+      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
+      <a href="market.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-market"><i
+          data-lucide="bar-chart-3"></i> Market Prices</a>
+      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI
+        Forecast</a>
+      <a href="buyers.html" class="dash-mobile-nav__link" id="mnav-buyers"><i data-lucide="users"></i> Buyers</a>
+      <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i>
+        Orders</a>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="dash-main" id="dash-main">
+
+    <!-- ── 1. MARKET OVERVIEW GRID ── -->
+    <section class="dash-section" id="dash-market-overview" style="padding-top: calc(var(--nav-height) + 28px);">
+      <div class="container">
+        <div class="dash-section__header">
+          <div>
+            <h2 class="dash-section__title">Market Overview</h2>
+            <p class="dash-section__subtitle">Live prices from verified nearby mandis</p>
+          </div>
+          <button class="dash-section__action" id="btn-refresh-market"><i data-lucide="refresh-cw"></i> Refresh Prices</button>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="dash-filter-bar" id="market-filter-bar">
+          <div class="dash-filter-bar__search">
+            <i data-lucide="search"></i>
+            <input type="text" id="market-search-input" placeholder="Search crop or mandi (e.g. Rice, Pune, Tomato)..."
+              aria-label="Search crops">
+          </div>
+          <div class="dash-filter-bar__filters">
+            <select id="filter-crop" class="dash-filter-select" aria-label="Filter by crop">
+              <option value="all">All Crops (15)</option>
+              <option value="rice">Rice</option>
+              <option value="wheat">Wheat</option>
+              <option value="maize">Maize</option>
+              <option value="soybean">Soybean</option>
+              <option value="pulses">Pulses</option>
+              <option value="onion">Onion</option>
+              <option value="tomato">Tomato</option>
+              <option value="potato">Potato</option>
+              <option value="chilli">Chilli</option>
+              <option value="groundnut">Groundnut</option>
+              <option value="cotton">Cotton</option>
+              <option value="sugarcane">Sugarcane</option>
+              <option value="mango">Mango</option>
+              <option value="banana">Banana</option>
+              <option value="grapes">Grapes</option>
+            </select>
+            <select id="filter-location" class="dash-filter-select" aria-label="Filter by location">
+              <option value="all">All Mandis</option>
+              <option value="Pune">Pune APMC</option>
+              <option value="Nashik">Nashik APMC</option>
+              <option value="Mumbai">Mumbai APMC</option>
+              <option value="Nagpur">Nagpur APMC</option>
+              <option value="Solapur">Solapur APMC</option>
+              <option value="Indore">Indore Mandi</option>
+              <option value="Guntur">Guntur APMC</option>
+              <option value="Rajkot">Rajkot APMC</option>
+            </select>
+            <select id="filter-demand" class="dash-filter-select" aria-label="Filter by demand">
+              <option value="all">All Demand Levels</option>
+              <option value="high">High Demand Only</option>
+              <option value="medium">Medium Demand</option>
+              <option value="low">Low Demand</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Crop Cards Grid -->
+        <div class="dash-market__grid" id="market-grid"></div>
+        <div class="dash-market__empty" id="market-empty" style="display:none;">
+          <i data-lucide="search-x"></i>
+          <p>No crops found matching your search criteria.</p>
+          <button class="btn btn--secondary" id="btn-clear-search">Clear Filters</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 2. WHAT FARMERS ARE SELLING ── -->
+    <section class="dash-section" id="dash-farmer-listings">
+      <div class="container">
+        <div class="dash-section__header">
+          <div>
+            <h2 class="dash-section__title">What Farmers Are Selling</h2>
+            <p class="dash-section__subtitle">Top traded commodities listed across regional mandis</p>
+          </div>
+          <a href="lots.html" class="dash-section__action">View My Listings <i data-lucide="arrow-right"></i></a>
+        </div>
+        <div class="dash-farmer-scroll" id="farmer-listings-scroll"></div>
+      </div>
+    </section>
+
+    <!-- ── 3. MARKET PRICE COMPARISON ── -->
+    <section class="dash-section" id="dash-market-comparison">
+      <div class="container">
+        <div class="dash-section__header">
+          <div>
+            <h2 class="dash-section__title">Compare Mandi Prices</h2>
+            <p class="dash-section__subtitle">Find the best market for your crop across states</p>
+          </div>
+        </div>
+        <div class="dash-compare-controls" id="compare-controls">
+          <div class="dash-compare-control">
+            <label for="compare-crop">Selected Crop</label>
+            <select id="compare-crop" class="dash-filter-select">
+              <option value="rice">Rice</option>
+              <option value="wheat">Wheat</option>
+              <option value="onion">Onion</option>
+              <option value="tomato">Tomato</option>
+              <option value="soybean">Soybean</option>
+              <option value="maize">Maize</option>
+              <option value="chilli">Chilli</option>
+              <option value="pulses">Pulses</option>
+            </select>
+          </div>
+          <div class="dash-compare-control">
+            <label for="compare-location">State / Region</label>
+            <select id="compare-location" class="dash-filter-select">
+              <option value="maharashtra">Maharashtra</option>
+              <option value="mp">Madhya Pradesh</option>
+              <option value="gujarat">Gujarat</option>
+              <option value="andhra">Andhra Pradesh</option>
+            </select>
+          </div>
+        </div>
+        <div class="dash-compare-best" id="compare-best-badge">
+          <i data-lucide="award"></i>
+          <span>Best Market Today: <strong id="best-market-name">Mumbai APMC</strong> offering <strong
+              id="best-market-price">₹2,920/q</strong></span>
+        </div>
+        <div class="dash-compare-table-wrap">
+          <table class="dash-compare-table" id="compare-table">
+            <thead>
+              <tr>
+                <th>Market Mandi</th>
+                <th>Price (₹/q)</th>
+                <th>Weekly Trend</th>
+                <th>Demand Level</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="compare-table-body"></tbody>
+          </table>
+        </div>
+        <div class="dash-compare-cards" id="compare-cards"></div>
+      </div>
+    </section>
+
+    <!-- ── 4. PRICE TREND CHART ── -->
+    <section class="dash-section" id="dash-price-chart-section">
+      <div class="container">
+        <div class="dash-card dash-chart-card">
+          <div class="dash-chart-card__header">
+            <div>
+              <h3 class="dash-chart-card__title" id="chart-title">Rice Price Trend</h3>
+              <p class="dash-chart-card__subtitle">Historical daily modal price analysis</p>
+            </div>
+            <div class="dash-chart-card__controls">
+              <select id="chart-crop-select" class="dash-filter-select dash-filter-select--sm"
+                aria-label="Select crop for chart">
+                <option value="rice">Rice</option>
+                <option value="wheat">Wheat</option>
+                <option value="onion">Onion</option>
+                <option value="tomato">Tomato</option>
+                <option value="maize">Maize</option>
+                <option value="soybean">Soybean</option>
+              </select>
+              <div class="dash-chart-card__tabs">
+                <button class="dash-chart-tab" data-range="7">7D</button>
+                <button class="dash-chart-tab dash-chart-tab--active" data-range="30">30D</button>
+                <button class="dash-chart-tab" data-range="90">3M</button>
+                <button class="dash-chart-tab" data-range="365">1Y</button>
+              </div>
+            </div>
+          </div>
+          <div class="dash-chart-stats" id="chart-stats">
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Current</span><span
+                class="dash-chart-stats__val" id="chart-stat-current">₹2,850</span></div>
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Highest</span><span
+                class="dash-chart-stats__val dash-chart-stats__val--up" id="chart-stat-high">₹2,900</span></div>
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Lowest</span><span
+                class="dash-chart-stats__val dash-chart-stats__val--down" id="chart-stat-low">₹2,620</span></div>
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Average</span><span
+                class="dash-chart-stats__val" id="chart-stat-avg">₹2,792</span></div>
+          </div>
+          <div class="dash-chart-card__canvas">
+            <svg class="dash-chart-svg" viewBox="0 0 900 220" preserveAspectRatio="none" id="dashboard-price-chart">
+              <text x="8" y="28" class="dash-chart__label">₹3,000</text>
+              <text x="8" y="78" class="dash-chart__label">₹2,800</text>
+              <text x="8" y="128" class="dash-chart__label">₹2,600</text>
+              <text x="8" y="178" class="dash-chart__label">₹2,400</text>
+              <line x1="70" y1="25" x2="890" y2="25" class="dash-chart__grid" />
+              <line x1="70" y1="75" x2="890" y2="75" class="dash-chart__grid" />
+              <line x1="70" y1="125" x2="890" y2="125" class="dash-chart__grid" />
+              <line x1="70" y1="175" x2="890" y2="175" class="dash-chart__grid" />
+              <path id="chart-area" d="" fill="url(#areaGrad)" opacity="0.3" />
+              <path id="chart-line" d="" fill="none" stroke="var(--ks-sage)" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" class="dash-chart__line" />
+              <defs>
+                <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="rgba(91, 154, 114, 0.3)" />
+                  <stop offset="100%" stop-color="rgba(91, 154, 114, 0.02)" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <p class="dash-chart-insight" id="chart-insight">📈 Rice prices increased 8.8% over the last 30 days in major
+            APMC mandis.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 5. MARKET INSIGHTS ── -->
+    <section class="dash-section" id="dash-market-insights">
+      <div class="container">
+        <div class="dash-section__header">
+          <div>
+            <h2 class="dash-section__title">Market Insights</h2>
+            <p class="dash-section__subtitle">Actionable intelligence for better selling decisions</p>
+          </div>
+        </div>
+        <div class="dash-insights__grid" id="insights-grid">
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-up" style="color:var(--ks-mint);"></i></span>
+            <p>Rice demand is <strong>increasing by 14%</strong> across Maharashtra mandis due to institutional buying.
+            </p>
+          </div>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="flame" style="color:var(--ks-coral);"></i></span>
+            <p>Onion prices are <strong>rising in Pune & Nashik</strong>. Current price is ₹2,850/q, 12% above seasonal
+              average.</p>
+          </div>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-down" style="color:var(--ks-coral);"></i></span>
+            <p>Tomato market arrivals are <strong>up by 20%</strong> in Solapur. Recommended to sell fresh harvest
+              within 2 days.</p>
+          </div>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="award" style="color:var(--ks-gold);"></i></span>
+            <p><strong>Mumbai APMC</strong> currently offers highest realization on premium grade grains.</p>
+          </div>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="tractor" style="color:var(--ks-sage);"></i></span>
+            <p>Soybean millers in <strong>Indore</strong> are offering premium contracts for moisture level under 10%.
+            </p>
+          </div>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="lightbulb" style="color:var(--ks-gold);"></i></span>
+            <p>Set a <strong>Target Price Alert</strong> on chilli and cotton to receive direct SMS when prices spike.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer dash-footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div>
+          <div class="footer__brand"><i data-lucide="sprout" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> KrishiShetra</div>
+          <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
+        </div>
+        <div class="footer__links">
+          <a href="#" class="footer__link" onclick="openHelpModal()">Kisan Support</a>
+          <a href="buyers.html" class="footer__link">For Buyers</a>
+          <a href="#" class="footer__link" onclick="openLanguageModal()">Languages</a>
+          <a href="index.html" class="footer__link">About KrishiShetra</a>
+        </div>
+      </div>
+      <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
+    </div>
+  </footer>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="dash-bottom-nav" id="dash-bottom-nav">
+    <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i
+        data-lucide="home"></i><span>Home</span></a>
+    <a href="market.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-market"><i
+        data-lucide="bar-chart-3"></i><span>Market</span></a>
+    <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span>My
+        Lots</span></a>
+    <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i
+        data-lucide="brain"></i><span>Forecast</span></a>
+    <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i
+        data-lucide="users"></i><span>Buyers</span></a>
+    <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i
+        data-lucide="clipboard-list"></i><span>Orders</span></a>
+  </nav>
+
+  <!-- MODALS -->
+  <!-- CROP DETAILS MODAL -->
+  <div class="dash-modal-overlay" id="crop-modal-overlay">
+    <div class="dash-modal dash-modal--lg" id="crop-modal">
+      <div class="dash-modal__header">
+        <div class="dash-crop-modal__header-title">
+          <span id="crop-modal-emoji" class="dash-crop-modal__emoji"><i data-lucide="sprout"></i></span>
+          <div>
+            <h3 id="crop-modal-name">Rice Market Details</h3>
+            <span id="crop-modal-market" class="dash-crop-modal__sub">Pune APMC · Live Market Data</span>
+          </div>
+        </div>
+        <button class="dash-modal__close" id="crop-modal-close" aria-label="Close modal"><i
+            data-lucide="x"></i></button>
+      </div>
+      <div class="dash-crop-modal__body">
+        <div class="dash-crop-modal__hero">
+          <div class="dash-crop-modal__img-wrap">
+            <img src="assets/images/crop-rice.jpg" alt="Crop" id="crop-modal-img" class="dash-crop-modal__img">
+          </div>
+          <div class="dash-crop-modal__hero-info">
+            <div class="dash-crop-modal__price-block">
+              <span class="dash-crop-modal__price-label">Current Mandi Price</span>
+              <div class="dash-crop-modal__price-val" id="crop-modal-price">₹2,850/q</div>
+              <span class="dash-crop-modal__price-change" id="crop-modal-change">↑ 5.2% from last week</span>
+            </div>
+            <div class="dash-crop-modal__badge-row">
+              <span class="dash-crop-card__demand dash-crop-card__demand--high" id="crop-modal-demand">🔥 High
+                Demand</span>
+              <span class="dash-status-badge dash-status-badge--live"><span class="dash-status-badge__dot"></span>
+                Active Mandi</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-crop-modal__ai-box">
+          <div class="dash-crop-modal__ai-header">
+            <i data-lucide="brain"></i>
+            <span>AI Selling Forecast</span>
+          </div>
+          <p id="crop-modal-ai-text">"High buyer arrival expected in next 3 days. Recommended selling price ₹2,950/q."
+          </p>
+        </div>
+
+        <div class="dash-crop-modal__section">
+          <h4>Nearby Mandi Price Comparison</h4>
+          <div class="dash-crop-modal__mandis" id="crop-modal-mandis"></div>
+        </div>
+
+        <div class="dash-crop-modal__section">
+          <h4>Top Verified Corporate Buyers</h4>
+          <div class="dash-crop-modal__buyers" id="crop-modal-buyers"></div>
+        </div>
+
+        <div class="dash-crop-modal__actions">
+          <a href="lots.html" class="btn btn--primary" id="crop-modal-sell-btn"><i data-lucide="plus-circle"></i> Sell
+            This Crop</a>
+          <button class="btn btn--secondary" id="crop-modal-alert-btn" onclick="openAlertModal()"><i
+              data-lucide="bell-ring"></i> Set Price Alert</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE ALERT MODAL -->
+  <div class="dash-modal-overlay" id="alert-modal-overlay">
+    <div class="dash-modal" id="alert-modal">
+      <div class="dash-modal__header">
+        <h3>Create Price Alert</h3>
+        <button class="dash-modal__close" id="alert-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <form class="dash-modal__form" id="alert-form">
+        <div class="dash-modal__field">
+          <label for="alert-crop-input">Crop</label>
+          <select id="alert-crop-input" class="dash-filter-select" required>
+            <option value="rice">Rice</option>
+            <option value="wheat">Wheat</option>
+            <option value="onion">Onion</option>
+            <option value="tomato">Tomato</option>
+            <option value="soybean">Soybean</option>
+            <option value="maize">Maize</option>
+            <option value="pulses">Pulses</option>
+          </select>
+        </div>
+        <div class="dash-modal__field">
+          <label for="alert-price-input">Target Price (₹/quintal)</label>
+          <input type="number" id="alert-price-input" class="dash-form-input" placeholder="e.g. 3000" required>
+        </div>
+        <div class="dash-modal__field">
+          <label for="alert-market-input">Market Mandi</label>
+          <select id="alert-market-input" class="dash-filter-select">
+            <option value="Pune APMC">Pune APMC</option>
+            <option value="Mumbai APMC">Mumbai APMC</option>
+            <option value="Nashik APMC">Nashik APMC</option>
+          </select>
+        </div>
+        <div class="dash-modal__field">
+          <label>Notify Via</label>
+          <div class="dash-modal__checkboxes">
+            <label class="dash-checkbox"><input type="checkbox" id="alert-ch-app" checked> In-App</label>
+            <label class="dash-checkbox"><input type="checkbox" id="alert-ch-sms" checked> SMS</label>
+            <label class="dash-checkbox"><input type="checkbox" id="alert-ch-wa"> WhatsApp</label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="bell-ring"></i> Set Price
+          Alert</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS / PROFILE / HELPLINE / LANG MODALS -->
+  <div class="dash-modal-overlay" id="notifications-modal-overlay">
+    <div class="dash-modal dash-modal--sm" id="notifications-modal">
+      <div class="dash-modal__header">
+        <div>
+          <h3>Notifications</h3>
+        </div>
+        <button class="dash-modal__close" id="notifications-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad" id="notifications-list"></div>
+    </div>
+  </div>
+
+  <div class="dash-modal-overlay" id="profile-modal-overlay">
+    <div class="dash-modal" id="profile-modal">
+      <div class="dash-modal__header">
+        <h3>Farmer Profile & Settings</h3>
+        <button class="dash-modal__close" id="profile-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <form class="dash-modal__form" id="profile-form">
+        <div class="dash-modal__field">
+          <label for="prof-name">Full Name</label>
+          <input type="text" id="prof-name" class="dash-form-input" value="Rajesh Patil" required>
+        </div>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save
+          Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="dash-modal-overlay" id="help-modal-overlay">
+    <div class="dash-modal" id="help-modal">
+      <div class="dash-modal__header">
+        <h3>Kisan Support & Helpline</h3>
+        <button class="dash-modal__close" id="help-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <div class="dash-help-banner">
+          <i data-lucide="phone-call"></i>
+          <div>
+            <div style="font-weight:700; color:var(--ks-evergreen);">Kisan Call Center (Toll Free)</div>
+            <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-modal-overlay" id="language-modal-overlay">
+    <div class="dash-modal dash-modal--sm" id="language-modal">
+      <div class="dash-modal__header">
+        <h3>Select Language</h3>
+        <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <div class="dash-lang-list">
+          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span>
+            <strong>Active</strong></button>
+          <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
+          <button class="dash-lang-btn" onclick="setLanguage('hi')"><span>हिन्दी (Hindi)</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/navbar.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+
+</html>

@@ -13,6 +13,9 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
 
@@ -31,7 +34,7 @@
       <!-- Top Brand Logo -->
       <div class="auth-hero__top">
         <a href="index.html" class="auth-hero__logo" title="Back to KrishiShetra Home">
-          <div class="auth-hero__logo-icon">🌾</div>
+          <div class="auth-hero__logo-icon"><i data-lucide="sprout"></i></div>
           <span class="auth-hero__logo-text">KrishiShetra</span>
         </a>
       </div>
@@ -71,7 +74,7 @@
       <div class="auth-content__header-bar">
         <div class="auth-lang-dropdown">
           <button type="button" class="auth-lang-btn" id="lang-menu-btn" aria-haspopup="true" aria-expanded="false">
-            <span>🌐</span>
+            <i data-lucide="globe" style="width:15px;height:15px;"></i>
             <span id="current-lang-text">English</span>
             <span style="font-size: 10px; opacity: 0.7;">▼</span>
           </button>
@@ -100,19 +103,19 @@
             <div class="auth-roles" role="radiogroup" aria-labelledby="label-role">
               
               <div class="auth-role-card active" data-role="farmer" tabindex="0" role="radio" aria-checked="true">
-                <span class="auth-role-card__icon">🚜</span>
+                <span class="auth-role-card__icon"><i data-lucide="tractor"></i></span>
                 <span class="auth-role-card__name" id="role-name-farmer">Farmer</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
               <div class="auth-role-card" data-role="fpo" tabindex="0" role="radio" aria-checked="false">
-                <span class="auth-role-card__icon">👥</span>
+                <span class="auth-role-card__icon"><i data-lucide="users"></i></span>
                 <span class="auth-role-card__name" id="role-name-fpo">FPO</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
               <div class="auth-role-card" data-role="buyer" tabindex="0" role="radio" aria-checked="false">
-                <span class="auth-role-card__icon">🏪</span>
+                <span class="auth-role-card__icon"><i data-lucide="store"></i></span>
                 <span class="auth-role-card__name" id="role-name-buyer">Buyer</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
@@ -158,7 +161,7 @@
             <div style="font-size: 14px; color: #6F7F75; margin-bottom: 12px;">
               <span id="otp-sent-text">Code sent to</span>
               <strong id="display-phone-number" style="color: #12372A; margin: 0 4px;">+91 98765 43210</strong>
-              <button type="button" class="auth-otp-change-num" id="btn-change-phone">✏️ <span id="btn-edit-text">Edit</span></button>
+              <button type="button" class="auth-otp-change-num" id="btn-change-phone"><i data-lucide="edit-3" style="width:12px;height:12px;vertical-align:middle;"></i> <span id="btn-edit-text">Edit</span></button>
             </div>
 
             <!-- 6-box OTP entry -->
@@ -175,7 +178,7 @@
 
           <!-- Demo Quick Fill helper for Evaluators -->
           <div class="auth-demo-pill">
-            <span>✨ Demo OTP: <strong>123456</strong></span>
+            <span><i data-lucide="sparkles" style="width:13px;height:13px;color:#D6A84F;vertical-align:middle;margin-right:3px;"></i> Demo OTP: <strong>123456</strong></span>
             <button type="button" id="btn-autofill-otp">Auto Fill</button>
           </div>
 
@@ -195,14 +198,14 @@
         <!-- Trust & Security Footer -->
         <div class="auth-trust-divider"></div>
         <div class="auth-trust-items">
-          <span class="auth-trust-item">🛡️ <span id="trust-secure">Secure</span></span>
+          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item">⚡ <span id="trust-simple">Simple</span></span>
+          <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item">👁️ <span id="trust-transparent">Transparent</span></span>
+          <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
         </div>
         <p class="auth-secure-subtext">
-          <span>🔒</span>
+          <i data-lucide="lock" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i>
           <span id="text-privacy">Your data is secure and protected under AgriStack guidelines.</span>
         </p>
 
@@ -216,6 +219,8 @@
        ════════════════════════════════════════ -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) lucide.createIcons();
+
       // Elements
       const phoneForm = document.getElementById('auth-phone-form');
       const otpStepContainer = document.getElementById('otp-step-container');
@@ -546,7 +551,11 @@
           btnVerifyOtp.style.background = '#5B9A72';
 
           setTimeout(() => {
-            window.location.href = 'index.html';
+            if (currentRole === 'buyer') {
+              window.location.href = 'buyer.html';
+            } else {
+              window.location.href = 'dashboard.html';
+            }
           }, 800);
         }, 800);
       });

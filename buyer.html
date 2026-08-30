@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiLink — B2B Agricultural Procurement Platform</title>
+  <meta name="description" content="Production-grade agricultural procurement, lot discovery, quality analytics, digital offer negotiation, order tracking, and escrow payments for verified buyers.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="css/buyer.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body class="buyer-body">
+
+  <!-- Ambient Background -->
+  <div class="buyer-ambient-bg" aria-hidden="true"></div>
+
+  <!-- ═════════════════════════════════════════════════
+       FIXED TOP HEADER / NAVBAR (Similar to Farmer Dashboard)
+       ═════════════════════════════════════════════════ -->
+  <header class="dash-header" id="buyer-header">
+    <div class="dash-header__inner">
+      <!-- Brand Logo -->
+      <a href="#/buyer/dashboard" class="dash-header__logo" id="buyer-logo">
+        <div class="dash-header__logo-icon"><i data-lucide="sprout"></i></div>
+        <span class="dash-header__logo-text">KrishiLink</span>
+        <span class="buyer-header__badge">BUYER</span>
+      </a>
+
+      <!-- Global Search -->
+      <div class="dash-search" id="buyer-search-wrapper">
+        <i data-lucide="search" class="dash-search__icon"></i>
+        <input type="text" id="global-buyer-search" class="dash-search__input" placeholder="Search crops, mandis, lots..." autocomplete="off" aria-label="Global search">
+        <kbd class="dash-search__kbd">Ctrl K</kbd>
+        <div class="kl-search-results" id="kl-search-results"></div>
+      </div>
+
+      <!-- Top Navigation Links -->
+      <nav class="dash-header__nav" id="buyer-nav">
+        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard">
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+        </a>
+        <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace">
+          <i data-lucide="store" class="dash-header__link-icon"></i> Marketplace
+        </a>
+        <a href="#/buyer/lots" class="dash-header__link" data-route="/buyer/lots">
+          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+        </a>
+        <a href="#/buyer/offers" class="dash-header__link" data-route="/buyer/offers">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> Offers
+        </a>
+        <a href="#/buyer/orders" class="dash-header__link" data-route="/buyer/orders">
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+        </a>
+        <a href="#/buyer/logistics" class="dash-header__link" data-route="/buyer/logistics">
+          <i data-lucide="map-pin" class="dash-header__link-icon"></i> Logistics
+        </a>
+        <a href="#/buyer/payments" class="dash-header__link" data-route="/buyer/payments">
+          <i data-lucide="credit-card" class="dash-header__link-icon"></i> Payments
+        </a>
+      </nav>
+
+      <!-- Right Actions (KYC Pill, Notifications, Profile Dropdown) -->
+      <div class="dash-header__actions">
+        <!-- KYC Verification Status Pill -->
+        <a href="#/buyer/kyc-verification" class="buyer-kyc-header-pill" title="Verification Status">
+          <i data-lucide="shield-check"></i>
+          <span>KYC VERIFIED</span>
+        </a>
+
+        <!-- Notifications -->
+        <div style="position:relative;">
+          <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+            <i data-lucide="bell"></i>
+            <span class="dash-header__badge" id="notifications-badge">5</span>
+          </button>
+          <div class="kl-notification-panel" id="kl-notification-panel"></div>
+        </div>
+
+        <!-- Profile Menu Dropdown -->
+        <div class="dash-profile-wrap" id="dash-profile-wrap">
+          <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu" onclick="toggleProfileDropdown()">
+            <div class="dash-header__avatar" id="header-avatar">RP</div>
+            <span class="dash-header__profile-name" id="header-user-name">Rajesh</span>
+            <i data-lucide="chevron-down" class="dash-header__profile-chevron"></i>
+          </button>
+          <div class="dash-profile-dropdown" id="dash-profile-dropdown">
+            <div class="dash-profile-dropdown__header">
+              <div class="dash-header__avatar dash-header__avatar--lg" id="dropdown-avatar">RP</div>
+              <div>
+                <div class="dash-profile-dropdown__name" id="dropdown-user-name">ABC Foods Pvt Ltd</div>
+                <div class="dash-profile-dropdown__phone" id="dropdown-user-phone">Rajesh Patil · Pune</div>
+              </div>
+            </div>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="#/buyer/profile" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="building-2"></i> Business Profile & Settings</a>
+            <a href="#/buyer/kyc-verification" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="shield-check"></i> KYC Verification Docs</a>
+            <a href="#/buyer/payments" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="wallet"></i> Escrow Ledger (₹50L Limit)</a>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="repeat"></i> Switch to Farmer Portal</a>
+            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
+          </div>
+        </div>
+
+        <!-- Mobile Toggle Button -->
+        <button class="dash-header__toggle" id="dash-nav-toggle" aria-label="Toggle navigation" onclick="toggleMobileNav()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="dash-header__mobile-menu" id="dash-mobile-menu">
+      <nav class="dash-header__mobile-nav">
+        <a href="#/buyer/dashboard" class="dash-header__link dash-header__link--active" data-route="/buyer/dashboard" onclick="toggleMobileNav()">
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+        </a>
+        <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace" onclick="toggleMobileNav()">
+          <i data-lucide="store" class="dash-header__link-icon"></i> Marketplace
+        </a>
+        <a href="#/buyer/lots" class="dash-header__link" data-route="/buyer/lots" onclick="toggleMobileNav()">
+          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+        </a>
+        <a href="#/buyer/offers" class="dash-header__link" data-route="/buyer/offers" onclick="toggleMobileNav()">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> Offers
+        </a>
+        <a href="#/buyer/orders" class="dash-header__link" data-route="/buyer/orders" onclick="toggleMobileNav()">
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+        </a>
+        <a href="#/buyer/logistics" class="dash-header__link" data-route="/buyer/logistics" onclick="toggleMobileNav()">
+          <i data-lucide="map-pin" class="dash-header__link-icon"></i> Logistics
+        </a>
+        <a href="#/buyer/payments" class="dash-header__link" data-route="/buyer/payments" onclick="toggleMobileNav()">
+          <i data-lucide="credit-card" class="dash-header__link-icon"></i> Payments
+        </a>
+        <a href="#/buyer/profile" class="dash-header__link" data-route="/buyer/profile" onclick="toggleMobileNav()">
+          <i data-lucide="user-check" class="dash-header__link-icon"></i> Profile
+        </a>
+        <a href="#/buyer/kyc-verification" class="dash-header__link" data-route="/buyer/kyc-verification" onclick="toggleMobileNav()">
+          <i data-lucide="shield-check" class="dash-header__link-icon"></i> KYC Verification
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ═════════════════════════════════════════════════
+       MAIN PAGE CONTENT CONTAINER
+       ═════════════════════════════════════════════════ -->
+  <main class="buyer-page-container" id="buyer-page-content">
+    <!-- Views injected dynamically by buyer-app.js -->
+  </main>
+
+  <!-- ═══ MODAL OVERLAY ═══ -->
+  <div class="kl-modal-overlay" id="kl-modal-overlay" onclick="closeModalOnBackdrop(event)">
+    <div class="kl-modal" id="kl-modal">
+      <div class="kl-modal__header">
+        <h3 class="kl-modal__title" id="kl-modal-title"></h3>
+        <button class="kl-modal__close" onclick="closeModal()" aria-label="Close modal">✕</button>
+      </div>
+      <div class="kl-modal__body" id="kl-modal-body"></div>
+      <div class="kl-modal__footer" id="kl-modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- ═══ TOAST CONTAINER ═══ -->
+  <div class="kl-toast-container" id="kl-toast-container"></div>
+
+  <!-- JS Modules -->
+  <script src="js/buyer-data.js"></script>
+  <script src="js/buyer-app.js"></script>
+</body>
+</html>
