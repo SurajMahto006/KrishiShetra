@@ -23,7 +23,7 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 
-<body class="dashboard-body">
+<body class="dashboard-body" data-protected>
 
   <!-- AMBIENT FARMER SUNLIGHT BACKGROUND -->
   <div class="dash-ambient-bg" aria-hidden="true">
@@ -136,8 +136,14 @@
   <main class="dash-main" id="dash-main">
 
     <!-- ── 1. AI MARKET FORECAST ENGINE ── -->
-    <section class="dash-section" id="dash-ai-forecast-section" style="padding-top: 28px;">
+    <section class="dash-section" id="dash-ai-forecast-section" style="padding-top: 24px;">
       <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
+          <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
+          <strong>AI Price Forecast</strong>
+        </nav>
+
         <div class="dash-section__header">
           <div>
             <h1 class="dash-section__title" style="font-size: 28px;">🤖 AI Market Price Forecast Engine</h1>
@@ -511,6 +517,8 @@
 
 <!-- SCRIPTS -->
 <script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/page-guard.js"></script>
 <script src="js/navbar.js"></script>
 <script src="js/dashboard.js"></script>
 </body>

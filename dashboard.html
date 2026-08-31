@@ -27,7 +27,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
-<body class="dashboard-body">
+<body class="dashboard-body" data-require-role="farmer">
 
   <!-- AMBIENT FARMER SUNLIGHT BACKGROUND -->
   <div class="dash-ambient-bg" aria-hidden="true">
@@ -157,6 +157,46 @@
           <span class="dash-welcome__meta-item" id="dash-location"><i data-lucide="map-pin"></i> Maharashtra (Pune APMC)</span>
           <span class="dash-welcome__meta-item" id="dash-weather"><i data-lucide="cloud-sun"></i> 29°C · Clear Sky</span>
           <span class="dash-welcome__meta-item" id="dash-date-display"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 1.5 SELLING JOURNEY ROADMAP ── -->
+    <section class="dash-section" style="padding-top: 16px; padding-bottom: 8px;" id="dash-selling-journey">
+      <div class="container">
+        <div class="dash-card" style="background: #FFFFFF; border: 1px solid var(--border-light, #E5E4DD); border-radius: 14px; padding: 18px 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <h3 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0; display: flex; align-items: center; gap: 6px;">
+              <span>🌾</span> Your Farm Selling Journey
+            </h3>
+            <span style="font-size: 12px; color: #777;">6 simple stages from harvest listing to verified bank payout</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; text-align: center;">
+            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="FarmerFlow.openFarmProfileModal()" role="button" style="cursor:pointer;">
+              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 1</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Farm Profile</div>
+            </div>
+            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="FarmerFlow.openCreateLotModal()" role="button" style="cursor:pointer;">
+              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 2</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">List Produce</div>
+            </div>
+            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="location.href='lots.html'" role="button" style="cursor:pointer;">
+              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 3</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Receive Offers</div>
+            </div>
+            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="location.href='lots.html'" role="button" style="cursor:pointer;">
+              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 4</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Negotiate</div>
+            </div>
+            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="location.href='orders.html'" role="button" style="cursor:pointer;">
+              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 5</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Confirm Deal</div>
+            </div>
+            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="location.href='orders.html'" role="button" style="cursor:pointer;">
+              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 6</div>
+              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Fulfill Order</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -768,8 +808,11 @@
 
   <!-- SCRIPTS -->
   <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/mandi-map.js"></script>
+  <script src="js/farmer.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 </html>

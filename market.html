@@ -136,8 +136,15 @@
   <main class="dash-main" id="dash-main">
 
     <!-- ── 1. MARKET OVERVIEW GRID ── -->
-    <section class="dash-section" id="dash-market-overview" style="padding-top: 28px;">
+    <section class="dash-section" id="dash-market-overview" style="padding-top: 24px;">
       <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
+          <a href="index.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Home</a> /
+          <a href="dashboard.html" id="breadcrumb-dash-link" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
+          <strong>Marketplace</strong>
+        </nav>
+
         <div class="dash-section__header">
           <div>
             <h2 class="dash-section__title">Market Overview</h2>
@@ -587,7 +594,10 @@
 
   <!-- SCRIPTS -->
   <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
+  <script src="js/farmer.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 

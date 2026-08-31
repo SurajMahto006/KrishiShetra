@@ -18,7 +18,7 @@
 
   <link rel="stylesheet" href="css/fpo-dashboard.css">
 </head>
-<body>
+<body data-require-role="fpo">
 
   <!-- =========================================================================
        TOP HEADER / UNIVERSAL NAVIGATION — DEEP EVERGREEN
@@ -1130,10 +1130,14 @@
 
   <!-- Script Execution -->
   <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/page-guard.js"></script>
   <script src="js/fpo-dashboard.js"></script>
   <script>
     // Initialize Lucide Icons
-    lucide.createIcons();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      lucide.createIcons();
+    }
   </script>
 </body>
 </html>

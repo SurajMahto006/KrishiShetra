@@ -23,7 +23,7 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 
-<body class="dashboard-body">
+<body class="dashboard-body" data-require-role="farmer">
 
   <!-- AMBIENT FARMER SUNLIGHT BACKGROUND -->
   <div class="dash-ambient-bg" aria-hidden="true">
@@ -325,6 +325,8 @@
 
   <!-- SCRIPTS -->
   <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/dashboard.js"></script>
 </body>

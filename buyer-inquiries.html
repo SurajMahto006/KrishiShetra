@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Inquiries & Negotiations — KrishiShetra</title>
+  <meta name="description" content="Manage wholesale produce inquiries, negotiate prices with farmers, and confirm orders.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/buyer.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+
+<body class="dashboard-body" data-require-role="buyer">
+
+  <!-- Ambient Farmer Sunlight Background -->
+  <div class="dash-ambient-bg" aria-hidden="true">
+    <div class="dash-ambient-bg__img"></div>
+    <div class="dash-ambient-bg__overlay"></div>
+    <div class="dash-ambient-bg__sunlight-glow"></div>
+  </div>
+
+  <!-- Universal Header / Navbar -->
+  <header class="dash-header" id="dash-header">
+    <div class="dash-header__inner">
+      <a href="index.html" class="dash-header__logo" id="dash-logo">
+        <span class="dash-header__logo-icon"><i data-lucide="sprout"></i></span>
+        <span class="dash-header__logo-text">KrishiShetra</span>
+      </a>
+
+      <!-- Role-Aware Nav Links -->
+      <nav class="dash-header__nav" id="dash-nav">
+        <a href="buyer.html" class="dash-header__link" id="nav-dashboard">
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+        </a>
+        <a href="market.html" class="dash-header__link" id="nav-market">
+          <i data-lucide="store" class="dash-header__link-icon"></i> Marketplace
+        </a>
+        <a href="buyer-inquiries.html" class="dash-header__link dash-header__link--active" id="nav-inquiries">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> My Inquiries
+        </a>
+        <a href="orders.html" class="dash-header__link" id="nav-orders">
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+        </a>
+      </nav>
+
+      <div class="dash-header__actions">
+        <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+          <i data-lucide="bell"></i>
+          <span class="dash-header__badge" id="notifications-badge" style="display:none;">0</span>
+        </button>
+
+        <div class="dash-profile-wrap" id="dash-profile-wrap">
+          <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
+            <div class="dash-header__avatar" id="header-avatar">BY</div>
+            <span class="dash-header__profile-name" id="header-user-name">Buyer</span>
+            <i data-lucide="chevron-down" class="dash-header__profile-chevron"></i>
+          </button>
+          <div class="dash-profile-dropdown" id="dash-profile-dropdown">
+            <div class="dash-profile-dropdown__header">
+              <div class="dash-header__avatar dash-header__avatar--lg" id="dropdown-avatar">BY</div>
+              <div>
+                <div class="dash-profile-dropdown__name" id="dropdown-user-name">Verified Buyer</div>
+                <div class="dash-profile-dropdown__phone" id="dropdown-user-phone">Procurement Account</div>
+              </div>
+            </div>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="buyer.html" class="dash-profile-dropdown__item"><i data-lucide="layout-dashboard"></i> Buyer Dashboard</a>
+            <a href="market.html" class="dash-profile-dropdown__item"><i data-lucide="store"></i> Browse Marketplace</a>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="#" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger" onclick="Auth.logout()"><i data-lucide="log-out"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="dash-main" style="padding-top: 24px;">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
+        <a href="buyer.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
+        <strong>My Inquiries & Negotiations</strong>
+      </nav>
+
+      <div class="dash-section__header" style="margin-bottom: 24px;">
+        <div>
+          <h1 class="dash-section__title" style="font-size: 26px;">
+            <i data-lucide="message-square" style="width:24px;height:24px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i>
+            My Purchase Inquiries & Negotiations
+          </h1>
+          <p class="dash-section__subtitle">Review quotations, submit counter-offers, and confirm deals with farmers.</p>
+        </div>
+        <a href="market.html" class="btn btn--primary"><i data-lucide="plus"></i> Browse Marketplace</a>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;" id="inquiries-filter-bar">
+        <button class="btn btn--sm btn--primary inq-filter-btn" data-status="all">All Inquiries</button>
+        <button class="btn btn--sm btn--secondary inq-filter-btn" data-status="pending">Pending</button>
+        <button class="btn btn--sm btn--secondary inq-filter-btn" data-status="negotiating">Negotiating</button>
+        <button class="btn btn--sm btn--secondary inq-filter-btn" data-status="accepted">Accepted (Ready to Order)</button>
+        <button class="btn btn--sm btn--secondary inq-filter-btn" data-status="rejected">Rejected</button>
+      </div>
+
+      <!-- Inquiries Feed -->
+      <div id="buyer-inquiries-list" style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="padding: 40px; text-align: center; color: #888;">Loading inquiries...</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modals Container -->
+  <div id="buyer-inquiry-modals"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/page-guard.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/buyer-inquiries.js"></script>
+</body>
+</html>

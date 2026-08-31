@@ -23,7 +23,7 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 
-<body class="dashboard-body">
+<body class="dashboard-body" data-require-role="farmer">
 
   <!-- AMBIENT FARMER SUNLIGHT BACKGROUND -->
   <div class="dash-ambient-bg" aria-hidden="true">
@@ -135,17 +135,22 @@
 
   <!-- MAIN CONTENT -->
   <main class="dash-main" id="dash-main">
-    <div class="container" style="padding-top: 28px;">
+    <div class="container" style="padding-top: 24px;">
+
+      <!-- Breadcrumb -->
+      <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
+        <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
+        <strong>My Lots</strong>
+      </nav>
 
       <!-- Page Header Banner -->
       <div class="dash-section__header" style="margin-bottom: 24px;">
         <div>
-          <h1 class="dash-section__title" style="font-size: 28px;"><i data-lucide="package" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i> My Crop Lots & Buyer Offers</h1>
-          <p class="dash-section__subtitle">Manage your active harvest listings, create new lots, and negotiate buyer
-            bids.</p>
+          <h1 class="dash-section__title" style="font-size: 26px;"><i data-lucide="package" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i> My Produce Lots</h1>
+          <p class="dash-section__subtitle">Manage your farm produce listings, track lot status, and review buyer inquiries.</p>
         </div>
-        <button class="btn btn--primary" id="btn-create-lot-page" onclick="openCreateLotModal()"><i
-            data-lucide="plus"></i> + Create New Crop Lot</button>
+        <button class="btn btn--primary" id="btn-create-lot-page" onclick="FarmerFlow.openCreateLotModal()"><i
+            data-lucide="plus-circle"></i> + Create Produce Lot</button>
       </div>
 
       <!-- Active Lots & Offers 2-Column Section -->
@@ -499,7 +504,10 @@
 
   <!-- SCRIPTS -->
   <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
+  <script src="js/farmer.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 
