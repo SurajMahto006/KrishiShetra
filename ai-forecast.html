@@ -444,83 +444,75 @@
     </div>
   </div>
 
-  <!-- SCRIPTS -->
-  <script src="js/navbar.js"></script>
-  <script src="js/dashboard.js"></script>
-</body>
-
-</html>
-
-<!-- NOTIFICATIONS / PROFILE / HELPLINE / LANG MODALS -->
-<div class="dash-modal-overlay" id="notifications-modal-overlay">
-  <div class="dash-modal dash-modal--sm" id="notifications-modal">
-    <div class="dash-modal__header">
-      <div>
-        <h3>Notifications</h3>
-      </div>
-      <button class="dash-modal__close" id="notifications-modal-close"><i data-lucide="x"></i></button>
-    </div>
-    <div class="dash-modal__body-pad" id="notifications-list"></div>
-  </div>
-</div>
-
-<div class="dash-modal-overlay" id="profile-modal-overlay">
-  <div class="dash-modal" id="profile-modal">
-    <div class="dash-modal__header">
-      <h3>Farmer Profile & Settings</h3>
-      <button class="dash-modal__close" id="profile-modal-close"><i data-lucide="x"></i></button>
-    </div>
-    <form class="dash-modal__form" id="profile-form">
-      <div class="dash-modal__field">
-        <label for="prof-name">Full Name</label>
-        <input type="text" id="prof-name" class="dash-form-input" value="Rajesh Patil" required>
-      </div>
-      <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save
-        Settings</button>
-    </form>
-  </div>
-</div>
-
-<div class="dash-modal-overlay" id="help-modal-overlay">
-  <div class="dash-modal" id="help-modal">
-    <div class="dash-modal__header">
-      <h3>Kisan Support & Helpline</h3>
-      <button class="dash-modal__close" id="help-modal-close"><i data-lucide="x"></i></button>
-    </div>
-    <div class="dash-modal__body-pad">
-      <div class="dash-help-banner">
-        <i data-lucide="phone-call"></i>
+  <!-- NOTIFICATIONS / PROFILE / HELPLINE / LANG MODALS -->
+  <div class="dash-modal-overlay" id="notifications-modal-overlay">
+    <div class="dash-modal dash-modal--sm" id="notifications-modal">
+      <div class="dash-modal__header">
         <div>
-          <div style="font-weight:700; color:var(--ks-evergreen);">Kisan Call Center (Toll Free)</div>
-          <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
+          <h3>Notifications</h3>
+        </div>
+        <button class="dash-modal__close" id="notifications-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad" id="notifications-list"></div>
+    </div>
+  </div>
+
+  <div class="dash-modal-overlay" id="profile-modal-overlay">
+    <div class="dash-modal" id="profile-modal">
+      <div class="dash-modal__header">
+        <h3>Farmer Profile & Settings</h3>
+        <button class="dash-modal__close" id="profile-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <form class="dash-modal__form" id="profile-form">
+        <div class="dash-modal__field">
+          <label for="prof-name">Full Name</label>
+          <input type="text" id="prof-name" class="dash-form-input" value="Rajesh Patil" required>
+        </div>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="dash-modal-overlay" id="help-modal-overlay">
+    <div class="dash-modal" id="help-modal">
+      <div class="dash-modal__header">
+        <h3>Kisan Support & Helpline</h3>
+        <button class="dash-modal__close" id="help-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <div class="dash-help-banner">
+          <i data-lucide="phone-call"></i>
+          <div>
+            <div style="font-weight:700; color:var(--ks-evergreen);">Kisan Call Center (Toll Free)</div>
+            <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="dash-modal-overlay" id="language-modal-overlay">
-  <div class="dash-modal dash-modal--sm" id="language-modal">
-    <div class="dash-modal__header">
-      <h3>Select Language</h3>
-      <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
-    </div>
-    <div class="dash-modal__body-pad">
-      <div class="dash-lang-list">
-        <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span>
-          <strong>Active</strong></button>
-        <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
+  <div class="dash-modal-overlay" id="language-modal-overlay">
+    <div class="dash-modal dash-modal--sm" id="language-modal">
+      <div class="dash-modal__header">
+        <h3>Select Language</h3>
+        <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <div class="dash-lang-list">
+          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span> <strong>Active</strong></button>
+          <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- SCRIPTS -->
-<script src="js/auth.js"></script>
-<script src="js/api.js"></script>
-<script src="js/page-guard.js"></script>
-<script src="js/navbar.js"></script>
-<script src="js/dashboard.js"></script>
+  <!-- SCRIPTS -->
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/page-guard.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
+</html>
 
 </html>

@@ -804,5 +804,45 @@ function initSectionLabels() {
   });
 }
 
+/* ============================================================
+   LOGIN MODAL
+   ============================================================ */
+function initLoginModal() {
+  const overlay = document.getElementById('login-overlay');
+  const closeBtn = document.getElementById('login-close');
+  const bg = document.getElementById('login-overlay-bg');
+  const form = document.getElementById('login-form');
+  const roleButtons = document.querySelectorAll('.login-card__role');
+
+  if (!overlay) return;
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      overlay.classList.remove('active');
+    });
+  }
+  if (bg) {
+    bg.addEventListener('click', () => {
+      overlay.classList.remove('active');
+    });
+  }
+
+  roleButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      roleButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const activeRole = document.querySelector('.login-card__role.active');
+      const role = activeRole ? activeRole.dataset.role : 'farmer';
+      window.location.href = `login.html?role=${role}`;
+    });
+  }
+}
+
 // Start data pulse after hero animation
 setTimeout(startDataPulse, 3000);
