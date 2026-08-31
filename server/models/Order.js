@@ -12,6 +12,11 @@ const deliveryAddressSchema = new mongoose.Schema(
       trim: true,
       default: ''
     },
+    addressLine: {
+      type: String,
+      trim: true,
+      default: ''
+    },
     addressLine1: {
       type: String,
       trim: true,
@@ -87,13 +92,13 @@ const orderSchema = new mongoose.Schema(
     },
     cropName: {
       type: String,
-      required: [true, 'Crop name is required'],
-      trim: true
+      trim: true,
+      default: ''
     },
     variety: {
       type: String,
-      required: [true, 'Variety is required'],
-      trim: true
+      trim: true,
+      default: ''
     },
     quantity: {
       type: Number,
@@ -133,7 +138,6 @@ const orderSchema = new mongoose.Schema(
           'confirmed',
           'processing',
           'ready_for_pickup',
-          'picked_up',
           'in_transit',
           'delivered',
           'completed',
@@ -144,29 +148,46 @@ const orderSchema = new mongoose.Schema(
       default: 'confirmed',
       index: true
     },
-    deliveryType: {
+    paymentStatus: {
       type: String,
       enum: {
-        values: ['pickup', 'delivery'],
-        message: '{VALUE} is not a valid delivery type'
+        values: ['pending', 'paid', 'failed', 'refunded'],
+        message: '{VALUE} is not a valid payment status'
       },
+      default: 'pending'
+    },
+    deliveryStatus: {
+      type: String,
+      enum: {
+        values: [
+          'pending',
+          'ready_for_pickup',
+          'picked_up',
+          'in_transit',
+          'delivered'
+        ],
+        message: '{VALUE} is not a valid delivery status'
+      },
+      default: 'pending'
+    },
+    deliveryType: {
+      type: String,
+      enum: ['pickup', 'delivery'],
       default: 'delivery'
     },
     deliveryAddress: {
       type: deliveryAddressSchema,
       default: () => ({})
     },
-    buyerNote: {
+    notes: {
       type: String,
       trim: true,
       maxlength: 1000,
       default: ''
     },
-    farmerNote: {
-      type: String,
-      trim: true,
-      maxlength: 1000,
-      default: ''
+    confirmedAt: {
+      type: Date,
+      default: Date.now
     },
     cancelledBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -189,11 +210,12 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-// Compound indexes for efficient order lookups and status queries
+// Compound indexes for optimal performance
 orderSchema.index({ buyer: 1, status: 1, createdAt: -1 });
 orderSchema.index({ farmer: 1, status: 1, createdAt: -1 });
+orderSchema.index({ lot: 1, status: 1 });
 
-// Format clean JSON output
+// Clean JSON serialization
 orderSchema.set('toJSON', {
   transform: (doc, ret) => {
     ret.id = ret._id;
