@@ -28,6 +28,7 @@ const generateOtp = () => {
 const register = async (req, res) => {
   try {
     const { name, email, phone, password, role } = req.body;
+    const userPhone = (phone || req.body.mobile || '').toString().trim();
 
     // Input validation
     if (!name || !email || !password) {
@@ -53,18 +54,18 @@ const register = async (req, res) => {
       if (existingUser.emailVerified) {
         return res.status(400).json({
           success: false,
-          message: 'A user with this email already exists'
+          message: 'An account with this email already exists. Please log in.'
         });
       }
 
       // If user exists but is not verified, update their info and resend verification OTP
       const otp = generateOtp();
       const otpHash = hashOtp(otp);
-      const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+      const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
       existingUser.name = name.trim();
       existingUser.password = password; // Will be hashed via pre-save hook
-      existingUser.phone = phone ? String(phone).trim() : '';
+      existingUser.phone = userPhone;
       if (role) existingUser.role = role;
       existingUser.emailVerificationOtpHash = otpHash;
       existingUser.emailVerificationExpiresAt = otpExpiresAt;
@@ -73,8 +74,16 @@ const register = async (req, res) => {
 
       await existingUser.save();
 
-      // Send real email via Resend
-      await sendVerificationEmail(normalizedEmail, otp);
+      // Send real email via Brevo
+      try {
+        await sendVerificationEmail(normalizedEmail, otp);
+      } catch (emailError) {
+        console.error('[Email Delivery Error]:', emailError.message || emailError);
+        return res.status(500).json({
+          success: false,
+          message: 'Account created, but verification email could not be sent. Please use Resend OTP.'
+        });
+      }
 
       return res.status(200).json({
         success: true,
@@ -85,7 +94,7 @@ const register = async (req, res) => {
     // Generate secure 6-digit OTP
     const otp = generateOtp();
     const otpHash = hashOtp(otp);
-    const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     // Validate role
     const validRoles = ['farmer', 'fpo', 'buyer', 'transporter', 'admin'];
@@ -97,7 +106,7 @@ const register = async (req, res) => {
     await User.create({
       name: name.trim(),
       email: normalizedEmail,
-      phone: phone ? String(phone).trim() : '',
+      phone: userPhone,
       password,
       role: assignedRole,
       emailVerified: false,
@@ -107,8 +116,16 @@ const register = async (req, res) => {
       emailVerificationLastSentAt: new Date()
     });
 
-    // Send real email via Resend
-    await sendVerificationEmail(normalizedEmail, otp);
+    // Send real email via Brevo
+    try {
+      await sendVerificationEmail(normalizedEmail, otp);
+    } catch (emailError) {
+      console.error('[Email Delivery Error]:', emailError.message || emailError);
+      return res.status(500).json({
+        success: false,
+        message: 'Account created, but verification email could not be sent. Please use Resend OTP.'
+      });
+    }
 
     return res.status(201).json({
       success: true,
@@ -161,7 +178,7 @@ const verifyEmail = async (req, res) => {
       });
     }
 
-    // Check expiration (5 minutes)
+    // Check expiration (10 minutes)
     if (Date.now() > user.emailVerificationExpiresAt.getTime()) {
       user.emailVerificationOtpHash = undefined;
       user.emailVerificationExpiresAt = undefined;
@@ -277,10 +294,10 @@ const resendVerification = async (req, res) => {
       }
     }
 
-    // Generate new OTP & hash
+    // Generate new OTP & hash (invalidating previous OTP)
     const otp = generateOtp();
     const otpHash = hashOtp(otp);
-    const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     user.emailVerificationOtpHash = otpHash;
     user.emailVerificationExpiresAt = otpExpiresAt;
@@ -289,11 +306,19 @@ const resendVerification = async (req, res) => {
     await user.save();
 
     // Send real email via Resend
-    await sendVerificationEmail(normalizedEmail, otp);
+    try {
+      await sendVerificationEmail(normalizedEmail, otp);
+    } catch (emailError) {
+      console.error('[Email Delivery Error]:', emailError.message || emailError);
+      return res.status(500).json({
+        success: false,
+        message: 'Could not send verification email. Please try again in a moment.'
+      });
+    }
 
     return res.status(200).json({
       success: true,
-      message: 'A new verification OTP has been sent to your email.'
+      message: 'A new verification code has been sent to your email.'
     });
   } catch (error) {
     return res.status(500).json({
@@ -419,7 +444,7 @@ const forgotPassword = async (req, res) => {
       // Generate secure 6-digit OTP
       const otp = generateOtp();
       const otpHash = hashOtp(otp);
-      const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+      const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
       user.passwordResetOtpHash = otpHash;
       user.passwordResetOtpExpiresAt = otpExpiresAt;
@@ -429,7 +454,11 @@ const forgotPassword = async (req, res) => {
       await user.save();
 
       // Send real email via Resend
-      await sendPasswordResetEmail(normalizedEmail, otp);
+      try {
+        await sendPasswordResetEmail(normalizedEmail, otp);
+      } catch (emailError) {
+        console.error('[Email Delivery Error]:', emailError.message || emailError);
+      }
     }
 
     // Generic response to avoid revealing email registration
@@ -469,7 +498,7 @@ const verifyResetOtp = async (req, res) => {
       });
     }
 
-    // Check expiration (5 minutes)
+    // Check expiration (10 minutes)
     if (Date.now() > user.passwordResetOtpExpiresAt.getTime()) {
       user.passwordResetOtpHash = undefined;
       user.passwordResetOtpExpiresAt = undefined;
@@ -660,7 +689,7 @@ const resendResetOtp = async (req, res) => {
       // Generate new OTP & hash
       const otp = generateOtp();
       const otpHash = hashOtp(otp);
-      const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+      const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
       user.passwordResetOtpHash = otpHash;
       user.passwordResetOtpExpiresAt = otpExpiresAt;
@@ -670,7 +699,11 @@ const resendResetOtp = async (req, res) => {
       await user.save();
 
       // Send real email via Resend
-      await sendPasswordResetEmail(normalizedEmail, otp);
+      try {
+        await sendPasswordResetEmail(normalizedEmail, otp);
+      } catch (emailError) {
+        console.error('[Email Delivery Error]:', emailError.message || emailError);
+      }
     }
 
     return res.status(200).json({

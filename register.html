@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KrishiShetra — Login & Access Platform</title>
-  <meta name="description" content="Access KrishiShetra AgriTech platform to discover live mandi prices, AI-driven crop forecasting, and verified buyer networks.">
+  <title>KrishiShetra — Create Account & Register</title>
+  <meta name="description" content="Register for KrishiShetra AgriTech platform to discover live mandi prices, AI-driven crop forecasting, and verified buyer networks.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,7 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
   <style>
-    /* Auth Form Specific Utilities & Proportions */
+    /* Auth Form Specific Utilities & Proportions matching login.html */
     .auth-card-box {
       width: 100%;
       max-width: 470px;
@@ -69,6 +69,8 @@
       cursor: pointer;
       transition: all var(--duration-fast, 0.2s) ease;
       font-family: var(--font-body);
+      text-align: center;
+      text-decoration: none;
     }
     .auth-tab-btn.active {
       background: #FFFFFF;
@@ -254,24 +256,6 @@
       letter-spacing: 0.08em;
       margin-bottom: 6px;
       display: block;
-    }
-    .auth-input-label-row .auth-input-label {
-      margin-bottom: 0;
-    }
-    .auth-forgot-link {
-      background: none;
-      border: none;
-      color: #5B9A72;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 0;
-      font-family: var(--font-body);
-      transition: color var(--duration-fast, 0.2s);
-    }
-    .auth-forgot-link:hover {
-      text-decoration: underline;
-      color: #12372A;
     }
     .auth-text-box, .auth-phone-box {
       display: flex;
@@ -493,70 +477,18 @@
         
         <!-- Header Text -->
         <header class="auth-header">
-          <h2 class="auth-header__title" id="auth-title">Welcome back</h2>
-          <p class="auth-header__subtitle" id="auth-subtitle">Enter your credentials to access your account</p>
+          <h2 class="auth-header__title" id="auth-title">Create Account</h2>
+          <p class="auth-header__subtitle" id="auth-subtitle">Join KrishiShetra and discover better market rates</p>
         </header>
 
         <!-- Mode Toggle Tabs (Login / Register) -->
         <div class="auth-tabs" id="auth-tabs-container">
-          <button type="button" class="auth-tab-btn active" id="tab-btn-login">Log In</button>
-          <button type="button" class="auth-tab-btn" id="tab-btn-register">Register</button>
+          <a href="login.html" class="auth-tab-btn" id="tab-btn-login">Log In</a>
+          <button type="button" class="auth-tab-btn active" id="tab-btn-register">Register</button>
         </div>
 
-        <!-- ── TAB 1: LOGIN FORM ── -->
-        <form id="auth-login-form" class="auth-form" novalidate>
-          <div id="login-alert" class="auth-alert"></div>
-
-          <!-- Email Input -->
-          <div class="auth-input-group">
-            <label class="auth-input-label" for="login-email" id="label-login-email">EMAIL ADDRESS</label>
-            <div class="auth-text-box">
-              <input 
-                type="email" 
-                id="login-email" 
-                class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
-                autocomplete="email" 
-                required
-              >
-            </div>
-          </div>
-
-          <!-- Password Input -->
-          <div class="auth-input-group">
-            <div class="auth-input-label-row">
-              <label class="auth-input-label" for="login-password" id="label-login-password">PASSWORD</label>
-              <button type="button" class="auth-forgot-link" id="link-to-forgot">Forgot Password?</button>
-            </div>
-            <div class="auth-text-box">
-              <input 
-                type="password" 
-                id="login-password" 
-                class="auth-text-box__input" 
-                placeholder="Enter your password" 
-                autocomplete="current-password" 
-                required
-              >
-              <button type="button" class="auth-toggle-pass-btn" data-target="login-password" aria-label="Toggle password visibility">
-                <i data-lucide="eye" style="width:16px;height:16px;"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Login Action Button -->
-          <button type="submit" class="auth-btn-primary" id="btn-login">
-            <span id="btn-login-text">Log In</span>
-            <span class="auth-btn-arrow">→</span>
-          </button>
-
-          <p class="auth-switch-prompt">
-            <span id="text-no-account">Don't have an account?</span> 
-            <button type="button" class="auth-switch-link" id="link-to-register">Create an account</button>
-          </p>
-        </form>
-
-        <!-- ── TAB 2: REGISTRATION FORM ── -->
-        <form id="auth-register-form" class="auth-form" style="display: none;" novalidate>
+        <!-- ── REGISTRATION FORM ── -->
+        <form id="auth-register-form" class="auth-form" novalidate>
           <div id="register-alert" class="auth-alert"></div>
 
           <!-- Role Selector -->
@@ -668,77 +600,17 @@
 
           <p class="auth-switch-prompt">
             <span id="text-have-account">Already have an account?</span> 
-            <button type="button" class="auth-switch-link" id="link-to-login">Log In</button>
+            <a href="login.html" class="auth-switch-link" id="link-to-login">Log In</a>
           </p>
         </form>
 
-        <!-- ── TAB 3: FORGOT PASSWORD FORM (Hidden Initially) ── -->
-        <form id="auth-forgot-form" class="auth-form" style="display: none;" novalidate>
-          <div id="forgot-alert" class="auth-alert"></div>
-
-          <div class="auth-input-group">
-            <label class="auth-input-label" for="forgot-email" id="label-forgot-email">EMAIL ADDRESS</label>
-            <div class="auth-text-box">
-              <input 
-                type="email" 
-                id="forgot-email" 
-                class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
-                autocomplete="email" 
-                required
-              >
-            </div>
-          </div>
-
-          <button type="submit" class="auth-btn-primary" id="btn-forgot-submit">
-            <span id="btn-forgot-text">Send Reset OTP</span>
-            <span class="auth-btn-arrow">→</span>
-          </button>
-
-          <p class="auth-switch-prompt">
-            <button type="button" class="auth-switch-link" id="link-forgot-to-login">← Back to Log In</button>
-          </p>
-        </form>
-
-        <!-- ── TAB 4: SET NEW PASSWORD FORM (Hidden Initially) ── -->
-        <form id="auth-reset-pass-form" class="auth-form" style="display: none;" novalidate>
-          <div id="reset-pass-alert" class="auth-alert"></div>
-
-          <div class="auth-input-group">
-            <label class="auth-input-label" for="reset-new-password" id="label-reset-password">NEW PASSWORD</label>
-            <div class="auth-text-box">
-              <input 
-                type="password" 
-                id="reset-new-password" 
-                class="auth-text-box__input" 
-                placeholder="Minimum 6 characters" 
-                autocomplete="new-password" 
-                minlength="6"
-                required
-              >
-              <button type="button" class="auth-toggle-pass-btn" data-target="reset-new-password" aria-label="Toggle password visibility">
-                <i data-lucide="eye" style="width:16px;height:16px;"></i>
-              </button>
-            </div>
-          </div>
-
-          <button type="submit" class="auth-btn-primary" id="btn-reset-pass-submit">
-            <span id="btn-reset-text">Reset Password</span>
-            <span class="auth-btn-arrow">→</span>
-          </button>
-
-          <p class="auth-switch-prompt">
-            <button type="button" class="auth-switch-link" id="link-reset-to-login">← Back to Log In</button>
-          </p>
-        </form>
-
-        <!-- ── STEP 3: OTP VERIFICATION STEP (Hidden Initially) ── -->
+        <!-- ── OTP VERIFICATION STEP (Hidden Initially) ── -->
         <div class="auth-otp-step" id="otp-step-container">
           <div id="otp-alert" class="auth-alert"></div>
 
           <div style="margin-bottom: 20px;">
             <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT EMAIL OTP</label>
-            <div style="font-size: 14px; color: #6F7F75; margin-bottom: 12px;">
+            <div style="font-size: 13.5px; color: #6F7F75; margin-bottom: 12px;">
               <span id="otp-sent-text">Verification code sent to</span>
               <strong id="display-user-email" style="color: #12372A; margin: 0 4px; word-break: break-all;">user@example.com</strong>
               <button type="button" class="auth-otp-change-num" id="btn-change-email">
@@ -770,8 +642,8 @@
             <span class="auth-btn-arrow">→</span>
           </button>
 
-          <p class="auth-switch-prompt" style="margin-top: 18px;">
-            <button type="button" class="auth-switch-link" id="link-back-to-login">← Back to Log In</button>
+          <p class="auth-switch-prompt" style="margin-top: 14px;">
+            <a href="login.html" class="auth-switch-link" id="link-back-to-login">← Back to Log In</a>
           </p>
         </div>
 
@@ -779,7 +651,8 @@
         <div class="auth-trust-divider"></div>
         <div class="auth-trust-items">
           <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
-                <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
+          <span class="auth-trust-dot">•</span>
+          <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
           <span class="auth-trust-dot">•</span>
           <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
         </div>
@@ -808,21 +681,8 @@
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');
-      const tabBtnLogin = document.getElementById('tab-btn-login');
-      const tabBtnRegister = document.getElementById('tab-btn-register');
-      const loginForm = document.getElementById('auth-login-form');
       const registerForm = document.getElementById('auth-register-form');
-      const forgotForm = document.getElementById('auth-forgot-form');
-      const resetPassForm = document.getElementById('auth-reset-pass-form');
       const otpStepContainer = document.getElementById('otp-step-container');
-
-      // Login elements
-      const loginEmail = document.getElementById('login-email');
-      const loginPassword = document.getElementById('login-password');
-      const btnLogin = document.getElementById('btn-login');
-      const loginAlert = document.getElementById('login-alert');
-      const linkToRegister = document.getElementById('link-to-register');
-      const linkToForgot = document.getElementById('link-to-forgot');
 
       // Register elements
       const registerName = document.getElementById('register-name');
@@ -831,19 +691,7 @@
       const registerPassword = document.getElementById('register-password');
       const btnRegister = document.getElementById('btn-register');
       const registerAlert = document.getElementById('register-alert');
-      const linkToLogin = document.getElementById('link-to-login');
       const roleCards = document.querySelectorAll('.auth-role-card');
-
-      // Forgot & Reset elements
-      const forgotEmail = document.getElementById('forgot-email');
-      const btnForgotSubmit = document.getElementById('btn-forgot-submit');
-      const forgotAlert = document.getElementById('forgot-alert');
-      const linkForgotToLogin = document.getElementById('link-forgot-to-login');
-
-      const resetNewPassword = document.getElementById('reset-new-password');
-      const btnResetPassSubmit = document.getElementById('btn-reset-pass-submit');
-      const resetPassAlert = document.getElementById('reset-pass-alert');
-      const linkResetToLogin = document.getElementById('link-reset-to-login');
 
       // OTP elements
       const displayUserEmail = document.getElementById('display-user-email');
@@ -854,7 +702,6 @@
       const timerCount = document.getElementById('timer-count');
       const btnResendOtp = document.getElementById('btn-resend-otp');
       const otpTimerDisplay = document.getElementById('otp-timer-display');
-      const linkBackToLogin = document.getElementById('link-back-to-login');
 
       // Language elements
       const langMenuBtn = document.getElementById('lang-menu-btn');
@@ -866,8 +713,6 @@
       let countdown = 60;
       let timerInterval = null;
       let activeOtpEmail = '';
-      let isResetFlow = false;
-      let activeResetToken = '';
 
       // ── UI Alert Helpers ──
       function showAlert(element, message, type = 'error') {
@@ -928,21 +773,12 @@
           badgeFarmers: '50,000+ Active Farmers',
           badgeMandis: '120+ APMC Mandis',
           badgeVerified: '100% Verified Buyers',
-          authTitleLogin: 'Welcome back',
-          authSubtitleLogin: 'Enter your credentials to access your account',
           authTitleRegister: 'Create Account',
           authSubtitleRegister: 'Join KrishiShetra and discover better market rates',
-          authTitleForgot: 'Reset Password',
-          authSubtitleForgot: 'Enter your registered email to receive a recovery OTP',
-          authTitleResetPass: 'Set New Password',
-          authSubtitleResetPass: 'Create a new secure password for your account',
           authTitleOtp: 'Verify Email',
           authSubtitleOtp: 'Enter the 6-digit OTP sent to your email inbox',
           tabLogin: 'Log In',
           tabRegister: 'Register',
-          labelLoginEmail: 'EMAIL ADDRESS',
-          labelLoginPassword: 'PASSWORD',
-          btnLogin: 'Log In',
           btnRegister: 'Register & Send OTP',
           labelRole: 'I AM A...',
           roleFarmer: 'Farmer',
@@ -961,8 +797,7 @@
           trustSimple: 'Simple',
           trustTransparent: 'Transparent',
           textPrivacy: 'Your data is secure and protected under AgriStack guidelines.',
-          textNoAccount: "Don't have an account?",
-          textHaveAccount: "Already have an account?"
+          textHaveAccount: 'Already have an account?'
         },
         hi: {
           langName: 'हिन्दी',
@@ -971,21 +806,12 @@
           badgeFarmers: '५०,०००+ सक्रिय किसान',
           badgeMandis: '१२०+ एपीएमसी मंडियां',
           badgeVerified: '१००% सत्यापित खरीदार',
-          authTitleLogin: 'कृषि क्षेत्र में स्वागत है',
-          authSubtitleLogin: 'अपने खाते में प्रवेश करने के लिए विवरण दर्ज करें',
           authTitleRegister: 'नया खाता बनाएं',
           authSubtitleRegister: 'कृषि क्षेत्र से जुड़ें और बेहतर मंडी भाव पाएं',
-          authTitleForgot: 'पासवर्ड रीसेट करें',
-          authSubtitleForgot: 'ओटीपी प्राप्त करने के लिए अपना पंजीकृत ईमेल दर्ज करें',
-          authTitleResetPass: 'नया पासवर्ड बनाएं',
-          authSubtitleResetPass: 'अपने खाते के लिए एक नया सुरक्षित पासवर्ड सेट करें',
           authTitleOtp: 'ईमेल सत्यापित करें',
           authSubtitleOtp: 'अपने ईमेल इनबॉक्स में भेजा गया ६-अंकों का ओटीपी दर्ज करें',
           tabLogin: 'लॉग इन',
           tabRegister: 'पंजीकरण',
-          labelLoginEmail: 'ईमेल पता',
-          labelLoginPassword: 'पासवर्ड',
-          btnLogin: 'लॉग इन करें',
           btnRegister: 'खाता बनाएं एवं ओटीपी भेजें',
           labelRole: 'मेरी भूमिका...',
           roleFarmer: 'किसान',
@@ -1004,7 +830,6 @@
           trustSimple: 'सरल',
           trustTransparent: 'पारदर्शी',
           textPrivacy: 'आपका डेटा सुरक्षित है और एग्रीस्टैक दिशानिर्देशों के तहत संरक्षित है।',
-          textNoAccount: 'खाता नहीं है?',
           textHaveAccount: 'क्या आपके पास पहले से खाता है?'
         },
         mr: {
@@ -1014,21 +839,12 @@
           badgeFarmers: '५०,०००+ सक्रिय शेतकरी',
           badgeMandis: '१२०+ APMC बाजार',
           badgeVerified: '१००% सत्यापित खरेदीदार',
-          authTitleLogin: 'कृषिक्षेत्रात स्वागत आहे',
-          authSubtitleLogin: 'तुमच्या खात्यात प्रवेश करण्यासाठी तपशील प्रविष्ट करा',
           authTitleRegister: 'नवीन खाते तयार करा',
           authSubtitleRegister: 'कृषिक्षेत्रशी जोडा आणि उत्तम बाजारभाव मिळवा',
-          authTitleForgot: 'पासवर्ड रीसेट करा',
-          authSubtitleForgot: 'पुनर्प्राप्ती OTP मिळविण्यासाठी तुमचा नोंदणीकृत ईमेल टाका',
-          authTitleResetPass: 'नवीन पासवर्ड सेट करा',
-          authSubtitleResetPass: 'तुमच्या खात्यासाठी नवीन सुरक्षित पासवर्ड तयार करा',
           authTitleOtp: 'ईमेल पडताळणी करा',
           authSubtitleOtp: 'तुमच्या ईमेल इनबॉक्समध्ये पाठवलेला ६-अंकी OTP टाका',
           tabLogin: 'लॉग इन',
           tabRegister: 'नोंदणी',
-          labelLoginEmail: 'ईमेल पत्ता',
-          labelLoginPassword: 'पासवर्ड',
-          btnLogin: 'लॉग इन करा',
           btnRegister: 'नोंदणी करा व ओटीपी पाठवा',
           labelRole: 'माझी भूमिका...',
           roleFarmer: 'शेतकरी',
@@ -1047,7 +863,6 @@
           trustSimple: 'सोपे',
           trustTransparent: 'पारदर्शक',
           textPrivacy: 'तुमचा डेटा सुरक्षित आहे आणि अ‍ॅग्रीस्टॅक मार्गदर्शक तत्त्वांनुसार संरक्षित आहे.',
-          textNoAccount: 'खाते नाही?',
           textHaveAccount: 'आधीच खाते आहे का?'
         }
       };
@@ -1064,14 +879,8 @@
         document.getElementById('badge-mandis').textContent = t.badgeMandis;
         document.getElementById('badge-verified').textContent = t.badgeVerified;
 
-        tabBtnLogin.textContent = t.tabLogin;
-        tabBtnRegister.textContent = t.tabRegister;
-
-        document.getElementById('label-login-email').textContent = t.labelLoginEmail;
-        document.getElementById('label-login-password').textContent = t.labelLoginPassword;
-        document.getElementById('btn-login-text').textContent = t.btnLogin;
-        document.getElementById('text-no-account').textContent = t.textNoAccount;
-        document.getElementById('link-to-register').textContent = t.tabRegister;
+        document.getElementById('tab-btn-login').textContent = t.tabLogin;
+        document.getElementById('tab-btn-register').textContent = t.tabRegister;
 
         document.getElementById('label-role').textContent = t.labelRole;
         document.getElementById('role-name-farmer').textContent = t.roleFarmer;
@@ -1084,10 +893,6 @@
         document.getElementById('label-register-password').textContent = t.labelRegisterPassword;
         document.getElementById('btn-register-text').textContent = t.btnRegister;
         document.getElementById('text-have-account').textContent = t.textHaveAccount;
-        document.getElementById('link-to-login').textContent = t.tabLogin;
-
-        document.getElementById('label-forgot-email').textContent = t.labelLoginEmail;
-        document.getElementById('label-reset-password').textContent = t.labelRegisterPassword;
 
         document.getElementById('label-otp').textContent = t.labelOtp;
         document.getElementById('otp-sent-text').textContent = t.otpSent;
@@ -1103,52 +908,11 @@
         document.querySelectorAll('.auth-lang-menu__item').forEach(item => {
           item.classList.toggle('active', item.dataset.lang === lang);
         });
-
-        if (loginForm.style.display !== 'none') {
-          document.getElementById('auth-title').textContent = t.authTitleLogin;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleLogin;
-        } else if (registerForm.style.display !== 'none') {
-          document.getElementById('auth-title').textContent = t.authTitleRegister;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleRegister;
-        } else if (forgotForm.style.display !== 'none') {
-          document.getElementById('auth-title').textContent = t.authTitleForgot;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleForgot;
-        } else if (resetPassForm.style.display !== 'none') {
-          document.getElementById('auth-title').textContent = t.authTitleResetPass;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleResetPass;
-        } else if (otpStepContainer.classList.contains('active')) {
-          document.getElementById('auth-title').textContent = t.authTitleOtp;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleOtp;
-        }
       }
 
-      // ── Tab Switchers ──
-      function showLoginTab() {
-        isResetFlow = false;
+      function showRegisterForm() {
         tabsContainer.style.display = 'flex';
-        tabBtnLogin.classList.add('active');
-        tabBtnRegister.classList.remove('active');
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-        forgotForm.style.display = 'none';
-        resetPassForm.style.display = 'none';
-        otpStepContainer.classList.remove('active');
-
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleLogin;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleLogin;
-        hideAlert(loginAlert);
-      }
-
-      function showRegisterTab() {
-        isResetFlow = false;
-        tabsContainer.style.display = 'flex';
-        tabBtnRegister.classList.add('active');
-        tabBtnLogin.classList.remove('active');
-        loginForm.style.display = 'none';
         registerForm.style.display = 'block';
-        forgotForm.style.display = 'none';
-        resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
 
         const t = translations[currentLang] || translations.en;
@@ -1157,54 +921,16 @@
         hideAlert(registerAlert);
       }
 
-      function showForgotTab() {
-        isResetFlow = true;
-        tabsContainer.style.display = 'none';
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'none';
-        forgotForm.style.display = 'block';
-        resetPassForm.style.display = 'none';
-        otpStepContainer.classList.remove('active');
-
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleForgot;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleForgot;
-        hideAlert(forgotAlert);
-        if (loginEmail.value.trim()) {
-          forgotEmail.value = loginEmail.value.trim();
-        }
-      }
-
-      function showResetPassStep() {
-        tabsContainer.style.display = 'none';
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'none';
-        forgotForm.style.display = 'none';
-        resetPassForm.style.display = 'block';
-        otpStepContainer.classList.remove('active');
-
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleResetPass;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleResetPass;
-        hideAlert(resetPassAlert);
-        resetNewPassword.value = '';
-        resetNewPassword.focus();
-      }
-
-      function showOtpStep(email, forReset = false) {
-        isResetFlow = forReset;
+      function showOtpStep(email) {
         activeOtpEmail = email;
         displayUserEmail.textContent = email;
         tabsContainer.style.display = 'none';
-        loginForm.style.display = 'none';
         registerForm.style.display = 'none';
-        forgotForm.style.display = 'none';
-        resetPassForm.style.display = 'none';
         otpStepContainer.classList.add('active');
 
         const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = forReset ? t.authTitleForgot : t.authTitleOtp;
-        document.getElementById('auth-subtitle').textContent = forReset ? 'Enter the recovery OTP sent to your inbox' : t.authSubtitleOtp;
+        document.getElementById('auth-title').textContent = t.authTitleOtp;
+        document.getElementById('auth-subtitle').textContent = t.authSubtitleOtp;
 
         hideAlert(otpAlert);
         startResendTimer();
@@ -1212,18 +938,7 @@
         otpBoxes[0].focus();
       }
 
-      tabBtnLogin.addEventListener('click', showLoginTab);
-      tabBtnRegister.addEventListener('click', showRegisterTab);
-      linkToRegister.addEventListener('click', showRegisterTab);
-      linkToLogin.addEventListener('click', showLoginTab);
-      linkBackToLogin.addEventListener('click', showLoginTab);
-      linkToForgot.addEventListener('click', showForgotTab);
-      linkForgotToLogin.addEventListener('click', showLoginTab);
-      linkResetToLogin.addEventListener('click', showLoginTab);
-      btnChangeEmail.addEventListener('click', () => {
-        if (isResetFlow) showForgotTab();
-        else showRegisterTab();
-      });
+      btnChangeEmail.addEventListener('click', showRegisterForm);
 
       // ── Language Dropdown Toggle ──
       langMenuBtn.addEventListener('click', (e) => {
@@ -1325,79 +1040,7 @@
         return otpBoxes.map(b => b.value).join('');
       }
 
-      // ── 1. LOGIN API HANDLER ──
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        hideAlert(loginAlert);
-
-        const email = loginEmail.value.trim();
-        const password = loginPassword.value;
-
-        if (!email || !password) {
-          showAlert(loginAlert, 'Please enter both email and password.');
-          return;
-        }
-
-        btnLogin.disabled = true;
-        btnLogin.innerHTML = 'Signing in… <span class="auth-btn-arrow">⏳</span>';
-
-        try {
-          const res = await fetch(`${API_BASE}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-          });
-
-          let data;
-          try {
-            data = await res.json();
-          } catch (pe) {
-            data = { success: res.ok, message: 'Invalid response from server' };
-          }
-
-          if (res.ok && data.success) {
-            window.Auth.setToken(data.token);
-            window.Auth.setUser(data.user);
-
-            btnLogin.innerHTML = 'Login Successful! ✓';
-            btnLogin.style.background = '#5B9A72';
-
-            setTimeout(() => {
-              const userRole = (data.user && data.user.role) ? data.user.role.toLowerCase() : 'farmer';
-              if (userRole === 'buyer') {
-                window.location.href = 'buyer.html';
-              } else if (userRole === 'fpo') {
-                window.location.href = 'fpo-dashboard.html';
-              } else if (userRole === 'transporter') {
-                window.location.href = 'transporter/dashboard.html';
-              } else if (userRole === 'admin') {
-                window.location.href = 'admin/dashboard.html';
-              } else {
-                window.location.href = 'dashboard.html';
-              }
-            }, 600);
-          } else {
-            btnLogin.disabled = false;
-            btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(loginAlert, data.message || 'Invalid email or password');
-
-            if (data.message && data.message.includes('verify your email')) {
-              activeOtpEmail = email;
-              setTimeout(() => {
-                showOtpStep(email, false);
-                showAlert(otpAlert, 'Please enter your verification OTP to activate your account.');
-              }, 1200);
-            }
-          }
-        } catch (err) {
-          console.error('[Login Network Error]:', err);
-          btnLogin.disabled = false;
-          btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please verify backend is running on port 5000.');
-        }
-      });
-
-      // ── 2. REGISTER API HANDLER ──
+      // ── REGISTER API HANDLER ──
       registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideAlert(registerAlert);
@@ -1444,7 +1087,7 @@
             btnRegister.disabled = false;
             btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
             
-            showOtpStep(email, false);
+            showOtpStep(email);
             showAlert(otpAlert, data.message || 'Registration successful. Check your email for the OTP.', 'success');
           } else if (data.message && (data.message.includes('verification email could not be sent') || data.message.includes('Resend OTP'))) {
             btnRegister.disabled = false;
@@ -1455,7 +1098,7 @@
               message: "Your account was created, but we couldn't send the verification email. You can request a new OTP.",
               actionText: 'Resend OTP ↻',
               actionCallback: async () => {
-                showOtpStep(email, false);
+                showOtpStep(email);
                 showAlert(otpAlert, 'Requesting a new verification code…');
                 try {
                   const resendRes = await fetch(`${API_BASE}/auth/resend-verification`, {
@@ -1488,52 +1131,7 @@
         }
       });
 
-      // ── 3. FORGOT PASSWORD API HANDLER ──
-      forgotForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        hideAlert(forgotAlert);
-
-        const email = forgotEmail.value.trim();
-        if (!email) {
-          showAlert(forgotAlert, 'Please enter your email address.');
-          return;
-        }
-
-        btnForgotSubmit.disabled = true;
-        btnForgotSubmit.innerHTML = 'Sending Recovery OTP… <span class="auth-btn-arrow">⏳</span>';
-
-        try {
-          const res = await fetch(`${API_BASE}/auth/forgot-password`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-          });
-
-          let data;
-          try {
-            data = await res.json();
-          } catch (pe) {
-            data = { success: res.ok, message: 'Invalid response from server' };
-          }
-
-          btnForgotSubmit.disabled = false;
-          btnForgotSubmit.innerHTML = '<span id="btn-forgot-text">Send Reset OTP</span> <span class="auth-btn-arrow">→</span>';
-
-          if (res.ok && data.success) {
-            showOtpStep(email, true);
-            showAlert(otpAlert, data.message || 'If an account exists, a reset OTP has been sent to your inbox.', 'success');
-          } else {
-            showAlert(forgotAlert, data.message || 'Failed to process password reset.');
-          }
-        } catch (err) {
-          console.error('[Forgot Password Network Error]:', err);
-          btnForgotSubmit.disabled = false;
-          btnForgotSubmit.innerHTML = '<span id="btn-forgot-text">Send Reset OTP</span> <span class="auth-btn-arrow">→</span>';
-          showAlert(forgotAlert, 'Unable to connect to KrishiShetra server. Please verify backend is running on port 5000.');
-        }
-      });
-
-      // ── 4. VERIFY OTP API HANDLER ──
+      // ── VERIFY OTP API HANDLER ──
       btnVerifyOtp.addEventListener('click', async () => {
         hideAlert(otpAlert);
         const otp = getEnteredOtp();
@@ -1546,10 +1144,8 @@
         btnVerifyOtp.disabled = true;
         btnVerifyOtp.innerHTML = 'Verifying… <span class="auth-btn-arrow">⏳</span>';
 
-        const endpoint = isResetFlow ? '/auth/verify-reset-otp' : '/auth/verify-email';
-
         try {
-          const res = await fetch(`${API_BASE}${endpoint}`, {
+          const res = await fetch(`${API_BASE}/auth/verify-email`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1569,27 +1165,11 @@
             btnVerifyOtp.innerHTML = 'Verified! ✓';
             btnVerifyOtp.style.background = '#5B9A72';
 
-            if (isResetFlow) {
-              activeResetToken = data.resetToken;
-              setTimeout(() => {
-                btnVerifyOtp.disabled = false;
-                btnVerifyOtp.style.background = '';
-                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
-                showResetPassStep();
-              }, 800);
-            } else {
-              showAlert(otpAlert, 'Email verified successfully! Redirecting to login…', 'success');
+            showAlert(otpAlert, 'Email verified successfully! Redirecting to login…', 'success');
 
-              setTimeout(() => {
-                btnVerifyOtp.disabled = false;
-                btnVerifyOtp.style.background = '';
-                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
-                
-                showLoginTab();
-                loginEmail.value = activeOtpEmail;
-                showAlert(loginAlert, 'Email verified successfully. Please log in with your password.', 'success');
-              }, 1200);
-            }
+            setTimeout(() => {
+              window.location.href = `login.html?verified=true&email=${encodeURIComponent(activeOtpEmail)}`;
+            }, 1200);
           } else {
             btnVerifyOtp.disabled = false;
             btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
@@ -1603,69 +1183,14 @@
         }
       });
 
-      // ── 5. SET NEW PASSWORD HANDLER ──
-      resetPassForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        hideAlert(resetPassAlert);
-
-        const newPassword = resetNewPassword.value;
-        if (!newPassword || newPassword.length < 6) {
-          showAlert(resetPassAlert, 'Password must be at least 6 characters long.');
-          return;
-        }
-
-        btnResetPassSubmit.disabled = true;
-        btnResetPassSubmit.innerHTML = 'Resetting Password… <span class="auth-btn-arrow">⏳</span>';
-
-        try {
-          const res = await fetch(`${API_BASE}/auth/reset-password`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              resetToken: activeResetToken,
-              newPassword
-            })
-          });
-
-          const data = await res.json();
-
-          if (res.ok && data.success) {
-            btnResetPassSubmit.innerHTML = 'Password Reset! ✓';
-            btnResetPassSubmit.style.background = '#5B9A72';
-
-            showAlert(resetPassAlert, 'Password reset successfully! Redirecting to login…', 'success');
-
-            setTimeout(() => {
-              btnResetPassSubmit.disabled = false;
-              btnResetPassSubmit.style.background = '';
-              btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
-              
-              showLoginTab();
-              loginEmail.value = activeOtpEmail;
-              showAlert(loginAlert, 'Password reset successfully. Please log in with your new password.', 'success');
-            }, 1200);
-          } else {
-            btnResetPassSubmit.disabled = false;
-            btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
-            showAlert(resetPassAlert, data.message || 'Failed to reset password.');
-          }
-        } catch (err) {
-          btnResetPassSubmit.disabled = false;
-          btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
-          showAlert(resetPassAlert, 'Network error. Please check your backend connection.');
-        }
-      });
-
-      // ── 6. RESEND OTP API HANDLER ──
+      // ── RESEND OTP API HANDLER ──
       btnResendOtp.addEventListener('click', async () => {
         hideAlert(otpAlert);
         btnResendOtp.disabled = true;
         btnResendOtp.textContent = 'Sending…';
 
-        const endpoint = isResetFlow ? '/auth/resend-reset-otp' : '/auth/resend-verification';
-
         try {
-          const res = await fetch(`${API_BASE}${endpoint}`, {
+          const res = await fetch(`${API_BASE}/auth/resend-verification`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: activeOtpEmail })
@@ -1694,17 +1219,6 @@
           showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please verify backend is running on port 5000.');
         }
       });
-
-      // ── Initial Tab Setup based on URL Parameter or Hash ──
-      const urlParams = new URLSearchParams(window.location.search);
-      const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
-      if (tabParam === 'register' || tabParam === 'signup') {
-        showRegisterTab();
-      } else if (tabParam === 'forgot' || tabParam === 'reset') {
-        showForgotTab();
-      } else {
-        showLoginTab();
-      }
 
     });
   </script>
