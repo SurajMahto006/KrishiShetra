@@ -4,11 +4,47 @@
  * error parsing, and provides structured methods for all backend endpoints.
  */
 
-const API_BASE_URL = 'http://localhost:5000/api';
+/**
+ * Production and Development API Endpoints
+ */
+const PROD_API_URL = 'https://krishishetra-1.onrender.com/api';
+const DEV_API_URL = 'http://localhost:5000/api';
+
+/**
+ * Resolves API Base URL dynamically from window.API_BASE_URL, local storage override, or environment
+ */
+function resolveApiBaseUrl() {
+  if (typeof window !== 'undefined') {
+    // 1. Explicit runtime override takes highest priority
+    if (window.API_BASE_URL) {
+      return window.API_BASE_URL.replace(/\/+$/, '');
+    }
+    // 2. Local storage override for debugging/testing
+    const stored = localStorage.getItem('krishi_api_base_url');
+    if (stored) {
+      return stored.replace(/\/+$/, '');
+    }
+    // 3. Localhost development detection
+    if (window.location && window.location.hostname) {
+      const host = window.location.hostname;
+      if (host === 'localhost' || host === '127.0.0.1') {
+        return DEV_API_URL;
+      }
+    }
+    // 4. Default for production / hosted deployments (Render static site, Vercel, etc.)
+    return PROD_API_URL;
+  }
+  return DEV_API_URL;
+}
+
+const API_BASE_URL = resolveApiBaseUrl();
+if (typeof window !== 'undefined') {
+  window.API_BASE_URL = API_BASE_URL;
+}
 
 class ApiClient {
-  constructor(baseUrl = API_BASE_URL) {
-    this.baseUrl = baseUrl;
+  constructor(baseUrl = window.API_BASE_URL || API_BASE_URL) {
+    this.baseUrl = baseUrl.replace(/\/+$/, '');
   }
 
   /**
@@ -91,7 +127,7 @@ class ApiClient {
       return {
         success: false,
         status: 0,
-        message: 'Unable to connect to KrishiShetra server. Please verify backend is running on port 5000.',
+        message: 'Unable to connect to KrishiShetra server. Please check your network connection or try again.',
         error: err.message
       };
     }

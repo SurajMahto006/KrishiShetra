@@ -804,7 +804,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
 
-      const API_BASE = (window.API_BASE_URL || 'http://localhost:5000/api').replace(/\/+$/, '');
+      const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      const API_BASE = (window.API_BASE_URL || (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api')).replace(/\/+$/, '');
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');
@@ -1393,7 +1394,7 @@
           console.error('[Login Network Error]:', err);
           btnLogin.disabled = false;
           btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please verify backend is running on port 5000.');
+          showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
 
@@ -1484,7 +1485,7 @@
           console.error('[Register Network Error]:', err);
           btnRegister.disabled = false;
           btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(registerAlert, 'Unable to connect to KrishiShetra server. Please verify backend is running on port 5000.');
+          showAlert(registerAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
 
@@ -1529,7 +1530,7 @@
           console.error('[Forgot Password Network Error]:', err);
           btnForgotSubmit.disabled = false;
           btnForgotSubmit.innerHTML = '<span id="btn-forgot-text">Send Reset OTP</span> <span class="auth-btn-arrow">→</span>';
-          showAlert(forgotAlert, 'Unable to connect to KrishiShetra server. Please verify backend is running on port 5000.');
+          showAlert(forgotAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
 
@@ -1599,7 +1600,7 @@
           console.error('[Verify OTP Network Error]:', err);
           btnVerifyOtp.disabled = false;
           btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please verify backend is running on port 5000.');
+          showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
 
@@ -1691,7 +1692,7 @@
           console.error('[Resend OTP Network Error]:', err);
           btnResendOtp.disabled = false;
           btnResendOtp.textContent = translations[currentLang].btnResend;
-          showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please verify backend is running on port 5000.');
+          showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
 

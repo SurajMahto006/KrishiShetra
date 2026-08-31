@@ -183,7 +183,11 @@ const Auth = {
           return res.user;
         }
       } else {
-        const res = await fetch('http://localhost:5000/api/auth/me', {
+        const isLocal = typeof window !== 'undefined' && window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+        const apiBase = (typeof window !== 'undefined' && window.API_BASE_URL)
+          ? window.API_BASE_URL.replace(/\/+$/, '')
+          : (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api');
+        const res = await fetch(`${apiBase}/auth/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
