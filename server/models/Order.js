@@ -12,11 +12,6 @@ const deliveryAddressSchema = new mongoose.Schema(
       trim: true,
       default: ''
     },
-    addressLine: {
-      type: String,
-      trim: true,
-      default: ''
-    },
     addressLine1: {
       type: String,
       trim: true,
@@ -131,21 +126,25 @@ const orderSchema = new mongoose.Schema(
       required: [true, 'Total amount is required'],
       min: [0.01, 'Total amount must be greater than zero']
     },
+    deliveryAddress: {
+      type: deliveryAddressSchema,
+      default: () => ({})
+    },
     status: {
       type: String,
       enum: {
         values: [
+          'pending',
           'confirmed',
           'processing',
           'ready_for_pickup',
           'in_transit',
           'delivered',
-          'completed',
           'cancelled'
         ],
         message: '{VALUE} is not a valid order status'
       },
-      default: 'confirmed',
+      default: 'pending',
       index: true
     },
     paymentStatus: {
@@ -156,38 +155,19 @@ const orderSchema = new mongoose.Schema(
       },
       default: 'pending'
     },
-    deliveryStatus: {
+    paymentMethod: {
       type: String,
       enum: {
-        values: [
-          'pending',
-          'ready_for_pickup',
-          'picked_up',
-          'in_transit',
-          'delivered'
-        ],
-        message: '{VALUE} is not a valid delivery status'
+        values: ['cod', 'online', 'offline'],
+        message: '{VALUE} is not a valid payment method'
       },
-      default: 'pending'
-    },
-    deliveryType: {
-      type: String,
-      enum: ['pickup', 'delivery'],
-      default: 'delivery'
-    },
-    deliveryAddress: {
-      type: deliveryAddressSchema,
-      default: () => ({})
+      default: 'cod'
     },
     notes: {
       type: String,
       trim: true,
       maxlength: 1000,
       default: ''
-    },
-    confirmedAt: {
-      type: Date,
-      default: Date.now
     },
     cancelledBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -210,12 +190,11 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-// Compound indexes for optimal performance
-orderSchema.index({ buyer: 1, status: 1, createdAt: -1 });
-orderSchema.index({ farmer: 1, status: 1, createdAt: -1 });
+// Indexes
+orderSchema.index({ buyer: 1, createdAt: -1 });
+orderSchema.index({ farmer: 1, createdAt: -1 });
 orderSchema.index({ lot: 1, status: 1 });
 
-// Clean JSON serialization
 orderSchema.set('toJSON', {
   transform: (doc, ret) => {
     ret.id = ret._id;

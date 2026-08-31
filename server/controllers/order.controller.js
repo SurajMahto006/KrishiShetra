@@ -32,7 +32,7 @@ const generateOrderId = async () => {
 };
 
 /**
- * Format an order item for list responses
+ * Format order item for list responses
  */
 const formatOrderListItem = (order) => {
   const lot = order.lot || {};
@@ -51,19 +51,18 @@ const formatOrderListItem = (order) => {
     totalAmount: order.totalAmount,
     status: order.status,
     paymentStatus: order.paymentStatus,
-    deliveryStatus: order.deliveryStatus,
-    deliveryType: order.deliveryType,
+    paymentMethod: order.paymentMethod,
     farmerName: farmerProfile.farmName || farmerUser.name || 'Verified Farmer',
     buyerName: buyerUser.name || 'Verified Buyer',
+    deliveryAddress: order.deliveryAddress || {},
     notes: order.notes || '',
-    confirmedAt: order.confirmedAt,
     createdAt: order.createdAt,
     updatedAt: order.updatedAt
   };
 };
 
 /**
- * Format a complete order detail
+ * Format complete order detail
  */
 const formatOrderDetail = (order) => {
   const lot = order.lot || {};
@@ -83,8 +82,7 @@ const formatOrderDetail = (order) => {
     totalAmount: order.totalAmount,
     status: order.status,
     paymentStatus: order.paymentStatus,
-    deliveryStatus: order.deliveryStatus,
-    deliveryType: order.deliveryType,
+    paymentMethod: order.paymentMethod,
     deliveryAddress: order.deliveryAddress || {},
     notes: order.notes || '',
     farmer: {
@@ -94,7 +92,6 @@ const formatOrderDetail = (order) => {
     buyer: {
       buyerName: buyerUser.name || 'Verified Buyer'
     },
-    confirmedAt: order.confirmedAt,
     cancelledBy: order.cancelledBy || null,
     cancellationReason: order.cancellationReason || '',
     cancelledAt: order.cancelledAt || null,
@@ -106,14 +103,14 @@ const formatOrderDetail = (order) => {
 /**
  * @desc    Create a new Order from an accepted Inquiry
  * @route   POST /api/orders
- * @access  Private (Buyer or Farmer participating in inquiry)
+ * @access  Private (Buyer role only)
  */
 const createOrder = async (req, res) => {
   let session = null;
   let useTransaction = false;
 
   try {
-    const { inquiryId, deliveryAddress, notes, buyerNote } = req.body;
+    const { inquiryId, quantity, deliveryAddress, paymentMethod, notes } = req.body;
 
     // 1. Validate inquiryId
     if (!inquiryId || !mongoose.Types.ObjectId.isValid(inquiryId)) {
@@ -123,7 +120,7 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // 2. Fetch Inquiry and check ownership + status
+    // 2. Fetch Inquiry and check ownership + accepted status
     const inquiry = await Inquiry.findById(inquiryId).populate('lot');
     if (!inquiry) {
       return res.status(404).json({
@@ -132,11 +129,7 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // User must be either buyer or farmer participating in inquiry
-    const isBuyer = inquiry.buyer.toString() === req.user._id.toString();
-    const isFarmer = inquiry.farmer.toString() === req.user._id.toString();
-
-    if (!isBuyer && !isFarmer) {
+    if (inquiry.buyer.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
         message: 'You are not authorized to create an order for this inquiry'
@@ -168,7 +161,7 @@ const createOrder = async (req, res) => {
       });
     }
 
-    if (lot.status === 'cancelled' || lot.status === 'sold') {
+    if (lot.status !== 'active') {
       return res.status(400).json({
         success: false,
         message: `Produce lot is currently ${lot.status}`
@@ -180,15 +173,27 @@ const createOrder = async (req, res) => {
         ? lot.availableQuantity
         : lot.quantity;
 
-    const requiredQty = inquiry.quantityRequired;
-    if (requiredQty > availableQty) {
+    // Determine order quantity (from request body if valid, else from accepted inquiry)
+    let orderQty = inquiry.quantityRequired;
+    if (quantity !== undefined && quantity !== null && quantity !== '') {
+      const qNum = Number(quantity);
+      if (isNaN(qNum) || qNum <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Quantity must be a positive number greater than zero'
+        });
+      }
+      orderQty = qNum;
+    }
+
+    if (orderQty > availableQty) {
       return res.status(400).json({
         success: false,
-        message: `Requested quantity (${requiredQty}) exceeds available lot quantity (${availableQty})`
+        message: `Requested quantity (${orderQty}) exceeds available lot quantity (${availableQty})`
       });
     }
 
-    // 5. Validate Delivery Inputs if provided
+    // 5. Validate Delivery Address if provided
     const cleanAddress = deliveryAddress && typeof deliveryAddress === 'object' ? { ...deliveryAddress } : {};
     if (cleanAddress.phone) {
       const phone = String(cleanAddress.phone).trim();
@@ -199,6 +204,7 @@ const createOrder = async (req, res) => {
         });
       }
     }
+
     if (cleanAddress.pincode) {
       const pin = String(cleanAddress.pincode).trim();
       if (!PINCODE_REGEX.test(pin)) {
@@ -209,19 +215,20 @@ const createOrder = async (req, res) => {
       }
     }
 
-    // Normalize address fields (support addressLine or addressLine1)
-    if (cleanAddress.addressLine && !cleanAddress.addressLine1) {
-      cleanAddress.addressLine1 = cleanAddress.addressLine;
-    }
-
     // 6. Server-side price and total calculation
     const agreedPrice = Number(inquiry.offeredPrice);
-    const totalAmount = Number((agreedPrice * requiredQty).toFixed(2));
+    const totalAmount = Number((agreedPrice * orderQty).toFixed(2));
 
-    // 7. Generate sequential Order ID
+    // 7. Payment method
+    const validPaymentMethods = ['cod', 'online', 'offline'];
+    const chosenPaymentMethod = paymentMethod && validPaymentMethods.includes(paymentMethod)
+      ? paymentMethod
+      : 'cod';
+
+    // 8. Generate sequential Order ID
     const orderId = await generateOrderId();
 
-    // 8. Try session transaction
+    // 9. Session transaction handling
     try {
       session = await mongoose.startSession();
       session.startTransaction();
@@ -233,18 +240,18 @@ const createOrder = async (req, res) => {
 
     const sessionOpts = session && useTransaction ? { session } : {};
 
-    // 9. Safe quantity deduction on Produce Lot
+    // 10. Atomically decrement lot availability
     const updatedLot = await ProduceLot.findOneAndUpdate(
       {
         _id: lot._id,
-        status: { $nin: ['cancelled', 'sold'] },
+        status: 'active',
         $or: [
-          { availableQuantity: { $gte: requiredQty } },
-          { availableQuantity: { $exists: false }, quantity: { $gte: requiredQty } }
+          { availableQuantity: { $gte: orderQty } },
+          { availableQuantity: { $exists: false }, quantity: { $gte: orderQty } }
         ]
       },
       {
-        $inc: { availableQuantity: -requiredQty }
+        $inc: { availableQuantity: -orderQty }
       },
       { new: true, ...sessionOpts }
     );
@@ -257,14 +264,12 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // If all quantity is consumed, mark sold; otherwise remain active
+    // If remaining available quantity is 0, mark as sold
     if (updatedLot.availableQuantity <= 0) {
       await ProduceLot.findByIdAndUpdate(lot._id, { status: 'sold' }, sessionOpts);
     }
 
-    const orderNotes = notes ? String(notes).trim() : (buyerNote ? String(buyerNote).trim() : '');
-
-    // 10. Create Order document
+    // 11. Create Order document
     const createdOrders = await Order.create(
       [
         {
@@ -275,18 +280,16 @@ const createOrder = async (req, res) => {
           farmer: inquiry.farmer,
           cropName: lot.cropName,
           variety: lot.variety,
-          quantity: requiredQty,
+          quantity: orderQty,
           quantityUnit: lot.quantityUnit,
           agreedPrice,
           priceUnit: lot.priceUnit,
           totalAmount,
-          status: 'confirmed',
-          paymentStatus: 'pending',
-          deliveryStatus: 'pending',
-          deliveryType: 'delivery',
           deliveryAddress: cleanAddress,
-          notes: orderNotes,
-          confirmedAt: new Date()
+          status: 'pending',
+          paymentStatus: 'pending',
+          paymentMethod: chosenPaymentMethod,
+          notes: notes ? String(notes).trim() : ''
         }
       ],
       sessionOpts
@@ -294,7 +297,7 @@ const createOrder = async (req, res) => {
 
     const order = createdOrders[0];
 
-    // 11. Update Inquiry
+    // 12. Update Inquiry status to completed
     inquiry.order = order._id;
     inquiry.status = 'completed';
     await inquiry.save(sessionOpts);
@@ -317,8 +320,7 @@ const createOrder = async (req, res) => {
         totalAmount: order.totalAmount,
         status: order.status,
         paymentStatus: order.paymentStatus,
-        deliveryStatus: order.deliveryStatus,
-        createdAt: order.createdAt
+        paymentMethod: order.paymentMethod
       }
     });
   } catch (error) {
@@ -559,7 +561,7 @@ const getSingleOrder = async (req, res) => {
 };
 
 /**
- * @desc    Update Order operational status
+ * @desc    Update Order status by Farmer
  * @route   PUT /api/orders/:orderId/status
  * @access  Private (Farmer role only)
  */
@@ -598,14 +600,14 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
-    // Allowed status transitions
+    // Allowed status transitions for farmer
     const validTransitions = {
-      confirmed: ['processing'],
-      processing: ['ready_for_pickup'],
+      pending: ['confirmed', 'cancelled'],
+      confirmed: ['processing', 'cancelled'],
+      processing: ['ready_for_pickup', 'cancelled'],
       ready_for_pickup: ['in_transit'],
       in_transit: ['delivered'],
-      delivered: ['completed'],
-      completed: [],
+      delivered: [],
       cancelled: []
     };
 
@@ -620,6 +622,16 @@ const updateOrderStatus = async (req, res) => {
     }
 
     order.status = newStatus;
+    if (newStatus === 'cancelled') {
+      order.cancelledBy = req.user._id;
+      order.cancelledAt = new Date();
+      // Restore quantity to lot
+      await ProduceLot.findByIdAndUpdate(order.lot, {
+        $inc: { availableQuantity: order.quantity },
+        $set: { status: 'active' }
+      });
+    }
+
     await order.save();
 
     return res.status(200).json({
@@ -640,9 +652,84 @@ const updateOrderStatus = async (req, res) => {
 };
 
 /**
- * @desc    Update Order payment status (Internal status tracking)
+ * @desc    Cancel order by Buyer and restore reserved inventory
+ * @route   PUT /api/orders/:orderId/cancel
+ * @access  Private (Buyer role only)
+ */
+const cancelOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    let query = {};
+    if (mongoose.Types.ObjectId.isValid(orderId)) {
+      query.$or = [{ orderId }, { _id: orderId }];
+    } else {
+      query.orderId = orderId;
+    }
+
+    const order = await Order.findOne(query);
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found'
+      });
+    }
+
+    // Buyer ownership check
+    if (order.buyer.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not authorized to cancel this order'
+      });
+    }
+
+    // Cannot cancel delivered or already cancelled orders
+    if (order.status === 'delivered') {
+      return res.status(400).json({
+        success: false,
+        message: 'Delivered orders cannot be cancelled'
+      });
+    }
+
+    if (order.status === 'cancelled') {
+      return res.status(400).json({
+        success: false,
+        message: 'Order is already cancelled'
+      });
+    }
+
+    order.status = 'cancelled';
+    order.cancelledBy = req.user._id;
+    order.cancelledAt = new Date();
+    await order.save();
+
+    // Restore reserved quantity to ProduceLot and mark active if was sold
+    await ProduceLot.findByIdAndUpdate(order.lot, {
+      $inc: { availableQuantity: order.quantity },
+      $set: { status: 'active' }
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Order cancelled successfully',
+      order: {
+        orderId: order.orderId,
+        status: order.status,
+        cancelledAt: order.cancelledAt
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while cancelling order'
+    });
+  }
+};
+
+/**
+ * @desc    Update payment status
  * @route   PUT /api/orders/:orderId/payment-status
- * @access  Private (Authorized order participants)
+ * @access  Private (Farmer or Admin)
  */
 const updatePaymentStatus = async (req, res) => {
   try {
@@ -672,11 +759,12 @@ const updatePaymentStatus = async (req, res) => {
       });
     }
 
-    // Ownership check
-    const isBuyer = order.buyer.toString() === req.user._id.toString();
+    // Farmer or Admin or Buyer check
     const isFarmer = order.farmer.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+    const isBuyer = order.buyer.toString() === req.user._id.toString();
 
-    if (!isBuyer && !isFarmer) {
+    if (!isFarmer && !isAdmin && !isBuyer) {
       return res.status(403).json({
         success: false,
         message: 'You are not authorized to update payment status for this order'
@@ -703,159 +791,12 @@ const updatePaymentStatus = async (req, res) => {
   }
 };
 
-/**
- * @desc    Update Order delivery status
- * @route   PUT /api/orders/:orderId/delivery-status
- * @access  Private (Farmer or authorized participant)
- */
-const updateDeliveryStatus = async (req, res) => {
-  try {
-    const { orderId } = req.params;
-    const { deliveryStatus } = req.body;
-
-    const allowedDeliveryStatuses = [
-      'pending',
-      'ready_for_pickup',
-      'picked_up',
-      'in_transit',
-      'delivered'
-    ];
-
-    if (!deliveryStatus || !allowedDeliveryStatuses.includes(deliveryStatus)) {
-      return res.status(400).json({
-        success: false,
-        message: `Invalid delivery status. Allowed: [${allowedDeliveryStatuses.join(', ')}]`
-      });
-    }
-
-    let query = {};
-    if (mongoose.Types.ObjectId.isValid(orderId)) {
-      query.$or = [{ orderId }, { _id: orderId }];
-    } else {
-      query.orderId = orderId;
-    }
-
-    const order = await Order.findOne(query);
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found'
-      });
-    }
-
-    // Ownership check
-    const isBuyer = order.buyer.toString() === req.user._id.toString();
-    const isFarmer = order.farmer.toString() === req.user._id.toString();
-
-    if (!isBuyer && !isFarmer) {
-      return res.status(403).json({
-        success: false,
-        message: 'You are not authorized to update delivery status for this order'
-      });
-    }
-
-    order.deliveryStatus = deliveryStatus;
-    await order.save();
-
-    return res.status(200).json({
-      success: true,
-      message: `Delivery status updated to ${deliveryStatus}`,
-      order: {
-        orderId: order.orderId,
-        deliveryStatus: order.deliveryStatus,
-        updatedAt: order.updatedAt
-      }
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Server error while updating delivery status'
-    });
-  }
-};
-
-/**
- * @desc    Cancel an order and restore available inventory
- * @route   PUT /api/orders/:orderId/cancel
- * @access  Private (Authorized Buyer or Farmer)
- */
-const cancelOrder = async (req, res) => {
-  try {
-    const { orderId } = req.params;
-    const { reason } = req.body;
-
-    let query = {};
-    if (mongoose.Types.ObjectId.isValid(orderId)) {
-      query.$or = [{ orderId }, { _id: orderId }];
-    } else {
-      query.orderId = orderId;
-    }
-
-    const order = await Order.findOne(query);
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found'
-      });
-    }
-
-    // Ownership check
-    const isBuyer = order.buyer.toString() === req.user._id.toString();
-    const isFarmer = order.farmer.toString() === req.user._id.toString();
-
-    if (!isBuyer && !isFarmer) {
-      return res.status(403).json({
-        success: false,
-        message: 'You are not authorized to cancel this order'
-      });
-    }
-
-    // Cannot cancel completed, delivered, or already cancelled orders
-    if (['completed', 'delivered', 'cancelled'].includes(order.status)) {
-      return res.status(400).json({
-        success: false,
-        message: `Order cannot be cancelled in '${order.status}' status`
-      });
-    }
-
-    order.status = 'cancelled';
-    order.cancelledBy = req.user._id;
-    order.cancellationReason = reason ? String(reason).trim().slice(0, 500) : 'Cancelled by participant';
-    order.cancelledAt = new Date();
-    await order.save();
-
-    // Safely restore lot quantity
-    await ProduceLot.findByIdAndUpdate(order.lot, {
-      $inc: { availableQuantity: order.quantity },
-      $set: { status: 'active' }
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: 'Order cancelled successfully',
-      order: {
-        orderId: order.orderId,
-        status: order.status,
-        cancellationReason: order.cancellationReason,
-        cancelledAt: order.cancelledAt
-      }
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Server error while cancelling order'
-    });
-  }
-};
-
 module.exports = {
   createOrder,
-  createOrderFromInquiry: createOrder,
   getMyOrders,
   getFarmerOrders,
   getSingleOrder,
   updateOrderStatus,
-  updatePaymentStatus,
-  updateDeliveryStatus,
-  cancelOrder
+  cancelOrder,
+  updatePaymentStatus
 };
