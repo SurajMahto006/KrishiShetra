@@ -1,33 +1,5 @@
 const mongoose = require('mongoose');
 
-const requirementSchema = new mongoose.Schema(
-  {
-    cropName: {
-      type: String,
-      trim: true,
-      required: [true, 'Crop name is required for requirement item']
-    },
-    variety: {
-      type: String,
-      trim: true,
-      default: ''
-    },
-    quantity: {
-      type: Number,
-      min: [0.01, 'Requirement quantity must be greater than zero']
-    },
-    quantityUnit: {
-      type: String,
-      enum: {
-        values: ['kg', 'quintal', 'ton'],
-        message: '{VALUE} is not a valid quantity unit'
-      },
-      default: 'quintal'
-    }
-  },
-  { _id: false }
-);
-
 const buyerProfileSchema = new mongoose.Schema(
   {
     user: {
@@ -37,48 +9,38 @@ const buyerProfileSchema = new mongoose.Schema(
       unique: true,
       index: true
     },
-    // Business Information
-    businessName: {
+    companyName: {
       type: String,
-      required: [true, 'Business name is required'],
+      required: [true, 'Company name is required'],
       trim: true
     },
-    businessType: {
+    buyerType: {
       type: String,
       enum: {
-        values: ['individual', 'retailer', 'wholesaler', 'processor', 'exporter', 'fpo', 'company', 'other'],
-        message: '{VALUE} is not a valid business type'
+        values: ['individual', 'business', 'trader', 'processor', 'retailer', 'fpo'],
+        message: '{VALUE} is not a valid buyer type'
       },
-      default: 'wholesaler',
-      required: [true, 'Business type is required']
+      default: 'individual'
     },
-    // Contact Information
-    contactPerson: {
-      type: String,
-      required: [true, 'Contact person name is required'],
-      trim: true
-    },
-    businessEmail: {
-      type: String,
-      trim: true,
-      lowercase: true,
-      default: ''
-    },
-    businessPhone: {
+    gstNumber: {
       type: String,
       trim: true,
       default: ''
     },
-    // Business Address
+    businessAddress: {
+      type: String,
+      trim: true,
+      default: ''
+    },
     state: {
       type: String,
       trim: true,
-      default: ''
+      required: [true, 'State is required']
     },
     district: {
       type: String,
       trim: true,
-      default: ''
+      required: [true, 'District is required']
     },
     taluka: {
       type: String,
@@ -93,27 +55,21 @@ const buyerProfileSchema = new mongoose.Schema(
     pincode: {
       type: String,
       trim: true,
-      default: ''
+      required: [true, 'Pincode is required']
     },
-    addressLine: {
-      type: String,
-      trim: true,
-      default: ''
-    },
-    // Requirements array
-    requirements: {
-      type: [requirementSchema],
-      default: []
-    },
-    // Verification Status (Immutable by buyer)
-    verificationStatus: {
+    interestedCrops: [
+      {
+        type: String,
+        trim: true
+      }
+    ],
+    preferredQuantityUnit: {
       type: String,
       enum: {
-        values: ['pending', 'verified', 'rejected'],
-        message: '{VALUE} is not a valid verification status'
+        values: ['kg', 'quintal', 'ton'],
+        message: '{VALUE} is not a valid preferred quantity unit'
       },
-      default: 'pending',
-      index: true
+      default: 'quintal'
     }
   },
   {
