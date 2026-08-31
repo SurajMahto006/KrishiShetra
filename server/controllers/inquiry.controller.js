@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Inquiry = require('../models/Inquiry');
 const ProduceLot = require('../models/ProduceLot');
 const FarmerProfile = require('../models/FarmerProfile');
+const { createNotification } = require('../services/notification.service');
+const { logActivity } = require('../services/activity.service');
 
 /**
  * Cleanly format an inquiry object for list views
@@ -181,6 +183,25 @@ const createInquiry = async (req, res) => {
           createdAt: new Date()
         }
       ]
+    });
+
+    // Notify farmer & log activity
+    createNotification({
+      recipient: lot.createdBy,
+      type: 'inquiry_received',
+      title: 'New Buyer Inquiry',
+      message: 'A buyer has submitted an inquiry for your produce lot.',
+      relatedEntity: { entityType: 'Inquiry', entityId: inquiry._id }
+    });
+
+    logActivity({
+      user: req.user._id,
+      action: 'inquiry_created',
+      entityType: 'Inquiry',
+      entityId: inquiry._id,
+      description: `Submitted purchase inquiry for produce lot ${lot.lotId}`,
+      metadata: { lotId: lot.lotId, offeredPrice: price, quantityRequired: qty },
+      ipAddress: req.ip
     });
 
     return res.status(201).json({
@@ -498,6 +519,35 @@ const updateInquiryStatus = async (req, res) => {
     inquiry.status = newStatus;
     await inquiry.save();
 
+    // Trigger notification to buyer if accepted or rejected
+    if (newStatus === 'accepted') {
+      createNotification({
+        recipient: inquiry.buyer,
+        type: 'inquiry_accepted',
+        title: 'Inquiry Accepted',
+        message: 'Your inquiry has been accepted.',
+        relatedEntity: { entityType: 'Inquiry', entityId: inquiry._id }
+      });
+    } else if (newStatus === 'rejected') {
+      createNotification({
+        recipient: inquiry.buyer,
+        type: 'inquiry_rejected',
+        title: 'Inquiry Rejected',
+        message: 'Your inquiry has been rejected.',
+        relatedEntity: { entityType: 'Inquiry', entityId: inquiry._id }
+      });
+    }
+
+    logActivity({
+      user: req.user._id,
+      action: `inquiry_${newStatus}`,
+      entityType: 'Inquiry',
+      entityId: inquiry._id,
+      description: `Inquiry status changed to ${newStatus}`,
+      metadata: { newStatus },
+      ipAddress: req.ip
+    });
+
     return res.status(200).json({
       success: true,
       message: `Inquiry status updated to ${newStatus}`,
@@ -600,6 +650,26 @@ const counterOffer = async (req, res) => {
     });
 
     await inquiry.save();
+
+    // Notify the other party
+    const counterParty = isBuyer ? inquiry.farmer : inquiry.buyer;
+    createNotification({
+      recipient: counterParty,
+      type: 'counter_offer',
+      title: 'Counter Offer Received',
+      message: 'New counter-offer received.',
+      relatedEntity: { entityType: 'Inquiry', entityId: inquiry._id }
+    });
+
+    logActivity({
+      user: req.user._id,
+      action: 'counter_offer_submitted',
+      entityType: 'Inquiry',
+      entityId: inquiry._id,
+      description: `Submitted counter-offer: ₹${price} for ${qty}`,
+      metadata: { offeredPrice: price, quantityRequired: qty },
+      ipAddress: req.ip
+    });
 
     return res.status(200).json({
       success: true,

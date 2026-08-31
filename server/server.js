@@ -11,6 +11,8 @@ const { marketRouter: buyerMarketRoutes, savedLotsRouter: buyerSavedLotsRoutes }
 const inquiryRoutes = require('./routes/inquiry.routes');
 const orderRoutes = require('./routes/order.routes');
 const transportRoutes = require('./routes/transport.routes');
+const notificationRoutes = require('./routes/notification.routes');
+const activityRoutes = require('./routes/activity.routes');
 const lotRoutes = require('./routes/lot.routes');
 const marketRoutes = require('./routes/market.routes');
 const offerRoutes = require('./routes/offer.routes');
@@ -36,6 +38,8 @@ app.use('/api/buyer', buyerRoutes);
 app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/transport', transportRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/activity', activityRoutes);
 app.use('/api/lots', lotRoutes);
 app.use('/api/market', marketRoutes);
 app.use('/api/offers', offerRoutes);

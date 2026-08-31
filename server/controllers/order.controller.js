@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const Inquiry = require('../models/Inquiry');
 const ProduceLot = require('../models/ProduceLot');
+const { createNotification } = require('../services/notification.service');
+const { logActivity } = require('../services/activity.service');
 
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 const PINCODE_REGEX = /^[1-9][0-9]{5}$/;
@@ -305,6 +307,25 @@ const createOrder = async (req, res) => {
     if (session && useTransaction) {
       await session.commitTransaction();
     }
+
+    // Notify farmer & log activity
+    createNotification({
+      recipient: inquiry.farmer,
+      type: 'order_created',
+      title: 'New Order Received',
+      message: 'New order received.',
+      relatedEntity: { entityType: 'Order', entityId: order._id }
+    });
+
+    logActivity({
+      user: req.user._id,
+      action: 'order_created',
+      entityType: 'Order',
+      entityId: order._id,
+      description: `Created order ${order.orderId}`,
+      metadata: { orderId: order.orderId, totalAmount: order.totalAmount },
+      ipAddress: req.ip
+    });
 
     return res.status(201).json({
       success: true,
@@ -634,6 +655,36 @@ const updateOrderStatus = async (req, res) => {
 
     await order.save();
 
+    // Notification mapping for order lifecycle transitions
+    const statusNotifications = {
+      confirmed: { type: 'order_confirmed', title: 'Order Confirmed', message: 'Your order has been confirmed.' },
+      processing: { type: 'order_processing', title: 'Order Processing', message: 'Your order is now being processed.' },
+      ready_for_pickup: { type: 'order_ready', title: 'Order Ready for Pickup', message: 'Your order is ready for pickup.' },
+      in_transit: { type: 'delivery_in_transit', title: 'Order In Transit', message: 'Your order is in transit.' },
+      delivered: { type: 'delivery_delivered', title: 'Order Delivered', message: 'Your order has been delivered.' },
+      cancelled: { type: 'order_cancelled', title: 'Order Cancelled', message: 'Your order has been cancelled by the farmer.' }
+    };
+
+    if (statusNotifications[newStatus]) {
+      createNotification({
+        recipient: order.buyer,
+        type: statusNotifications[newStatus].type,
+        title: statusNotifications[newStatus].title,
+        message: statusNotifications[newStatus].message,
+        relatedEntity: { entityType: 'Order', entityId: order._id }
+      });
+    }
+
+    logActivity({
+      user: req.user._id,
+      action: `order_status_${newStatus}`,
+      entityType: 'Order',
+      entityId: order._id,
+      description: `Order ${order.orderId} status changed to ${newStatus}`,
+      metadata: { orderId: order.orderId, newStatus },
+      ipAddress: req.ip
+    });
+
     return res.status(200).json({
       success: true,
       message: `Order status updated to ${newStatus}`,
@@ -709,6 +760,25 @@ const cancelOrder = async (req, res) => {
       $set: { status: 'active' }
     });
 
+    // Notify farmer & log activity
+    createNotification({
+      recipient: order.farmer,
+      type: 'order_cancelled',
+      title: 'Order Cancelled',
+      message: `Order ${order.orderId} has been cancelled by the buyer.`,
+      relatedEntity: { entityType: 'Order', entityId: order._id }
+    });
+
+    logActivity({
+      user: req.user._id,
+      action: 'order_cancelled',
+      entityType: 'Order',
+      entityId: order._id,
+      description: `Cancelled order ${order.orderId}`,
+      metadata: { orderId: order.orderId },
+      ipAddress: req.ip
+    });
+
     return res.status(200).json({
       success: true,
       message: 'Order cancelled successfully',
@@ -773,6 +843,26 @@ const updatePaymentStatus = async (req, res) => {
 
     order.paymentStatus = paymentStatus;
     await order.save();
+
+    // Notify counterparty & log activity
+    const recipient = isFarmer ? order.buyer : order.farmer;
+    createNotification({
+      recipient,
+      type: 'payment_updated',
+      title: 'Payment Status Updated',
+      message: `Payment status updated to ${paymentStatus}.`,
+      relatedEntity: { entityType: 'Order', entityId: order._id }
+    });
+
+    logActivity({
+      user: req.user._id,
+      action: 'payment_status_updated',
+      entityType: 'Order',
+      entityId: order._id,
+      description: `Payment status of order ${order.orderId} updated to ${paymentStatus}`,
+      metadata: { orderId: order.orderId, paymentStatus },
+      ipAddress: req.ip
+    });
 
     return res.status(200).json({
       success: true,

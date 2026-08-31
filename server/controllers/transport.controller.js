@@ -3,6 +3,8 @@ const TransportProfile = require('../models/TransportProfile');
 const TransportRequest = require('../models/TransportRequest');
 const Order = require('../models/Order');
 const ProduceLot = require('../models/ProduceLot');
+const { createNotification } = require('../services/notification.service');
+const { logActivity } = require('../services/activity.service');
 
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 const PINCODE_REGEX = /^[1-9][0-9]{5}$/;
@@ -533,6 +535,33 @@ const acceptRequest = async (req, res) => {
     // 4. Update Order delivery status
     await Order.findByIdAndUpdate(updated.order, { deliveryStatus: 'ready_for_pickup' });
 
+    // Notify farmer and buyer
+    createNotification({
+      recipient: updated.farmer,
+      type: 'delivery_accepted',
+      title: 'Transporter Accepted Delivery',
+      message: 'Transporter accepted the delivery.',
+      relatedEntity: { entityType: 'TransportRequest', entityId: updated._id }
+    });
+
+    createNotification({
+      recipient: updated.buyer,
+      type: 'delivery_accepted',
+      title: 'Transporter Accepted Delivery',
+      message: 'Transporter accepted the delivery.',
+      relatedEntity: { entityType: 'TransportRequest', entityId: updated._id }
+    });
+
+    logActivity({
+      user: req.user._id,
+      action: 'transport_job_accepted',
+      entityType: 'TransportRequest',
+      entityId: updated._id,
+      description: `Accepted transport request ${updated.requestId}`,
+      metadata: { requestId: updated.requestId },
+      ipAddress: req.ip
+    });
+
     return res.status(200).json({
       success: true,
       message: 'Transport job accepted successfully',
@@ -870,18 +899,73 @@ const updateTransportStatus = async (req, res) => {
     if (newStatus === 'picked_up') {
       request.pickedUpAt = new Date();
       await Order.findByIdAndUpdate(request.order, { deliveryStatus: 'picked_up', status: 'ready_for_pickup' });
+      // Notify buyer and farmer
+      createNotification({
+        recipient: request.farmer,
+        type: 'delivery_picked_up',
+        title: 'Delivery Picked Up',
+        message: 'Your delivery has been picked up.',
+        relatedEntity: { entityType: 'TransportRequest', entityId: request._id }
+      });
+      createNotification({
+        recipient: request.buyer,
+        type: 'delivery_picked_up',
+        title: 'Delivery Picked Up',
+        message: 'Your delivery has been picked up.',
+        relatedEntity: { entityType: 'TransportRequest', entityId: request._id }
+      });
     } else if (newStatus === 'in_transit') {
       await Order.findByIdAndUpdate(request.order, { deliveryStatus: 'in_transit', status: 'in_transit' });
+      // Notify buyer and farmer
+      createNotification({
+        recipient: request.farmer,
+        type: 'delivery_in_transit',
+        title: 'Delivery In Transit',
+        message: 'Your delivery is in transit.',
+        relatedEntity: { entityType: 'TransportRequest', entityId: request._id }
+      });
+      createNotification({
+        recipient: request.buyer,
+        type: 'delivery_in_transit',
+        title: 'Delivery In Transit',
+        message: 'Your delivery is in transit.',
+        relatedEntity: { entityType: 'TransportRequest', entityId: request._id }
+      });
     } else if (newStatus === 'delivered') {
       request.deliveredAt = new Date();
       await Order.findByIdAndUpdate(request.order, { deliveryStatus: 'delivered', status: 'delivered' });
       // Free transporter availability
       await TransportProfile.findOneAndUpdate({ user: req.user._id }, { isAvailable: true });
+      // Notify buyer and farmer
+      createNotification({
+        recipient: request.farmer,
+        type: 'delivery_delivered',
+        title: 'Order Delivered',
+        message: 'Your order has been delivered.',
+        relatedEntity: { entityType: 'TransportRequest', entityId: request._id }
+      });
+      createNotification({
+        recipient: request.buyer,
+        type: 'delivery_delivered',
+        title: 'Order Delivered',
+        message: 'Your order has been delivered.',
+        relatedEntity: { entityType: 'TransportRequest', entityId: request._id }
+      });
     } else if (newStatus === 'pickup_ready') {
       await Order.findByIdAndUpdate(request.order, { deliveryStatus: 'ready_for_pickup' });
     }
 
     await request.save();
+
+    logActivity({
+      user: req.user._id,
+      action: `delivery_status_${newStatus}`,
+      entityType: 'TransportRequest',
+      entityId: request._id,
+      description: `Transport request ${request.requestId} status updated to ${newStatus}`,
+      metadata: { requestId: request.requestId, newStatus },
+      ipAddress: req.ip
+    });
 
     return res.status(200).json({
       success: true,
