@@ -54,6 +54,13 @@ const produceLotSchema = new mongoose.Schema(
       required: [true, 'Quantity is required'],
       min: [0.01, 'Quantity must be greater than zero']
     },
+    availableQuantity: {
+      type: Number,
+      min: [0, 'Available quantity cannot be negative'],
+      default: function () {
+        return this.quantity;
+      }
+    },
     quantityUnit: {
       type: String,
       enum: {

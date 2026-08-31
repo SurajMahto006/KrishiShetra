@@ -76,6 +76,11 @@ const inquirySchema = new mongoose.Schema(
       default: 'pending',
       index: true
     },
+    order: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order',
+      default: null
+    },
     offers: {
       type: [offerItemSchema],
       default: []
