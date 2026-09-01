@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KrishiLink — B2B Agricultural Procurement Platform</title>
+  <title>KrishiShetra — B2B Agricultural Procurement Platform</title>
   <meta name="description" content="Production-grade agricultural procurement, lot discovery, quality analytics, digital offer negotiation, order tracking, and escrow payments for verified buyers.">
 
   <!-- Google Fonts -->
@@ -56,20 +56,17 @@
         <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace">
           <i data-lucide="store" class="dash-header__link-icon"></i> Marketplace
         </a>
-        <a href="#/buyer/lots" class="dash-header__link" data-route="/buyer/lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
-        </a>
-        <a href="#/buyer/offers" class="dash-header__link" data-route="/buyer/offers">
-          <i data-lucide="message-square" class="dash-header__link-icon"></i> Offers
+        <a href="#/buyer/inquiries" class="dash-header__link" data-route="/buyer/inquiries">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> My Inquiries
         </a>
         <a href="#/buyer/orders" class="dash-header__link" data-route="/buyer/orders">
           <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
         </a>
-        <a href="#/buyer/logistics" class="dash-header__link" data-route="/buyer/logistics">
-          <i data-lucide="map-pin" class="dash-header__link-icon"></i> Logistics
+        <a href="#/buyer/directory" class="dash-header__link" data-route="/buyer/directory">
+          <i data-lucide="users" class="dash-header__link-icon"></i> Farmers & FPOs
         </a>
         <a href="#/buyer/payments" class="dash-header__link" data-route="/buyer/payments">
-          <i data-lucide="credit-card" class="dash-header__link-icon"></i> Payments
+          <i data-lucide="wallet" class="dash-header__link-icon"></i> Escrow & Payments
         </a>
       </nav>
 
@@ -131,20 +128,17 @@
         <a href="#/buyer/marketplace" class="dash-header__link" data-route="/buyer/marketplace" onclick="toggleMobileNav()">
           <i data-lucide="store" class="dash-header__link-icon"></i> Marketplace
         </a>
-        <a href="#/buyer/lots" class="dash-header__link" data-route="/buyer/lots" onclick="toggleMobileNav()">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
-        </a>
-        <a href="#/buyer/offers" class="dash-header__link" data-route="/buyer/offers" onclick="toggleMobileNav()">
-          <i data-lucide="message-square" class="dash-header__link-icon"></i> Offers
+        <a href="#/buyer/inquiries" class="dash-header__link" data-route="/buyer/inquiries" onclick="toggleMobileNav()">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> My Inquiries
         </a>
         <a href="#/buyer/orders" class="dash-header__link" data-route="/buyer/orders" onclick="toggleMobileNav()">
           <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
         </a>
-        <a href="#/buyer/logistics" class="dash-header__link" data-route="/buyer/logistics" onclick="toggleMobileNav()">
-          <i data-lucide="map-pin" class="dash-header__link-icon"></i> Logistics
+        <a href="#/buyer/directory" class="dash-header__link" data-route="/buyer/directory" onclick="toggleMobileNav()">
+          <i data-lucide="users" class="dash-header__link-icon"></i> Farmers & FPOs
         </a>
         <a href="#/buyer/payments" class="dash-header__link" data-route="/buyer/payments" onclick="toggleMobileNav()">
-          <i data-lucide="credit-card" class="dash-header__link-icon"></i> Payments
+          <i data-lucide="wallet" class="dash-header__link-icon"></i> Escrow & Payments
         </a>
         <a href="#/buyer/profile" class="dash-header__link" data-route="/buyer/profile" onclick="toggleMobileNav()">
           <i data-lucide="user-check" class="dash-header__link-icon"></i> Profile
@@ -182,6 +176,7 @@
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
+  <script src="js/buyer-data.js"></script>
   <script src="js/buyer-app.js"></script>
 </body>
 </html>

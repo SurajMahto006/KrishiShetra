@@ -1777,11 +1777,14 @@ function initPriceTrendChart() {
 document.addEventListener('DOMContentLoaded', async () => {
   // Authentication State Verification
   if (window.Auth) {
-    const authenticatedUser = await window.Auth.verifyAuth();
-    if (!authenticatedUser) {
-      return; // verifyAuth redirects to login.html
+    if (window.Auth.isLocalEnv() && localStorage.getItem(window.Auth.DEV_SESSION_KEY)) {
+      // Local Developer Session active — skip remote token verification
+    } else {
+      const authenticatedUser = await window.Auth.verifyAuth();
+      if (!authenticatedUser) {
+        return;
+      }
     }
-    updateUserUI(authenticatedUser);
   }
 
   // 1. Date Display in Hero

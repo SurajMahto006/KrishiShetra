@@ -260,9 +260,16 @@ const Auth = {
    * Verify token with backend /api/auth/me
    */
   async verifyAuth() {
+    if (this.isLocalEnv() && localStorage.getItem(this.DEV_SESSION_KEY)) {
+      const devUser = this.getUser();
+      if (devUser) return devUser;
+    }
+
     const token = this.getToken();
     if (!token) {
-      this.clearSession();
+      if (!this.isLocalEnv() || !localStorage.getItem(this.DEV_SESSION_KEY)) {
+        this.clearSession();
+      }
       return null;
     }
 
@@ -287,7 +294,9 @@ const Auth = {
           return data.user;
         }
       }
-      this.clearSession();
+      if (!this.isLocalEnv() || !localStorage.getItem(this.DEV_SESSION_KEY)) {
+        this.clearSession();
+      }
       return null;
     } catch (err) {
       console.error('[Auth Verification Failed]:', err.message);

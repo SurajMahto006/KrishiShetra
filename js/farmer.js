@@ -24,11 +24,11 @@ const FarmerFlow = {
 
     // 3. Page-specific initializers
     const path = window.location.pathname.toLowerCase();
-    if (path.endsWith('dashboard.html') || path.endsWith('/')) {
+    if (typeof this.initDashboard === 'function' && (path.endsWith('dashboard.html') || path.endsWith('/'))) {
       await this.initDashboard();
-    } else if (path.endsWith('lots.html')) {
+    } else if (typeof this.initLotsPage === 'function' && path.endsWith('lots.html')) {
       await this.initLotsPage();
-    } else if (path.endsWith('market.html')) {
+    } else if (typeof this.initMarketPage === 'function' && path.endsWith('market.html')) {
       await this.initMarketPage();
     }
 

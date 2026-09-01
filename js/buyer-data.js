@@ -1,5 +1,5 @@
 /**
- * KRISHILINK — B2B BUYER MODULE DATA SERVICES v2.0
+ * KRISHISHETRA — B2B BUYER MODULE DATA SERVICES v2.0
  * Production-Grade API-Ready Abstraction Services
  */
 
@@ -499,19 +499,56 @@ const offerService = {
       ]
     };
     INITIAL_ORDERS_DATA.unshift(newOrder);
+
+    // Add Escrow record
+    paymentService.addEscrowTransaction({
+      orderId: newOrder.id,
+      seller: lot.sellerName,
+      crop: `${lot.crop} (${lot.quantity} Q)`,
+      amount: landed.grandTotal
+    });
+
     return { offer: off, order: newOrder };
   }
 };
 
 const orderService = {
-  getOrders() { return INITIAL_ORDERS_DATA; },
-  getOrderById(orderId) { return INITIAL_ORDERS_DATA.find(o => o.id === orderId) || INITIAL_ORDERS_DATA[0]; }
+  getOrders(statusFilter = 'all') {
+    if (statusFilter === 'all') return INITIAL_ORDERS_DATA;
+    return INITIAL_ORDERS_DATA.filter(o => o.status === statusFilter);
+  },
+  getOrderById(orderId) {
+    return INITIAL_ORDERS_DATA.find(o => o.id === orderId) || INITIAL_ORDERS_DATA[0];
+  },
+  confirmQualityAndRelease(orderId) {
+    const o = INITIAL_ORDERS_DATA.find(ord => ord.id === orderId);
+    if (!o) return null;
+    o.status = 'DELIVERED';
+    o.paymentStatus = 'RELEASED';
+    o.timeline.forEach(t => {
+      t.done = true;
+      t.active = false;
+      if (t.time === 'Pending') t.time = 'Completed';
+    });
+    // Add completed transaction in ledger
+    paymentService.releaseEscrowForOrder(orderId);
+    return o;
+  }
 };
 
 const logisticsService = {
   getTrackingInfo(orderId) {
     const order = orderService.getOrderById(orderId);
-    return order ? { ...order.logistics, orderId: order.id, crop: order.crop, sellerName: order.sellerName, pickupAddress: order.pickupAddress, deliveryAddress: order.deliveryAddress } : null;
+    return order ? {
+      ...order.logistics,
+      orderId: order.id,
+      crop: order.crop,
+      variety: order.variety,
+      quantity: order.quantity,
+      sellerName: order.sellerName,
+      pickupAddress: order.pickupAddress,
+      deliveryAddress: order.deliveryAddress
+    } : null;
   }
 };
 
@@ -519,25 +556,73 @@ const paymentService = {
   getSummary() {
     const completed = INITIAL_TRANSACTIONS_DATA.filter(t => t.status === 'COMPLETED');
     const held = INITIAL_TRANSACTIONS_DATA.filter(t => t.status === 'HELD');
+    const totalAmount = INITIAL_TRANSACTIONS_DATA.reduce((s, t) => s + t.amount, 0);
     return {
-      totalProcurement: '₹42.8L',
-      pendingEscrow: `₹${(held.reduce((s,t) => s + t.amount, 0) / 100000).toFixed(1)}L`,
-      paidCompleted: `₹${(completed.reduce((s,t) => s + t.amount, 0) / 100000).toFixed(1)}L`,
+      totalProcurement: `₹${(totalAmount / 100000).toFixed(1)}L`,
+      pendingEscrow: `₹${(held.reduce((s, t) => s + t.amount, 0) / 100000).toFixed(1)}L`,
+      paidCompleted: `₹${(completed.reduce((s, t) => s + t.amount, 0) / 100000).toFixed(1)}L`,
       transactionCount: INITIAL_TRANSACTIONS_DATA.length
     };
   },
-  getTransactions() { return INITIAL_TRANSACTIONS_DATA; }
+  getTransactions(filter = 'all') {
+    if (filter === 'all') return INITIAL_TRANSACTIONS_DATA;
+    return INITIAL_TRANSACTIONS_DATA.filter(t => t.status === filter || t.type.toLowerCase().includes(filter.toLowerCase()));
+  },
+  addEscrowTransaction({ orderId, seller, crop, amount }) {
+    const tx = {
+      id: `tx-${Math.floor(80000 + Math.random() * 19999)}`,
+      orderId: orderId,
+      date: new Date().toISOString().split('T')[0],
+      seller: seller,
+      crop: crop,
+      amount: amount,
+      type: 'Escrow Deposit',
+      status: 'HELD',
+      invoiceId: `INV-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 89999)}`
+    };
+    INITIAL_TRANSACTIONS_DATA.unshift(tx);
+    return tx;
+  },
+  releaseEscrowForOrder(orderId) {
+    const tx = INITIAL_TRANSACTIONS_DATA.find(t => t.orderId === orderId);
+    if (tx) {
+      tx.status = 'COMPLETED';
+      tx.type = 'Bank Transfer (Released)';
+    }
+  },
+  depositFunds(amount) {
+    const tx = {
+      id: `tx-${Math.floor(80000 + Math.random() * 19999)}`,
+      orderId: 'WALLET-TOPUP',
+      date: new Date().toISOString().split('T')[0],
+      seller: 'KrishiShetra Escrow Vault',
+      crop: 'Escrow Fund Allocation',
+      amount: parseFloat(amount),
+      type: 'Escrow Deposit',
+      status: 'HELD',
+      invoiceId: `INV-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 89999)}`
+    };
+    INITIAL_TRANSACTIONS_DATA.unshift(tx);
+    return tx;
+  }
 };
 
 const searchService = {
   search(query) {
     if (!query || query.length < 2) return [];
-    const q = query.toLowerCase();
+    const q = query.toLowerCase().trim();
     return SEARCH_INDEX.filter(item => item.label.toLowerCase().includes(q));
   }
 };
 
 const notificationService = {
-  getNotifications() { return NOTIFICATIONS_DATA; },
-  getCount() { return NOTIFICATIONS_DATA.length; }
+  getNotifications() {
+    return NOTIFICATIONS_DATA;
+  },
+  getCount() {
+    return NOTIFICATIONS_DATA.filter(n => n.unread).length || NOTIFICATIONS_DATA.length;
+  },
+  markAllRead() {
+    NOTIFICATIONS_DATA.forEach(n => n.unread = false);
+  }
 };
