@@ -1,0 +1,622 @@
+/* ==========================================================================
+   KRISHISHETRA UNIFIED DESIGN SYSTEM & STYLES
+   ========================================================================== */
+
+:root {
+  /* ── Backgrounds & Surfaces ── */
+  --ks-bg-ivory: #F5F4ED;
+  --ks-card-white: #FFFFFF;
+  --ks-surface-elevated: #FAF9F5;
+  --ks-surface-pale-sage: #E5F0E7;
+  --ks-surface-amber: #FDF8ED;
+  --ks-surface-terracotta: #FDF0EE;
+
+  /* ── Core Brand Palette ── */
+  --ks-evergreen: #12372A;
+  --ks-evergreen-light: #1A4D3B;
+  --ks-evergreen-dark: #0B251C;
+  --ks-sage: #5B9A72;
+  --ks-sage-hover: #4C8561;
+  --ks-sage-dark: #3F7051;
+  --ks-mint: #8FCB9B;
+  --ks-mint-light: #EAF6ED;
+  --ks-pale-sage: #E5F0E7;
+  --ks-pale-sage-light: #F0F6F1;
+
+  /* ── Typography & Neutral Tokens ── */
+  --ks-charcoal: #17221D;
+  --ks-text-main: #17221D;
+  --ks-text-muted: #6F7F75;
+  --ks-text-subtle: #8A9A90;
+  --ks-text-on-dark: #FFFFFF;
+  --ks-text-on-dark-sub: #B8CDC2;
+
+  /* ── Accent & Transaction Colors ── */
+  --ks-amber: #D6A84F;
+  --ks-amber-dark: #B88935;
+  --ks-amber-light: #FDF8ED;
+  --ks-terracotta: #C96D5B;
+  --ks-terracotta-dark: #A63F2C;
+  --ks-terracotta-light: #FDF0EE;
+  --ks-blue: #3B82F6;
+  --ks-blue-light: #EBF4FC;
+
+  /* ── Borders ── */
+  --ks-border: #E2DDD0;
+  --ks-border-subtle: #ECEAE1;
+  --ks-border-light: #E7E6DC;
+  --ks-border-sage: #BCD7C3;
+  --ks-border-amber: #EAD098;
+  --ks-border-terracotta: #E8A89C;
+
+  /* ── Status Tokens ── */
+  --status-success-bg: #E8F5EC;
+  --status-success-border: #8FCB9B;
+  --status-success-text: #2E7246;
+
+  --status-warning-bg: #FDF6E8;
+  --status-warning-border: #E8C882;
+  --status-warning-text: #8C6517;
+
+  --status-info-bg: #EBF4FC;
+  --status-info-border: #A3CDF7;
+  --status-info-text: #1E5C99;
+
+  --status-error-bg: #FDF0EE;
+  --status-error-border: #E8A89C;
+  --status-error-text: #A63F2C;
+
+  /* ── Typography Tokens ── */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* ── Dimensions ── */
+  --header-height: 70px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-xs: 0 1px 3px rgba(18, 55, 42, 0.04), 0 1px 2px rgba(18, 55, 42, 0.02);
+  --shadow-sm: 0 2px 8px rgba(18, 55, 42, 0.05), 0 1px 3px rgba(18, 55, 42, 0.02);
+  --shadow-md: 0 8px 24px rgba(18, 55, 42, 0.07), 0 2px 6px rgba(18, 55, 42, 0.03);
+  --shadow-lg: 0 16px 36px rgba(18, 55, 42, 0.1), 0 4px 12px rgba(18, 55, 42, 0.04);
+
+  /* ── Transitions ── */
+  --transition-fast: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100vh;
+  background-color: var(--ks-bg-ivory);
+  color: var(--ks-charcoal);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ks-evergreen);
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.serif-heading {
+  font-family: var(--font-display);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* ── Layout Containers ── */
+.app-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.app-main {
+  min-height: calc(100vh - var(--header-height));
+  padding: 28px 0 60px 0;
+}
+
+/* ── Universal Header ── */
+.ks-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: var(--ks-evergreen);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(11, 37, 28, 0.25);
+}
+
+.ks-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  gap: 20px;
+}
+
+.ks-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.ks-brand__logo-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8FCB9B 0%, #5B9A72 50%, #12372A 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(18, 55, 42, 0.35);
+}
+
+.ks-brand__text {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ks-brand__badge {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  background: rgba(143, 203, 155, 0.22);
+  color: #8FCB9B;
+  border: 1px solid rgba(143, 203, 155, 0.35);
+}
+
+/* ── Navigation Menu ── */
+.ks-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ks-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--ks-text-on-dark-sub);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+
+.ks-nav__link:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ks-nav__link.active {
+  color: #FFFFFF;
+  background: rgba(143, 203, 155, 0.18);
+  border: 1px solid rgba(143, 203, 155, 0.28);
+  font-weight: 600;
+}
+
+/* ── Header Actions ── */
+.ks-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ks-icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--ks-text-on-dark-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: var(--transition-fast);
+}
+
+.ks-icon-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.ks-badge-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ks-amber);
+  border: 2px solid var(--ks-evergreen);
+}
+
+.ks-user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px 5px 6px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #FFFFFF;
+  transition: var(--transition-fast);
+}
+
+.ks-user-menu:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ks-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ks-sage) 0%, var(--ks-mint) 100%);
+  color: var(--ks-evergreen);
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Cards & Surfaces ── */
+.ks-card {
+  background: var(--ks-card-white);
+  border: 1px solid var(--ks-border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 24px;
+  transition: var(--transition-fast);
+}
+
+.ks-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.ks-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 12px;
+}
+
+.ks-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ks-evergreen);
+}
+
+/* ── Stat Cards ── */
+.ks-stat-card {
+  background: var(--ks-card-white);
+  border: 1px solid var(--ks-border-light);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  transition: var(--transition-fast);
+}
+
+.ks-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.ks-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ks-stat-icon--sage {
+  background: var(--ks-surface-pale-sage);
+  color: var(--ks-sage-dark);
+}
+
+.ks-stat-icon--amber {
+  background: var(--ks-surface-amber);
+  color: var(--ks-amber-dark);
+}
+
+.ks-stat-icon--terracotta {
+  background: var(--ks-surface-terracotta);
+  color: var(--ks-terracotta-dark);
+}
+
+.ks-stat-icon--blue {
+  background: var(--ks-blue-light);
+  color: var(--ks-blue);
+}
+
+/* ── Buttons ── */
+.ks-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition-fast);
+  text-decoration: none;
+}
+
+.ks-btn--primary {
+  background: var(--ks-sage);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(91, 154, 114, 0.28);
+}
+
+.ks-btn--primary:hover {
+  background: var(--ks-sage-hover);
+  box-shadow: 0 4px 12px rgba(91, 154, 114, 0.38);
+}
+
+.ks-btn--secondary {
+  background: var(--ks-card-white);
+  color: var(--ks-charcoal);
+  border: 1px solid var(--ks-border);
+}
+
+.ks-btn--secondary:hover {
+  background: var(--ks-surface-elevated);
+  border-color: var(--ks-text-muted);
+}
+
+.ks-btn--danger {
+  background: var(--ks-terracotta);
+  color: #FFFFFF;
+}
+
+.ks-btn--danger:hover {
+  background: var(--ks-terracotta-dark);
+}
+
+.ks-btn--sm {
+  padding: 6px 12px;
+  font-size: 12.5px;
+}
+
+.ks-btn--lg {
+  padding: 12px 24px;
+  font-size: 15px;
+}
+
+/* ── Status Badges ── */
+.ks-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ks-badge--success {
+  background: var(--status-success-bg);
+  border: 1px solid var(--status-success-border);
+  color: var(--status-success-text);
+}
+
+.ks-badge--warning {
+  background: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  color: var(--status-warning-text);
+}
+
+.ks-badge--info {
+  background: var(--status-info-bg);
+  border: 1px solid var(--status-info-border);
+  color: var(--status-info-text);
+}
+
+.ks-badge--danger {
+  background: var(--status-error-bg);
+  border: 1px solid var(--status-error-border);
+  color: var(--status-error-text);
+}
+
+/* ── Tables ── */
+.ks-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--ks-border-light);
+  border-radius: var(--radius-sm);
+  background: var(--ks-card-white);
+}
+
+.ks-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13.5px;
+}
+
+.ks-table th {
+  background: var(--ks-surface-elevated);
+  color: var(--ks-text-muted);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ks-border-light);
+}
+
+.ks-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--ks-border-subtle);
+  color: var(--ks-charcoal);
+  vertical-align: middle;
+}
+
+.ks-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ks-table tbody tr:hover td {
+  background: var(--ks-surface-pale-sage-light);
+}
+
+/* ── Form Controls ── */
+.ks-form-group {
+  margin-bottom: 18px;
+}
+
+.ks-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ks-charcoal);
+  margin-bottom: 6px;
+}
+
+.ks-input, .ks-select, .ks-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  background: #FFFFFF;
+  border: 1px solid var(--ks-border);
+  border-radius: var(--radius-sm);
+  color: var(--ks-charcoal);
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.ks-input:focus, .ks-select:focus, .ks-textarea:focus {
+  border-color: var(--ks-sage);
+  box-shadow: 0 0 0 3px rgba(91, 154, 114, 0.15);
+}
+
+/* ── Shimmer Skeleton ── */
+@keyframes ksShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.ks-skeleton {
+  background: linear-gradient(90deg, #EAE8DE 25%, #F4F2E8 50%, #EAE8DE 75%);
+  background-size: 200% 100%;
+  animation: ksShimmer 1.5s infinite;
+  border-radius: var(--radius-xs);
+}
+
+/* ── Empty State ── */
+.ks-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--ks-card-white);
+  border: 1px dashed var(--ks-border);
+  border-radius: var(--radius-md);
+}
+
+.ks-empty-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--ks-text-muted);
+  margin: 0 auto 12px;
+}
+
+.ks-empty-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ks-evergreen);
+  margin-bottom: 6px;
+}
+
+.ks-empty-desc {
+  font-size: 13.5px;
+  color: var(--ks-text-muted);
+  max-width: 400px;
+  margin: 0 auto 16px;
+}
+
+/* ── Grid Utilities ── */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  .ks-nav { display: none; }
+  .app-container { padding: 0 16px; }
+}
