@@ -30,6 +30,8 @@ import BuyerOffers from './pages/buyer/BuyerOffers';
 import BuyerOrders from './pages/buyer/BuyerOrders';
 import BuyerLogistics from './pages/buyer/BuyerLogistics';
 import BuyerPayments from './pages/buyer/BuyerPayments';
+import BuyerRequirements from './pages/buyer/BuyerRequirements';
+import BuyerProfile from './pages/buyer/BuyerProfile';
 
 // Transporter Workspace
 import TransporterDashboard from './pages/transporter/TransporterDashboard';
@@ -190,6 +192,14 @@ export const App = () => {
             }
           />
           <Route
+            path="/buyer/requirements"
+            element={
+              <ProtectedRoute allowedRoles={['buyer', 'admin']}>
+                <BuyerRequirements />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/buyer/lots"
             element={
               <ProtectedRoute allowedRoles={['buyer', 'admin']}>
@@ -226,6 +236,14 @@ export const App = () => {
             element={
               <ProtectedRoute allowedRoles={['buyer', 'admin']}>
                 <BuyerPayments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/buyer/profile"
+            element={
+              <ProtectedRoute allowedRoles={['buyer', 'admin']}>
+                <BuyerProfile />
               </ProtectedRoute>
             }
           />
