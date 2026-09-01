@@ -16,7 +16,6 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <link rel="stylesheet" href="css/app-shell.css">
   <link rel="stylesheet" href="css/fpo-dashboard.css">
 </head>
 <body data-require-role="fpo">
@@ -27,8 +26,8 @@
   <header class="header" id="mainHeader">
     <div class="container header-inner">
       <!-- Brand Logo -->
-      <a href="fpo-dashboard.html" class="brand">
-        <div class="brand-icon"><i data-lucide="sprout"></i></div>
+      <a href="index.html" class="brand">
+        <span class="brand-icon">🌾</span>
         <span class="brand-text">
           KrishiShetra
           <span class="brand-badge">FPO Hub</span>
@@ -50,10 +49,6 @@
 
       <!-- Header Right Controls -->
       <div class="header-actions">
-        <!-- Universal Workspace Switcher -->
-        <button class="workspace-switcher-btn" data-action="switch-workspace" title="Switch Workspace">
-          <i data-lucide="grid" style="width:13px;height:13px;"></i> Workspaces
-        </button>
         <!-- Notification Bell -->
         <button class="icon-btn" id="notifBtn" title="Notifications" onclick="toggleNotificationMenu()">
           <i data-lucide="bell" style="width:18px;height:18px;"></i>
@@ -1137,7 +1132,6 @@
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
-  <script src="js/app-shell.js"></script>
   <script src="js/fpo-dashboard.js"></script>
   <script>
     // Initialize Lucide Icons

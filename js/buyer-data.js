@@ -1,5 +1,5 @@
 /**
- * KRISHISHETRA — B2B BUYER MODULE DATA SERVICES v2.0
+ * KRISHILINK — B2B BUYER MODULE DATA SERVICES v2.0
  * Production-Grade API-Ready Abstraction Services
  */
 
