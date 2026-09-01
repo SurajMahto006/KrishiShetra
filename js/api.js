@@ -77,19 +77,23 @@ class ApiClient {
 
       // Handle 401 Unauthorized globally
       if (response.status === 401) {
-        if (window.Auth && typeof window.Auth.clearSession === 'function') {
-          window.Auth.clearSession();
-        } else {
-          localStorage.removeItem('krishi_token');
-          localStorage.removeItem('krishi_user');
-          localStorage.removeItem('krishi_user_role');
-          localStorage.removeItem('krishi_is_logged_in');
-        }
+        const isLocalDev = window.Auth && typeof window.Auth.isLocalEnv === 'function' && window.Auth.isLocalEnv() && localStorage.getItem('krishishetra_dev_session');
 
-        // Only redirect if on a protected page (not login or landing)
-        const path = window.location.pathname.toLowerCase();
-        if (!path.endsWith('login.html') && !path.endsWith('index.html') && !path.endsWith('/')) {
-          window.location.href = path.includes('/transporter/') || path.includes('/admin/') ? '../login.html' : 'login.html';
+        if (!isLocalDev) {
+          if (window.Auth && typeof window.Auth.clearSession === 'function') {
+            window.Auth.clearSession();
+          } else {
+            localStorage.removeItem('krishi_token');
+            localStorage.removeItem('krishi_user');
+            localStorage.removeItem('krishi_user_role');
+            localStorage.removeItem('krishi_is_logged_in');
+          }
+
+          // Only redirect if on a protected page (not login or landing)
+          const path = window.location.pathname.toLowerCase();
+          if (!path.endsWith('login.html') && !path.endsWith('index.html') && !path.endsWith('/')) {
+            window.location.href = path.includes('/transporter/') || path.includes('/admin/') ? '../login.html' : 'login.html';
+          }
         }
 
         return {
