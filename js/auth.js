@@ -171,6 +171,36 @@ const Auth = {
   },
 
   /**
+   * Get canonical target URL for Home/Logo navigation based on authentication status.
+   * If logged in, returns user's specific dashboard URL.
+   * If logged out, returns the public landing page.
+   */
+  getAuthenticatedHome() {
+    const path = window.location.pathname.toLowerCase();
+    const isSubdir = path.includes('/transporter/') || path.includes('/admin/');
+    const prefix = isSubdir ? '../' : '';
+
+    if (!this.isLoggedIn()) {
+      return `${prefix}index.html`;
+    }
+
+    const role = this.getRole();
+    switch (role) {
+      case 'buyer':
+        return `${prefix}buyer.html`;
+      case 'transporter':
+        return `${prefix}transporter/dashboard.html`;
+      case 'fpo':
+        return `${prefix}fpo-dashboard.html`;
+      case 'admin':
+        return `${prefix}admin/dashboard.html`;
+      case 'farmer':
+      default:
+        return `${prefix}dashboard.html`;
+    }
+  },
+
+  /**
    * Require user to be logged in. Redirect to login.html if not.
    */
   requireAuth() {
@@ -185,11 +215,14 @@ const Auth = {
 
   /**
    * Require user to possess specific role. If wrong role, redirect to appropriate dashboard.
+   * Note: admin is permitted on all dashboards.
    */
   requireRole(expectedRole) {
     if (!this.requireAuth()) return false;
 
     const currentRole = this.getRole();
+    if (currentRole === 'admin') return true;
+
     if (currentRole !== expectedRole.toLowerCase()) {
       console.warn(`[PageGuard] Role mismatch. Expected: '${expectedRole}', Current: '${currentRole}'. Redirecting...`);
       this.redirectUserByRole();
@@ -197,6 +230,8 @@ const Auth = {
     }
     return true;
   },
+
+
 
   /**
    * Verify token with backend /api/auth/me

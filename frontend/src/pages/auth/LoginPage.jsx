@@ -58,25 +58,32 @@ export const LoginPage = () => {
               id="login-email"
               type="email"
               className="ks-input"
-              style={{ paddingLeft: '38px', height: '42px', fontSize: '13.5px' }}
-              placeholder="farmer@example.com"
+              style={{ paddingLeft: '38px', height: '40px', fontSize: '13.5px' }}
+              placeholder="name@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              autoComplete="email"
               disabled={loading}
+              autoComplete="email"
             />
           </div>
         </div>
 
-        {/* Password with Eye Toggle */}
+        {/* Password */}
         <div className="ks-form-group" style={{ marginBottom: '12px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-            <label className="ks-label" htmlFor="login-password" style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <label className="ks-label" htmlFor="login-password" style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               Password
             </label>
-            <a href="#" style={{ color: 'var(--ks-sage)', fontSize: '11.5px', fontWeight: 600 }}>
-              Forgot Password?
+            <a
+              href="#forgot-password"
+              onClick={(e) => {
+                e.preventDefault();
+                alert('Password reset link will be sent to your verified email.');
+              }}
+              style={{ fontSize: '11.5px', color: 'var(--ks-sage)', fontWeight: 600, textDecoration: 'none' }}
+            >
+              Forgot password?
             </a>
           </div>
           <div style={{ position: 'relative' }}>
@@ -85,38 +92,34 @@ export const LoginPage = () => {
               id="login-password"
               type={showPassword ? 'text' : 'password'}
               className="ks-input"
-              style={{ paddingLeft: '38px', paddingRight: '40px', height: '42px', fontSize: '13.5px' }}
-              placeholder="Enter your password"
+              style={{ paddingLeft: '38px', paddingRight: '38px', height: '40px', fontSize: '13.5px' }}
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              autoComplete="current-password"
               disabled={loading}
+              autoComplete="current-password"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label="Toggle password visibility"
               style={{
                 position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'none',
+                right: '12px',
+                top: '12px',
+                background: 'transparent',
                 border: 'none',
                 color: 'var(--ks-text-muted)',
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                padding: '4px'
+                padding: 0
               }}
             >
-              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
           </div>
         </div>
 
-        {/* Remember Me */}
+        {/* Remember me */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px', fontSize: '12.5px' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ks-text-muted)', cursor: 'pointer' }}>
             <input type="checkbox" defaultChecked disabled={loading} /> Remember me on this device
@@ -138,7 +141,7 @@ export const LoginPage = () => {
         </Button>
       </form>
 
-      {/* Development-Only Role Selector for Local Contributors */}
+      {/* Local Vite Development Role Selection */}
       {import.meta.env.DEV && <DevAuthSelector />}
     </AuthLayout>
   );

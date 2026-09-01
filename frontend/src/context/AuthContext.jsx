@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
   // 1. Real production token
   const [token, setToken] = useState(() => localStorage.getItem('krishi_token'));
 
-  // 2. Development-only session
+  // 2. Local Vite Development session
   const [devSession, setDevSession] = useState(() => {
     if (!isDevMode) return null;
     try {
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     }
   });
 
-  // 3. User object resolution (real user takes priority, fallback to devSession in development)
+  // 3. User object resolution (real user takes priority, fallback to devSession in local dev)
   const [user, setUser] = useState(() => {
     try {
       const stored = localStorage.getItem('krishi_user');
@@ -139,7 +139,7 @@ export const AuthProvider = ({ children }) => {
     return () => { isMounted = false; };
   }, []);
 
-  // ── Real Production Login ──
+  // ── Real Production Login (Preserved for Production) ──
   const login = useCallback(async (email, password) => {
     setIsSubmitting(true);
     try {
@@ -230,10 +230,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isDevMode]);
 
-  // ── Development-Only Login as Test Role ──
+  // ── Local Vite Development Role Setter ──
   const loginAsDevRole = useCallback((roleKey) => {
     if (!isDevMode) {
-      console.warn('[AuthContext] loginAsDevRole is strictly disabled in production builds.');
+      console.warn('[AuthContext] Developer role access is strictly disabled in production builds.');
       return null;
     }
 
@@ -254,20 +254,23 @@ export const AuthProvider = ({ children }) => {
     return testUser;
   }, [isDevMode]);
 
-  // ── Development-Only Role Switcher ──
+  // ── Local Vite Development Role Switcher ──
   const switchDevRole = useCallback((roleKey) => {
     return loginAsDevRole(roleKey);
   }, [loginAsDevRole]);
 
-  // ── Unified Logout ──
+  // ── Isolated Logout ──
   const logout = useCallback(() => {
-    // 1. Wipe dev session if in development mode
-    if (isDevMode) {
+    // 1. If currently in a local dev session, only clear the dev session
+    if (isDevMode && localStorage.getItem(DEV_SESSION_KEY)) {
       localStorage.removeItem(DEV_SESSION_KEY);
       setDevSession(null);
+      setUser(null);
+      setRole('farmer');
+      return;
     }
 
-    // 2. Wipe real production authentication artifacts
+    // 2. Production session logout
     localStorage.removeItem('krishi_token');
     localStorage.removeItem('krishi_user');
     localStorage.removeItem('krishi_user_role');
@@ -275,7 +278,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('krishi_user_email');
     localStorage.removeItem('krishi_is_logged_in');
 
-    // 3. Reset memory state
     setToken(null);
     setUser(null);
     setRole('farmer');
