@@ -610,13 +610,16 @@ input, select, textarea {
   gap: 20px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 640px) {
-  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
-  .ks-nav { display: none; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .ks-nav { display: none !important; }
+  .mobile-only-toggle { display: flex !important; }
   .app-container { padding: 0 16px; }
 }
+
+@media (max-width: 480px) {
+  .grid-4, .grid-3 { grid-template-columns: 1fr; }
+}
+

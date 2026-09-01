@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import api from '../services/api';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+  // Synchronous initialization from localStorage for instant, zero-delay startup
   const [token, setToken] = useState(() => localStorage.getItem('krishi_token'));
   const [user, setUser] = useState(() => {
     try {
@@ -14,76 +15,69 @@ export const AuthProvider = ({ children }) => {
     }
   });
   const [role, setRole] = useState(() => localStorage.getItem('krishi_user_role') || 'farmer');
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (token && !user) {
-      // Fetch user profile if token exists but user state is missing
-      fetchProfile();
-    }
-  }, [token]);
-
-  const fetchProfile = async () => {
-    try {
-      const res = await api.get('/auth/profile');
-      if (res.success && res.data) {
-        setUser(res.data);
-        const userRole = (res.data.role || 'farmer').toLowerCase();
-        setRole(userRole);
-        localStorage.setItem('krishi_user', JSON.stringify(res.data));
-        localStorage.setItem('krishi_user_role', userRole);
-      }
-    } catch (e) {
-      console.warn('Profile fetch failed:', e);
-    }
-  };
-
-  const login = async (email, password) => {
-    setLoading(true);
+  const login = useCallback(async (email, password) => {
+    setIsSubmitting(true);
     try {
       const res = await api.post('/auth/login', { email, password });
+      
       if (res.success && res.token) {
         const authToken = res.token;
-        const authUser = res.user || { email, name: res.name || email.split('@')[0], role: res.role || 'farmer' };
-        const userRole = (authUser.role || 'farmer').toLowerCase();
+        const authUser = res.user || {
+          id: res.id || email,
+          name: res.name || email.split('@')[0],
+          email,
+          role: res.role || 'farmer'
+        };
+        const userRole = (authUser.role || res.role || 'farmer').toLowerCase();
 
-        setToken(authToken);
-        setUser(authUser);
-        setRole(userRole);
-
+        // 1. Synchronously update localStorage
         localStorage.setItem('krishi_token', authToken);
         localStorage.setItem('krishi_user', JSON.stringify(authUser));
         localStorage.setItem('krishi_user_role', userRole);
         localStorage.setItem('krishi_is_logged_in', 'true');
 
+        // 2. Synchronously update in-memory state
+        setToken(authToken);
+        setUser(authUser);
+        setRole(userRole);
+
         return { success: true, role: userRole };
       }
-      return { success: false, message: res.message || 'Login failed' };
-    } catch (err) {
-      return { success: false, message: err.message || 'Login failed' };
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const register = async (formData) => {
-    setLoading(true);
+      return {
+        success: false,
+        message: res.message || 'Invalid email or password. Please try again.'
+      };
+    } catch (err) {
+      return {
+        success: false,
+        message: err.message || 'Network error during login. Please check server connection.'
+      };
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, []);
+
+  const register = useCallback(async (formData) => {
+    setIsSubmitting(true);
     try {
       const res = await api.post('/auth/register', formData);
       if (res.success) {
         if (res.token) {
           const authToken = res.token;
           const authUser = res.user || formData;
-          const userRole = (authUser.role || 'farmer').toLowerCase();
-
-          setToken(authToken);
-          setUser(authUser);
-          setRole(userRole);
+          const userRole = (authUser.role || formData.role || 'farmer').toLowerCase();
 
           localStorage.setItem('krishi_token', authToken);
           localStorage.setItem('krishi_user', JSON.stringify(authUser));
           localStorage.setItem('krishi_user_role', userRole);
           localStorage.setItem('krishi_is_logged_in', 'true');
+
+          setToken(authToken);
+          setUser(authUser);
+          setRole(userRole);
 
           return { success: true, role: userRole };
         }
@@ -93,32 +87,34 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       return { success: false, message: err.message || 'Registration failed' };
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
-  };
+  }, []);
 
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    setRole('farmer');
+  const logout = useCallback(() => {
+    // 1. Wipe all authentication artifacts
     localStorage.removeItem('krishi_token');
     localStorage.removeItem('krishi_user');
     localStorage.removeItem('krishi_user_role');
     localStorage.removeItem('krishi_user_name');
     localStorage.removeItem('krishi_user_email');
     localStorage.removeItem('krishi_is_logged_in');
-  };
+
+    // 2. Reset memory state
+    setToken(null);
+    setUser(null);
+    setRole('farmer');
+  }, []);
 
   const value = {
     token,
     user,
     role,
     isAuthenticated: !!token,
-    loading,
+    loading: isSubmitting,
     login,
     register,
-    logout,
-    refreshProfile: fetchProfile
+    logout
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

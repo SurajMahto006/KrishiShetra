@@ -13,14 +13,15 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError('');
 
-    const res = await login(email, password);
+    const res = await login(email.trim(), password);
     if (res.success) {
-      const userRole = res.role || 'farmer';
-      navigate(`/${userRole}/dashboard`);
+      const userRole = (res.role || 'farmer').toLowerCase();
+      navigate(`/${userRole}/dashboard`, { replace: true });
     } else {
-      setError(res.message || 'Invalid credentials. Please verify your email and password.');
+      setError(res.message || 'Invalid email or password. Please verify your credentials.');
     }
   };
 
@@ -43,7 +44,7 @@ export const LoginPage = () => {
 
         {error && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: 'var(--status-error-bg)', border: '1px solid var(--status-error-border)', color: 'var(--status-error-text)', borderRadius: 'var(--radius-sm)', fontSize: '13px', marginBottom: '20px' }}>
-            <AlertCircle size={16} />
+            <AlertCircle size={16} style={{ flexShrink: 0 }} />
             <span>{error}</span>
           </div>
         )}
@@ -62,6 +63,8 @@ export const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoComplete="email"
+                disabled={loading}
               />
             </div>
           </div>
@@ -79,6 +82,8 @@ export const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="current-password"
+                disabled={loading}
               />
             </div>
           </div>
@@ -99,7 +104,7 @@ export const LoginPage = () => {
             iconPosition="right"
             style={{ width: '100%' }}
           >
-            Sign In to Workspace
+            {loading ? 'Signing in...' : 'Sign In to Workspace'}
           </Button>
         </form>
 
