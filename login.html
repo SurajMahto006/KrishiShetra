@@ -1742,23 +1742,23 @@
                 localStorage.setItem('krishi_is_logged_in', 'true');
               }
 
-              // Explicit Canonical Routing
+              // Explicit Direct Canonical Routing
               switch (role) {
                 case 'buyer':
-                  window.location.href = 'buyer.html';
+                  window.location.href = '/buyer.html';
                   break;
                 case 'fpo':
-                  window.location.href = 'fpo-dashboard.html';
+                  window.location.href = '/fpo-dashboard.html';
                   break;
                 case 'transporter':
-                  window.location.href = 'transporter/dashboard.html';
+                  window.location.href = '/transporter/dashboard.html';
                   break;
                 case 'admin':
-                  window.location.href = 'admin/dashboard.html';
+                  window.location.href = '/admin/dashboard.html';
                   break;
                 case 'farmer':
                 default:
-                  window.location.href = 'dashboard.html';
+                  window.location.href = '/dashboard.html';
                   break;
               }
             });
