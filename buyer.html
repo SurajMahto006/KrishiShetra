@@ -112,13 +112,9 @@
             </div>
             <div class="dash-profile-dropdown__sep"></div>
             <a href="#/buyer/profile" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="building-2"></i> Business Profile & Settings</a>
-            <a href="#/buyer/kyc-verification" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="shield-check"></i> KYC Verification Docs</a>
-            <a href="#/buyer/payments" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="wallet"></i> Escrow Ledger (₹50L Limit)</a>
+            <a href="#/buyer/payments" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="wallet"></i> Escrow Ledger</a>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="sprout"></i> Switch to Farmer Hub</a>
-            <a href="fpo-dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="users"></i> Switch to FPO Hub</a>
-            <a href="transporter/dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="truck"></i> Switch to Transporter Hub</a>
-            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
+            <a href="javascript:void(0)" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger" onclick="if (window.Auth && window.Auth.logout) { window.Auth.logout(); } else { localStorage.clear(); window.location.href='login.html'; }"><i data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
 
@@ -156,9 +152,11 @@
         <a href="#/buyer/profile" class="dash-header__link" data-route="/buyer/profile" onclick="toggleMobileNav()">
           <i data-lucide="user-check" class="dash-header__link-icon"></i> Profile
         </a>
-        <a href="#/buyer/kyc-verification" class="dash-header__link" data-route="/buyer/kyc-verification" onclick="toggleMobileNav()">
-          <i data-lucide="shield-check" class="dash-header__link-icon"></i> KYC Verification
-        </a>
+        <div style="padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 8px;">
+          <a href="javascript:void(0)" style="color: #FFA89B; font-weight: 700; display: flex; align-items: center; gap: 8px; font-size: 13.5px;" onclick="if (window.Auth && window.Auth.logout) { window.Auth.logout(); } else { localStorage.clear(); window.location.href='login.html'; }">
+            <i data-lucide="log-out"></i> Logout
+          </a>
+        </div>
       </nav>
     </div>
   </header>
