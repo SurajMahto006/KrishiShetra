@@ -36,7 +36,7 @@
       <!-- Brand Logo -->
       <a href="#/buyer/dashboard" class="dash-header__logo" id="buyer-logo">
         <div class="dash-header__logo-icon"><i data-lucide="sprout"></i></div>
-        <span class="dash-header__logo-text">KrishiLink</span>
+        <span class="dash-header__logo-text">Krishi<span>Shetra</span></span>
         <span class="buyer-header__badge">BUYER</span>
       </a>
 
@@ -111,7 +111,7 @@
             <a href="#/buyer/payments" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="wallet"></i> Escrow Ledger (₹50L Limit)</a>
             <div class="dash-profile-dropdown__sep"></div>
             <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="repeat"></i> Switch to Farmer Portal</a>
-            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
+            <a href="javascript:void(0)" onclick="if (window.Auth && window.Auth.logout) { window.Auth.logout(); } else { localStorage.clear(); window.location.href='login.html'; }" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
 

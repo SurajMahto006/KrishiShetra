@@ -1712,7 +1712,12 @@
       });
 
       // ── Local Development Role Shortcut Handler ──
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      const isDevEnv = (window.Auth && typeof window.Auth.isLocalEnv === 'function' && window.Auth.isLocalEnv()) ||
+                       window.location.hostname === 'localhost' ||
+                       window.location.hostname === '127.0.0.1' ||
+                       window.location.protocol === 'file:';
+
+      if (isDevEnv) {
         const devBlock = document.getElementById('local-dev-testing');
         if (devBlock) {
           devBlock.style.display = 'block';
@@ -1730,7 +1735,7 @@
               if (window.Auth && typeof window.Auth.redirectUserByRole === 'function') {
                 window.Auth.redirectUserByRole(devUser);
               } else {
-                window.location.href = role === 'farmer' ? 'dashboard.html' : `${role}.html`;
+                window.location.href = role === 'farmer' ? 'dashboard.html' : (role === 'buyer' ? 'buyer.html' : `${role}-dashboard.html`);
               }
             });
           });

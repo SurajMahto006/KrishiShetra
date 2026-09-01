@@ -17,8 +17,10 @@ const Auth = {
    * Check if running in a local development environment
    */
   isLocalEnv() {
-    return typeof window !== 'undefined' && window.location &&
-      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    if (typeof window === 'undefined' || !window.location) return false;
+    const h = window.location.hostname || '';
+    const p = window.location.protocol || '';
+    return h === 'localhost' || h === '127.0.0.1' || h.startsWith('192.168.') || h.startsWith('10.') || h === '' || p === 'file:';
   },
 
   /**

@@ -1521,7 +1521,67 @@ function initSearchInput() {
   }
 }
 
+// ── UI Interaction & Modal Helpers ──
+function toggleProfileDropdown() {
+  const dropdown = document.getElementById('dash-profile-dropdown');
+  if (dropdown) dropdown.classList.toggle('active');
+}
+
+function closeProfileDropdown() {
+  const dropdown = document.getElementById('dash-profile-dropdown');
+  if (dropdown) dropdown.classList.remove('active');
+}
+
+function toggleMobileNav() {
+  const menu = document.getElementById('dash-mobile-menu');
+  if (menu) menu.classList.toggle('active');
+}
+
+function openModal(title, bodyHtml, footerHtml) {
+  const overlay = document.getElementById('kl-modal-overlay');
+  const titleEl = document.getElementById('kl-modal-title');
+  const bodyEl = document.getElementById('kl-modal-body');
+  const footerEl = document.getElementById('kl-modal-footer');
+  if (titleEl) titleEl.textContent = title || '';
+  if (bodyEl) bodyEl.innerHTML = bodyHtml || '';
+  if (footerEl) footerEl.innerHTML = footerHtml || '';
+  if (overlay) overlay.classList.add('active');
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+}
+
+function closeModal() {
+  const overlay = document.getElementById('kl-modal-overlay');
+  if (overlay) overlay.classList.remove('active');
+  const detailOverlay = document.getElementById('buyer-lot-detail-overlay');
+  if (detailOverlay) detailOverlay.classList.remove('active');
+}
+
+function closeModalOnBackdrop(e) {
+  if (e && e.target && e.target.id === 'kl-modal-overlay') {
+    closeModal();
+  }
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('kl-toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `kl-toast kl-toast--${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.remove();
+  }, 4000);
+}
+
 // Global modal triggers for HTML onclick bindings
+window.toggleProfileDropdown = toggleProfileDropdown;
+window.closeProfileDropdown = closeProfileDropdown;
+window.toggleMobileNav = toggleMobileNav;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.closeModalOnBackdrop = closeModalOnBackdrop;
+window.showToast = showToast;
 window.openLotDetailModal = openLotDetailModal;
 window.openSendInquiryModal = openSendInquiryModal;
 window.openNegotiationModal = openNegotiationModal;
@@ -1531,4 +1591,5 @@ window.renderLotsView = renderLotsView;
 window.renderLogisticsView = renderLogisticsView;
 window.renderPaymentsView = renderPaymentsView;
 window.renderProfileView = renderProfileView;
+
 
