@@ -580,10 +580,7 @@ function openProfileModal() {
         <div><strong>Bank Escrow:</strong> State Bank of India (Active)</div>
       </div>
     </div>
-    <div style="display:flex;gap:10px;">
-      <button class="btn btn-danger" style="flex:1;" onclick="if(window.Auth){Auth.logout()}else{window.location.href='login.html'}">Sign Out</button>
-      <button class="btn btn-secondary" style="flex:1;" onclick="closeModal('lotDetailModal')">Close</button>
-    </div>
+    <button class="btn btn-secondary" style="width:100%;" onclick="closeModal('lotDetailModal')">Close</button>
   `;
   document.getElementById('lotModalTitle').innerText = `👤 FPO Organization Profile`;
   document.getElementById('lotModalContent').innerHTML = content;

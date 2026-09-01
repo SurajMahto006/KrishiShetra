@@ -16,7 +16,7 @@
     rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/app-shell.css">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
 
   <!-- Lucide Icons -->
@@ -35,9 +35,9 @@
   <!-- HEADER / NAVBAR -->
   <header class="dash-header" id="dash-header">
     <div class="dash-header__inner">
-      <a href="dashboard.html" class="dash-header__logo" id="dash-logo">
+      <a href="index.html" class="dash-header__logo" id="dash-logo">
         <span class="dash-header__logo-icon"><i data-lucide="sprout"></i></span>
-        <span class="dash-header__logo-text">KrishiShetra <span class="dash-brand-badge">Farmer</span></span>
+        <span class="dash-header__logo-text">KrishiShetra</span>
       </a>
 
       <div class="dash-search" id="dash-search">
@@ -104,7 +104,7 @@
             <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan
               Helpline</a>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="#" onclick="if(window.Auth){Auth.logout()}else{window.location.href='login.html'};return false;" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
+            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
                 data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
@@ -145,7 +145,7 @@
             24h bank transfers.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="buyer.html#/buyer/dashboard" class="btn btn--primary" style="background:var(--ks-evergreen); color:#FFFFFF;"><i data-lucide="shield-check"></i> Open KrishiShetra Buyer Hub</a>
+          <a href="buyer.html#/buyer/dashboard" class="btn btn--primary" style="background:var(--ks-evergreen); color:#FFFFFF;"><i data-lucide="shield-check"></i> Open KrishiLink Buyer Portal</a>
           <a href="lots.html" class="btn btn--secondary"><i data-lucide="plus-circle"></i> List Lot for Buyers</a>
         </div>
       </div>
@@ -327,7 +327,6 @@
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
-  <script src="js/app-shell.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/dashboard.js"></script>
 </body>

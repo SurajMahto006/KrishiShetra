@@ -16,6 +16,393 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* Auth Form Specific Utilities & Proportions matching login.html */
+    .auth-card-box {
+      width: 100%;
+      max-width: 470px;
+      margin: auto 0;
+      position: relative;
+      z-index: 2;
+      background: #FFFFFF;
+      border: 1px solid rgba(18, 55, 42, 0.08);
+      border-radius: 20px;
+      padding: 32px 32px;
+      box-shadow: 0 16px 40px rgba(18, 55, 42, 0.06), 0 4px 12px rgba(18, 55, 42, 0.03);
+      animation: reveal-up 0.5s var(--ease-out) forwards;
+    }
+    .auth-header {
+      margin-bottom: 20px;
+    }
+    .auth-header__title {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 2.8vw, 30px);
+      font-weight: 700;
+      color: #12372A;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .auth-header__subtitle {
+      font-size: 14px;
+      color: #6F7F75;
+      font-weight: 400;
+    }
+    .auth-tabs {
+      display: flex;
+      background: #F5F8F6;
+      border: 1.5px solid #DCE6DF;
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 18px;
+      gap: 4px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      color: #6F7F75;
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: all var(--duration-fast, 0.2s) ease;
+      font-family: var(--font-body);
+      text-align: center;
+      text-decoration: none;
+    }
+    .auth-tab-btn.active {
+      background: #FFFFFF;
+      color: #12372A;
+      box-shadow: 0 2px 6px rgba(18, 55, 42, 0.08);
+    }
+    .auth-alert {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 14px;
+      display: none;
+      line-height: 1.45;
+    }
+    .auth-alert--error {
+      background: #FDF0EE;
+      color: #C96D5B;
+      border: 1px solid #E8A89C;
+    }
+    .auth-alert--success {
+      background: #E8F5EC;
+      color: #2E7246;
+      border: 1px solid #8FCB9B;
+    }
+    .auth-alert--warning {
+      background: #FFFBEB;
+      color: #92400E;
+      border: 1.5px solid #FCD34D;
+      padding: 12px 14px;
+    }
+    .auth-alert-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .auth-alert-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #78350F;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .auth-alert-msg {
+      font-size: 12px;
+      line-height: 1.4;
+      color: #92400E;
+    }
+    .auth-alert-action-btn {
+      align-self: flex-start;
+      margin-top: 6px;
+      padding: 6px 14px;
+      background: #12372A;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .auth-alert-action-btn:hover {
+      background: #5B9A72;
+      transform: translateY(-1px);
+    }
+    .auth-roles-group {
+      margin-bottom: 14px;
+    }
+    .auth-roles-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #12372A;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .auth-roles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 0;
+    }
+    .auth-role-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 4px;
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DF;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all var(--duration-fast, 0.2s) ease;
+      user-select: none;
+      position: relative;
+    }
+    .auth-role-card:hover {
+      border-color: #5B9A72;
+      background: #F5F8F6;
+      transform: translateY(-1px);
+    }
+    .auth-role-card.active {
+      border-color: #5B9A72;
+      background: #E5F0E7;
+      box-shadow: 0 2px 10px rgba(91, 154, 114, 0.15);
+    }
+    .auth-role-card__icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(91, 154, 114, 0.12);
+      border: 1px solid rgba(91, 154, 114, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--duration-fast, 0.2s);
+    }
+    .auth-role-card__icon svg {
+      width: 17px;
+      height: 17px;
+      color: #2D5A3D;
+      stroke-width: 2.2;
+    }
+    .auth-role-card.active .auth-role-card__icon {
+      background: #5B9A72;
+      border-color: #5B9A72;
+    }
+    .auth-role-card.active .auth-role-card__icon svg {
+      color: #FFFFFF;
+    }
+    .auth-role-card__name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #17221D;
+      text-align: center;
+    }
+    .auth-role-card.active .auth-role-card__name {
+      color: #12372A;
+    }
+    .auth-role-card__check {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #5B9A72;
+      color: #FFFFFF;
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all var(--duration-fast, 0.2s);
+    }
+    .auth-role-card.active .auth-role-card__check {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .auth-input-group {
+      margin-bottom: 14px;
+    }
+    .auth-input-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+    .auth-input-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #12372A;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .auth-text-box, .auth-phone-box {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DF;
+      border-radius: 10px;
+      transition: all var(--duration-fast, 0.2s);
+      overflow: hidden;
+      height: 46px;
+    }
+    .auth-text-box:focus-within, .auth-phone-box:focus-within {
+      border-color: #5B9A72;
+      box-shadow: 0 0 0 3px rgba(91, 154, 114, 0.18);
+    }
+    .auth-phone-box__prefix {
+      padding: 0 12px;
+      color: #12372A;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-right: 1.5px solid #DCE6DF;
+      user-select: none;
+      background: #F5F4ED;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      height: 100%;
+    }
+    .auth-phone-box__input {
+      flex: 1;
+      padding: 0 14px;
+      background: transparent;
+      border: none;
+      color: #17221D;
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      font-family: var(--font-body);
+      height: 100%;
+    }
+    .auth-text-box__input {
+      flex: 1;
+      padding: 0 14px;
+      background: transparent;
+      border: none;
+      color: #17221D;
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      font-family: var(--font-body);
+      height: 100%;
+    }
+    .auth-text-box__input::placeholder, .auth-phone-box__input::placeholder {
+      color: #6F7F75;
+      opacity: 0.75;
+      font-weight: 400;
+      font-size: 13.5px;
+    }
+    .auth-toggle-pass-btn {
+      background: none;
+      border: none;
+      padding: 0 12px;
+      color: #6F7F75;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      transition: color var(--duration-fast, 0.2s);
+    }
+    .auth-toggle-pass-btn:hover {
+      color: #12372A;
+    }
+    .auth-btn-primary {
+      width: 100%;
+      height: 46px;
+      padding: 0 24px;
+      background: #12372A;
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: 14.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all var(--duration-fast, 0.2s) ease;
+      box-shadow: 0 4px 14px rgba(18, 55, 42, 0.16);
+      font-family: var(--font-body);
+      margin-top: 4px;
+    }
+    .auth-btn-primary:hover {
+      background: #5B9A72;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(91, 154, 114, 0.25);
+    }
+    .auth-btn-primary:active {
+      transform: translateY(0);
+    }
+    .auth-switch-prompt {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 13.5px;
+      color: #6F7F75;
+    }
+    .auth-switch-link {
+      color: #5B9A72;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 13.5px;
+      font-family: var(--font-body);
+    }
+    .auth-switch-link:hover {
+      text-decoration: underline;
+      color: #12372A;
+    }
+    .auth-trust-divider {
+      height: 1px;
+      background: #E5F0E7;
+      margin: 22px 0 14px;
+    }
+    .auth-trust-items {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-size: 12px;
+      color: #6F7F75;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .auth-secure-subtext {
+      text-align: center;
+      font-size: 11.5px;
+      color: #6F7F75;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+  </style>
 </head>
 <body>
 
@@ -74,9 +461,9 @@
       <div class="auth-content__header-bar">
         <div class="auth-lang-dropdown">
           <button type="button" class="auth-lang-btn" id="lang-menu-btn" aria-haspopup="true" aria-expanded="false">
-            <i data-lucide="globe" style="width:14px;height:14px;"></i>
+            <i data-lucide="globe" style="width:15px;height:15px;"></i>
             <span id="current-lang-text">English</span>
-            <span style="font-size: 9px; opacity: 0.6;">▼</span>
+            <span style="font-size: 10px; opacity: 0.7;">▼</span>
           </button>
           <div class="auth-lang-menu" id="lang-menu" role="menu">
             <button type="button" class="auth-lang-menu__item active" data-lang="en">English</button>
@@ -85,12 +472,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Mobile Top Brand Logo (Hidden on Desktop) -->
-      <a href="index.html" class="auth-mobile-logo" title="Back to KrishiShetra Home">
-        <div class="auth-mobile-logo__icon"><i data-lucide="sprout"></i></div>
-        <span class="auth-mobile-logo__text">KrishiShetra</span>
-      </a>
 
       <div class="auth-card-box">
         
@@ -103,7 +484,7 @@
         <!-- Mode Toggle Tabs (Login / Register) -->
         <div class="auth-tabs" id="auth-tabs-container">
           <a href="login.html" class="auth-tab-btn" id="tab-btn-login">Log In</a>
-          <a href="register.html" class="auth-tab-btn active" id="tab-btn-register">Register</a>
+          <button type="button" class="auth-tab-btn active" id="tab-btn-register">Register</button>
         </div>
 
         <!-- ── REGISTRATION FORM ── -->
@@ -142,42 +523,18 @@
             </div>
           </div>
 
-          <!-- 2-Col Grid: Name and Mobile -->
-          <div class="auth-input-grid-2">
-            <!-- Full Name Input -->
-            <div class="auth-input-group">
-              <label class="auth-input-label" for="register-name" id="label-register-name">FULL NAME</label>
-              <div class="auth-text-box">
-                <input 
-                  type="text" 
-                  id="register-name" 
-                  class="auth-text-box__input" 
-                  placeholder="e.g. Rajesh Patil" 
-                  autocomplete="name" 
-                  required
-                >
-              </div>
-            </div>
-
-            <!-- Mobile Number Input -->
-            <div class="auth-input-group">
-              <label class="auth-input-label" for="register-phone" id="label-phone">MOBILE NUMBER</label>
-              <div class="auth-phone-box">
-                <div class="auth-phone-box__prefix">
-                  <span>🇮🇳</span>
-                  <span>+91</span>
-                </div>
-                <input 
-                  type="tel" 
-                  id="register-phone" 
-                  class="auth-phone-box__input" 
-                  placeholder="10-digit number" 
-                  maxlength="10" 
-                  inputmode="numeric" 
-                  pattern="[0-9]{10}"
-                  autocomplete="tel-national"
-                >
-              </div>
+          <!-- Full Name Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="register-name" id="label-register-name">FULL NAME</label>
+            <div class="auth-text-box">
+              <input 
+                type="text" 
+                id="register-name" 
+                class="auth-text-box__input" 
+                placeholder="e.g. Rajesh Patil" 
+                autocomplete="name" 
+                required
+              >
             </div>
           </div>
 
@@ -192,6 +549,27 @@
                 placeholder="farmer@example.com" 
                 autocomplete="email" 
                 required
+              >
+            </div>
+          </div>
+
+          <!-- Mobile Number Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="register-phone" id="label-phone">MOBILE NUMBER</label>
+            <div class="auth-phone-box">
+              <div class="auth-phone-box__prefix">
+                <span>🇮🇳</span>
+                <span>+91</span>
+              </div>
+              <input 
+                type="tel" 
+                id="register-phone" 
+                class="auth-phone-box__input" 
+                placeholder="10-digit number" 
+                maxlength="10" 
+                inputmode="numeric" 
+                pattern="[0-9]{10}"
+                autocomplete="tel-national"
               >
             </div>
           </div>
@@ -230,9 +608,9 @@
         <div class="auth-otp-step" id="otp-step-container">
           <div id="otp-alert" class="auth-alert"></div>
 
-          <div style="margin-bottom: 14px;">
+          <div style="margin-bottom: 20px;">
             <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT EMAIL OTP</label>
-            <div style="font-size: 13px; color: #6F7F75; margin-bottom: 10px;">
+            <div style="font-size: 13.5px; color: #6F7F75; margin-bottom: 12px;">
               <span id="otp-sent-text">Verification code sent to</span>
               <strong id="display-user-email" style="color: #12372A; margin: 0 4px; word-break: break-all;">user@example.com</strong>
               <button type="button" class="auth-otp-change-num" id="btn-change-email">
@@ -272,14 +650,14 @@
         <!-- Trust & Security Footer -->
         <div class="auth-trust-divider"></div>
         <div class="auth-trust-items">
-          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
+          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="zap" style="width:13px;height:13px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
+          <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="eye" style="width:13px;height:13px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
+          <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
         </div>
         <p class="auth-secure-subtext">
-          <i data-lucide="lock" style="width:12px;height:12px;color:#5B9A72;vertical-align:middle;"></i>
+          <i data-lucide="lock" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i>
           <span id="text-privacy">Your data is secure and protected under AgriStack guidelines.</span>
         </p>
 
@@ -420,8 +798,7 @@
           trustSimple: 'Simple',
           trustTransparent: 'Transparent',
           textPrivacy: 'Your data is secure and protected under AgriStack guidelines.',
-          textHaveAccount: 'Already have an account?',
-          linkLogin: 'Log In'
+          textHaveAccount: 'Already have an account?'
         },
         hi: {
           langName: 'हिन्दी',
@@ -454,8 +831,7 @@
           trustSimple: 'सरल',
           trustTransparent: 'पारदर्शी',
           textPrivacy: 'आपका डेटा सुरक्षित है और एग्रीस्टैक दिशानिर्देशों के तहत संरक्षित है।',
-          textHaveAccount: 'क्या आपके पास पहले से खाता है?',
-          linkLogin: 'लॉग इन करें'
+          textHaveAccount: 'क्या आपके पास पहले से खाता है?'
         },
         mr: {
           langName: 'मराठी',
@@ -488,8 +864,7 @@
           trustSimple: 'सोपे',
           trustTransparent: 'पारदर्शक',
           textPrivacy: 'तुमचा डेटा सुरक्षित आहे आणि अ‍ॅग्रीस्टॅक मार्गदर्शक तत्त्वांनुसार संरक्षित आहे.',
-          textHaveAccount: 'आधीच खाते आहे का?',
-          linkLogin: 'लॉग इन करा'
+          textHaveAccount: 'आधीच खाते आहे का?'
         }
       };
 
@@ -519,7 +894,6 @@
         document.getElementById('label-register-password').textContent = t.labelRegisterPassword;
         document.getElementById('btn-register-text').textContent = t.btnRegister;
         document.getElementById('text-have-account').textContent = t.textHaveAccount;
-        document.getElementById('link-to-login').textContent = t.linkLogin;
 
         document.getElementById('label-otp').textContent = t.labelOtp;
         document.getElementById('otp-sent-text').textContent = t.otpSent;
@@ -822,31 +1196,32 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: activeOtpEmail })
           });
-          const data = await res.json();
+
+          let data;
+          try {
+            data = await res.json();
+          } catch (pe) {
+            data = { success: res.ok, message: 'Invalid response from server' };
+          }
+
           if (res.ok && data.success) {
-            showAlert(otpAlert, data.message || 'OTP resent successfully.', 'success');
-            startOtpTimer();
+            btnResendOtp.textContent = translations[currentLang].btnResend;
+            showAlert(otpAlert, data.message || 'A new verification OTP has been sent.', 'success');
+            startResendTimer();
           } else {
-            showAlert(otpAlert, data.message || 'Failed to resend OTP.');
             btnResendOtp.disabled = false;
-            btnResendOtp.textContent = 'Resend OTP';
+            btnResendOtp.textContent = translations[currentLang].btnResend;
+            showAlert(otpAlert, data.message || 'Failed to resend OTP.');
           }
         } catch (err) {
-          showAlert(otpAlert, 'Network error. Please try again.');
+          console.error('[Resend OTP Network Error]:', err);
           btnResendOtp.disabled = false;
-          btnResendOtp.textContent = 'Resend OTP';
+          btnResendOtp.textContent = translations[currentLang].btnResend;
+          showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
 
-      // ── Role Pre-selection ──
-      const urlParams = new URLSearchParams(window.location.search);
-      const roleParam = urlParams.get('role');
-      if (roleParam) {
-        currentRole = roleParam;
-        document.querySelectorAll('.auth-role-card').forEach(card => {
-          card.classList.toggle('active', card.dataset.role === roleParam);
-        });
-      }
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>

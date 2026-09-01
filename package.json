@@ -6,10 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node server/server.js",
-    "dev": "nodemon server/server.js",
-    "dev:backend": "nodemon server/server.js",
-    "dev:frontend": "npm run dev --prefix frontend",
-    "build:frontend": "npm run build --prefix frontend"
+    "dev": "nodemon server/server.js"
   },
   "dependencies": {
     "@getbrevo/brevo": "^6.0.3",

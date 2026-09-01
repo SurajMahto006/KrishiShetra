@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initLenis();
   initGSAP();
   initNavbar();
-  initAuthenticatedLandingNav();
   initLoginModal();
   initChart();
   initCounters();
@@ -806,56 +805,6 @@ function initSectionLabels() {
 }
 
 /* ============================================================
-   AUTHENTICATED USER LANDING NAVIGATION
-   ============================================================ */
-function getDashboardUrlByRole(r) {
-  switch (r) {
-    case 'buyer': return 'buyer.html';
-    case 'transporter': return 'transporter/dashboard.html';
-    case 'fpo': return 'fpo-dashboard.html';
-    case 'admin': return 'admin/dashboard.html';
-    case 'farmer':
-    default: return 'dashboard.html';
-  }
-}
-
-function initAuthenticatedLandingNav() {
-  const token = localStorage.getItem('krishi_token');
-  const storedRole = (localStorage.getItem('krishi_user_role') || 'farmer').toLowerCase();
-
-  if (token) {
-    const dashUrl = getDashboardUrlByRole(storedRole);
-    const navCta = document.getElementById('btn-login-nav');
-    const heroBtn = document.getElementById('btn-explore');
-    const navLogo = document.getElementById('nav-logo');
-
-    if (navCta) {
-      navCta.textContent = 'Go to Dashboard';
-      navCta.href = dashUrl;
-      navCta.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = dashUrl;
-      });
-    }
-    if (heroBtn) {
-      heroBtn.innerHTML = `Go to Dashboard <span class="btn-arrow">→</span>`;
-      heroBtn.href = dashUrl;
-      heroBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = dashUrl;
-      });
-    }
-    if (navLogo) {
-      navLogo.href = dashUrl;
-      navLogo.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = dashUrl;
-      });
-    }
-  }
-}
-
-/* ============================================================
    LOGIN MODAL
    ============================================================ */
 function initLoginModal() {
@@ -888,12 +837,6 @@ function initLoginModal() {
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const token = localStorage.getItem('krishi_token');
-      if (token) {
-        const storedRole = (localStorage.getItem('krishi_user_role') || 'farmer').toLowerCase();
-        window.location.href = getDashboardUrlByRole(storedRole);
-        return;
-      }
       const activeRole = document.querySelector('.login-card__role.active');
       const role = activeRole ? activeRole.dataset.role : 'farmer';
       window.location.href = `login.html?role=${role}`;

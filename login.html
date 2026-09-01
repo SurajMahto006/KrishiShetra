@@ -16,6 +16,409 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* Auth Form Specific Utilities & Proportions */
+    .auth-card-box {
+      width: 100%;
+      max-width: 470px;
+      margin: auto 0;
+      position: relative;
+      z-index: 2;
+      background: #FFFFFF;
+      border: 1px solid rgba(18, 55, 42, 0.08);
+      border-radius: 20px;
+      padding: 32px 32px;
+      box-shadow: 0 16px 40px rgba(18, 55, 42, 0.06), 0 4px 12px rgba(18, 55, 42, 0.03);
+      animation: reveal-up 0.5s var(--ease-out) forwards;
+    }
+    .auth-header {
+      margin-bottom: 20px;
+    }
+    .auth-header__title {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 2.8vw, 30px);
+      font-weight: 700;
+      color: #12372A;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .auth-header__subtitle {
+      font-size: 14px;
+      color: #6F7F75;
+      font-weight: 400;
+    }
+    .auth-tabs {
+      display: flex;
+      background: #F5F8F6;
+      border: 1.5px solid #DCE6DF;
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 18px;
+      gap: 4px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      color: #6F7F75;
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: all var(--duration-fast, 0.2s) ease;
+      font-family: var(--font-body);
+    }
+    .auth-tab-btn.active {
+      background: #FFFFFF;
+      color: #12372A;
+      box-shadow: 0 2px 6px rgba(18, 55, 42, 0.08);
+    }
+    .auth-alert {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 14px;
+      display: none;
+      line-height: 1.45;
+    }
+    .auth-alert--error {
+      background: #FDF0EE;
+      color: #C96D5B;
+      border: 1px solid #E8A89C;
+    }
+    .auth-alert--success {
+      background: #E8F5EC;
+      color: #2E7246;
+      border: 1px solid #8FCB9B;
+    }
+    .auth-alert--warning {
+      background: #FFFBEB;
+      color: #92400E;
+      border: 1.5px solid #FCD34D;
+      padding: 12px 14px;
+    }
+    .auth-alert-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .auth-alert-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #78350F;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .auth-alert-msg {
+      font-size: 12px;
+      line-height: 1.4;
+      color: #92400E;
+    }
+    .auth-alert-action-btn {
+      align-self: flex-start;
+      margin-top: 6px;
+      padding: 6px 14px;
+      background: #12372A;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .auth-alert-action-btn:hover {
+      background: #5B9A72;
+      transform: translateY(-1px);
+    }
+    .auth-roles-group {
+      margin-bottom: 14px;
+    }
+    .auth-roles-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #12372A;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .auth-roles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 0;
+    }
+    .auth-role-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 4px;
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DF;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all var(--duration-fast, 0.2s) ease;
+      user-select: none;
+      position: relative;
+    }
+    .auth-role-card:hover {
+      border-color: #5B9A72;
+      background: #F5F8F6;
+      transform: translateY(-1px);
+    }
+    .auth-role-card.active {
+      border-color: #5B9A72;
+      background: #E5F0E7;
+      box-shadow: 0 2px 10px rgba(91, 154, 114, 0.15);
+    }
+    .auth-role-card__icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(91, 154, 114, 0.12);
+      border: 1px solid rgba(91, 154, 114, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--duration-fast, 0.2s);
+    }
+    .auth-role-card__icon svg {
+      width: 17px;
+      height: 17px;
+      color: #2D5A3D;
+      stroke-width: 2.2;
+    }
+    .auth-role-card.active .auth-role-card__icon {
+      background: #5B9A72;
+      border-color: #5B9A72;
+    }
+    .auth-role-card.active .auth-role-card__icon svg {
+      color: #FFFFFF;
+    }
+    .auth-role-card__name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #17221D;
+      text-align: center;
+    }
+    .auth-role-card.active .auth-role-card__name {
+      color: #12372A;
+    }
+    .auth-role-card__check {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #5B9A72;
+      color: #FFFFFF;
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all var(--duration-fast, 0.2s);
+    }
+    .auth-role-card.active .auth-role-card__check {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .auth-input-group {
+      margin-bottom: 14px;
+    }
+    .auth-input-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+    .auth-input-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #12372A;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .auth-input-label-row .auth-input-label {
+      margin-bottom: 0;
+    }
+    .auth-forgot-link {
+      background: none;
+      border: none;
+      color: #5B9A72;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      font-family: var(--font-body);
+      transition: color var(--duration-fast, 0.2s);
+    }
+    .auth-forgot-link:hover {
+      text-decoration: underline;
+      color: #12372A;
+    }
+    .auth-text-box, .auth-phone-box {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 1.5px solid #DCE6DF;
+      border-radius: 10px;
+      transition: all var(--duration-fast, 0.2s);
+      overflow: hidden;
+      height: 46px;
+    }
+    .auth-text-box:focus-within, .auth-phone-box:focus-within {
+      border-color: #5B9A72;
+      box-shadow: 0 0 0 3px rgba(91, 154, 114, 0.18);
+    }
+    .auth-phone-box__prefix {
+      padding: 0 12px;
+      color: #12372A;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-right: 1.5px solid #DCE6DF;
+      user-select: none;
+      background: #F5F4ED;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      height: 100%;
+    }
+    .auth-phone-box__input {
+      flex: 1;
+      padding: 0 14px;
+      background: transparent;
+      border: none;
+      color: #17221D;
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      font-family: var(--font-body);
+      height: 100%;
+    }
+    .auth-text-box__input {
+      flex: 1;
+      padding: 0 14px;
+      background: transparent;
+      border: none;
+      color: #17221D;
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      font-family: var(--font-body);
+      height: 100%;
+    }
+    .auth-text-box__input::placeholder, .auth-phone-box__input::placeholder {
+      color: #6F7F75;
+      opacity: 0.75;
+      font-weight: 400;
+      font-size: 13.5px;
+    }
+    .auth-toggle-pass-btn {
+      background: none;
+      border: none;
+      padding: 0 12px;
+      color: #6F7F75;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      transition: color var(--duration-fast, 0.2s);
+    }
+    .auth-toggle-pass-btn:hover {
+      color: #12372A;
+    }
+    .auth-btn-primary {
+      width: 100%;
+      height: 46px;
+      padding: 0 24px;
+      background: #12372A;
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: 14.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all var(--duration-fast, 0.2s) ease;
+      box-shadow: 0 4px 14px rgba(18, 55, 42, 0.16);
+      font-family: var(--font-body);
+      margin-top: 4px;
+    }
+    .auth-btn-primary:hover {
+      background: #5B9A72;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(91, 154, 114, 0.25);
+    }
+    .auth-btn-primary:active {
+      transform: translateY(0);
+    }
+    .auth-switch-prompt {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 13.5px;
+      color: #6F7F75;
+    }
+    .auth-switch-link {
+      color: #5B9A72;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 13.5px;
+      font-family: var(--font-body);
+    }
+    .auth-switch-link:hover {
+      text-decoration: underline;
+      color: #12372A;
+    }
+    .auth-trust-divider {
+      height: 1px;
+      background: #E5F0E7;
+      margin: 22px 0 14px;
+    }
+    .auth-trust-items {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-size: 12px;
+      color: #6F7F75;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .auth-secure-subtext {
+      text-align: center;
+      font-size: 11.5px;
+      color: #6F7F75;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+  </style>
 </head>
 <body>
 
@@ -74,9 +477,9 @@
       <div class="auth-content__header-bar">
         <div class="auth-lang-dropdown">
           <button type="button" class="auth-lang-btn" id="lang-menu-btn" aria-haspopup="true" aria-expanded="false">
-            <i data-lucide="globe" style="width:14px;height:14px;"></i>
+            <i data-lucide="globe" style="width:15px;height:15px;"></i>
             <span id="current-lang-text">English</span>
-            <span style="font-size: 9px; opacity: 0.6;">▼</span>
+            <span style="font-size: 10px; opacity: 0.7;">▼</span>
           </button>
           <div class="auth-lang-menu" id="lang-menu" role="menu">
             <button type="button" class="auth-lang-menu__item active" data-lang="en">English</button>
@@ -85,12 +488,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Mobile Top Brand Logo (Hidden on Desktop) -->
-      <a href="index.html" class="auth-mobile-logo" title="Back to KrishiShetra Home">
-        <div class="auth-mobile-logo__icon"><i data-lucide="sprout"></i></div>
-        <span class="auth-mobile-logo__text">KrishiShetra</span>
-      </a>
 
       <div class="auth-card-box">
         
@@ -102,8 +499,8 @@
 
         <!-- Mode Toggle Tabs (Login / Register) -->
         <div class="auth-tabs" id="auth-tabs-container">
-          <a href="login.html" class="auth-tab-btn active" id="tab-btn-login">Log In</a>
-          <a href="register.html" class="auth-tab-btn" id="tab-btn-register">Register</a>
+          <button type="button" class="auth-tab-btn active" id="tab-btn-login">Log In</button>
+          <button type="button" class="auth-tab-btn" id="tab-btn-register">Register</button>
         </div>
 
         <!-- ── TAB 1: LOGIN FORM ── -->
@@ -154,11 +551,128 @@
 
           <p class="auth-switch-prompt">
             <span id="text-no-account">Don't have an account?</span> 
-            <a href="register.html" class="auth-switch-link" id="link-to-register">Create an account</a>
+            <button type="button" class="auth-switch-link" id="link-to-register">Create an account</button>
           </p>
         </form>
 
-        <!-- ── TAB 2: FORGOT PASSWORD FORM (Hidden Initially) ── -->
+        <!-- ── TAB 2: REGISTRATION FORM ── -->
+        <form id="auth-register-form" class="auth-form" style="display: none;" novalidate>
+          <div id="register-alert" class="auth-alert"></div>
+
+          <!-- Role Selector -->
+          <div class="auth-roles-group">
+            <label class="auth-roles-label" id="label-role">I AM A...</label>
+            <div class="auth-roles" role="radiogroup" aria-labelledby="label-role">
+              
+              <div class="auth-role-card active" data-role="farmer" tabindex="0" role="radio" aria-checked="true">
+                <span class="auth-role-card__icon"><i data-lucide="tractor"></i></span>
+                <span class="auth-role-card__name" id="role-name-farmer">Farmer</span>
+                <span class="auth-role-card__check">✓</span>
+              </div>
+
+              <div class="auth-role-card" data-role="fpo" tabindex="0" role="radio" aria-checked="false">
+                <span class="auth-role-card__icon"><i data-lucide="users"></i></span>
+                <span class="auth-role-card__name" id="role-name-fpo">FPO</span>
+                <span class="auth-role-card__check">✓</span>
+              </div>
+
+              <div class="auth-role-card" data-role="buyer" tabindex="0" role="radio" aria-checked="false">
+                <span class="auth-role-card__icon"><i data-lucide="store"></i></span>
+                <span class="auth-role-card__name" id="role-name-buyer">Buyer</span>
+                <span class="auth-role-card__check">✓</span>
+              </div>
+
+              <div class="auth-role-card" data-role="transporter" tabindex="0" role="radio" aria-checked="false">
+                <span class="auth-role-card__icon"><i data-lucide="truck"></i></span>
+                <span class="auth-role-card__name" id="role-name-transporter">Transporter</span>
+                <span class="auth-role-card__check">✓</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Full Name Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="register-name" id="label-register-name">FULL NAME</label>
+            <div class="auth-text-box">
+              <input 
+                type="text" 
+                id="register-name" 
+                class="auth-text-box__input" 
+                placeholder="e.g. Rajesh Patil" 
+                autocomplete="name" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Email Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="register-email" id="label-register-email">EMAIL ADDRESS</label>
+            <div class="auth-text-box">
+              <input 
+                type="email" 
+                id="register-email" 
+                class="auth-text-box__input" 
+                placeholder="farmer@example.com" 
+                autocomplete="email" 
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Mobile Number Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="register-phone" id="label-phone">MOBILE NUMBER</label>
+            <div class="auth-phone-box">
+              <div class="auth-phone-box__prefix">
+                <span>🇮🇳</span>
+                <span>+91</span>
+              </div>
+              <input 
+                type="tel" 
+                id="register-phone" 
+                class="auth-phone-box__input" 
+                placeholder="10-digit number" 
+                maxlength="10" 
+                inputmode="numeric" 
+                pattern="[0-9]{10}"
+                autocomplete="tel-national"
+              >
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="auth-input-group">
+            <label class="auth-input-label" for="register-password" id="label-register-password">PASSWORD</label>
+            <div class="auth-text-box">
+              <input 
+                type="password" 
+                id="register-password" 
+                class="auth-text-box__input" 
+                placeholder="Minimum 6 characters" 
+                autocomplete="new-password" 
+                required
+              >
+              <button type="button" class="auth-toggle-pass-btn" data-target="register-password" aria-label="Toggle password visibility">
+                <i data-lucide="eye" style="width:16px;height:16px;"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Register Action Button -->
+          <button type="submit" class="auth-btn-primary" id="btn-register">
+            <span id="btn-register-text">Register & Send OTP</span>
+            <span class="auth-btn-arrow">→</span>
+          </button>
+
+          <p class="auth-switch-prompt">
+            <span id="text-have-account">Already have an account?</span> 
+            <button type="button" class="auth-switch-link" id="link-to-login">Log In</button>
+          </p>
+        </form>
+
+        <!-- ── TAB 3: FORGOT PASSWORD FORM (Hidden Initially) ── -->
         <form id="auth-forgot-form" class="auth-form" style="display: none;" novalidate>
           <div id="forgot-alert" class="auth-alert"></div>
 
@@ -186,7 +700,7 @@
           </p>
         </form>
 
-        <!-- ── TAB 3: SET NEW PASSWORD FORM (Hidden Initially) ── -->
+        <!-- ── TAB 4: SET NEW PASSWORD FORM (Hidden Initially) ── -->
         <form id="auth-reset-pass-form" class="auth-form" style="display: none;" novalidate>
           <div id="reset-pass-alert" class="auth-alert"></div>
 
@@ -218,13 +732,13 @@
           </p>
         </form>
 
-        <!-- ── STEP 4: OTP VERIFICATION STEP (Hidden Initially) ── -->
+        <!-- ── STEP 3: OTP VERIFICATION STEP (Hidden Initially) ── -->
         <div class="auth-otp-step" id="otp-step-container">
           <div id="otp-alert" class="auth-alert"></div>
 
-          <div style="margin-bottom: 14px;">
+          <div style="margin-bottom: 20px;">
             <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT EMAIL OTP</label>
-            <div style="font-size: 13px; color: #6F7F75; margin-bottom: 10px;">
+            <div style="font-size: 14px; color: #6F7F75; margin-bottom: 12px;">
               <span id="otp-sent-text">Verification code sent to</span>
               <strong id="display-user-email" style="color: #12372A; margin: 0 4px; word-break: break-all;">user@example.com</strong>
               <button type="button" class="auth-otp-change-num" id="btn-change-email">
@@ -256,7 +770,7 @@
             <span class="auth-btn-arrow">→</span>
           </button>
 
-          <p class="auth-switch-prompt" style="margin-top: 14px;">
+          <p class="auth-switch-prompt" style="margin-top: 18px;">
             <button type="button" class="auth-switch-link" id="link-back-to-login">← Back to Log In</button>
           </p>
         </div>
@@ -264,14 +778,13 @@
         <!-- Trust & Security Footer -->
         <div class="auth-trust-divider"></div>
         <div class="auth-trust-items">
-          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
+          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
+                <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="zap" style="width:13px;height:13px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
-          <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="eye" style="width:13px;height:13px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
+          <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
         </div>
         <p class="auth-secure-subtext">
-          <i data-lucide="lock" style="width:12px;height:12px;color:#5B9A72;vertical-align:middle;"></i>
+          <i data-lucide="lock" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i>
           <span id="text-privacy">Your data is secure and protected under AgriStack guidelines.</span>
         </p>
 
@@ -299,6 +812,7 @@
       const tabBtnLogin = document.getElementById('tab-btn-login');
       const tabBtnRegister = document.getElementById('tab-btn-register');
       const loginForm = document.getElementById('auth-login-form');
+      const registerForm = document.getElementById('auth-register-form');
       const forgotForm = document.getElementById('auth-forgot-form');
       const resetPassForm = document.getElementById('auth-reset-pass-form');
       const otpStepContainer = document.getElementById('otp-step-container');
@@ -308,7 +822,18 @@
       const loginPassword = document.getElementById('login-password');
       const btnLogin = document.getElementById('btn-login');
       const loginAlert = document.getElementById('login-alert');
+      const linkToRegister = document.getElementById('link-to-register');
       const linkToForgot = document.getElementById('link-to-forgot');
+
+      // Register elements
+      const registerName = document.getElementById('register-name');
+      const registerEmail = document.getElementById('register-email');
+      const registerPhone = document.getElementById('register-phone');
+      const registerPassword = document.getElementById('register-password');
+      const btnRegister = document.getElementById('btn-register');
+      const registerAlert = document.getElementById('register-alert');
+      const linkToLogin = document.getElementById('link-to-login');
+      const roleCards = document.querySelectorAll('.auth-role-card');
 
       // Forgot & Reset elements
       const forgotEmail = document.getElementById('forgot-email');
@@ -337,6 +862,7 @@
       const langMenu = document.getElementById('lang-menu');
       const currentLangText = document.getElementById('current-lang-text');
 
+      let currentRole = 'farmer';
       let currentLang = 'en';
       let countdown = 60;
       let timerInterval = null;
@@ -350,6 +876,28 @@
         element.textContent = message;
         element.className = `auth-alert auth-alert--${type}`;
         element.style.display = 'block';
+      }
+
+      function showStructuredAlert(element, { title, message, actionText, actionCallback, type = 'warning' }) {
+        if (!element) return;
+        element.className = `auth-alert auth-alert--${type}`;
+        element.innerHTML = `
+          <div class="auth-alert-content">
+            <div class="auth-alert-title">
+              <i data-lucide="${type === 'warning' ? 'alert-triangle' : 'alert-circle'}" style="width:14px;height:14px;"></i>
+              <span>${title}</span>
+            </div>
+            <div class="auth-alert-msg">${message}</div>
+            ${actionText ? `<button type="button" class="auth-alert-action-btn" id="alert-action-btn">${actionText}</button>` : ''}
+          </div>
+        `;
+        element.style.display = 'block';
+        if (window.lucide) lucide.createIcons();
+
+        if (actionText && typeof actionCallback === 'function') {
+          const btn = element.querySelector('#alert-action-btn');
+          if (btn) btn.addEventListener('click', actionCallback);
+        }
       }
 
       function hideAlert(element) {
@@ -383,6 +931,8 @@
           badgeVerified: '100% Verified Buyers',
           authTitleLogin: 'Welcome back',
           authSubtitleLogin: 'Enter your credentials to access your account',
+          authTitleRegister: 'Create Account',
+          authSubtitleRegister: 'Join KrishiShetra and discover better market rates',
           authTitleForgot: 'Reset Password',
           authSubtitleForgot: 'Enter your registered email to receive a recovery OTP',
           authTitleResetPass: 'Set New Password',
@@ -394,6 +944,15 @@
           labelLoginEmail: 'EMAIL ADDRESS',
           labelLoginPassword: 'PASSWORD',
           btnLogin: 'Log In',
+          btnRegister: 'Register & Send OTP',
+          labelRole: 'I AM A...',
+          roleFarmer: 'Farmer',
+          roleFpo: 'FPO',
+          roleBuyer: 'Buyer',
+          roleTransporter: 'Transporter',
+          labelRegisterName: 'FULL NAME',
+          labelPhone: 'MOBILE NUMBER',
+          labelRegisterPassword: 'PASSWORD',
           labelOtp: 'ENTER 6-DIGIT EMAIL OTP',
           otpSent: 'Verification code sent to',
           btnChange: 'Change',
@@ -404,7 +963,7 @@
           trustTransparent: 'Transparent',
           textPrivacy: 'Your data is secure and protected under AgriStack guidelines.',
           textNoAccount: "Don't have an account?",
-          linkCreateAccount: 'Create an account'
+          textHaveAccount: "Already have an account?"
         },
         hi: {
           langName: 'हिन्दी',
@@ -415,6 +974,8 @@
           badgeVerified: '१००% सत्यापित खरीदार',
           authTitleLogin: 'कृषि क्षेत्र में स्वागत है',
           authSubtitleLogin: 'अपने खाते में प्रवेश करने के लिए विवरण दर्ज करें',
+          authTitleRegister: 'नया खाता बनाएं',
+          authSubtitleRegister: 'कृषि क्षेत्र से जुड़ें और बेहतर मंडी भाव पाएं',
           authTitleForgot: 'पासवर्ड रीसेट करें',
           authSubtitleForgot: 'ओटीपी प्राप्त करने के लिए अपना पंजीकृत ईमेल दर्ज करें',
           authTitleResetPass: 'नया पासवर्ड बनाएं',
@@ -426,6 +987,15 @@
           labelLoginEmail: 'ईमेल पता',
           labelLoginPassword: 'पासवर्ड',
           btnLogin: 'लॉग इन करें',
+          btnRegister: 'खाता बनाएं एवं ओटीपी भेजें',
+          labelRole: 'मेरी भूमिका...',
+          roleFarmer: 'किसान',
+          roleFpo: 'एफपीओ (FPO)',
+          roleBuyer: 'खरीदार',
+          roleTransporter: 'ट्रांसपोर्टर',
+          labelRegisterName: 'पूरा नाम',
+          labelPhone: 'मोबाइल नंबर',
+          labelRegisterPassword: 'पासवर्ड',
           labelOtp: '६ अंकों का ओटीपी दर्ज करें',
           otpSent: 'ओटीपी भेजा गया:',
           btnChange: 'बदलें',
@@ -436,7 +1006,7 @@
           trustTransparent: 'पारदर्शी',
           textPrivacy: 'आपका डेटा सुरक्षित है और एग्रीस्टैक दिशानिर्देशों के तहत संरक्षित है।',
           textNoAccount: 'खाता नहीं है?',
-          linkCreateAccount: 'खाता बनाएं'
+          textHaveAccount: 'क्या आपके पास पहले से खाता है?'
         },
         mr: {
           langName: 'मराठी',
@@ -447,6 +1017,8 @@
           badgeVerified: '१००% सत्यापित खरेदीदार',
           authTitleLogin: 'कृषिक्षेत्रात स्वागत आहे',
           authSubtitleLogin: 'तुमच्या खात्यात प्रवेश करण्यासाठी तपशील प्रविष्ट करा',
+          authTitleRegister: 'नवीन खाते तयार करा',
+          authSubtitleRegister: 'कृषिक्षेत्रशी जोडा आणि उत्तम बाजारभाव मिळवा',
           authTitleForgot: 'पासवर्ड रीसेट करा',
           authSubtitleForgot: 'पुनर्प्राप्ती OTP मिळविण्यासाठी तुमचा नोंदणीकृत ईमेल टाका',
           authTitleResetPass: 'नवीन पासवर्ड सेट करा',
@@ -458,6 +1030,15 @@
           labelLoginEmail: 'ईमेल पत्ता',
           labelLoginPassword: 'पासवर्ड',
           btnLogin: 'लॉग इन करा',
+          btnRegister: 'नोंदणी करा व ओटीपी पाठवा',
+          labelRole: 'माझी भूमिका...',
+          roleFarmer: 'शेतकरी',
+          roleFpo: 'FPO',
+          roleBuyer: 'खरेदीदार',
+          roleTransporter: 'वाहतूकदार',
+          labelRegisterName: 'पूर्ण नाव',
+          labelPhone: 'मोबाईल नंबर',
+          labelRegisterPassword: 'पासवर्ड',
           labelOtp: '६-अंकी ईमेल OTP टाका',
           otpSent: 'OTP यावर पाठवला आहे:',
           btnChange: 'बदला',
@@ -468,7 +1049,7 @@
           trustTransparent: 'पारदर्शक',
           textPrivacy: 'तुमचा डेटा सुरक्षित आहे आणि अ‍ॅग्रीस्टॅक मार्गदर्शक तत्त्वांनुसार संरक्षित आहे.',
           textNoAccount: 'खाते नाही?',
-          linkCreateAccount: 'नवीन खाते तयार करा'
+          textHaveAccount: 'आधीच खाते आहे का?'
         }
       };
 
@@ -491,10 +1072,23 @@
         document.getElementById('label-login-password').textContent = t.labelLoginPassword;
         document.getElementById('btn-login-text').textContent = t.btnLogin;
         document.getElementById('text-no-account').textContent = t.textNoAccount;
-        document.getElementById('link-to-register').textContent = t.linkCreateAccount;
+        document.getElementById('link-to-register').textContent = t.tabRegister;
+
+        document.getElementById('label-role').textContent = t.labelRole;
+        document.getElementById('role-name-farmer').textContent = t.roleFarmer;
+        document.getElementById('role-name-fpo').textContent = t.roleFpo;
+        document.getElementById('role-name-buyer').textContent = t.roleBuyer;
+        document.getElementById('role-name-transporter').textContent = t.roleTransporter;
+
+        document.getElementById('label-register-name').textContent = t.labelRegisterName;
+        document.getElementById('label-phone').textContent = t.labelPhone;
+        document.getElementById('label-register-password').textContent = t.labelRegisterPassword;
+        document.getElementById('btn-register-text').textContent = t.btnRegister;
+        document.getElementById('text-have-account').textContent = t.textHaveAccount;
+        document.getElementById('link-to-login').textContent = t.tabLogin;
 
         document.getElementById('label-forgot-email').textContent = t.labelLoginEmail;
-        document.getElementById('label-reset-password').textContent = t.labelLoginPassword;
+        document.getElementById('label-reset-password').textContent = t.labelRegisterPassword;
 
         document.getElementById('label-otp').textContent = t.labelOtp;
         document.getElementById('otp-sent-text').textContent = t.otpSent;
@@ -514,6 +1108,9 @@
         if (loginForm.style.display !== 'none') {
           document.getElementById('auth-title').textContent = t.authTitleLogin;
           document.getElementById('auth-subtitle').textContent = t.authSubtitleLogin;
+        } else if (registerForm.style.display !== 'none') {
+          document.getElementById('auth-title').textContent = t.authTitleRegister;
+          document.getElementById('auth-subtitle').textContent = t.authSubtitleRegister;
         } else if (forgotForm.style.display !== 'none') {
           document.getElementById('auth-title').textContent = t.authTitleForgot;
           document.getElementById('auth-subtitle').textContent = t.authSubtitleForgot;
@@ -526,11 +1123,14 @@
         }
       }
 
-      // ── View Switchers ──
+      // ── Tab Switchers ──
       function showLoginTab() {
         isResetFlow = false;
         tabsContainer.style.display = 'flex';
+        tabBtnLogin.classList.add('active');
+        tabBtnRegister.classList.remove('active');
         loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
         forgotForm.style.display = 'none';
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
@@ -541,10 +1141,28 @@
         hideAlert(loginAlert);
       }
 
+      function showRegisterTab() {
+        isResetFlow = false;
+        tabsContainer.style.display = 'flex';
+        tabBtnRegister.classList.add('active');
+        tabBtnLogin.classList.remove('active');
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        forgotForm.style.display = 'none';
+        resetPassForm.style.display = 'none';
+        otpStepContainer.classList.remove('active');
+
+        const t = translations[currentLang] || translations.en;
+        document.getElementById('auth-title').textContent = t.authTitleRegister;
+        document.getElementById('auth-subtitle').textContent = t.authSubtitleRegister;
+        hideAlert(registerAlert);
+      }
+
       function showForgotTab() {
         isResetFlow = true;
         tabsContainer.style.display = 'none';
         loginForm.style.display = 'none';
+        registerForm.style.display = 'none';
         forgotForm.style.display = 'block';
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
@@ -561,6 +1179,7 @@
       function showResetPassStep() {
         tabsContainer.style.display = 'none';
         loginForm.style.display = 'none';
+        registerForm.style.display = 'none';
         forgotForm.style.display = 'none';
         resetPassForm.style.display = 'block';
         otpStepContainer.classList.remove('active');
@@ -579,6 +1198,7 @@
         displayUserEmail.textContent = email;
         tabsContainer.style.display = 'none';
         loginForm.style.display = 'none';
+        registerForm.style.display = 'none';
         forgotForm.style.display = 'none';
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.add('active');
@@ -593,18 +1213,17 @@
         otpBoxes[0].focus();
       }
 
-      const urlParams = new URLSearchParams(window.location.search);
-      const roleParam = urlParams.get('role');
-      if (roleParam && document.getElementById('tab-register')) {
-        document.getElementById('tab-register').href = `register.html?role=${encodeURIComponent(roleParam)}`;
-      }
-
+      tabBtnLogin.addEventListener('click', showLoginTab);
+      tabBtnRegister.addEventListener('click', showRegisterTab);
+      linkToRegister.addEventListener('click', showRegisterTab);
+      linkToLogin.addEventListener('click', showLoginTab);
       linkBackToLogin.addEventListener('click', showLoginTab);
       linkToForgot.addEventListener('click', showForgotTab);
       linkForgotToLogin.addEventListener('click', showLoginTab);
       linkResetToLogin.addEventListener('click', showLoginTab);
       btnChangeEmail.addEventListener('click', () => {
-        showForgotTab();
+        if (isResetFlow) showForgotTab();
+        else showRegisterTab();
       });
 
       // ── Language Dropdown Toggle ──
@@ -624,6 +1243,33 @@
           setLanguage(btn.dataset.lang);
           langMenu.classList.remove('open');
         });
+      });
+
+      // ── Role Selector ──
+      roleCards.forEach(card => {
+        card.addEventListener('click', () => {
+          roleCards.forEach(c => {
+            c.classList.remove('active');
+            c.setAttribute('aria-checked', 'false');
+          });
+          card.classList.add('active');
+          card.setAttribute('aria-checked', 'true');
+          currentRole = card.dataset.role;
+        });
+
+        card.addEventListener('keydown', (e) => {
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            card.click();
+          }
+        });
+      });
+
+      // Phone Input Formatting
+      registerPhone.addEventListener('input', (e) => {
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 10) val = val.slice(0, 10);
+        e.target.value = val;
       });
 
       // ── Timer Handler (60s Cooldown) ──
@@ -752,7 +1398,98 @@
         }
       });
 
-      // ── 2. FORGOT PASSWORD API HANDLER ──
+      // ── 2. REGISTER API HANDLER ──
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert(registerAlert);
+
+        const name = registerName.value.trim();
+        const email = registerEmail.value.trim();
+        const phone = registerPhone.value.trim();
+        const password = registerPassword.value;
+
+        if (!name || !email || !password) {
+          showAlert(registerAlert, 'Please fill in all required fields.');
+          return;
+        }
+
+        if (password.length < 6) {
+          showAlert(registerAlert, 'Password must be at least 6 characters long.');
+          return;
+        }
+
+        btnRegister.disabled = true;
+        btnRegister.innerHTML = 'Sending OTP… <span class="auth-btn-arrow">⏳</span>';
+
+        try {
+          const res = await fetch(`${API_BASE}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              email,
+              phone,
+              password,
+              role: currentRole
+            })
+          });
+
+          let data;
+          try {
+            data = await res.json();
+          } catch (pe) {
+            data = { success: res.ok, message: 'Invalid response from server' };
+          }
+
+          if (res.ok && data.success) {
+            btnRegister.disabled = false;
+            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            
+            showOtpStep(email, false);
+            showAlert(otpAlert, data.message || 'Registration successful. Check your email for the OTP.', 'success');
+          } else if (data.message && (data.message.includes('verification email could not be sent') || data.message.includes('Resend OTP'))) {
+            btnRegister.disabled = false;
+            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            
+            showStructuredAlert(registerAlert, {
+              title: 'Verification email not sent',
+              message: "Your account was created, but we couldn't send the verification email. You can request a new OTP.",
+              actionText: 'Resend OTP ↻',
+              actionCallback: async () => {
+                showOtpStep(email, false);
+                showAlert(otpAlert, 'Requesting a new verification code…');
+                try {
+                  const resendRes = await fetch(`${API_BASE}/auth/resend-verification`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                  });
+                  const resendData = await resendRes.json();
+                  if (resendRes.ok && resendData.success) {
+                    showAlert(otpAlert, resendData.message || 'A new verification OTP has been sent.', 'success');
+                  } else {
+                    showAlert(otpAlert, resendData.message || 'Could not send OTP. Please try again in a few seconds.');
+                  }
+                } catch (rErr) {
+                  showAlert(otpAlert, 'Unable to connect to server to resend OTP.');
+                }
+              },
+              type: 'warning'
+            });
+          } else {
+            btnRegister.disabled = false;
+            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(registerAlert, data.message || 'Registration failed. Please try again.');
+          }
+        } catch (err) {
+          console.error('[Register Network Error]:', err);
+          btnRegister.disabled = false;
+          btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+          showAlert(registerAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
+        }
+      });
+
+      // ── 3. FORGOT PASSWORD API HANDLER ──
       forgotForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideAlert(forgotAlert);
@@ -797,7 +1534,7 @@
         }
       });
 
-      // ── 3. VERIFY OTP API HANDLER ──
+      // ── 4. VERIFY OTP API HANDLER ──
       btnVerifyOtp.addEventListener('click', async () => {
         hideAlert(otpAlert);
         const otp = getEnteredOtp();
@@ -867,7 +1604,7 @@
         }
       });
 
-      // ── 4. SET NEW PASSWORD HANDLER ──
+      // ── 5. SET NEW PASSWORD HANDLER ──
       resetPassForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideAlert(resetPassAlert);
@@ -920,7 +1657,7 @@
         }
       });
 
-      // ── 5. RESEND OTP API HANDLER ──
+      // ── 6. RESEND OTP API HANDLER ──
       btnResendOtp.addEventListener('click', async () => {
         hideAlert(otpAlert);
         btnResendOtp.disabled = true;
@@ -959,22 +1696,15 @@
         }
       });
 
-      // ── Initial Setup based on URL Parameter or Hash ──
+      // ── Initial Tab Setup based on URL Parameter or Hash ──
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
-      const verifiedParam = urlParams.get('verified');
-      const emailParam = urlParams.get('email');
-
       if (tabParam === 'register' || tabParam === 'signup') {
-        window.location.replace('register.html');
+        showRegisterTab();
       } else if (tabParam === 'forgot' || tabParam === 'reset') {
         showForgotTab();
       } else {
         showLoginTab();
-        if (verifiedParam === 'true' && emailParam) {
-          loginEmail.value = decodeURIComponent(emailParam);
-          showAlert(loginAlert, 'Email verified successfully! Please sign in with your credentials.', 'success');
-        }
       }
 
     });

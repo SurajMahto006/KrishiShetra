@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="../css/app-shell.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,9 +19,10 @@
        ═══════════════════════════════════════════ -->
   <header class="admin-header" id="adminHeader">
     <div class="admin-header-inner">
-      <a href="dashboard.html" class="admin-brand">
-        <div class="brand-icon"><i data-lucide="sprout"></i></div>
-        <span class="brand-text">KrishiShetra <span class="brand-badge">Admin Hub</span></span>
+      <a href="index.html" class="admin-brand">
+        <span class="brand-icon">🌾</span>
+        <span class="brand-text">KrishiShetra</span>
+        <span class="brand-badge">Admin</span>
       </a>
 
       <nav>
@@ -36,10 +36,6 @@
       </nav>
 
       <div class="admin-header-actions">
-        <!-- Universal Workspace Switcher -->
-        <button class="workspace-switcher-btn" data-action="switch-workspace" title="Switch Workspace">
-          <i data-lucide="grid" style="width:13px;height:13px;"></i> Workspaces
-        </button>
         <button class="admin-icon-btn" title="Notifications" onclick="showToast('3 new notifications')">
           <i data-lucide="bell" style="width:18px;height:18px;"></i>
           <span class="notif-dot"></span>
@@ -605,8 +601,5 @@
       }
     });
   </script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/api.js"></script>
-  <script src="../js/app-shell.js"></script>
 </body>
 </html>
