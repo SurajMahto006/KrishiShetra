@@ -1,0 +1,911 @@
+/* ==========================================================================
+   KRISHISHETRA UNIVERSAL APPLICATION SHELL & DESIGN SYSTEM
+   Standardized Foundation for Farmer, FPO, Buyer, Transporter & Admin
+   
+   Color Palette:
+   • Background: #F5F4ED (Warm Ivory)
+   • Cards/Surfaces: #FFFFFF (Crisp White)
+   • Deep Evergreen: #12372A (Header & Primary Dark Text)
+   • Primary Sage: #5B9A72 (Primary Action Buttons & Active States)
+   • Fresh Mint: #8FCB9B (Success Indicators & Accents)
+   • Pale Sage: #E5F0E7 (Information Strips & Subtle Backgrounds)
+   • Charcoal: #17221D (High-Contrast Body Text)
+   • Muted Sage: #6F7F75 (Secondary & Metadata Text)
+   • Amber: #D6A84F (Pending, AI Insights & Alerts)
+   • Terracotta: #C96D5B (Danger, Rejected & Warning)
+   ========================================================================== */
+
+:root {
+  /* ── Core Backgrounds ── */
+  --ks-bg-ivory: #F5F4ED;
+  --ks-card-white: #FFFFFF;
+  --ks-surface-elevated: #FAF9F5;
+  --ks-surface-pale-sage: #E5F0E7;
+  --ks-surface-amber: #FDF8ED;
+  --ks-surface-terracotta: #FDF0EE;
+
+  /* ── Core Brand Colors ── */
+  --ks-evergreen: #12372A;
+  --ks-evergreen-light: #1A4D3B;
+  --ks-evergreen-dark: #0B251C;
+  --ks-sage: #5B9A72;
+  --ks-sage-hover: #4C8561;
+  --ks-sage-dark: #3F7051;
+  --ks-mint: #8FCB9B;
+  --ks-mint-light: #EAF6ED;
+  --ks-pale-sage: #E5F0E7;
+  --ks-pale-sage-light: #F0F6F1;
+
+  /* ── Neutral / Typography Colors ── */
+  --ks-charcoal: #17221D;
+  --ks-text-main: #17221D;
+  --ks-text-muted: #6F7F75;
+  --ks-text-subtle: #8A9A90;
+  --ks-text-on-dark: #FFFFFF;
+  --ks-text-on-dark-sub: #B8CDC2;
+
+  /* ── Accent & Transaction Colors ── */
+  --ks-amber: #D6A84F;
+  --ks-amber-dark: #B88935;
+  --ks-amber-light: #FDF8ED;
+  --ks-terracotta: #C96D5B;
+  --ks-terracotta-dark: #A63F2C;
+  --ks-terracotta-light: #FDF0EE;
+  --ks-blue: #3B82F6;
+  --ks-blue-light: #EBF4FC;
+
+  /* ── Borders & Dividers ── */
+  --ks-border: #E2DDD0;
+  --ks-border-subtle: #ECEAE1;
+  --ks-border-light: #E7E6DC;
+  --ks-border-sage: #BCD7C3;
+  --ks-border-amber: #EAD098;
+  --ks-border-terracotta: #E8A89C;
+
+  /* ── Status Tokens ── */
+  --status-success-bg: #E8F5EC;
+  --status-success-border: #8FCB9B;
+  --status-success-text: #2E7246;
+
+  --status-warning-bg: #FDF6E8;
+  --status-warning-border: #E8C882;
+  --status-warning-text: #8C6517;
+
+  --status-info-bg: #EBF4FC;
+  --status-info-border: #A3CDF7;
+  --status-info-text: #1E5C99;
+
+  --status-error-bg: #FDF0EE;
+  --status-error-border: #E8A89C;
+  --status-error-text: #A63F2C;
+
+  /* ── Typography Tokens ── */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* ── Dimensions & Elevations ── */
+  --header-height: 70px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --shadow-xs: 0 1px 3px rgba(18, 55, 42, 0.04), 0 1px 2px rgba(18, 55, 42, 0.02);
+  --shadow-sm: 0 2px 8px rgba(18, 55, 42, 0.05), 0 1px 3px rgba(18, 55, 42, 0.02);
+  --shadow-md: 0 8px 24px rgba(18, 55, 42, 0.07), 0 2px 6px rgba(18, 55, 42, 0.03);
+  --shadow-lg: 0 16px 36px rgba(18, 55, 42, 0.1), 0 4px 12px rgba(18, 55, 42, 0.04);
+
+  --transition-fast: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   1. UNIVERSAL CANONICAL LOGO (Single source of truth)
+   ========================================================================== */
+.dash-header__logo,
+.app-brand,
+.trans-brand,
+.admin-brand,
+.brand {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-decoration: none !important;
+  flex-shrink: 0 !important;
+  color: #FFFFFF !important;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), transform var(--transition-fast) !important;
+}
+
+.dash-header__logo:hover,
+.app-brand:hover,
+.trans-brand:hover,
+.admin-brand:hover,
+.brand:hover {
+  opacity: 0.95;
+  transform: translateY(-0.5px);
+}
+
+.dash-header__logo-icon,
+.app-brand__icon,
+.trans-brand-icon,
+.brand-icon {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #8FCB9B 0%, #5B9A72 50%, #12372A 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+  transition: transform var(--transition-fast) !important;
+  flex-shrink: 0 !important;
+}
+
+.dash-header__logo:hover .dash-header__logo-icon,
+.app-brand:hover .app-brand__icon,
+.trans-brand:hover .trans-brand-icon,
+.admin-brand:hover .brand-icon,
+.brand:hover .brand-icon {
+  transform: rotate(-5deg) scale(1.05);
+}
+
+.dash-header__logo-icon svg,
+.app-brand__icon svg,
+.trans-brand-icon svg,
+.brand-icon svg,
+.dash-header__logo-icon i,
+.app-brand__icon i,
+.trans-brand-icon i,
+.brand-icon i {
+  width: 21px !important;
+  height: 21px !important;
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+  stroke-width: 2.2 !important;
+  display: block !important;
+}
+
+.dash-header__logo-text,
+.app-brand__text,
+.trans-brand-text,
+.admin-brand .brand-text,
+.brand-text {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 21px !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Workspace Role Badge in Logo */
+.dash-brand-badge,
+.brand-badge,
+.trans-brand-badge,
+.buyer-header__badge {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  padding: 2.5px 8px !important;
+  border-radius: 9999px !important;
+  background: rgba(143, 203, 155, 0.16) !important;
+  border: 1px solid rgba(143, 203, 155, 0.35) !important;
+  color: #8FCB9B !important;
+  display: inline-block !important;
+  line-height: 1.2 !important;
+  vertical-align: middle !important;
+}
+
+/* ==========================================================================
+   2. UNIVERSAL APPLICATION HEADER (Deep Evergreen #12372A)
+   ========================================================================== */
+.dash-header,
+.admin-header,
+.trans-header,
+.header,
+#mainHeader,
+#adminHeader,
+#buyer-header {
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+  height: var(--header-height, 70px) !important;
+  background-color: var(--ks-evergreen, #12372A) !important;
+  background: linear-gradient(180deg, #153E30 0%, #12372A 100%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 20px rgba(11, 37, 28, 0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.dash-header__inner,
+.admin-header-inner,
+.trans-header-inner,
+.header-inner,
+.container.header-inner {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: 0 24px !important;
+  gap: 20px !important;
+  height: 100% !important;
+}
+
+/* Navigation Menu */
+.dash-header__nav,
+.admin-nav-menu,
+.trans-nav-menu,
+.nav-menu {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.dash-header__link,
+.admin-nav-link,
+.trans-nav-link,
+.nav-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 7px 13px !important;
+  border-radius: var(--radius-sm, 8px) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: #B8CDC2 !important;
+  text-decoration: none !important;
+  transition: all var(--transition-fast) !important;
+  white-space: nowrap !important;
+}
+
+.dash-header__link:hover,
+.admin-nav-link:hover,
+.trans-nav-link:hover,
+.nav-link:hover {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+}
+
+.dash-header__link--active,
+.admin-nav-link.active,
+.trans-nav-link.active,
+.nav-link.active {
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  background: rgba(143, 203, 155, 0.16) !important;
+  border: 1px solid rgba(143, 203, 155, 0.28) !important;
+}
+
+.dash-header__link-icon,
+.admin-nav-link svg,
+.trans-nav-link svg,
+.nav-link svg {
+  width: 16px !important;
+  height: 16px !important;
+  opacity: 0.9 !important;
+}
+
+/* Header Right Actions */
+.dash-header__actions,
+.admin-header-actions,
+.trans-header-actions,
+.header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-left: auto !important;
+}
+
+/* Universal Workspace Switcher Pill */
+.workspace-switcher-btn,
+.portal-switch-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 12px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: var(--radius-full, 9999px) !important;
+  color: #F5F4ED !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.workspace-switcher-btn:hover,
+.portal-switch-btn:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-0.5px);
+}
+
+/* Icon Buttons (Notifications, Language, Help) */
+.dash-header__action-btn,
+.admin-icon-btn,
+.trans-btn-icon,
+.icon-btn {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #E5F0E7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  position: relative !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.dash-header__action-btn:hover,
+.admin-icon-btn:hover,
+.trans-btn-icon:hover,
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #FFFFFF !important;
+}
+
+.dash-header__badge,
+.notif-dot,
+.trans-notif-dot,
+.badge-dot {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  min-width: 8px !important;
+  height: 8px !important;
+  background-color: var(--ks-amber, #D6A84F) !important;
+  border: 1.5px solid var(--ks-evergreen, #12372A) !important;
+  border-radius: 9999px !important;
+}
+
+.dash-header__badge:not(:empty) {
+  min-width: 17px !important;
+  height: 17px !important;
+  padding: 0 4px !important;
+  top: -3px !important;
+  right: -3px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: #12372A !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* User Profile Pill */
+.dash-header__profile,
+.admin-header-user,
+.trans-user-pill,
+.profile-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 4px 12px 4px 4px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: var(--radius-full, 9999px) !important;
+  color: #FFFFFF !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.dash-header__profile:hover,
+.admin-header-user:hover,
+.trans-user-pill:hover,
+.profile-pill:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+.dash-header__avatar,
+.admin-header-avatar,
+.trans-user-avatar,
+.profile-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #5B9A72, #8FCB9B) !important;
+  color: #12372A !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.dash-header__profile-name,
+.admin-header-user-name,
+.trans-user-name,
+.profile-name {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #FFFFFF !important;
+}
+
+.admin-header-user-role,
+.trans-user-role,
+.profile-role {
+  font-size: 11px !important;
+  color: #8FCB9B !important;
+  font-weight: 500 !important;
+}
+
+/* ==========================================================================
+   3. UNIVERSAL DROPDOWNS & PANELS
+   ========================================================================== */
+.dash-profile-dropdown,
+.ks-dropdown-menu {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  width: 250px !important;
+  background: #FFFFFF !important;
+  border: 1px solid var(--ks-border, #E2DDD0) !important;
+  border-radius: var(--radius-md, 14px) !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 8px !important;
+  z-index: 1100 !important;
+  display: none;
+  animation: ksDropdownSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dash-profile-wrap.open .dash-profile-dropdown,
+.dash-profile-dropdown.active {
+  display: block !important;
+}
+
+@keyframes ksDropdownSlide {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dash-profile-dropdown__header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 12px !important;
+  background: var(--ks-bg-ivory, #F5F4ED) !important;
+  border-radius: var(--radius-sm, 8px) !important;
+  margin-bottom: 6px !important;
+}
+
+.dash-profile-dropdown__name {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: var(--ks-evergreen, #12372A) !important;
+}
+
+.dash-profile-dropdown__phone,
+.dash-profile-dropdown__role {
+  font-size: 11.5px !important;
+  color: var(--ks-text-muted, #6F7F75) !important;
+}
+
+.dash-profile-dropdown__item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 9px 12px !important;
+  border-radius: var(--radius-sm, 8px) !important;
+  color: var(--ks-charcoal, #17221D) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: all var(--transition-fast) !important;
+  cursor: pointer !important;
+}
+
+.dash-profile-dropdown__item:hover {
+  background: var(--ks-surface-pale-sage, #E5F0E7) !important;
+  color: var(--ks-evergreen, #12372A) !important;
+}
+
+.dash-profile-dropdown__item svg,
+.dash-profile-dropdown__item i {
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--ks-sage, #5B9A72) !important;
+}
+
+.dash-profile-dropdown__item--danger {
+  color: var(--ks-terracotta, #C96D5B) !important;
+}
+
+.dash-profile-dropdown__item--danger:hover {
+  background: var(--ks-surface-terracotta, #FDF0EE) !important;
+  color: var(--ks-terracotta-dark, #A63F2C) !important;
+}
+
+.dash-profile-dropdown__item--danger svg,
+.dash-profile-dropdown__item--danger i {
+  color: var(--ks-terracotta, #C96D5B) !important;
+}
+
+.dash-profile-dropdown__sep {
+  height: 1px !important;
+  background: var(--ks-border-subtle, #ECEAE1) !important;
+  margin: 6px 0 !important;
+}
+
+/* ==========================================================================
+   4. UNIVERSAL BUTTON SYSTEM
+   ========================================================================== */
+.btn,
+.ks-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 9px 18px !important;
+  border-radius: var(--radius-sm, 8px) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  border: 1.5px solid transparent !important;
+  transition: all var(--transition-fast) !important;
+  white-space: nowrap !important;
+}
+
+.btn:active,
+.ks-btn:active {
+  transform: scale(0.98);
+}
+
+/* Primary Button (Sage Green) */
+.btn--primary,
+.btn-primary,
+.ks-btn-primary {
+  background-color: var(--ks-sage, #5B9A72) !important;
+  border-color: var(--ks-sage, #5B9A72) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(91, 154, 114, 0.25) !important;
+}
+
+.btn--primary:hover,
+.btn-primary:hover,
+.ks-btn-primary:hover {
+  background-color: var(--ks-sage-hover, #4C8561) !important;
+  border-color: var(--ks-sage-hover, #4C8561) !important;
+  box-shadow: 0 4px 14px rgba(91, 154, 114, 0.35) !important;
+  transform: translateY(-1px);
+}
+
+/* Secondary Button (Crisp White / Light Surface) */
+.btn--secondary,
+.btn-secondary,
+.ks-btn-secondary {
+  background-color: var(--ks-card-white, #FFFFFF) !important;
+  border-color: var(--ks-border, #E2DDD0) !important;
+  color: var(--ks-charcoal, #17221D) !important;
+  box-shadow: var(--shadow-xs) !important;
+}
+
+.btn--secondary:hover,
+.btn-secondary:hover,
+.ks-btn-secondary:hover {
+  background-color: var(--ks-surface-pale-sage, #E5F0E7) !important;
+  border-color: var(--ks-border-sage, #BCD7C3) !important;
+  color: var(--ks-evergreen, #12372A) !important;
+  transform: translateY(-1px);
+}
+
+/* Danger Button (Terracotta) */
+.btn--danger,
+.btn-danger,
+.ks-btn-danger {
+  background-color: var(--ks-terracotta, #C96D5B) !important;
+  border-color: var(--ks-terracotta, #C96D5B) !important;
+  color: #FFFFFF !important;
+}
+
+.btn--danger:hover,
+.btn-danger:hover,
+.ks-btn-danger:hover {
+  background-color: var(--ks-terracotta-dark, #A63F2C) !important;
+  border-color: var(--ks-terracotta-dark, #A63F2C) !important;
+  transform: translateY(-1px);
+}
+
+/* Small Button Variant */
+.btn--sm,
+.btn-sm,
+.ks-btn-sm {
+  padding: 6px 12px !important;
+  font-size: 12.5px !important;
+  border-radius: 6px !important;
+}
+
+/* ==========================================================================
+   5. UNIVERSAL CARD & SURFACE SYSTEM
+   ========================================================================== */
+.dash-card,
+.stat-card,
+.kpi-card,
+.glass-card,
+.ks-card {
+  background-color: var(--ks-card-white, #FFFFFF) !important;
+  border: 1px solid var(--ks-border-light, #E7E6DC) !important;
+  border-radius: var(--radius-md, 14px) !important;
+  box-shadow: var(--shadow-sm) !important;
+  padding: 20px !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.dash-card:hover,
+.stat-card:hover,
+.kpi-card:hover,
+.ks-card-hover:hover {
+  box-shadow: var(--shadow-md) !important;
+  border-color: var(--ks-border-sage, #BCD7C3) !important;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   6. UNIVERSAL STATUS BADGES
+   ========================================================================== */
+.badge,
+.status-badge,
+.ks-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 3px 9px !important;
+  border-radius: var(--radius-full, 9999px) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0.02em !important;
+  border: 1px solid transparent !important;
+}
+
+/* Success / Active / Verified / Delivered */
+.badge-success,
+.badge-verified,
+.badge-active,
+.badge-delivered,
+.badge--success,
+.status-badge.active,
+.status-badge.verified,
+.status-badge.delivered {
+  background-color: var(--status-success-bg, #E8F5EC) !important;
+  border-color: var(--status-success-border, #8FCB9B) !important;
+  color: var(--status-success-text, #2E7246) !important;
+}
+
+/* Warning / Pending / In Progress / Under Review */
+.badge-warning,
+.badge-pending,
+.badge-review,
+.badge-progress,
+.badge--warning,
+.status-badge.pending,
+.status-badge.warning {
+  background-color: var(--status-warning-bg, #FDF6E8) !important;
+  border-color: var(--status-warning-border, #E8C882) !important;
+  color: var(--status-warning-text, #8C6517) !important;
+}
+
+/* Info / In Transit / Merged */
+.badge-info,
+.badge-transit,
+.badge--info,
+.status-badge.in-transit,
+.status-badge.info {
+  background-color: var(--status-info-bg, #EBF4FC) !important;
+  border-color: var(--status-info-border, #A3CDF7) !important;
+  color: var(--status-info-text, #1E5C99) !important;
+}
+
+/* Danger / Rejected / Cancelled / Disputed */
+.badge-danger,
+.badge-rejected,
+.badge-cancelled,
+.badge-disputed,
+.badge--danger,
+.status-badge.danger,
+.status-badge.rejected,
+.status-badge.cancelled {
+  background-color: var(--status-error-bg, #FDF0EE) !important;
+  border-color: var(--status-error-border, #E8A89C) !important;
+  color: var(--status-error-text, #A63F2C) !important;
+}
+
+/* ==========================================================================
+   7. UNIVERSAL TABLE STYLING
+   ========================================================================== */
+.custom-table-container,
+.table-responsive,
+.ks-table-wrap {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  border-radius: var(--radius-sm, 8px) !important;
+  border: 1px solid var(--ks-border-light, #E7E6DC) !important;
+  background: #FFFFFF !important;
+}
+
+.custom-table,
+.admin-table,
+.trans-table,
+.ks-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  text-align: left !important;
+  font-size: 13.5px !important;
+  color: var(--ks-charcoal, #17221D) !important;
+}
+
+.custom-table th,
+.admin-table th,
+.trans-table th,
+.ks-table th {
+  background-color: var(--ks-bg-ivory, #F5F4ED) !important;
+  color: var(--ks-text-muted, #6F7F75) !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  padding: 12px 16px !important;
+  border-bottom: 1.5px solid var(--ks-border-light, #E7E6DC) !important;
+  white-space: nowrap !important;
+}
+
+.custom-table td,
+.admin-table td,
+.trans-table td,
+.ks-table td {
+  padding: 14px 16px !important;
+  border-bottom: 1px solid var(--ks-border-subtle, #ECEAE1) !important;
+  vertical-align: middle !important;
+}
+
+.custom-table tr:hover td,
+.admin-table tr:hover td,
+.trans-table tr:hover td,
+.ks-table tr:hover td {
+  background-color: #FAF9F5 !important;
+}
+
+.custom-table tr:last-child td,
+.admin-table tr:last-child td,
+.trans-table tr:last-child td,
+.ks-table tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* ==========================================================================
+   8. UNIVERSAL SKELETON & EMPTY STATES
+   ========================================================================== */
+.ks-skeleton,
+.skeleton-box {
+  background: linear-gradient(90deg, #ECEAE1 25%, #F5F4ED 50%, #ECEAE1 75%) !important;
+  background-size: 200% 100% !important;
+  animation: ksShimmer 1.5s infinite !important;
+  border-radius: var(--radius-sm, 8px) !important;
+}
+
+@keyframes ksShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.ks-empty-state {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 48px 24px !important;
+}
+
+.ks-empty-state__icon {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background: var(--ks-surface-pale-sage, #E5F0E7) !important;
+  color: var(--ks-sage, #5B9A72) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 16px !important;
+}
+
+.ks-empty-state__icon svg,
+.ks-empty-state__icon i {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.ks-empty-state__title {
+  font-family: var(--font-display) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--ks-evergreen, #12372A) !important;
+  margin-bottom: 6px !important;
+}
+
+.ks-empty-state__desc {
+  font-size: 13.5px !important;
+  color: var(--ks-text-muted, #6F7F75) !important;
+  max-width: 360px !important;
+  margin-bottom: 18px !important;
+  line-height: 1.5 !important;
+}
+
+/* ==========================================================================
+   9. RESPONSIVE NAVIGATION & DRAWER
+   ========================================================================== */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
+
+.dash-header__toggle,
+.admin-hamburger,
+.trans-hamburger,
+.mobile-toggle {
+  display: none;
+  background: transparent !important;
+  border: none !important;
+  color: #FFFFFF !important;
+  cursor: pointer !important;
+  padding: 6px !important;
+}
+
+@media (max-width: 1280px) {
+  .dash-header__link,
+  .admin-nav-item,
+  .trans-nav-link {
+    padding: 6px 8px !important;
+    font-size: 13px !important;
+    gap: 5px !important;
+  }
+}
+
+@media (max-width: 1080px) {
+  .dash-header__nav,
+  .admin-nav-menu,
+  .trans-nav-menu,
+  .nav-menu {
+    display: none !important;
+  }
+  
+  .dash-header__toggle,
+  .admin-hamburger,
+  .trans-hamburger,
+  .mobile-toggle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+

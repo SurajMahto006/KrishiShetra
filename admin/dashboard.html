@@ -10,9 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../css/app-shell.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-require-role="admin">
 
   <!-- ═══════════════════════════════════════════
        TOP HEADER — Unified KrishiShetra Navigation
@@ -20,10 +21,9 @@
   <header class="admin-header" id="adminHeader">
     <div class="admin-header-inner">
       <!-- Brand -->
-      <a href="index.html" class="admin-brand">
-        <span class="brand-icon">🌾</span>
-        <span class="brand-text">KrishiShetra</span>
-        <span class="brand-badge">Admin</span>
+      <a href="dashboard.html" class="admin-brand">
+        <div class="brand-icon"><i data-lucide="sprout"></i></div>
+        <span class="brand-text">KrishiShetra <span class="brand-badge">Admin Hub</span></span>
       </a>
 
       <!-- Desktop Navigation -->
@@ -39,6 +39,10 @@
 
       <!-- Header Right -->
       <div class="admin-header-actions">
+        <!-- Universal Workspace Switcher -->
+        <button class="workspace-switcher-btn" data-action="switch-workspace" title="Switch Workspace">
+          <i data-lucide="grid" style="width:13px;height:13px;"></i> Workspaces
+        </button>
         <a href="../transporter/dashboard.html" class="portal-switch-btn" title="Transporter & Fleet Hub" style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:9999px;color:#F5F2EB;font-size:12.5px;font-weight:600;text-decoration:none;">
           <i data-lucide="truck" style="width:14px;height:14px;color:#E8B96A;"></i> Transporter Hub
         </a>
@@ -48,11 +52,24 @@
           <span class="notif-dot"></span>
         </button>
 
-        <div class="admin-header-user">
-          <div class="admin-header-avatar">AD</div>
-          <div class="admin-header-user-info">
-            <span class="admin-header-user-name">Admin User</span>
-            <span class="admin-header-user-role">Super Admin</span>
+        <div class="dash-profile-wrap" style="position:relative;">
+          <div class="admin-header-user" role="button" tabindex="0">
+            <div class="admin-header-avatar">AD</div>
+            <div class="admin-header-user-info">
+              <span class="admin-header-user-name">Admin User</span>
+              <span class="admin-header-user-role">Super Admin</span>
+            </div>
+          </div>
+          <div class="dash-profile-dropdown" style="right:0;width:200px;">
+            <div class="dash-profile-dropdown__header">
+              <div>
+                <div class="dash-profile-dropdown__name">Super Admin</div>
+                <div class="dash-profile-dropdown__role">System Administration</div>
+              </div>
+            </div>
+            <a href="settings.html" class="dash-profile-dropdown__item"><i data-lucide="settings"></i> System Settings</a>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="#" onclick="if(window.Auth){Auth.logout()}else{window.location.href='../login.html'};return false;" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
 
@@ -501,5 +518,9 @@
     // ── Initialize Lucide Icons ──
     lucide.createIcons();
   </script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/page-guard.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/app-shell.js"></script>
 </body>
 </html>

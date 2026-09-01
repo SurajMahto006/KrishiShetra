@@ -16,6 +16,7 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <link rel="stylesheet" href="../css/app-shell.css">
   <link rel="stylesheet" href="css/transporter.css">
 </head>
 <body data-require-role="transporter">
@@ -27,7 +28,7 @@
     <div class="trans-header-inner">
       <!-- Brand -->
       <a href="dashboard.html" class="trans-brand">
-        <span class="trans-brand-icon">🌾</span>
+        <div class="trans-brand-icon"><i data-lucide="sprout"></i></div>
         <span class="trans-brand-text">
           KrishiShetra
           <span class="trans-brand-badge">Transporter Hub</span>
@@ -49,10 +50,11 @@
 
       <!-- Header Actions -->
       <div class="trans-header-actions">
-        <!-- Switch Portal -->
-        <a href="../index.html" class="portal-switch-btn" title="Go to FPO Dashboard">
-          <i data-lucide="repeat" style="width:14px;height:14px;"></i> FPO Hub
-        </a>
+        <!-- Universal Workspace Switcher -->
+        <button class="workspace-switcher-btn" data-action="switch-workspace" title="Switch Workspace">
+          <i data-lucide="grid" style="width:13px;height:13px;"></i> Workspaces
+        </button>
+
 
         <!-- Notification Bell -->
         <button class="trans-btn-icon" title="Notifications" onclick="showToast('3 new high-value loads posted in Nashik corridor!')">
@@ -60,14 +62,27 @@
           <span class="trans-notif-dot"></span>
         </button>
 
-        <!-- User Profile Pill -->
-        <a href="profile.html" class="trans-user-pill">
-          <div class="trans-user-avatar">KE</div>
-          <div class="trans-user-info">
-            <span class="trans-user-name">Kisan Express</span>
-            <span class="trans-user-role">Gold Carrier ✓</span>
+        <!-- User Profile Pill & Dropdown -->
+        <div class="dash-profile-wrap" style="position:relative;">
+          <div class="trans-user-pill" role="button" tabindex="0">
+            <div class="trans-user-avatar">KE</div>
+            <div class="trans-user-info">
+              <span class="trans-user-name">Kisan Express</span>
+              <span class="trans-user-role">Gold Carrier ✓</span>
+            </div>
           </div>
-        </a>
+          <div class="dash-profile-dropdown" style="right:0;width:200px;">
+            <div class="dash-profile-dropdown__header">
+              <div>
+                <div class="dash-profile-dropdown__name">Kisan Express</div>
+                <div class="dash-profile-dropdown__role">Transporter Account</div>
+              </div>
+            </div>
+            <a href="profile.html" class="dash-profile-dropdown__item"><i data-lucide="user"></i> Profile & Fleet</a>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="#" onclick="if(window.Auth){Auth.logout()}else{window.location.href='../login.html'};return false;" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
+          </div>
+        </div>
 
         <!-- Mobile Hamburger -->
         <button class="trans-hamburger" id="transHamburger">
@@ -493,6 +508,7 @@
   <script src="../js/auth.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/page-guard.js"></script>
+  <script src="../js/app-shell.js"></script>
   <script src="js/transporter-data.js"></script>
   <script src="js/transporter.js"></script>
 </body>

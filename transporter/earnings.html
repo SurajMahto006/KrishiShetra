@@ -12,6 +12,7 @@
   
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../css/app-shell.css">
   <link rel="stylesheet" href="css/transporter.css">
 </head>
 <body>
@@ -20,7 +21,7 @@
   <header class="trans-header">
     <div class="trans-header-inner">
       <a href="dashboard.html" class="trans-brand">
-        <span class="trans-brand-icon">🌾</span>
+        <div class="trans-brand-icon"><i data-lucide="sprout"></i></div>
         <span class="trans-brand-text">
           KrishiShetra
           <span class="trans-brand-badge">Financials</span>
@@ -40,6 +41,10 @@
       </nav>
 
       <div class="trans-header-actions">
+        <!-- Universal Workspace Switcher -->
+        <button class="workspace-switcher-btn" data-action="switch-workspace" title="Switch Workspace">
+          <i data-lucide="grid" style="width:13px;height:13px;"></i> Workspaces
+        </button>
         <button class="btn btn-amber btn-sm" onclick="openWithdrawModal()">
           <i data-lucide="arrow-up-right" style="width:14px;height:14px;"></i> Instant Withdrawal
         </button>
@@ -200,6 +205,9 @@
     </div>
   </footer>
 
+  <script src="../js/auth.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/app-shell.js"></script>
   <script src="js/transporter-data.js"></script>
   <script src="js/transporter.js"></script>
   <script>
