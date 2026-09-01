@@ -51,13 +51,12 @@ const Auth = {
    */
   getUser() {
     try {
-      const u = localStorage.getItem(this.USER_KEY);
-      if (u) return JSON.parse(u);
-
       if (this.isLocalEnv()) {
         const dev = localStorage.getItem(this.DEV_SESSION_KEY);
         if (dev) return JSON.parse(dev);
       }
+      const u = localStorage.getItem(this.USER_KEY);
+      if (u) return JSON.parse(u);
       return null;
     } catch (e) {
       return null;
@@ -83,27 +82,41 @@ const Auth = {
   },
 
   /**
+   * Set isolated local developer session (local dev only)
+   */
+  setDevSession(role) {
+    if (!this.isLocalEnv()) return null;
+    const r = (role || 'farmer').toLowerCase();
+    const devUser = {
+      id: `dev_${r}_id`,
+      role: r,
+      name: `Development ${r.charAt(0).toUpperCase() + r.slice(1)}`,
+      email: `dev.${r}@krishishetra.local`,
+      isDev: true
+    };
+    localStorage.setItem(this.DEV_SESSION_KEY, JSON.stringify(devUser));
+    localStorage.setItem(this.USER_KEY, JSON.stringify(devUser));
+    localStorage.setItem(this.ROLE_KEY, r);
+    localStorage.setItem(this.NAME_KEY, devUser.name);
+    localStorage.setItem(this.EMAIL_KEY, devUser.email);
+    localStorage.setItem(this.LOGGED_IN_KEY, 'true');
+    return devUser;
+  },
+
+  /**
    * Check if user has an active token in localStorage or active dev session
    */
   isLoggedIn() {
-    if (!!this.getToken()) return true;
-    if (this.isLocalEnv()) {
-      return !!localStorage.getItem(this.DEV_SESSION_KEY);
+    if (this.isLocalEnv() && localStorage.getItem(this.DEV_SESSION_KEY)) {
+      return true;
     }
-    return false;
+    return !!this.getToken() || localStorage.getItem(this.LOGGED_IN_KEY) === 'true';
   },
 
   /**
    * Get current user role
    */
   getRole() {
-    const user = this.getUser();
-    if (user && user.role) {
-      return user.role.toLowerCase();
-    }
-    const storedRole = localStorage.getItem(this.ROLE_KEY);
-    if (storedRole) return storedRole.toLowerCase();
-
     if (this.isLocalEnv()) {
       try {
         const dev = localStorage.getItem(this.DEV_SESSION_KEY);
@@ -113,6 +126,13 @@ const Auth = {
         }
       } catch (e) {}
     }
+    const user = this.getUser();
+    if (user && user.role) {
+      return user.role.toLowerCase();
+    }
+    const storedRole = localStorage.getItem(this.ROLE_KEY);
+    if (storedRole) return storedRole.toLowerCase();
+
     return 'farmer';
   },
 

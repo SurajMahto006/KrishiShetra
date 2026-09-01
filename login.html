@@ -1722,20 +1722,44 @@
         if (devBlock) {
           devBlock.style.display = 'block';
           devBlock.querySelectorAll('.dev-role-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-              const role = btn.getAttribute('data-dev-role') || 'farmer';
-              const devUser = {
-                id: `dev_${role}_id`,
-                role: role,
-                name: `Development ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-                email: `dev.${role}@krishishetra.local`,
-                isDev: true
-              };
-              localStorage.setItem('krishishetra_dev_session', JSON.stringify(devUser));
-              if (window.Auth && typeof window.Auth.redirectUserByRole === 'function') {
-                window.Auth.redirectUserByRole(devUser);
+            btn.addEventListener('click', (e) => {
+              e.preventDefault();
+              const role = (btn.getAttribute('data-dev-role') || 'farmer').toLowerCase();
+              
+              if (window.Auth && typeof window.Auth.setDevSession === 'function') {
+                window.Auth.setDevSession(role);
               } else {
-                window.location.href = role === 'farmer' ? 'dashboard.html' : (role === 'buyer' ? 'buyer.html' : `${role}-dashboard.html`);
+                const devUser = {
+                  id: `dev_${role}_id`,
+                  role: role,
+                  name: `Development ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+                  email: `dev.${role}@krishishetra.local`,
+                  isDev: true
+                };
+                localStorage.setItem('krishishetra_dev_session', JSON.stringify(devUser));
+                localStorage.setItem('krishi_user', JSON.stringify(devUser));
+                localStorage.setItem('krishi_user_role', role);
+                localStorage.setItem('krishi_is_logged_in', 'true');
+              }
+
+              // Explicit Canonical Routing
+              switch (role) {
+                case 'buyer':
+                  window.location.href = 'buyer.html';
+                  break;
+                case 'fpo':
+                  window.location.href = 'fpo-dashboard.html';
+                  break;
+                case 'transporter':
+                  window.location.href = 'transporter/dashboard.html';
+                  break;
+                case 'admin':
+                  window.location.href = 'admin/dashboard.html';
+                  break;
+                case 'farmer':
+                default:
+                  window.location.href = 'dashboard.html';
+                  break;
               }
             });
           });
