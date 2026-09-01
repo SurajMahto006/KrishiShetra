@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KrishiLink — B2B Agricultural Procurement Platform</title>
-  <meta name="description" content="Production-grade agricultural procurement, lot discovery, quality analytics, digital offer negotiation, order tracking, and escrow payments for verified buyers.">
+  <title>KrishiShetra — Buyer Procurement & Sourcing Hub</title>
+  <meta name="description" content="KrishiShetra Buyer Hub — Agricultural procurement, lot discovery, quality analytics, digital offer negotiation, order tracking, and escrow payments for verified buyers.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <!-- Design System CSS -->
+  <link rel="stylesheet" href="css/app-shell.css">
   <link rel="stylesheet" href="css/buyer.css">
 
   <!-- Lucide Icons -->
@@ -29,15 +30,14 @@
   <div class="buyer-ambient-bg" aria-hidden="true"></div>
 
   <!-- ═════════════════════════════════════════════════
-       FIXED TOP HEADER / NAVBAR (Similar to Farmer Dashboard)
+       FIXED TOP HEADER / NAVBAR
        ═════════════════════════════════════════════════ -->
   <header class="dash-header" id="buyer-header">
     <div class="dash-header__inner">
       <!-- Brand Logo -->
       <a href="#/buyer/dashboard" class="dash-header__logo" id="buyer-logo">
         <div class="dash-header__logo-icon"><i data-lucide="sprout"></i></div>
-        <span class="dash-header__logo-text">KrishiLink</span>
-        <span class="buyer-header__badge">BUYER</span>
+        <span class="dash-header__logo-text">KrishiShetra <span class="dash-brand-badge">Buyer Hub</span></span>
       </a>
 
       <!-- Global Search -->
@@ -73,8 +73,13 @@
         </a>
       </nav>
 
-      <!-- Right Actions (KYC Pill, Notifications, Profile Dropdown) -->
+      <!-- Right Actions (Workspace Switcher, KYC Pill, Notifications, Profile Dropdown) -->
       <div class="dash-header__actions">
+        <!-- Universal Workspace Switcher -->
+        <button class="workspace-switcher-btn" data-action="switch-workspace" title="Switch Workspace">
+          <i data-lucide="grid" style="width:13px;height:13px;"></i> Workspaces
+        </button>
+
         <!-- KYC Verification Status Pill -->
         <a href="#/buyer/kyc-verification" class="buyer-kyc-header-pill" title="Verification Status">
           <i data-lucide="shield-check"></i>
@@ -110,7 +115,9 @@
             <a href="#/buyer/kyc-verification" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="shield-check"></i> KYC Verification Docs</a>
             <a href="#/buyer/payments" class="dash-profile-dropdown__item" onclick="closeProfileDropdown()"><i data-lucide="wallet"></i> Escrow Ledger (₹50L Limit)</a>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="repeat"></i> Switch to Farmer Portal</a>
+            <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="sprout"></i> Switch to Farmer Hub</a>
+            <a href="fpo-dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="users"></i> Switch to FPO Hub</a>
+            <a href="transporter/dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="truck"></i> Switch to Transporter Hub</a>
             <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
@@ -182,6 +189,7 @@
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
+  <script src="js/app-shell.js"></script>
   <script src="js/buyer-app.js"></script>
 </body>
 </html>

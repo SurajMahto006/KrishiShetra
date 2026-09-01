@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/app-shell.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/mandi-map.css">
 
@@ -43,7 +43,7 @@
       <!-- Brand Logo -->
       <a href="index.html" class="dash-header__logo" id="dash-logo">
         <span class="dash-header__logo-icon"><i data-lucide="sprout"></i></span>
-        <span class="dash-header__logo-text">KrishiShetra</span>
+        <span class="dash-header__logo-text">KrishiShetra <span class="dash-brand-badge">Farmer</span></span>
       </a>
 
       <!-- Global Search -->
@@ -78,6 +78,10 @@
 
       <!-- Right Actions -->
       <div class="dash-header__actions">
+        <!-- Universal Workspace Switcher -->
+        <button class="workspace-switcher-btn" data-action="switch-workspace" title="Switch Workspace">
+          <i data-lucide="grid" style="width:13px;height:13px;"></i> Workspaces
+        </button>
         <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
@@ -810,6 +814,7 @@
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
+  <script src="js/app-shell.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/mandi-map.js"></script>
   <script src="js/farmer.js"></script>
