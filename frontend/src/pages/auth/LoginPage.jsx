@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import AuthLayout from '../../components/auth/AuthLayout';
 import Button from '../../components/common/Button';
+import DevAuthSelector from '../../components/dev/DevAuthSelector';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -136,6 +137,9 @@ export const LoginPage = () => {
           {loading ? 'Signing in...' : 'Log In to Workspace'}
         </Button>
       </form>
+
+      {/* Development-Only Role Selector for Local Contributors */}
+      {import.meta.env.DEV && <DevAuthSelector />}
     </AuthLayout>
   );
 };

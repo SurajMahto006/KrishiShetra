@@ -11,6 +11,15 @@ const Auth = {
   NAME_KEY: 'krishi_user_name',
   EMAIL_KEY: 'krishi_user_email',
   LOGGED_IN_KEY: 'krishi_is_logged_in',
+  DEV_SESSION_KEY: 'krishishetra_dev_session',
+
+  /**
+   * Check if running in a local development environment
+   */
+  isLocalEnv() {
+    return typeof window !== 'undefined' && window.location &&
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  },
 
   /**
    * Retrieve JWT from localStorage
@@ -41,7 +50,13 @@ const Auth = {
   getUser() {
     try {
       const u = localStorage.getItem(this.USER_KEY);
-      return u ? JSON.parse(u) : null;
+      if (u) return JSON.parse(u);
+
+      if (this.isLocalEnv()) {
+        const dev = localStorage.getItem(this.DEV_SESSION_KEY);
+        if (dev) return JSON.parse(dev);
+      }
+      return null;
     } catch (e) {
       return null;
     }
@@ -66,10 +81,14 @@ const Auth = {
   },
 
   /**
-   * Check if user has an active token in localStorage
+   * Check if user has an active token in localStorage or active dev session
    */
   isLoggedIn() {
-    return !!this.getToken();
+    if (!!this.getToken()) return true;
+    if (this.isLocalEnv()) {
+      return !!localStorage.getItem(this.DEV_SESSION_KEY);
+    }
+    return false;
   },
 
   /**
@@ -81,13 +100,27 @@ const Auth = {
       return user.role.toLowerCase();
     }
     const storedRole = localStorage.getItem(this.ROLE_KEY);
-    return storedRole ? storedRole.toLowerCase() : 'farmer';
+    if (storedRole) return storedRole.toLowerCase();
+
+    if (this.isLocalEnv()) {
+      try {
+        const dev = localStorage.getItem(this.DEV_SESSION_KEY);
+        if (dev) {
+          const parsed = JSON.parse(dev);
+          if (parsed.role) return parsed.role.toLowerCase();
+        }
+      } catch (e) {}
+    }
+    return 'farmer';
   },
 
   /**
    * Clear all session data
    */
   clearSession() {
+    if (this.isLocalEnv()) {
+      localStorage.removeItem(this.DEV_SESSION_KEY);
+    }
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     localStorage.removeItem(this.ROLE_KEY);

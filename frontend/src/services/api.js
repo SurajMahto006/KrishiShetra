@@ -40,6 +40,16 @@ class ApiService {
       const response = await fetch(url, config);
 
       if (response.status === 401) {
+        // In local development test session, do not forcibly redirect to login on 401
+        // so contributors can inspect honest empty/error states on pages
+        if (import.meta.env.DEV && localStorage.getItem('krishishetra_dev_session')) {
+          return {
+            success: false,
+            status: 401,
+            message: 'Protected backend endpoint unauthenticated in development mode.'
+          };
+        }
+
         localStorage.removeItem('krishi_token');
         localStorage.removeItem('krishi_user');
         localStorage.removeItem('krishi_user_role');
