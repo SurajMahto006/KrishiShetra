@@ -82,8 +82,13 @@ app.use('/api/test', testRoutes);
 
 
 
-// Root fallback route
-app.get('/', (req, res) => {
+const path = require('path');
+
+// Serve root static files (HTML, CSS, JS, Assets)
+app.use(express.static(path.join(__dirname, '..')));
+
+// Fallback for API health if accessed directly
+app.get('/api', (req, res) => {
   res.json({
     message: 'Welcome to KrishiShetra API'
   });
