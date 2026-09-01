@@ -1261,23 +1261,33 @@ function initNegotiateForm() {
   }
 }
 
-// 9. Buyers Directory Modal
-function openBuyersModal() {
+// 9. Buyers Directory Page & Modal
+function renderBuyersDirectoryList() {
   const list = document.getElementById('buyers-directory-list');
   if (list) {
     list.innerHTML = CORPORATE_BUYERS.map(b => `
-      <div class="dash-crop-modal__buyer-row" style="margin-bottom:10px; padding:12px 14px;">
+      <div class="dash-crop-modal__buyer-row" style="margin-bottom:12px; padding:14px 16px; background:var(--ks-bg-ivory); border-radius:var(--radius-sm); border:1px solid var(--ks-border-subtle); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <div>
-          <div style="font-size:15px; font-weight:700; color:var(--ks-charcoal);">${b.name} <span class="dash-offer-row__verified">✓ ${b.rating}</span></div>
-          <div style="font-size:12px; color:var(--ks-text-muted); margin-top:2px;">Purchasing: ${b.crops.join(', ')} · Min ${b.minQty}</div>
-          <div style="font-size:11px; color:var(--ks-sage); margin-top:2px;"><i data-lucide="zap" style="width:11px;height:11px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ${b.paymentDays}</div>
+          <div style="font-size:16px; font-weight:700; color:var(--ks-charcoal); display:flex; align-items:center; gap:8px;">
+            ${b.name} 
+            <span class="dash-offer-row__verified" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; padding:2px 8px; background:rgba(91,154,114,0.15); color:var(--ks-sage); border-radius:12px; font-weight:700;">✓ ${b.rating}</span>
+            <span style="font-size:11px; padding:2px 8px; background:rgba(18,55,42,0.08); color:var(--ks-evergreen); border-radius:12px; font-weight:600;">Verified Partner</span>
+          </div>
+          <div style="font-size:13px; color:var(--ks-text-muted); margin-top:4px;">Purchasing: <strong>${b.crops.join(', ')}</strong> · Min Qty: <strong>${b.minQty}</strong></div>
+          <div style="font-size:12px; color:var(--ks-sage); margin-top:4px; display:flex; align-items:center; gap:4px;"><i data-lucide="zap" style="width:12px;height:12px;"></i> ${b.paymentDays} Guarantee · Direct Escrow Settlement</div>
         </div>
-        <button class="btn btn--primary btn--sm" onclick="closeModal('buyers-modal-overlay'); openCreateLotModal()">Sell Crop</button>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <a href="buyer.html#/buyer/marketplace" class="btn btn--secondary btn--sm"><i data-lucide="store" style="width:13px;height:13px;"></i> Buyer Hub</a>
+          <button class="btn btn--primary btn--sm" onclick="openCreateLotModal()"><i data-lucide="plus-circle" style="width:13px;height:13px;"></i> Sell Crop</button>
+        </div>
       </div>
     `).join('');
     if (window.lucide) lucide.createIcons({ root: list });
   }
+}
 
+function openBuyersModal() {
+  renderBuyersDirectoryList();
   const closeBtn = document.getElementById('buyers-modal-close');
   if (closeBtn) closeBtn.onclick = () => closeModal('buyers-modal-overlay');
   openModal('buyers-modal-overlay');
@@ -1796,6 +1806,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderFarmerListings();
   renderLotsPanel();
   renderOffersPanel();
+  renderBuyersDirectoryList();
   renderOrdersGrid();
   renderAlertsGrid();
   updateStatsCounts();

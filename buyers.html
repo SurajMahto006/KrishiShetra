@@ -35,7 +35,7 @@
   <!-- HEADER / NAVBAR -->
   <header class="dash-header" id="dash-header">
     <div class="dash-header__inner">
-      <a href="index.html" class="dash-header__logo" id="dash-logo">
+      <a href="buyers.html" class="dash-header__logo" id="dash-logo">
         <span class="dash-header__logo-icon"><i data-lucide="sprout"></i></span>
         <span class="dash-header__logo-text">KrishiShetra</span>
       </a>
@@ -49,23 +49,14 @@
       </div>
 
       <nav class="dash-header__nav" id="dash-nav">
-        <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
-          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
-        </a>
-        <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
-        </a>
-        <a href="market.html" class="dash-header__link" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
-        </a>
-        <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
-        </a>
         <a href="buyers.html" class="dash-header__link dash-header__link--active" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
+          <i data-lucide="users" class="dash-header__link-icon"></i> Farmer Buyers Directory
         </a>
-        <a href="orders.html" class="dash-header__link" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+        <a href="buyer.html" class="dash-header__link" id="nav-buyer-portal">
+          <i data-lucide="store" class="dash-header__link-icon"></i> Buyer Portal (KrishiLink)
+        </a>
+        <a href="login.html" class="dash-header__link" id="nav-login">
+          <i data-lucide="log-in" class="dash-header__link-icon"></i> Switch User / Login
         </a>
       </nav>
 
@@ -95,16 +86,10 @@
               </div>
             </div>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-profile"><i data-lucide="user"></i> My Profile &
-              Farm</a>
-            <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> Manage
-              My Lots</a>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-alerts"><i data-lucide="bell-ring"></i> Price
-              Alerts</a>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan
-              Helpline</a>
+            <a href="buyer.html" class="dash-profile-dropdown__item"><i data-lucide="store"></i> Open Buyer Portal</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan Helpline</a>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
+            <a href="login.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
                 data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
@@ -119,17 +104,12 @@
   <!-- Mobile Slide Nav -->
   <div class="dash-mobile-nav" id="dash-mobile-nav">
     <div class="dash-mobile-nav__links">
-      <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i>
-        Dashboard</a>
-      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
-      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market
-        Prices</a>
-      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI
-        Forecast</a>
       <a href="buyers.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-buyers"><i
-          data-lucide="users"></i> Buyers</a>
-      <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i>
-        Orders</a>
+          data-lucide="users"></i> Buyers Directory</a>
+      <a href="buyer.html" class="dash-mobile-nav__link" id="mnav-buyer-portal"><i data-lucide="store"></i>
+        Buyer Portal</a>
+      <a href="login.html" class="dash-mobile-nav__link" id="mnav-login"><i data-lucide="log-in"></i>
+        Login / Switch</a>
     </div>
   </div>
 
@@ -146,7 +126,7 @@
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <a href="buyer.html#/buyer/dashboard" class="btn btn--primary" style="background:var(--ks-evergreen); color:#FFFFFF;"><i data-lucide="shield-check"></i> Open KrishiLink Buyer Portal</a>
-          <a href="lots.html" class="btn btn--secondary"><i data-lucide="plus-circle"></i> List Lot for Buyers</a>
+          <a href="buyer.html#/buyer/marketplace" class="btn btn--secondary"><i data-lucide="store"></i> Sourcing Marketplace</a>
         </div>
       </div>
 
@@ -189,9 +169,9 @@
         </div>
         <div class="footer__links">
           <a href="#" class="footer__link" onclick="openHelpModal()">Kisan Support</a>
-          <a href="buyers.html" class="footer__link">For Buyers</a>
-          <a href="#" class="footer__link" onclick="openLanguageModal()">Languages</a>
-          <a href="index.html" class="footer__link">About KrishiShetra</a>
+          <a href="buyer.html" class="footer__link">For Buyers</a>
+          <a href="login.html" class="footer__link">Login</a>
+          <a href="buyers.html" class="footer__link">Buyers Directory</a>
         </div>
       </div>
       <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
@@ -200,18 +180,12 @@
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="dash-bottom-nav" id="dash-bottom-nav">
-    <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i
-        data-lucide="home"></i><span>Home</span></a>
-    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i
-        data-lucide="bar-chart-3"></i><span>Market</span></a>
-    <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span>My
-        Lots</span></a>
-    <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i
-        data-lucide="brain"></i><span>Forecast</span></a>
     <a href="buyers.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-buyers"><i
-        data-lucide="users"></i><span>Buyers</span></a>
-    <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i
-        data-lucide="clipboard-list"></i><span>Orders</span></a>
+        data-lucide="users"></i><span>Directory</span></a>
+    <a href="buyer.html" class="dash-bottom-nav__item" id="bnav-buyer"><i
+        data-lucide="store"></i><span>Buyer Hub</span></a>
+    <a href="login.html" class="dash-bottom-nav__item" id="bnav-login"><i
+        data-lucide="user"></i><span>Account</span></a>
   </nav>
 
   <!-- MODALS -->

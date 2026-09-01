@@ -1798,9 +1798,7 @@
             setTimeout(() => {
               const role = (data.user && data.user.role) ? data.user.role.toLowerCase() : 'farmer';
               if (role === 'buyer') window.location.href = 'buyer.html';
-              else if (role === 'fpo') window.location.href = 'fpo-dashboard.html';
-              else if (role === 'transporter') window.location.href = 'transporter/dashboard.html';
-              else window.location.href = 'dashboard.html';
+              else window.location.href = 'buyers.html';
             }, 600);
             return;
           } else {
@@ -1839,9 +1837,7 @@
           showAlert('Login successful. Redirecting to your portal…', 'success');
           setTimeout(() => {
             if (role === 'buyer') window.location.href = 'buyer.html';
-            else if (role === 'fpo') window.location.href = 'fpo-dashboard.html';
-            else if (role === 'transporter') window.location.href = 'transporter/dashboard.html';
-            else window.location.href = 'dashboard.html';
+            else window.location.href = 'buyers.html';
           }, 600);
         }
       });
@@ -1997,9 +1993,7 @@
                 btnVerifyOtp.innerHTML = `<span id="text-btn-verify">${translations[currentLang].btnVerify}</span> <span>→</span>`;
                 
                 if (selectedRole === 'buyer') window.location.href = 'buyer.html';
-                else if (selectedRole === 'fpo') window.location.href = 'fpo-dashboard.html';
-                else if (selectedRole === 'transporter') window.location.href = 'transporter/dashboard.html';
-                else window.location.href = 'dashboard.html';
+                else window.location.href = 'buyers.html';
               }, 800);
             }
           } else {
