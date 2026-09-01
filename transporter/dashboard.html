@@ -62,14 +62,27 @@
           <span class="trans-notif-dot"></span>
         </button>
 
-        <!-- User Profile Pill -->
-        <a href="profile.html" class="trans-user-pill">
-          <div class="trans-user-avatar">KE</div>
-          <div class="trans-user-info">
-            <span class="trans-user-name">Kisan Express</span>
-            <span class="trans-user-role">Gold Carrier ✓</span>
+        <!-- User Profile Pill & Dropdown -->
+        <div class="dash-profile-wrap" style="position:relative;">
+          <div class="trans-user-pill" role="button" tabindex="0">
+            <div class="trans-user-avatar">KE</div>
+            <div class="trans-user-info">
+              <span class="trans-user-name">Kisan Express</span>
+              <span class="trans-user-role">Gold Carrier ✓</span>
+            </div>
           </div>
-        </a>
+          <div class="dash-profile-dropdown" style="right:0;width:200px;">
+            <div class="dash-profile-dropdown__header">
+              <div>
+                <div class="dash-profile-dropdown__name">Kisan Express</div>
+                <div class="dash-profile-dropdown__role">Transporter Account</div>
+              </div>
+            </div>
+            <a href="profile.html" class="dash-profile-dropdown__item"><i data-lucide="user"></i> Profile & Fleet</a>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="#" onclick="if(window.Auth){Auth.logout()}else{window.location.href='../login.html'};return false;" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
+          </div>
+        </div>
 
         <!-- Mobile Hamburger -->
         <button class="trans-hamburger" id="transHamburger">

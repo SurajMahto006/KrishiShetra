@@ -1221,81 +1221,94 @@ async function renderLotsView(container) {
 // ═══════════════════════════════════════════════════════════════════════
 // 8. LOGISTICS TRACKING VIEW
 // ═══════════════════════════════════════════════════════════════════════
-function renderLogisticsView(container) {
+async function renderLogisticsView(container) {
   container.innerHTML = `
     <div class="buyer-view" style="padding-top: 24px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
         <div>
           <h1 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">Logistics & Fleet Dispatch</h1>
-          <p style="font-size: 13.5px; color: #666; margin: 0;">Real-time shipment transit status, cold-chain telemetry, and delivery schedules.</p>
+          <p style="font-size: 13.5px; color: #666; margin: 0;">Real-time shipment transit status and delivery schedules for confirmed procurement orders.</p>
         </div>
         <div style="display: flex; gap: 10px;">
           <a href="#/buyer/orders" class="btn btn--secondary btn--sm" style="text-decoration: none;"><i data-lucide="package"></i> View Orders</a>
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
-        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
-          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">In Transit Vehicles</div>
-          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">4 Trucks</div>
-          <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">GPS Telemetry active</div>
-        </div>
-        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
-          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Expected Deliveries Today</div>
-          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">2 Shipments</div>
-          <div style="font-size: 12px; color: #D6A84F; margin-top: 4px;">Arriving before 18:00</div>
-        </div>
-        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
-          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Verified Transporters</div>
-          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">18 Partners</div>
-          <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">AgriStack Insured</div>
-        </div>
-      </div>
-
-      <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 24px;">
-        <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 16px 0;">Active Shipments Pipeline</h3>
-        <div style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
-            <thead>
-              <tr style="border-bottom: 2px solid #E5E4DD; text-align: left; color: #777; font-size: 12px; text-transform: uppercase;">
-                <th style="padding: 10px 12px;">Trip ID</th>
-                <th style="padding: 10px 12px;">Produce & Quantity</th>
-                <th style="padding: 10px 12px;">Origin Mandi / Farm</th>
-                <th style="padding: 10px 12px;">Destination Hub</th>
-                <th style="padding: 10px 12px;">Vehicle & Driver</th>
-                <th style="padding: 10px 12px;">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom: 1px solid #F0EFEA;">
-                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">TRP-8821</td>
-                <td style="padding: 12px;">Red Onion (24 MT)</td>
-                <td style="padding: 12px;">Lasalgaon, Nashik</td>
-                <td style="padding: 12px;">Vashi Wholesale, Mumbai</td>
-                <td style="padding: 12px;">MH-15-EG-4402 (Sunil G.)</td>
-                <td style="padding: 12px;"><span style="background: #CFFAFE; color: #155E75; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">In Transit (ETA 2h)</span></td>
-              </tr>
-              <tr style="border-bottom: 1px solid #F0EFEA;">
-                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">TRP-8819</td>
-                <td style="padding: 12px;">Tomato Hybrid (18 MT)</td>
-                <td style="padding: 12px;">Pimpalgaon, MH</td>
-                <td style="padding: 12px;">Hadapsar Processing, Pune</td>
-                <td style="padding: 12px;">MH-12-PQ-9104 (Amol D.)</td>
-                <td style="padding: 12px;"><span style="background: #D1FAE5; color: #065F46; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">Delivered ✓</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div id="buyer-logistics-content">
+        <div style="padding: 40px; text-align: center; color: #888;">Loading logistics status...</div>
       </div>
     </div>
   `;
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+
+  const contentEl = document.getElementById('buyer-logistics-content');
+  try {
+    const res = await window.api?.orders?.getMine?.();
+    const orders = (res && res.success && Array.isArray(res.orders)) ? res.orders : [];
+    const activeShipments = orders.filter(o => ['confirmed', 'processing', 'ready_for_pickup', 'in_transit'].includes(o.status));
+
+    if (activeShipments.length > 0) {
+      contentEl.innerHTML = `
+        <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 24px;">
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 16px 0;">Active Order Dispatches (${activeShipments.length})</h3>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+              <thead>
+                <tr style="border-bottom: 2px solid #E5E4DD; text-align: left; color: #777; font-size: 12px; text-transform: uppercase;">
+                  <th style="padding: 10px 12px;">Order ID</th>
+                  <th style="padding: 10px 12px;">Produce & Quantity</th>
+                  <th style="padding: 10px 12px;">Farmer / Origin</th>
+                  <th style="padding: 10px 12px;">Destination</th>
+                  <th style="padding: 10px 12px;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${activeShipments.map(ord => {
+                  const s = getOrderStatusBadge(ord.status);
+                  const dest = ord.deliveryAddress ? `${ord.deliveryAddress.village || ''}, ${ord.deliveryAddress.state || ''}` : 'Pending Confirmation';
+                  return `
+                    <tr style="border-bottom: 1px solid #F0EFEA;">
+                      <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen); font-family: monospace;">${ord.orderId}</td>
+                      <td style="padding: 12px;">${ord.cropName} (${ord.quantity} ${ord.quantityUnit || 'q'})</td>
+                      <td style="padding: 12px;">${ord.farmerName || 'Verified Farm'}</td>
+                      <td style="padding: 12px;">${dest}</td>
+                      <td style="padding: 12px;"><span style="background: ${s.bg}; color: ${s.color}; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">${s.text}</span></td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    } else {
+      contentEl.innerHTML = `
+        <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 48px 24px; text-align: center;">
+          <div style="font-size: 36px; margin-bottom: 12px;">🚛</div>
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">No Active Shipments in Transit</h3>
+          <p style="font-size: 13px; color: #666; max-width: 440px; margin: 0 auto 16px auto;">
+            When your purchase orders are confirmed with farmers, vehicle allocation and shipment dispatch updates will appear here.
+          </p>
+          <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none;">Browse Available Produce</a>
+        </div>
+      `;
+    }
+  } catch (e) {
+    contentEl.innerHTML = `
+      <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 36px; text-align: center; color: #666;">
+        <p>No active logistics records found for this account.</p>
+      </div>
+    `;
+  }
+
   if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 }
 
 // ═══════════════════════════════════════════════════════════════════════
 // 9. ESCROW & PAYMENTS VIEW
 // ═══════════════════════════════════════════════════════════════════════
-function renderPaymentsView(container) {
+async function renderPaymentsView(container) {
   container.innerHTML = `
     <div class="buyer-view" style="padding-top: 24px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
@@ -1305,61 +1318,102 @@ function renderPaymentsView(container) {
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
-        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
-          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Locked in Escrow</div>
-          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">₹14,50,000</div>
-          <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">3 active orders protected</div>
-        </div>
-        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
-          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Total Settled (30D)</div>
-          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">₹68,20,000</div>
-          <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">100% on-time disbursement</div>
-        </div>
-        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
-          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Credit Limit / Facility</div>
-          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">₹50,00,000</div>
-          <div style="font-size: 12px; color: #D6A84F; margin-top: 4px;">NABARD/SBI institutional link</div>
-        </div>
-      </div>
-
-      <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 24px;">
-        <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 16px 0;">Recent Escrow Transactions</h3>
-        <div style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
-            <thead>
-              <tr style="border-bottom: 2px solid #E5E4DD; text-align: left; color: #777; font-size: 12px; text-transform: uppercase;">
-                <th style="padding: 10px 12px;">Txn Reference</th>
-                <th style="padding: 10px 12px;">Order ID</th>
-                <th style="padding: 10px 12px;">Amount</th>
-                <th style="padding: 10px 12px;">Beneficiary FPO / Farmer</th>
-                <th style="padding: 10px 12px;">Escrow Status</th>
-                <th style="padding: 10px 12px;">Release Condition</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom: 1px solid #F0EFEA;">
-                <td style="padding: 12px; font-family: monospace; font-weight: 700;">TXN-ESC-9014</td>
-                <td style="padding: 12px; font-weight: 600;">ORD-6621</td>
-                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">₹5,88,000</td>
-                <td style="padding: 12px;">Sahyadri Farmers Producer Co.</td>
-                <td style="padding: 12px;"><span style="background: #FEF3C7; color: #92400E; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">Funds Locked (Escrow)</span></td>
-                <td style="padding: 12px; color: #666;">Delivery Confirmation OTP</td>
-              </tr>
-              <tr style="border-bottom: 1px solid #F0EFEA;">
-                <td style="padding: 12px; font-family: monospace; font-weight: 700;">TXN-ESC-8991</td>
-                <td style="padding: 12px; font-weight: 600;">ORD-6590</td>
-                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">₹3,20,000</td>
-                <td style="padding: 12px;">Nashik Agro Cooperative</td>
-                <td style="padding: 12px;"><span style="background: #D1FAE5; color: #065F46; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">Disbursed ✓</span></td>
-                <td style="padding: 12px; color: #666;">Delivered & Verified</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div id="buyer-payments-content">
+        <div style="padding: 40px; text-align: center; color: #888;">Loading ledger...</div>
       </div>
     </div>
   `;
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+
+  const contentEl = document.getElementById('buyer-payments-content');
+  try {
+    const res = await window.api?.orders?.getMine?.();
+    const orders = (res && res.success && Array.isArray(res.orders)) ? res.orders : [];
+
+    let lockedAmount = 0;
+    let settledAmount = 0;
+
+    orders.forEach(o => {
+      const amt = Number(o.totalAmount) || 0;
+      if (['pending', 'confirmed', 'processing', 'in_transit'].includes(o.status)) {
+        lockedAmount += amt;
+      } else if (o.status === 'delivered') {
+        settledAmount += amt;
+      }
+    });
+
+    if (orders.length > 0) {
+      contentEl.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
+            <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Locked in Escrow</div>
+            <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">₹${lockedAmount.toLocaleString('en-IN')}</div>
+            <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">For active procurement orders</div>
+          </div>
+          <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
+            <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Total Settled</div>
+            <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">₹${settledAmount.toLocaleString('en-IN')}</div>
+            <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">Completed transactions</div>
+          </div>
+        </div>
+
+        <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 24px;">
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 16px 0;">Order Settlement Ledger</h3>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+              <thead>
+                <tr style="border-bottom: 2px solid #E5E4DD; text-align: left; color: #777; font-size: 12px; text-transform: uppercase;">
+                  <th style="padding: 10px 12px;">Order ID</th>
+                  <th style="padding: 10px 12px;">Amount</th>
+                  <th style="padding: 10px 12px;">Farmer / Beneficiary</th>
+                  <th style="padding: 10px 12px;">Payment Method</th>
+                  <th style="padding: 10px 12px;">Escrow Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${orders.map(ord => {
+                  const s = getOrderStatusBadge(ord.status);
+                  const isLocked = ['pending', 'confirmed', 'processing', 'in_transit'].includes(ord.status);
+                  return `
+                    <tr style="border-bottom: 1px solid #F0EFEA;">
+                      <td style="padding: 12px; font-family: monospace; font-weight: 700;">${ord.orderId}</td>
+                      <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">₹${(ord.totalAmount || 0).toLocaleString('en-IN')}</td>
+                      <td style="padding: 12px;">${ord.farmerName || 'Verified Farm'}</td>
+                      <td style="padding: 12px; text-transform: capitalize;">${ord.paymentMethod || 'Escrow'}</td>
+                      <td style="padding: 12px;">
+                        <span style="background: ${isLocked ? '#FEF3C7' : '#D1FAE5'}; color: ${isLocked ? '#92400E' : '#065F46'}; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">
+                          ${isLocked ? 'Funds Locked (Escrow)' : 'Settled / Released'}
+                        </span>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    } else {
+      contentEl.innerHTML = `
+        <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 48px 24px; text-align: center;">
+          <div style="font-size: 36px; margin-bottom: 12px;">💳</div>
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">No Active Escrow Settlements</h3>
+          <p style="font-size: 13px; color: #666; max-width: 440px; margin: 0 auto 16px auto;">
+            Funds are locked into secure bank-grade escrow when you place confirmed wholesale orders with farmers.
+          </p>
+          <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none;">Explore Produce Marketplace</a>
+        </div>
+      `;
+    }
+  } catch (e) {
+    contentEl.innerHTML = `
+      <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 36px; text-align: center; color: #666;">
+        <p>No escrow transaction records found.</p>
+      </div>
+    `;
+  }
+
   if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 }
 

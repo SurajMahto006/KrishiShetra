@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="../css/app-shell.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-require-role="admin">
 
   <!-- ═══════════════════════════════════════════
        TOP HEADER — Unified KrishiShetra Navigation
@@ -52,11 +52,24 @@
           <span class="notif-dot"></span>
         </button>
 
-        <div class="admin-header-user">
-          <div class="admin-header-avatar">AD</div>
-          <div class="admin-header-user-info">
-            <span class="admin-header-user-name">Admin User</span>
-            <span class="admin-header-user-role">Super Admin</span>
+        <div class="dash-profile-wrap" style="position:relative;">
+          <div class="admin-header-user" role="button" tabindex="0">
+            <div class="admin-header-avatar">AD</div>
+            <div class="admin-header-user-info">
+              <span class="admin-header-user-name">Admin User</span>
+              <span class="admin-header-user-role">Super Admin</span>
+            </div>
+          </div>
+          <div class="dash-profile-dropdown" style="right:0;width:200px;">
+            <div class="dash-profile-dropdown__header">
+              <div>
+                <div class="dash-profile-dropdown__name">Super Admin</div>
+                <div class="dash-profile-dropdown__role">System Administration</div>
+              </div>
+            </div>
+            <a href="settings.html" class="dash-profile-dropdown__item"><i data-lucide="settings"></i> System Settings</a>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="#" onclick="if(window.Auth){Auth.logout()}else{window.location.href='../login.html'};return false;" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
 
@@ -506,6 +519,7 @@
     lucide.createIcons();
   </script>
   <script src="../js/auth.js"></script>
+  <script src="../js/page-guard.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/app-shell.js"></script>
 </body>
