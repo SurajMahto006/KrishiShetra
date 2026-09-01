@@ -27,13 +27,13 @@ export const ProtectedRoute = ({ allowedRoles = [], children }) => {
     role ||
     user?.role ||
     localStorage.getItem('krishi_user_role') ||
-    'buyer'
+    'farmer'
   ).toLowerCase();
 
-  // If specific roles are required, check role access
+  // If specific roles are required, check role access (admin is permitted everywhere)
   if (allowedRoles.length > 0) {
     const normalizedAllowed = allowedRoles.map(r => r.toLowerCase());
-    const hasRole = normalizedAllowed.includes(currentRole);
+    const hasRole = currentRole === 'admin' || normalizedAllowed.includes(currentRole);
 
     if (!hasRole) {
       // User is attempting to access a route belonging to another role workspace

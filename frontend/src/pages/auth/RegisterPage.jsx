@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User, Phone, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User, Phone, Eye, EyeOff, ArrowRight, Tractor, Users, Store, Truck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import AuthLayout from '../../components/auth/AuthLayout';
 import Button from '../../components/common/Button';
@@ -14,12 +14,24 @@ export const RegisterPage = () => {
     password: '',
     confirmPassword: ''
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { register, loading } = useAuth();
   const navigate = useNavigate();
 
+  const roles = [
+    { id: 'farmer', label: 'Farmer', icon: Tractor },
+    { id: 'fpo', label: 'FPO', icon: Users },
+    { id: 'buyer', label: 'Buyer', icon: Store },
+    { id: 'transporter', label: 'Transporter', icon: Truck }
+  ];
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleRoleSelect = (roleId) => {
+    setFormData({ ...formData, role: roleId });
   };
 
   const handleSubmit = async (e) => {
@@ -57,52 +69,132 @@ export const RegisterPage = () => {
     <>
       Already have an account?{' '}
       <Link to="/login" style={{ color: 'var(--ks-sage)', fontWeight: 700 }}>
-        Sign In
+        Log In
       </Link>
     </>
   );
 
   return (
     <AuthLayout
-      title="Join KrishiShetra"
-      subtitle="Create your verified agricultural trade account."
+      activeTab="register"
+      title="Create an Account"
+      subtitle="Join KrishiShetra's agricultural trade & logistics network"
       error={error}
       footer={footer}
-      maxWidth="480px"
+      maxWidth="475px"
     >
-      <form onSubmit={handleSubmit}>
-        {/* Full Name */}
-        <div className="ks-form-group" style={{ marginBottom: '12px' }}>
-          <label className="ks-label" htmlFor="register-name">Full Name / Organization Name</label>
-          <div style={{ position: 'relative' }}>
-            <User size={16} style={{ position: 'absolute', left: '12px', top: '12px', color: 'var(--ks-text-muted)' }} />
-            <input
-              id="register-name"
-              type="text"
-              name="name"
-              className="ks-input"
-              style={{ paddingLeft: '38px', height: '40px' }}
-              placeholder="e.g. Ramesh Patil / Sahyadri Agro"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
+      <form onSubmit={handleSubmit} noValidate>
+        {/* Role Selector Pills */}
+        <div style={{ marginBottom: '10px' }}>
+          <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 700, color: '#12372A', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '5px' }}>
+            I am a...
+          </label>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
+            {roles.map((r) => {
+              const Icon = r.icon;
+              const isSelected = formData.role === r.id;
+              return (
+                <button
+                  key={r.id}
+                  type="button"
+                  onClick={() => handleRoleSelect(r.id)}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '3px',
+                    padding: '6px 2px',
+                    background: isSelected ? '#E5F0E7' : '#FFFFFF',
+                    border: isSelected ? '1.5px solid #5B9A72' : '1.5px solid #DCE6DF',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.18s ease',
+                    boxShadow: isSelected ? '0 2px 8px rgba(91, 154, 114, 0.15)' : 'none'
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '6px',
+                      background: isSelected ? '#5B9A72' : 'rgba(91, 154, 114, 0.12)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: isSelected ? '#FFFFFF' : '#2D5A3D'
+                    }}
+                  >
+                    <Icon size={13} strokeWidth={2.4} />
+                  </div>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: isSelected ? '#12372A' : '#17221D' }}>
+                    {r.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 2-Col Grid: Name and Mobile Number */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+          <div className="ks-form-group" style={{ marginBottom: 0 }}>
+            <label className="ks-label" htmlFor="reg-name" style={{ fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>
+              Full Name
+            </label>
+            <div style={{ position: 'relative' }}>
+              <User size={14} style={{ position: 'absolute', left: '10px', top: '12px', color: 'var(--ks-text-muted)' }} />
+              <input
+                id="reg-name"
+                type="text"
+                name="name"
+                className="ks-input"
+                style={{ paddingLeft: '32px', height: '38px', fontSize: '13px' }}
+                placeholder="Ramesh Patil"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          <div className="ks-form-group" style={{ marginBottom: 0 }}>
+            <label className="ks-label" htmlFor="reg-phone" style={{ fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>
+              Mobile
+            </label>
+            <div style={{ position: 'relative' }}>
+              <Phone size={14} style={{ position: 'absolute', left: '10px', top: '12px', color: 'var(--ks-text-muted)' }} />
+              <input
+                id="reg-phone"
+                type="tel"
+                name="phone"
+                className="ks-input"
+                style={{ paddingLeft: '32px', height: '38px', fontSize: '13px' }}
+                placeholder="10-digit mobile"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+            </div>
           </div>
         </div>
 
         {/* Email Address */}
-        <div className="ks-form-group" style={{ marginBottom: '12px' }}>
-          <label className="ks-label" htmlFor="register-email">Email Address</label>
+        <div className="ks-form-group" style={{ marginBottom: '8px' }}>
+          <label className="ks-label" htmlFor="reg-email" style={{ fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>
+            Email Address
+          </label>
           <div style={{ position: 'relative' }}>
-            <Mail size={16} style={{ position: 'absolute', left: '12px', top: '12px', color: 'var(--ks-text-muted)' }} />
+            <Mail size={14} style={{ position: 'absolute', left: '10px', top: '12px', color: 'var(--ks-text-muted)' }} />
             <input
-              id="register-email"
+              id="reg-email"
               type="email"
               name="email"
               className="ks-input"
-              style={{ paddingLeft: '38px', height: '40px' }}
-              placeholder="name@example.com"
+              style={{ paddingLeft: '32px', height: '38px', fontSize: '13px' }}
+              placeholder="farmer@example.com"
               value={formData.email}
               onChange={handleChange}
               required
@@ -112,59 +204,20 @@ export const RegisterPage = () => {
           </div>
         </div>
 
-        {/* Phone Number & Role Selector in 2-Column Grid */}
-        <div className="grid-2" style={{ gap: '12px', marginBottom: '12px' }}>
+        {/* 2-Col Grid: Password & Confirm Password */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
           <div className="ks-form-group" style={{ marginBottom: 0 }}>
-            <label className="ks-label" htmlFor="register-phone">Mobile Number</label>
+            <label className="ks-label" htmlFor="reg-pass" style={{ fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>
+              Password
+            </label>
             <div style={{ position: 'relative' }}>
-              <Phone size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: 'var(--ks-text-muted)' }} />
+              <Lock size={14} style={{ position: 'absolute', left: '10px', top: '12px', color: 'var(--ks-text-muted)' }} />
               <input
-                id="register-phone"
-                type="tel"
-                name="phone"
-                className="ks-input"
-                style={{ paddingLeft: '36px', height: '40px', fontSize: '13px' }}
-                placeholder="10-digit mobile"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              />
-            </div>
-          </div>
-
-          <div className="ks-form-group" style={{ marginBottom: 0 }}>
-            <label className="ks-label" htmlFor="register-role">Workspace Role</label>
-            <select
-              id="register-role"
-              name="role"
-              className="ks-select"
-              style={{ height: '40px', fontSize: '13px' }}
-              value={formData.role}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            >
-              <option value="farmer">Farmer (Producer)</option>
-              <option value="fpo">FPO (Aggregator)</option>
-              <option value="buyer">Buyer (Trader / Mill)</option>
-              <option value="transporter">Transporter (Fleet)</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Password & Confirm Password in 2-Column Grid */}
-        <div className="grid-2" style={{ gap: '12px', marginBottom: '18px' }}>
-          <div className="ks-form-group" style={{ marginBottom: 0 }}>
-            <label className="ks-label" htmlFor="register-password">Password</label>
-            <div style={{ position: 'relative' }}>
-              <Lock size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: 'var(--ks-text-muted)' }} />
-              <input
-                id="register-password"
-                type="password"
+                id="reg-pass"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 className="ks-input"
-                style={{ paddingLeft: '36px', height: '40px', fontSize: '13px' }}
+                style={{ paddingLeft: '32px', paddingRight: '28px', height: '38px', fontSize: '13px' }}
                 placeholder="Min 6 chars"
                 value={formData.password}
                 onChange={handleChange}
@@ -172,19 +225,41 @@ export const RegisterPage = () => {
                 minLength={6}
                 disabled={loading}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label="Toggle password visibility"
+                style={{
+                  position: 'absolute',
+                  right: '6px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--ks-text-muted)',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
             </div>
           </div>
 
           <div className="ks-form-group" style={{ marginBottom: 0 }}>
-            <label className="ks-label" htmlFor="register-confirm">Confirm Password</label>
+            <label className="ks-label" htmlFor="reg-confirm" style={{ fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>
+              Confirm Password
+            </label>
             <div style={{ position: 'relative' }}>
-              <Lock size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: 'var(--ks-text-muted)' }} />
+              <Lock size={14} style={{ position: 'absolute', left: '10px', top: '12px', color: 'var(--ks-text-muted)' }} />
               <input
-                id="register-confirm"
-                type="password"
+                id="reg-confirm"
+                type={showPassword ? 'text' : 'password'}
                 name="confirmPassword"
                 className="ks-input"
-                style={{ paddingLeft: '36px', height: '40px', fontSize: '13px' }}
+                style={{ paddingLeft: '32px', height: '38px', fontSize: '13px' }}
                 placeholder="Re-enter password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -196,6 +271,7 @@ export const RegisterPage = () => {
           </div>
         </div>
 
+        {/* Submit CTA */}
         <Button
           type="submit"
           variant="primary"
@@ -204,9 +280,9 @@ export const RegisterPage = () => {
           disabled={loading}
           icon={ArrowRight}
           iconPosition="right"
-          style={{ width: '100%' }}
+          style={{ width: '100%', height: '42px', fontSize: '14px', borderRadius: 'var(--radius-full)' }}
         >
-          {loading ? 'Creating Account...' : 'Create Verified Account'}
+          {loading ? 'Creating Account...' : 'Register & Join Network'}
         </Button>
       </form>
     </AuthLayout>

@@ -864,6 +864,11 @@
 /* ==========================================================================
    9. RESPONSIVE NAVIGATION & DRAWER
    ========================================================================== */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
+
 .dash-header__toggle,
 .admin-hamburger,
 .trans-hamburger,
@@ -876,7 +881,17 @@
   padding: 6px !important;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
+  .dash-header__link,
+  .admin-nav-item,
+  .trans-nav-link {
+    padding: 6px 8px !important;
+    font-size: 13px !important;
+    gap: 5px !important;
+  }
+}
+
+@media (max-width: 1080px) {
   .dash-header__nav,
   .admin-nav-menu,
   .trans-nav-menu,
@@ -893,3 +908,4 @@
     justify-content: center !important;
   }
 }
+

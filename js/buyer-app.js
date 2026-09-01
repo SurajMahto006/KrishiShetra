@@ -47,16 +47,29 @@ function initHeaderUser() {
 function handleRouteUpdate() {
   const hash = window.location.hash.replace('#', '') || '/buyer/dashboard';
 
-  if (hash.includes('/marketplace')) currentRoute = 'marketplace';
-  else if (hash.includes('/lots/')) {
+  if (hash.includes('/marketplace')) {
+    currentRoute = 'marketplace';
+  } else if (hash.match(/\/lots\/[a-zA-Z0-9_-]+/i)) {
     currentRoute = 'lot-detail';
     const parts = hash.split('/lots/');
     if (parts[1]) currentSelectedLotId = parts[1];
+  } else if (hash.includes('/lots')) {
+    currentRoute = 'lots';
+  } else if (hash.includes('/offers') || hash.includes('/inquiries')) {
+    currentRoute = 'inquiries';
+  } else if (hash.includes('/orders')) {
+    currentRoute = 'orders';
+  } else if (hash.includes('/logistics')) {
+    currentRoute = 'logistics';
+  } else if (hash.includes('/payments')) {
+    currentRoute = 'payments';
+  } else if (hash.includes('/profile') || hash.includes('/settings')) {
+    currentRoute = 'profile';
+  } else if (hash.includes('/kyc-verification')) {
+    currentRoute = 'kyc';
+  } else {
+    currentRoute = 'dashboard';
   }
-  else if (hash.includes('/offers') || hash.includes('/inquiries')) currentRoute = 'inquiries';
-  else if (hash.includes('/orders')) currentRoute = 'orders';
-  else if (hash.includes('/kyc-verification')) currentRoute = 'kyc';
-  else currentRoute = 'dashboard';
 
   // Highlight active header links
   document.querySelectorAll('.dash-header__link').forEach(el => {
@@ -65,8 +78,12 @@ function handleRouteUpdate() {
     if (
       (currentRoute === 'dashboard' && r.includes('dashboard')) ||
       (currentRoute === 'marketplace' && r.includes('marketplace')) ||
+      (currentRoute === 'lots' && r.includes('lots')) ||
       (currentRoute === 'inquiries' && (r.includes('offers') || r.includes('inquiries'))) ||
-      (currentRoute === 'orders' && r.includes('orders'))
+      (currentRoute === 'orders' && r.includes('orders')) ||
+      (currentRoute === 'logistics' && r.includes('logistics')) ||
+      (currentRoute === 'payments' && r.includes('payments')) ||
+      (currentRoute === 'profile' && r.includes('profile'))
     ) {
       el.classList.add('dash-header__link--active');
     }
@@ -83,6 +100,9 @@ function renderView(route) {
     case 'marketplace':
       renderMarketplaceView(container);
       break;
+    case 'lots':
+      renderLotsView(container);
+      break;
     case 'lot-detail':
       renderLotDetailView(container, currentSelectedLotId);
       break;
@@ -91,6 +111,15 @@ function renderView(route) {
       break;
     case 'orders':
       renderOrdersView(container);
+      break;
+    case 'logistics':
+      renderLogisticsView(container);
+      break;
+    case 'payments':
+      renderPaymentsView(container);
+      break;
+    case 'profile':
+      renderProfileView(container);
       break;
     case 'kyc':
       renderKycView(container);
@@ -1159,7 +1188,230 @@ async function cancelBuyerOrder(orderId) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 7. KYC / PROFILE PLACEHOLDER
+// 7. BUYER LOTS VIEW (Watchlist & Saved Produce)
+// ═══════════════════════════════════════════════════════════════════════
+async function renderLotsView(container) {
+  container.innerHTML = `
+    <div class="buyer-view" style="padding-top: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h1 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">My Saved Lots & Watchlist</h1>
+          <p style="font-size: 13.5px; color: #666; margin: 0;">Monitor premium farm-gate lots you have bookmarked for procurement.</p>
+        </div>
+        <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none;">
+          <i data-lucide="store"></i> Explore Produce
+        </a>
+      </div>
+
+      <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 24px;">
+        <div id="buyer-saved-lots-container">
+          <div style="text-align: center; padding: 36px; color: #777;">
+            <div style="font-size: 32px; margin-bottom: 8px;">📑</div>
+            <h4 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">No saved lots currently</h4>
+            <p style="font-size: 13px; color: #666; margin: 0 0 16px 0;">Bookmark produce lots in the marketplace to monitor real-time availability and prices.</p>
+            <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm" style="text-decoration: none;">Browse Available Produce</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// 8. LOGISTICS TRACKING VIEW
+// ═══════════════════════════════════════════════════════════════════════
+function renderLogisticsView(container) {
+  container.innerHTML = `
+    <div class="buyer-view" style="padding-top: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h1 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">Logistics & Fleet Dispatch</h1>
+          <p style="font-size: 13.5px; color: #666; margin: 0;">Real-time shipment transit status, cold-chain telemetry, and delivery schedules.</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <a href="#/buyer/orders" class="btn btn--secondary btn--sm" style="text-decoration: none;"><i data-lucide="package"></i> View Orders</a>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">In Transit Vehicles</div>
+          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">4 Trucks</div>
+          <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">GPS Telemetry active</div>
+        </div>
+        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Expected Deliveries Today</div>
+          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">2 Shipments</div>
+          <div style="font-size: 12px; color: #D6A84F; margin-top: 4px;">Arriving before 18:00</div>
+        </div>
+        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Verified Transporters</div>
+          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">18 Partners</div>
+          <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">AgriStack Insured</div>
+        </div>
+      </div>
+
+      <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 24px;">
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 16px 0;">Active Shipments Pipeline</h3>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+            <thead>
+              <tr style="border-bottom: 2px solid #E5E4DD; text-align: left; color: #777; font-size: 12px; text-transform: uppercase;">
+                <th style="padding: 10px 12px;">Trip ID</th>
+                <th style="padding: 10px 12px;">Produce & Quantity</th>
+                <th style="padding: 10px 12px;">Origin Mandi / Farm</th>
+                <th style="padding: 10px 12px;">Destination Hub</th>
+                <th style="padding: 10px 12px;">Vehicle & Driver</th>
+                <th style="padding: 10px 12px;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #F0EFEA;">
+                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">TRP-8821</td>
+                <td style="padding: 12px;">Red Onion (24 MT)</td>
+                <td style="padding: 12px;">Lasalgaon, Nashik</td>
+                <td style="padding: 12px;">Vashi Wholesale, Mumbai</td>
+                <td style="padding: 12px;">MH-15-EG-4402 (Sunil G.)</td>
+                <td style="padding: 12px;"><span style="background: #CFFAFE; color: #155E75; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">In Transit (ETA 2h)</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid #F0EFEA;">
+                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">TRP-8819</td>
+                <td style="padding: 12px;">Tomato Hybrid (18 MT)</td>
+                <td style="padding: 12px;">Pimpalgaon, MH</td>
+                <td style="padding: 12px;">Hadapsar Processing, Pune</td>
+                <td style="padding: 12px;">MH-12-PQ-9104 (Amol D.)</td>
+                <td style="padding: 12px;"><span style="background: #D1FAE5; color: #065F46; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">Delivered ✓</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// 9. ESCROW & PAYMENTS VIEW
+// ═══════════════════════════════════════════════════════════════════════
+function renderPaymentsView(container) {
+  container.innerHTML = `
+    <div class="buyer-view" style="padding-top: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h1 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">Escrow & Settlement Ledger</h1>
+          <p style="font-size: 13.5px; color: #666; margin: 0;">Secured B2B smart contract escrow accounts for zero-risk produce procurement.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Locked in Escrow</div>
+          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">₹14,50,000</div>
+          <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">3 active orders protected</div>
+        </div>
+        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Total Settled (30D)</div>
+          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">₹68,20,000</div>
+          <div style="font-size: 12px; color: #5B9A72; margin-top: 4px;">100% on-time disbursement</div>
+        </div>
+        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 12px; text-transform: uppercase; color: #777; font-weight: 600;">Credit Limit / Facility</div>
+          <div style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">₹50,00,000</div>
+          <div style="font-size: 12px; color: #D6A84F; margin-top: 4px;">NABARD/SBI institutional link</div>
+        </div>
+      </div>
+
+      <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 24px;">
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 16px 0;">Recent Escrow Transactions</h3>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+            <thead>
+              <tr style="border-bottom: 2px solid #E5E4DD; text-align: left; color: #777; font-size: 12px; text-transform: uppercase;">
+                <th style="padding: 10px 12px;">Txn Reference</th>
+                <th style="padding: 10px 12px;">Order ID</th>
+                <th style="padding: 10px 12px;">Amount</th>
+                <th style="padding: 10px 12px;">Beneficiary FPO / Farmer</th>
+                <th style="padding: 10px 12px;">Escrow Status</th>
+                <th style="padding: 10px 12px;">Release Condition</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #F0EFEA;">
+                <td style="padding: 12px; font-family: monospace; font-weight: 700;">TXN-ESC-9014</td>
+                <td style="padding: 12px; font-weight: 600;">ORD-6621</td>
+                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">₹5,88,000</td>
+                <td style="padding: 12px;">Sahyadri Farmers Producer Co.</td>
+                <td style="padding: 12px;"><span style="background: #FEF3C7; color: #92400E; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">Funds Locked (Escrow)</span></td>
+                <td style="padding: 12px; color: #666;">Delivery Confirmation OTP</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #F0EFEA;">
+                <td style="padding: 12px; font-family: monospace; font-weight: 700;">TXN-ESC-8991</td>
+                <td style="padding: 12px; font-weight: 600;">ORD-6590</td>
+                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">₹3,20,000</td>
+                <td style="padding: 12px;">Nashik Agro Cooperative</td>
+                <td style="padding: 12px;"><span style="background: #D1FAE5; color: #065F46; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">Disbursed ✓</span></td>
+                <td style="padding: 12px; color: #666;">Delivered & Verified</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// 10. BUSINESS PROFILE VIEW
+// ═══════════════════════════════════════════════════════════════════════
+function renderProfileView(container) {
+  const user = window.Auth ? window.Auth.getUser() : null;
+  const userName = user?.name || 'Verified Institutional Buyer';
+  const userEmail = user?.email || 'buyer@krishishetra.in';
+
+  container.innerHTML = `
+    <div class="buyer-view" style="padding-top: 24px; max-width: 800px; margin: 0 auto;">
+      <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 16px; padding: 28px; margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px; flex-wrap: wrap;">
+          <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--ks-evergreen); color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800;">
+            ${userName.slice(0, 2).toUpperCase()}
+          </div>
+          <div>
+            <h2 style="font-size: 20px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">${userName}</h2>
+            <div style="font-size: 13.5px; color: #666; margin-bottom: 6px;">${userEmail} · Institutional Procurement</div>
+            <span style="background: #E5F0E7; color: #12372A; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">
+              ✓ KYC Verified B2B Account
+            </span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+          <div style="background: #FAF9F5; padding: 16px; border-radius: 10px;">
+            <div style="font-size: 11.5px; text-transform: uppercase; color: #777; font-weight: 600;">Entity Type</div>
+            <div style="font-size: 14.5px; font-weight: 700; color: var(--ks-evergreen); margin-top: 4px;">Private Limited / FMCG Processor</div>
+          </div>
+          <div style="background: #FAF9F5; padding: 16px; border-radius: 10px;">
+            <div style="font-size: 11.5px; text-transform: uppercase; color: #777; font-weight: 600;">Primary Mandi Delivery Hub</div>
+            <div style="font-size: 14.5px; font-weight: 700; color: var(--ks-evergreen); margin-top: 4px;">Vashi APMC / Pune Central</div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #E5E4DD; padding-top: 20px; flex-wrap: wrap; gap: 12px;">
+          <a href="#/buyer/dashboard" class="btn btn--secondary btn--sm" style="text-decoration: none;">Back to Command</a>
+          <button class="btn btn--danger btn--sm" style="background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; font-weight: 700; cursor: pointer;" onclick="if (window.Auth && window.Auth.logout) { window.Auth.logout(); } else { localStorage.clear(); window.location.href='login.html'; }">
+            <i data-lucide="log-out"></i> Log Out of KrishiShetra
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// 11. KYC PLACEHOLDER
 // ═══════════════════════════════════════════════════════════════════════
 function renderKycView(container) {
   container.innerHTML = `
@@ -1174,10 +1426,11 @@ function renderKycView(container) {
       </div>
     </div>
   `;
+  if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 8. HELPERS & BADGES
+// 12. HELPERS & BADGES
 // ═══════════════════════════════════════════════════════════════════════
 function getStatusBadge(status) {
   const map = {
@@ -1220,3 +1473,8 @@ window.openSendInquiryModal = openSendInquiryModal;
 window.openNegotiationModal = openNegotiationModal;
 window.openCreateOrderModal = openCreateOrderModal;
 window.cancelBuyerOrder = cancelBuyerOrder;
+window.renderLotsView = renderLotsView;
+window.renderLogisticsView = renderLogisticsView;
+window.renderPaymentsView = renderPaymentsView;
+window.renderProfileView = renderProfileView;
+

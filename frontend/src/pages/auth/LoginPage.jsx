@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import AuthLayout from '../../components/auth/AuthLayout';
 import Button from '../../components/common/Button';
@@ -8,6 +8,7 @@ import Button from '../../components/common/Button';
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { login, loading } = useAuth();
   const navigate = useNavigate();
@@ -37,23 +38,27 @@ export const LoginPage = () => {
 
   return (
     <AuthLayout
-      title="Welcome to KrishiShetra"
-      subtitle="Sign in to continue to your agricultural workspace."
+      activeTab="login"
+      title="Welcome back"
+      subtitle="Enter your credentials to access your account"
       error={error}
       footer={footer}
-      maxWidth="440px"
+      maxWidth="475px"
     >
-      <form onSubmit={handleSubmit}>
-        <div className="ks-form-group">
-          <label className="ks-label" htmlFor="login-email">Email Address</label>
+      <form onSubmit={handleSubmit} noValidate>
+        {/* Email Address */}
+        <div className="ks-form-group" style={{ marginBottom: '12px' }}>
+          <label className="ks-label" htmlFor="login-email" style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Email Address
+          </label>
           <div style={{ position: 'relative' }}>
-            <Mail size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--ks-text-muted)' }} />
+            <Mail size={15} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--ks-text-muted)' }} />
             <input
               id="login-email"
               type="email"
               className="ks-input"
-              style={{ paddingLeft: '38px' }}
-              placeholder="name@example.com"
+              style={{ paddingLeft: '38px', height: '42px', fontSize: '13.5px' }}
+              placeholder="farmer@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -63,32 +68,61 @@ export const LoginPage = () => {
           </div>
         </div>
 
-        <div className="ks-form-group">
-          <label className="ks-label" htmlFor="login-password">Password</label>
+        {/* Password with Eye Toggle */}
+        <div className="ks-form-group" style={{ marginBottom: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+            <label className="ks-label" htmlFor="login-password" style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 0 }}>
+              Password
+            </label>
+            <a href="#" style={{ color: 'var(--ks-sage)', fontSize: '11.5px', fontWeight: 600 }}>
+              Forgot Password?
+            </a>
+          </div>
           <div style={{ position: 'relative' }}>
-            <Lock size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--ks-text-muted)' }} />
+            <Lock size={15} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--ks-text-muted)' }} />
             <input
               id="login-password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               className="ks-input"
-              style={{ paddingLeft: '38px' }}
-              placeholder="••••••••"
+              style={{ paddingLeft: '38px', paddingRight: '40px', height: '42px', fontSize: '13.5px' }}
+              placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
               disabled={loading}
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label="Toggle password visibility"
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                color: 'var(--ks-text-muted)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '4px'
+              }}
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px', fontSize: '12.5px' }}>
+        {/* Remember Me */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px', fontSize: '12.5px' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ks-text-muted)', cursor: 'pointer' }}>
-            <input type="checkbox" defaultChecked disabled={loading} /> Remember me
+            <input type="checkbox" defaultChecked disabled={loading} /> Remember me on this device
           </label>
-          <a href="#" style={{ color: 'var(--ks-sage)', fontWeight: 600 }}>Forgot password?</a>
         </div>
 
+        {/* Submit CTA */}
         <Button
           type="submit"
           variant="primary"
@@ -97,9 +131,9 @@ export const LoginPage = () => {
           disabled={loading}
           icon={ArrowRight}
           iconPosition="right"
-          style={{ width: '100%' }}
+          style={{ width: '100%', height: '42px', fontSize: '14px', borderRadius: 'var(--radius-full)' }}
         >
-          {loading ? 'Signing in...' : 'Sign In to Workspace'}
+          {loading ? 'Signing in...' : 'Log In to Workspace'}
         </Button>
       </form>
     </AuthLayout>

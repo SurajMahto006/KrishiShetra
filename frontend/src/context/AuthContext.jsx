@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  // Synchronous initialization from localStorage for instant, zero-delay startup
+  // Synchronous initialization from localStorage
   const [token, setToken] = useState(() => localStorage.getItem('krishi_token'));
   const [user, setUser] = useState(() => {
     try {
@@ -25,10 +25,45 @@ export const AuthProvider = ({ children }) => {
         if (parsed.role) return parsed.role.toLowerCase();
       }
     } catch {}
-    return 'buyer';
+    return 'farmer';
   });
 
+  const [isInitializing, setIsInitializing] = useState(() => !!localStorage.getItem('krishi_token'));
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Verify auth session on initial startup if token exists
+  useEffect(() => {
+    let isMounted = true;
+    const verifySession = async () => {
+      const storedToken = localStorage.getItem('krishi_token');
+      if (!storedToken) {
+        if (isMounted) setIsInitializing(false);
+        return;
+      }
+
+      try {
+        const res = await api.get('/auth/me');
+        if (isMounted && res?.success && res.user) {
+          const verifiedUser = res.user;
+          const verifiedRole = (verifiedUser.role || 'farmer').toLowerCase();
+
+          localStorage.setItem('krishi_user', JSON.stringify(verifiedUser));
+          localStorage.setItem('krishi_user_role', verifiedRole);
+          localStorage.setItem('krishi_is_logged_in', 'true');
+
+          setUser(verifiedUser);
+          setRole(verifiedRole);
+        }
+      } catch (e) {
+        console.warn('[AuthContext] Session check completed, using local state.');
+      } finally {
+        if (isMounted) setIsInitializing(false);
+      }
+    };
+
+    verifySession();
+    return () => { isMounted = false; };
+  }, []);
 
   const login = useCallback(async (email, password) => {
     setIsSubmitting(true);
@@ -41,14 +76,16 @@ export const AuthProvider = ({ children }) => {
           id: res.id || email,
           name: res.name || email.split('@')[0],
           email,
-          role: res.role || 'buyer'
+          role: res.role || 'farmer'
         };
-        const userRole = (authUser.role || res.role || 'buyer').toLowerCase();
+        const userRole = (authUser.role || res.role || 'farmer').toLowerCase();
 
         // 1. Synchronously update localStorage
         localStorage.setItem('krishi_token', authToken);
         localStorage.setItem('krishi_user', JSON.stringify(authUser));
         localStorage.setItem('krishi_user_role', userRole);
+        if (authUser.name) localStorage.setItem('krishi_user_name', authUser.name);
+        if (authUser.email) localStorage.setItem('krishi_user_email', authUser.email);
         localStorage.setItem('krishi_is_logged_in', 'true');
 
         // 2. Synchronously update in-memory state
@@ -81,11 +118,13 @@ export const AuthProvider = ({ children }) => {
         if (res.token) {
           const authToken = res.token;
           const authUser = res.user || formData;
-          const userRole = (authUser.role || formData.role || 'buyer').toLowerCase();
+          const userRole = (authUser.role || formData.role || 'farmer').toLowerCase();
 
           localStorage.setItem('krishi_token', authToken);
           localStorage.setItem('krishi_user', JSON.stringify(authUser));
           localStorage.setItem('krishi_user_role', userRole);
+          if (authUser.name) localStorage.setItem('krishi_user_name', authUser.name);
+          if (authUser.email) localStorage.setItem('krishi_user_email', authUser.email);
           localStorage.setItem('krishi_is_logged_in', 'true');
 
           setToken(authToken);
@@ -116,7 +155,7 @@ export const AuthProvider = ({ children }) => {
     // 2. Reset memory state
     setToken(null);
     setUser(null);
-    setRole('buyer');
+    setRole('farmer');
   }, []);
 
   const value = {
@@ -124,7 +163,7 @@ export const AuthProvider = ({ children }) => {
     user,
     role,
     isAuthenticated: !!token,
-    loading: isSubmitting,
+    loading: isInitializing || isSubmitting,
     login,
     register,
     logout

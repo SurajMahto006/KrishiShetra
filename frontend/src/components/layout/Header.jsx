@@ -230,7 +230,6 @@ export const Header = () => {
             className="ks-icon-btn mobile-only-toggle"
             onClick={() => setShowMobileNav(!showMobileNav)}
             aria-label="Toggle navigation menu"
-            style={{ display: 'none' }}
           >
             {showMobileNav ? <X size={20} /> : <Menu size={20} />}
           </button>

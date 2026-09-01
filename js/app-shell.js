@@ -13,6 +13,7 @@
 
   function initAppShell() {
     initLucideIcons();
+    initAuthenticatedHomeNavigation();
     initWorkspaceSwitcher();
     initUniversalProfile();
     initNotificationBell();
@@ -20,7 +21,40 @@
   }
 
   /**
-   * 1. Lucide icon initializer
+   * 1. Universal Authenticated Home & Logo Navigation Handler
+   * Configures all logo, home, and brand links so that:
+   * - Authenticated users are routed directly to their role-specific dashboard.
+   * - Logged-out users are routed to the public landing page.
+   */
+  function initAuthenticatedHomeNavigation() {
+    const targetHome = window.Auth ? window.Auth.getAuthenticatedHome() : 'index.html';
+    
+    // Select all logo, brand, and home navigation links across all pages
+    const homeLinks = document.querySelectorAll(
+      '.dash-header__logo, .app-brand, .trans-brand, .admin-brand, .brand, .navbar__logo, #dash-logo, #nav-logo, #bnav-home, a[data-action="home"]'
+    );
+
+    homeLinks.forEach(link => {
+      link.setAttribute('href', targetHome);
+      link.addEventListener('click', (e) => {
+        if (window.Auth && window.Auth.isLoggedIn()) {
+          const currentUrl = window.location.pathname.toLowerCase();
+          const targetUrl = window.Auth.getAuthenticatedHome();
+          // If already on the destination page, smooth scroll to top instead of reloading
+          if (currentUrl.endsWith(targetUrl.replace(/^\.\.\//, ''))) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            e.preventDefault();
+            window.location.href = targetUrl;
+          }
+        }
+      });
+    });
+  }
+
+  /**
+   * 2. Lucide icon initializer
    */
   function initLucideIcons() {
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
