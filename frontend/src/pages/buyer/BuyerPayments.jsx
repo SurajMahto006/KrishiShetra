@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   CreditCard,
   ShieldCheck,
@@ -20,6 +20,7 @@ import StatusBadge from '../../components/common/StatusBadge';
 import buyerService from '../../services/buyerService';
 
 export const BuyerPayments = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -176,7 +177,7 @@ export const BuyerPayments = () => {
             title="No payment records found"
             description="When you execute procurement orders, escrow lock and disbursement details will appear here."
             actionLabel="Explore Marketplace"
-            onAction={() => window.location.href = '/buyer/marketplace'}
+            onAction={() => navigate('/buyer/marketplace')}
           />
         ) : (
           <Table

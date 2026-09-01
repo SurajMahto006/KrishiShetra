@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Bookmark,
   Trash2,
@@ -20,6 +20,7 @@ import EmptyState from '../../components/common/EmptyState';
 import buyerService from '../../services/buyerService';
 
 export const BuyerLots = () => {
+  const navigate = useNavigate();
   const [savedLots, setSavedLots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -213,7 +214,7 @@ export const BuyerLots = () => {
             title="No saved produce lots"
             description="Save lots you are interested in from the Marketplace to compare prices and make bulk offers."
             actionLabel="Explore Marketplace"
-            onAction={() => window.location.href = '/buyer/marketplace'}
+            onAction={() => navigate('/buyer/marketplace')}
           />
         ) : (
           <Table

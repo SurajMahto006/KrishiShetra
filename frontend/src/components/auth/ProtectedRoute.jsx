@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import AppShell from '../layout/AppShell';
 
 export const ProtectedRoute = ({ allowedRoles = [], children }) => {
-  const { isAuthenticated, role, loading } = useAuth();
+  const { isAuthenticated, role, user, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -22,13 +22,21 @@ export const ProtectedRoute = ({ allowedRoles = [], children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // Determine current active user role safely
+  const currentRole = (
+    role ||
+    user?.role ||
+    localStorage.getItem('krishi_user_role') ||
+    'buyer'
+  ).toLowerCase();
+
   // If specific roles are required, check role access
   if (allowedRoles.length > 0) {
-    const currentRole = (role || 'farmer').toLowerCase();
-    const hasRole = allowedRoles.map(r => r.toLowerCase()).includes(currentRole);
+    const normalizedAllowed = allowedRoles.map(r => r.toLowerCase());
+    const hasRole = normalizedAllowed.includes(currentRole);
 
     if (!hasRole) {
-      // Redirect to their own role dashboard
+      // User is attempting to access a route belonging to another role workspace
       return <Navigate to={`/${currentRole}/dashboard`} replace />;
     }
   }

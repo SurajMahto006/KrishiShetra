@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Package,
   Layers,
@@ -28,6 +28,7 @@ import buyerService from '../../services/buyerService';
 
 export const BuyerDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -386,7 +387,7 @@ export const BuyerDashboard = () => {
               title="No active procurement orders"
               description="Orders created from accepted offers or direct buys will appear here."
               actionLabel="Explore Marketplace"
-              onAction={() => window.location.href = '/buyer/marketplace'}
+              onAction={() => navigate('/buyer/marketplace')}
             />
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -426,7 +427,7 @@ export const BuyerDashboard = () => {
               title="No active transport jobs"
               description="Book transport for your procurement orders to track deliveries live."
               actionLabel="Book Logistics"
-              onAction={() => window.location.href = '/buyer/logistics'}
+              onAction={() => navigate('/buyer/logistics')}
             />
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

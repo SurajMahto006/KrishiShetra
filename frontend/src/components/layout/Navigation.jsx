@@ -16,7 +16,6 @@ import {
   BarChart2,
   Settings,
   CreditCard,
-  ClipboardList,
   Bookmark
 } from 'lucide-react';
 
@@ -37,10 +36,9 @@ const NAV_CONFIG = {
     { label: 'Orders', path: '/fpo/orders', icon: FileText }
   ],
   buyer: [
-    { label: 'Sourcing Hub', path: '/buyer/dashboard', icon: LayoutDashboard },
+    { label: 'Dashboard', path: '/buyer/dashboard', icon: LayoutDashboard },
     { label: 'Marketplace', path: '/buyer/marketplace', icon: Package },
-    { label: 'Requirements', path: '/buyer/requirements', icon: ClipboardList },
-    { label: 'Saved Lots', path: '/buyer/lots', icon: Bookmark },
+    { label: 'My Lots', path: '/buyer/lots', icon: Bookmark },
     { label: 'Offers', path: '/buyer/offers', icon: FileText },
     { label: 'Orders', path: '/buyer/orders', icon: ShieldCheck },
     { label: 'Logistics', path: '/buyer/logistics', icon: Truck },

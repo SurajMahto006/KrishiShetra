@@ -14,7 +14,20 @@ export const AuthProvider = ({ children }) => {
       return null;
     }
   });
-  const [role, setRole] = useState(() => localStorage.getItem('krishi_user_role') || 'farmer');
+
+  const [role, setRole] = useState(() => {
+    const storedRole = localStorage.getItem('krishi_user_role');
+    if (storedRole) return storedRole.toLowerCase();
+    try {
+      const stored = localStorage.getItem('krishi_user');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.role) return parsed.role.toLowerCase();
+      }
+    } catch {}
+    return 'buyer';
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const login = useCallback(async (email, password) => {
@@ -28,9 +41,9 @@ export const AuthProvider = ({ children }) => {
           id: res.id || email,
           name: res.name || email.split('@')[0],
           email,
-          role: res.role || 'farmer'
+          role: res.role || 'buyer'
         };
-        const userRole = (authUser.role || res.role || 'farmer').toLowerCase();
+        const userRole = (authUser.role || res.role || 'buyer').toLowerCase();
 
         // 1. Synchronously update localStorage
         localStorage.setItem('krishi_token', authToken);
@@ -68,7 +81,7 @@ export const AuthProvider = ({ children }) => {
         if (res.token) {
           const authToken = res.token;
           const authUser = res.user || formData;
-          const userRole = (authUser.role || formData.role || 'farmer').toLowerCase();
+          const userRole = (authUser.role || formData.role || 'buyer').toLowerCase();
 
           localStorage.setItem('krishi_token', authToken);
           localStorage.setItem('krishi_user', JSON.stringify(authUser));
@@ -103,7 +116,7 @@ export const AuthProvider = ({ children }) => {
     // 2. Reset memory state
     setToken(null);
     setUser(null);
-    setRole('farmer');
+    setRole('buyer');
   }, []);
 
   const value = {

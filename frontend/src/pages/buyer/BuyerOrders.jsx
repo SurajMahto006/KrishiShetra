@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ShieldCheck,
   Download,
@@ -23,6 +23,7 @@ import StatusBadge from '../../components/common/StatusBadge';
 import buyerService from '../../services/buyerService';
 
 export const BuyerOrders = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -225,7 +226,7 @@ export const BuyerOrders = () => {
             title="No procurement orders found"
             description={statusFilter === 'ALL' ? "Orders created from accepted offers or direct buys will appear here." : `No ${statusFilter.toLowerCase()} orders found.`}
             actionLabel="Explore Marketplace"
-            onAction={() => window.location.href = '/buyer/marketplace'}
+            onAction={() => navigate('/buyer/marketplace')}
           />
         ) : (
           <Table

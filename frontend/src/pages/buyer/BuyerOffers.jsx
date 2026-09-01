@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   FileText,
   CheckCircle,
@@ -22,6 +22,7 @@ import StatusBadge from '../../components/common/StatusBadge';
 import buyerService from '../../services/buyerService';
 
 export const BuyerOffers = () => {
+  const navigate = useNavigate();
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -104,7 +105,7 @@ export const BuyerOffers = () => {
       if (res.success) {
         setSelectedOfferForOrder(null);
         alert('Procurement order generated and locked into trade escrow!');
-        window.location.href = '/buyer/orders';
+        navigate('/buyer/orders');
       } else {
         alert(res.message || 'Failed to execute order.');
       }
@@ -285,7 +286,7 @@ export const BuyerOffers = () => {
             title="No procurement offers found"
             description={statusFilter === 'ALL' ? "Offers you submit on marketplace lots will appear here with live seller response status." : `No ${statusFilter.toLowerCase()} offers found.`}
             actionLabel="Browse Marketplace"
-            onAction={() => window.location.href = '/buyer/marketplace'}
+            onAction={() => navigate('/buyer/marketplace')}
           />
         ) : (
           <Table
