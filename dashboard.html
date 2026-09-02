@@ -809,6 +809,16 @@
 
   <!-- SCRIPTS -->
   <script src="js/auth.js"></script>
+  <!-- Dev: auto-create a farmer session on localhost so the dashboard loads without a real login -->
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      var isLocal = h === 'localhost' || h === '127.0.0.1' || h.startsWith('192.168.') || h === '';
+      if (isLocal && window.Auth && !window.Auth.isLoggedIn()) {
+        window.Auth.setDevSession('farmer');
+      }
+    })();
+  </script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
