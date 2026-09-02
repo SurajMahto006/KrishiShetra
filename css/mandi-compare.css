@@ -1,0 +1,906 @@
+/* ============================================================
+   KRISHISHETRA — MANDI PRICE COMPARISON PAGE
+   Consistent with dashboard.css design tokens.
+   ============================================================ */
+
+/* ── Page Hero Banner ── */
+.mpc-page-hero {
+  background: linear-gradient(135deg, var(--ks-evergreen) 0%, #1A4D3B 100%);
+  padding: calc(var(--nav-height) + 28px) 0 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.mpc-page-hero__inner { color: #fff; }
+
+.mpc-page-hero__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 10px;
+}
+
+.mpc-page-hero__breadcrumb a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+}
+
+.mpc-page-hero__breadcrumb a:hover { color: var(--ks-mint); }
+
+.mpc-page-hero__breadcrumb svg { width: 13px; height: 13px; }
+
+.mpc-page-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
+.mpc-page-hero__sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.72);
+  margin: 0;
+}
+
+/* ── Main Layout ── */
+.mpc-main {
+  padding: 28px 0 60px;
+  background: var(--ks-bg-ivory);
+  min-height: 60vh;
+}
+
+.mpc-section {
+  margin-bottom: 32px;
+}
+
+.mpc-section--flush {
+  margin-bottom: 24px;
+}
+
+.mpc-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mpc-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 700;
+  color: var(--ks-evergreen);
+  margin: 0 0 3px;
+}
+
+.mpc-section-subtitle {
+  font-size: 13px;
+  color: var(--ks-text-muted);
+  margin: 0;
+}
+
+.mpc-section-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Labels / Inputs ── */
+.mpc-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ks-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 7px;
+}
+
+.mpc-label svg { width: 13px; height: 13px; }
+
+.mpc-select,
+.mpc-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--ks-charcoal);
+  background: var(--ks-card-white);
+  border: 1px solid var(--ks-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.mpc-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236F7F75' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+.mpc-select:focus,
+.mpc-input:focus {
+  border-color: var(--ks-sage);
+  box-shadow: 0 0 0 3px rgba(91,154,114,0.15);
+}
+
+/* ── Crop Selector Block ── */
+.mpc-crop-selector {
+  background: var(--ks-card-white);
+  border: 1px solid var(--ks-border);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.mpc-crop-selector__your-crops {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.mpc-crop-selector__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ks-text-muted);
+  white-space: nowrap;
+}
+
+.mpc-crop-selector__quick {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mpc-quick-crop-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ks-evergreen);
+  background: var(--ks-pale-sage);
+  border: 1.5px solid var(--ks-border-sage);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mpc-quick-crop-btn:hover,
+.mpc-quick-crop-btn.active {
+  background: var(--ks-evergreen);
+  color: #fff;
+  border-color: var(--ks-evergreen);
+}
+
+.mpc-crop-selector__controls {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 16px;
+  align-items: end;
+}
+
+.mpc-crop-selector__group { display: flex; flex-direction: column; }
+
+.mpc-qty-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.mpc-qty-wrap .mpc-input { padding-right: 72px; }
+
+.mpc-qty-unit {
+  position: absolute;
+  right: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ks-text-muted);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.mpc-crop-selector__search { grid-column: span 1; }
+
+@media (max-width: 900px) {
+  .mpc-crop-selector__controls { grid-template-columns: 1fr 1fr; }
+  .mpc-crop-selector__search { grid-column: span 2; }
+}
+
+@media (max-width: 600px) {
+  .mpc-crop-selector__controls { grid-template-columns: 1fr; }
+  .mpc-crop-selector__search { grid-column: span 1; }
+}
+
+/* ── Summary Strip ── */
+.mpc-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.mpc-summary-item {
+  background: var(--ks-card-white);
+  border: 1px solid var(--ks-border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s;
+}
+
+.mpc-summary-item:hover { box-shadow: var(--shadow-md); }
+
+.mpc-summary-item__icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.mpc-summary-item__label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ks-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.mpc-summary-item__val {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ks-charcoal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mpc-summary-item__sub {
+  font-size: 11px;
+  color: var(--ks-text-muted);
+  margin-top: 2px;
+}
+
+.mpc-summary-item--gold { border-top: 3px solid var(--ks-amber); }
+.mpc-summary-item--blue { border-top: 3px solid #60A5FA; }
+.mpc-summary-item--green { border-top: 3px solid var(--ks-sage); }
+.mpc-summary-item--neutral { border-top: 3px solid var(--ks-border); }
+
+.mpc-summary-item--gold .mpc-summary-item__val { color: #b5821e; }
+.mpc-summary-item--blue .mpc-summary-item__val { color: #2563EB; }
+.mpc-summary-item--green .mpc-summary-item__val { color: var(--ks-sage); }
+
+@media (max-width: 900px) { .mpc-summary-strip { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .mpc-summary-strip { grid-template-columns: 1fr 1fr; gap: 10px; } }
+
+/* ── Recommendation Card ── */
+.mpc-recommendation {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.mpc-rec__inner {
+  background: linear-gradient(135deg, #12372A 0%, #1A4D3B 100%);
+  padding: 22px 26px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+}
+
+.mpc-rec__badge-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+.mpc-rec__badge {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.mpc-rec__badge-label {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ks-amber);
+  background: rgba(214,168,79,0.15);
+  border: 1px solid rgba(214,168,79,0.3);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.mpc-rec__content { min-width: 0; }
+
+.mpc-rec__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.mpc-rec__subtitle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  margin: 0 0 12px;
+}
+
+.mpc-rec__reasons { display: flex; flex-direction: column; gap: 5px; }
+
+.mpc-rec__reason {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.88);
+}
+
+.mpc-rec__reason-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ks-mint);
+  flex-shrink: 0;
+}
+
+.mpc-rec__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.mpc-rec__actions .btn--primary {
+  background: var(--ks-mint) !important;
+  color: var(--ks-evergreen) !important;
+  border-color: var(--ks-mint) !important;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .mpc-rec__inner { grid-template-columns: auto 1fr; }
+  .mpc-rec__actions { grid-column: span 2; flex-direction: row; }
+}
+
+@media (max-width: 500px) {
+  .mpc-rec__inner { grid-template-columns: 1fr; }
+  .mpc-rec__actions { grid-column: span 1; }
+}
+
+/* ── Price Diff Calculator ── */
+.mpc-calc-card {
+  background: var(--ks-card-white);
+  border: 1px solid var(--ks-border);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.mpc-calc-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ks-border-subtle);
+}
+
+.mpc-calc-card__icon { font-size: 28px; }
+
+.mpc-calc-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ks-charcoal);
+  margin: 0 0 3px;
+}
+
+.mpc-calc-card__sub {
+  font-size: 12px;
+  color: var(--ks-text-muted);
+  margin: 0;
+}
+
+.mpc-calc-rows { display: flex; flex-direction: column; gap: 10px; }
+
+.mpc-calc-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--ks-bg-ivory);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--ks-border-subtle);
+}
+
+.mpc-calc-row__mandi {
+  flex: 1;
+  min-width: 0;
+}
+
+.mpc-calc-row__name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ks-charcoal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mpc-calc-row__dist {
+  font-size: 11px;
+  color: var(--ks-text-muted);
+  margin-top: 2px;
+}
+
+.mpc-calc-row__price {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.mpc-calc-row__price-val {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ks-sage);
+}
+
+.mpc-calc-row__price-sub {
+  font-size: 11px;
+  color: var(--ks-text-muted);
+  margin-top: 1px;
+}
+
+.mpc-calc-row__diff {
+  text-align: right;
+  flex-shrink: 0;
+  min-width: 90px;
+}
+
+.mpc-calc-row__diff-val {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.mpc-calc-row__diff-val--positive { color: #059669; }
+.mpc-calc-row__diff-val--neutral  { color: var(--ks-text-muted); }
+.mpc-calc-row__diff-val--best {
+  color: var(--ks-evergreen);
+  background: var(--ks-mint-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.mpc-calc-row--highlight {
+  background: var(--ks-mint-light);
+  border-color: var(--ks-border-sage);
+}
+
+.mpc-calc-potential {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, var(--ks-mint-light), #DFFAEC);
+  border: 1px solid var(--ks-border-sage);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mpc-calc-potential__icon { font-size: 24px; }
+
+.mpc-calc-potential__text { flex: 1; min-width: 0; }
+
+.mpc-calc-potential__headline {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ks-evergreen);
+  margin: 0 0 2px;
+}
+
+.mpc-calc-potential__sub {
+  font-size: 12px;
+  color: var(--ks-sage);
+  margin: 0;
+}
+
+.mpc-calc-potential__amount {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ks-evergreen);
+  flex-shrink: 0;
+}
+
+/* ── Mandi Cards Grid ── */
+.mpc-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.mpc-mandi-card {
+  background: var(--ks-card-white);
+  border: 1.5px solid var(--ks-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mpc-mandi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--ks-border-sage);
+}
+
+.mpc-mandi-card--best-price  { border-top: 3px solid var(--ks-amber); }
+.mpc-mandi-card--nearest     { border-top: 3px solid #60A5FA; }
+.mpc-mandi-card--best-value  { border-top: 3px solid var(--ks-sage); }
+.mpc-mandi-card--selected    { border-color: var(--ks-sage); background: var(--ks-mint-light); }
+
+.mpc-mandi-card__badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-height: 22px;
+}
+
+.mpc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.mpc-badge--gold    { background: var(--ks-amber-light); color: #b5821e; border: 1px solid #f0d492; }
+.mpc-badge--blue    { background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; }
+.mpc-badge--green   { background: var(--ks-mint-light); color: var(--ks-sage); border: 1px solid var(--ks-border-sage); }
+.mpc-badge--orange  { background: #FFF7ED; color: #C2410C; border: 1px solid #FED7AA; }
+.mpc-badge--neutral { background: var(--ks-bg-ivory); color: var(--ks-text-muted); border: 1px solid var(--ks-border); }
+
+.mpc-mandi-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mpc-mandi-card__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ks-evergreen);
+  margin: 0 0 3px;
+}
+
+.mpc-mandi-card__location {
+  font-size: 12px;
+  color: var(--ks-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mpc-mandi-card__price-block { text-align: right; flex-shrink: 0; }
+
+.mpc-mandi-card__price {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ks-sage);
+  line-height: 1;
+}
+
+.mpc-mandi-card__price-unit {
+  font-size: 11px;
+  color: var(--ks-text-muted);
+  font-weight: 500;
+}
+
+.mpc-mandi-card__price-trend {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.mpc-mandi-card__price-trend--up   { color: #059669; }
+.mpc-mandi-card__price-trend--down { color: #DC2626; }
+
+.mpc-mandi-card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: var(--ks-bg-ivory);
+  border-radius: var(--radius-sm);
+}
+
+.mpc-mandi-card__stat { text-align: center; }
+
+.mpc-mandi-card__stat-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ks-charcoal);
+  display: block;
+}
+
+.mpc-mandi-card__stat-lbl {
+  font-size: 10px;
+  color: var(--ks-text-muted);
+  display: block;
+  margin-top: 1px;
+}
+
+.mpc-mandi-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mpc-mandi-card__earnings {
+  font-size: 12px;
+  color: var(--ks-text-muted);
+}
+
+.mpc-mandi-card__earnings strong {
+  color: var(--ks-charcoal);
+  font-weight: 700;
+}
+
+.mpc-mandi-card__actions {
+  display: flex;
+  gap: 7px;
+}
+
+.mpc-compare-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1.5px solid var(--ks-sage);
+  background: transparent;
+  color: var(--ks-sage);
+  transition: all 0.15s;
+}
+
+.mpc-compare-add-btn:hover,
+.mpc-compare-add-btn.added {
+  background: var(--ks-sage);
+  color: #fff;
+}
+
+.mpc-compare-add-btn.added { pointer-events: none; }
+
+.mpc-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1.5px solid var(--ks-border);
+  background: transparent;
+  color: var(--ks-charcoal);
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.mpc-nav-btn:hover {
+  background: var(--ks-pale-sage);
+  border-color: var(--ks-border-sage);
+}
+
+.mpc-mandi-card__updated {
+  font-size: 10px;
+  color: var(--ks-text-muted-light);
+}
+
+/* ── Nearby toggle ── */
+.mpc-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ks-charcoal);
+  cursor: pointer;
+  user-select: none;
+}
+
+.mpc-toggle-check { display: none; }
+
+.mpc-toggle-pill {
+  width: 38px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: var(--ks-border);
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.mpc-toggle-pill::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.mpc-toggle-check:checked + .mpc-toggle-pill { background: var(--ks-sage); }
+.mpc-toggle-check:checked + .mpc-toggle-pill::after { transform: translateX(16px); }
+
+/* ── Side-by-Side Compare Table ── */
+.mpc-compare-empty {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--ks-card-white);
+  border: 2px dashed var(--ks-border);
+  border-radius: var(--radius-md);
+  color: var(--ks-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.mpc-compare-empty__icon { font-size: 36px; margin-bottom: 10px; }
+
+.mpc-compare-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--ks-border);
+}
+
+.mpc-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: var(--ks-card-white);
+  min-width: 500px;
+}
+
+.mpc-compare-table th {
+  background: var(--ks-evergreen);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 16px;
+  white-space: nowrap;
+}
+
+.mpc-compare-table th:first-child { border-radius: 0; }
+
+.mpc-compare-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--ks-border-subtle);
+  color: var(--ks-charcoal);
+  vertical-align: middle;
+}
+
+.mpc-compare-table tr:last-child td { border-bottom: none; }
+.mpc-compare-table tr:hover td { background: var(--ks-bg-ivory); }
+
+.mpc-compare-table .mpc-ct-best-row td {
+  background: var(--ks-mint-light);
+  font-weight: 700;
+}
+
+.mpc-compare-table .mpc-ct-best-row td:first-child { border-left: 3px solid var(--ks-sage); }
+
+.mpc-ct-label { font-weight: 600; color: var(--ks-text-muted); font-size: 12px; }
+.mpc-ct-price { font-size: 16px; font-weight: 800; color: var(--ks-sage); }
+.mpc-ct-earn  { font-size: 14px; font-weight: 700; color: var(--ks-evergreen); }
+.mpc-ct-diff-pos { color: #059669; font-weight: 700; }
+.mpc-ct-diff-neg { color: #DC2626; font-weight: 600; }
+.mpc-ct-badge    { font-size: 13px; }
+
+/* ── Chart ── */
+.mpc-chart-toggle {
+  display: flex;
+  background: var(--ks-bg-ivory);
+  border: 1px solid var(--ks-border);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  gap: 2px;
+}
+
+.mpc-chart-toggle-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ks-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.mpc-chart-toggle-btn--active {
+  background: var(--ks-card-white);
+  color: var(--ks-evergreen);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.mpc-chart-wrap {
+  background: var(--ks-card-white);
+  border: 1px solid var(--ks-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Empty/Loading States ── */
+.mpc-loading {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--ks-text-muted);
+  font-size: 13px;
+}
+
+.mpc-loading__spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--ks-border);
+  border-top-color: var(--ks-sage);
+  border-radius: 50%;
+  animation: mpcSpin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes mpcSpin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .mpc-cards-grid { grid-template-columns: 1fr; }
+  .mpc-mandi-card__stats { grid-template-columns: repeat(3,1fr); }
+  .mpc-chart-toggle { flex-wrap: wrap; }
+}
+
+@media (max-width: 500px) {
+  .mpc-page-hero { padding-top: calc(var(--nav-height) + 16px); }
+  .mpc-mandi-card__price { font-size: 18px; }
+  .mpc-calc-row { flex-wrap: wrap; gap: 8px; }
+  .mpc-calc-row__diff { min-width: auto; }
+}

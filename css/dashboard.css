@@ -4119,3 +4119,155 @@ body.dashboard-body {
   border-top: 1px solid #E4E3D8;
   margin: 18px 0;
 }
+
+/* ============================================================
+   MANDI PRICE COMPARISON — ENTRY CARD (Dashboard)
+   ============================================================ */
+.mpc-entry-card {
+  background: linear-gradient(135deg, var(--ks-evergreen) 0%, #1A4D3B 60%, #2D6A4F 100%);
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 28px rgba(18, 55, 42, 0.22);
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+
+.mpc-entry-card::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(143, 203, 155, 0.18) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.mpc-entry-card::after {
+  content: '📊';
+  position: absolute;
+  bottom: -10px;
+  right: 200px;
+  font-size: 80px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.mpc-entry-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(18, 55, 42, 0.32);
+}
+
+.mpc-entry-card:focus-visible {
+  outline: 3px solid var(--ks-mint);
+  outline-offset: 3px;
+}
+
+.mpc-entry-card__left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  min-width: 0;
+}
+
+.mpc-entry-card__icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  background: rgba(143, 203, 155, 0.2);
+  border: 1px solid rgba(143, 203, 155, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mpc-entry-card__icon-wrap svg {
+  width: 24px;
+  height: 24px;
+  color: var(--ks-mint);
+}
+
+.mpc-entry-card__text { flex: 1; min-width: 0; }
+
+.mpc-entry-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 5px;
+}
+
+.mpc-entry-card__desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.mpc-entry-card__right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.mpc-entry-card__stats {
+  display: flex;
+  gap: 20px;
+}
+
+.mpc-entry-card__stat {
+  text-align: center;
+}
+
+.mpc-entry-card__stat-val {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ks-mint);
+  line-height: 1.1;
+}
+
+.mpc-entry-card__stat-lbl {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.mpc-entry-card__btn {
+  background: var(--ks-mint) !important;
+  color: var(--ks-evergreen) !important;
+  border-color: var(--ks-mint) !important;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.mpc-entry-card__btn:hover {
+  background: #a8d9b4 !important;
+  transform: translateY(-1px);
+}
+
+.mpc-entry-card__btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+@media (max-width: 768px) {
+  .mpc-entry-card { flex-direction: column; align-items: flex-start; padding: 18px 20px; }
+  .mpc-entry-card__right { width: 100%; justify-content: space-between; }
+  .mpc-entry-card__stats { gap: 14px; }
+}

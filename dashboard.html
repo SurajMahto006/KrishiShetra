@@ -75,6 +75,9 @@
         <a href="orders.html" class="dash-header__link" id="nav-orders">
           <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
         </a>
+        <a href="mandi-compare.html" class="dash-header__link" id="nav-compare">
+          <i data-lucide="bar-chart-2" class="dash-header__link-icon"></i> Compare
+        </a>
       </nav>
 
       <!-- Right Actions -->
@@ -256,6 +259,33 @@
           <button class="dash-action" id="action-forecast" onclick="location.href='ai-forecast.html'"><div class="dash-action__icon dash-action__icon--purple"><i data-lucide="brain"></i></div><span class="dash-action__label">AI Forecast</span><span class="dash-action__desc">Price predictions</span></button>
           <button class="dash-action" id="action-alerts" onclick="openAlertModal()"><div class="dash-action__icon dash-action__icon--orange"><i data-lucide="bell-ring"></i></div><span class="dash-action__label">Price Alerts</span><span class="dash-action__desc">SMS & App alerts</span></button>
           <button class="dash-action" id="action-lots" onclick="location.href='lots.html'"><div class="dash-action__icon dash-action__icon--teal"><i data-lucide="list-checks"></i></div><span class="dash-action__label">My Lots</span><span class="dash-action__desc">Manage listings</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 3.5 MANDI PRICE COMPARISON ENTRY ── -->
+    <section class="dash-section" style="padding-top:0; padding-bottom:8px;" id="dash-compare-entry">
+      <div class="container">
+        <div class="mpc-entry-card" onclick="location.href='mandi-compare.html'" role="button" tabindex="0" aria-label="Compare Mandi Prices">
+          <div class="mpc-entry-card__left">
+            <div class="mpc-entry-card__icon-wrap">
+              <i data-lucide="bar-chart-2"></i>
+            </div>
+            <div class="mpc-entry-card__text">
+              <h3 class="mpc-entry-card__title">📊 Compare Mandi Prices</h3>
+              <p class="mpc-entry-card__desc">Find the best price for your crop across 45+ Indian APMCs. Compare earnings, transport costs &amp; get a clear ⭐ recommendation.</p>
+            </div>
+          </div>
+          <div class="mpc-entry-card__right">
+            <div class="mpc-entry-card__stats">
+              <div class="mpc-entry-card__stat"><span class="mpc-entry-card__stat-val">45+</span><span class="mpc-entry-card__stat-lbl">Mandis</span></div>
+              <div class="mpc-entry-card__stat"><span class="mpc-entry-card__stat-val">15</span><span class="mpc-entry-card__stat-lbl">Crops</span></div>
+              <div class="mpc-entry-card__stat"><span class="mpc-entry-card__stat-val">Live</span><span class="mpc-entry-card__stat-lbl">Prices</span></div>
+            </div>
+            <button class="btn btn--primary mpc-entry-card__btn">
+              Compare Now <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </section>
