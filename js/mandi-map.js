@@ -1,10 +1,12 @@
 ﻿/**
- * KRISHISHETRA â€” INDIA MANDI MAP
- * Leaflet + CartoDB tiles (zero API key)
- * 80+ APMC mandis, GPS location, clustering, AI assistant
+ * KRISHISHETRA - INDIA MANDI MAP (GPS System)
+ * Leaflet + OpenStreetMap tiles (zero API key required)
+ * 45+ APMC mandis with real GPS coordinates (lat/lng)
+ * Features: GPS geolocation, marker clustering, AI selling assistant,
+ *           crop/state/radius filters, Google Maps directions
  */
 
-// â”€â”€â”€ 1. MANDI DATASET â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- MANDI DATASET: 45 mandis with GPS coordinates ---
 
 const MANDI_MAP_DATA = [
   // MAHARASHTRA
@@ -587,5 +589,6 @@ function initMandiMap() {
   // Also trigger if already in view
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ obs.observe(section); });
 })();
+
 
 
