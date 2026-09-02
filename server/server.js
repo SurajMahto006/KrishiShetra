@@ -84,8 +84,13 @@ app.use('/api/test', testRoutes);
 
 const path = require('path');
 
+const rootDir = path.join(__dirname, '..');
+
 // Serve root static files (HTML, CSS, JS, Assets)
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(rootDir));
+
+// Support /KrishiShetra and /krishishetra path aliases so requests with folder prefix work seamlessly
+app.use(['/KrishiShetra', '/krishishetra'], express.static(rootDir));
 
 // Fallback for API health if accessed directly
 app.get('/api', (req, res) => {
