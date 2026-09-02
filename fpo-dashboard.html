@@ -27,9 +27,9 @@
     <div class="container header-inner">
       <!-- Brand Logo -->
       <a href="index.html" class="brand">
-        <span class="brand-icon">🌾</span>
+        <div class="brand-icon-box"><i data-lucide="sprout"></i></div>
         <span class="brand-text">
-          KrishiShetra
+          Krishi<span>Shetra</span>
           <span class="brand-badge">FPO Hub</span>
         </span>
       </a>
@@ -44,6 +44,7 @@
           <li><a href="#buyers" class="nav-link"><i data-lucide="briefcase" style="width:16px;height:16px;"></i> <span data-i18n="nav_buyers">Buyers</span></a></li>
           <li><a href="#orders" class="nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> <span data-i18n="nav_orders">Orders</span></a></li>
           <li><a href="#analytics" class="nav-link"><i data-lucide="bar-chart-3" style="width:16px;height:16px;"></i> <span data-i18n="nav_analytics">Analytics</span></a></li>
+          <li class="mobile-logout-item"><a href="javascript:void(0)" onclick="handleFpoLogout()" class="nav-link nav-link--danger"><i data-lucide="log-out" style="width:16px;height:16px;"></i> <span>Log Out</span></a></li>
         </ul>
       </nav>
 
@@ -65,12 +66,41 @@
           </select>
         </div>
 
-        <!-- FPO Profile Pill -->
-        <div class="profile-pill" onclick="openProfileModal()">
-          <div class="profile-avatar">NF</div>
-          <div class="profile-info">
-            <span class="profile-name">Nashik Farmers FPO</span>
-            <span class="profile-role">Registered FPC ✓</span>
+        <!-- FPO Profile Pill & Dropdown -->
+        <div class="profile-dropdown-wrap" id="fpoProfileWrap">
+          <div class="profile-pill" id="fpoProfileBtn" onclick="toggleFpoProfileDropdown()">
+            <div class="profile-avatar">NF</div>
+            <div class="profile-info">
+              <span class="profile-name">Nashik Farmers FPO</span>
+              <span class="profile-role">Registered FPC ✓</span>
+            </div>
+            <i data-lucide="chevron-down" class="profile-chevron"></i>
+          </div>
+          <div class="profile-dropdown-menu" id="fpoProfileDropdown">
+            <div class="profile-dropdown-header">
+              <div class="profile-avatar profile-avatar--lg">NF</div>
+              <div>
+                <div class="profile-dropdown-title">Nashik Kisan Samriddhi FPC</div>
+                <div class="profile-dropdown-sub">CIN: U01111MH2022PTC123456 · Nashik</div>
+              </div>
+            </div>
+            <div class="profile-dropdown-sep"></div>
+            <a href="javascript:void(0)" onclick="openProfileModal(); closeFpoProfileDropdown();" class="profile-dropdown-item">
+              <i data-lucide="building-2"></i> FPO Organization Profile
+            </a>
+            <a href="#farmers" class="profile-dropdown-item" onclick="closeFpoProfileDropdown()">
+              <i data-lucide="users"></i> Member Farmers Directory
+            </a>
+            <a href="#lots" class="profile-dropdown-item" onclick="closeFpoProfileDropdown()">
+              <i data-lucide="package"></i> Aggregated Lots
+            </a>
+            <a href="#orders" class="profile-dropdown-item" onclick="closeFpoProfileDropdown()">
+              <i data-lucide="clipboard-list"></i> Buyer Contracts & Orders
+            </a>
+            <div class="profile-dropdown-sep"></div>
+            <a href="javascript:void(0)" onclick="handleFpoLogout()" class="profile-dropdown-item profile-dropdown-item--danger" id="fpoLogoutBtn">
+              <i data-lucide="log-out"></i> Log Out
+            </a>
           </div>
         </div>
 

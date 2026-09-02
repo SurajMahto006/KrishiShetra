@@ -161,133 +161,129 @@ async function renderDashboardView(container) {
   const dateStr = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   container.innerHTML = `
-    <div class="buyer-view" style="padding-top: 24px;">
-      <!-- Hero Command Center Header -->
-      <div class="kl-card" style="background: linear-gradient(135deg, #12372A 0%, #1A4D3B 100%); color: #FFFFFF; border-radius: 14px; padding: 26px 30px; margin-bottom: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; box-shadow: 0 6px 20px rgba(18,55,42,0.12);">
+    <div class="buyer-view">
+      <!-- Standardized Command Center Hero Banner -->
+      <div class="buyer-hero-banner">
         <div>
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-            <span style="font-size: 11px; font-weight: 800; background: rgba(232, 185, 106, 0.2); color: #E8B96A; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.06em;">
-              PROCUREMENT COMMAND CENTER
-            </span>
-            <span style="font-size: 12px; color: rgba(255, 255, 255, 0.7); display: flex; align-items: center; gap: 4px;">
+          <div class="buyer-hero-banner__eyebrow">
+            <span class="buyer-hero-banner__tag">PROCUREMENT COMMAND CENTER</span>
+            <span class="buyer-hero-banner__date">
               <i data-lucide="calendar" style="width: 13px; height: 13px;"></i> ${dateStr}
             </span>
           </div>
-          <h1 style="font-size: 24px; font-weight: 700; margin: 0 0 4px 0; color: #F5F4ED;">
-            ${greeting}, ${buyerName}
-          </h1>
-          <p style="font-size: 13.5px; color: rgba(245, 244, 237, 0.85); margin: 0; max-width: 620px; line-height: 1.45;">
-            Manage your agricultural procurement from one place.
+          <h1 class="buyer-hero-banner__title">${greeting}, ${buyerName}</h1>
+          <p class="buyer-hero-banner__desc">
+            Manage your agricultural procurement, active contracts, and escrow settlements.
           </p>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <a href="#/buyer/marketplace" class="btn btn--primary" style="background: #E8B96A; color: #12372A; font-weight: 700; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-size: 13px;">
+        <div class="buyer-hero-banner__actions">
+          <a href="#/buyer/marketplace" class="btn btn--primary" style="background: #D97706; color: #FFFFFF; font-weight: 700;">
             <i data-lucide="store"></i> Browse Marketplace
           </a>
-          <a href="#/buyer/inquiries" class="btn btn--secondary" style="background: rgba(255,255,255,0.12); color: #FFF; border: 1px solid rgba(255,255,255,0.25); text-decoration: none; padding: 10px 16px; border-radius: 8px; font-size: 13px;">
+          <a href="#/buyer/inquiries" class="btn btn--secondary" style="background: rgba(255,255,255,0.12); color: #FFF; border-color: rgba(255,255,255,0.25);">
             <i data-lucide="message-square"></i> New Inquiry
           </a>
-          <a href="#/buyer/orders" class="btn btn--secondary" style="background: rgba(255,255,255,0.12); color: #FFF; border: 1px solid rgba(255,255,255,0.25); text-decoration: none; padding: 10px 16px; border-radius: 8px; font-size: 13px;">
+          <a href="#/buyer/orders" class="btn btn--secondary" style="background: rgba(255,255,255,0.12); color: #FFF; border-color: rgba(255,255,255,0.25);">
             <i data-lucide="clipboard-list"></i> View Orders
           </a>
         </div>
       </div>
 
       <!-- 5 Summary KPI Cards -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 22px;" id="buyer-stats-grid">
-        <a href="#/buyer/inquiries" class="kl-stat-card" style="text-decoration: none; background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700; letter-spacing: 0.04em;">Active Inquiries</div>
-            <span style="width: 30px; height: 30px; border-radius: 6px; background: #FEF3C7; color: #92400E; display: flex; align-items: center; justify-content: center;"><i data-lucide="message-square" style="width: 15px; height: 15px;"></i></span>
+      <div class="buyer-stats-grid" id="buyer-stats-grid">
+        <a href="#/buyer/inquiries" class="buyer-stat-card">
+          <div class="buyer-stat-card__top">
+            <div class="buyer-stat-card__label">Active Inquiries</div>
+            <span class="buyer-stat-card__icon" style="background: #FEF3C7; color: #92400E;"><i data-lucide="message-square"></i></span>
           </div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;" id="stat-active-inquiries">--</div>
-          <div style="font-size: 11px; color: #777; margin-top: 2px;">Negotiations in progress</div>
+          <div class="buyer-stat-card__val" id="stat-active-inquiries">--</div>
+          <div class="buyer-stat-card__sub">Negotiations in progress</div>
         </a>
 
-        <a href="#/buyer/orders" class="kl-stat-card" style="text-decoration: none; background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700; letter-spacing: 0.04em;">Pending Orders</div>
-            <span style="width: 30px; height: 30px; border-radius: 6px; background: #E5F0E7; color: #12372A; display: flex; align-items: center; justify-content: center;"><i data-lucide="clock" style="width: 15px; height: 15px;"></i></span>
+        <a href="#/buyer/orders" class="buyer-stat-card">
+          <div class="buyer-stat-card__top">
+            <div class="buyer-stat-card__label">Pending Orders</div>
+            <span class="buyer-stat-card__icon" style="background: #E8F5EC; color: #0D4435;"><i data-lucide="clock"></i></span>
           </div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;" id="stat-pending-orders">--</div>
-          <div style="font-size: 11px; color: #5B9A72; margin-top: 2px; font-weight: 600;">Escrow locked contracts</div>
+          <div class="buyer-stat-card__val" id="stat-pending-orders">--</div>
+          <div class="buyer-stat-card__sub" style="color: #2D6A4F; font-weight: 600;">Escrow locked contracts</div>
         </a>
 
-        <a href="#/buyer/orders" class="kl-stat-card" style="text-decoration: none; background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700; letter-spacing: 0.04em;">Orders in Transit</div>
-            <span style="width: 30px; height: 30px; border-radius: 6px; background: #E0E7FF; color: #3730A3; display: flex; align-items: center; justify-content: center;"><i data-lucide="truck" style="width: 15px; height: 15px;"></i></span>
+        <a href="#/buyer/orders" class="buyer-stat-card">
+          <div class="buyer-stat-card__top">
+            <div class="buyer-stat-card__label">Orders in Transit</div>
+            <span class="buyer-stat-card__icon" style="background: #E0F2FE; color: #0369A1;"><i data-lucide="truck"></i></span>
           </div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;" id="stat-in-transit">--</div>
-          <div style="font-size: 11px; color: #3730A3; margin-top: 2px; font-weight: 600;">Dispatched freight loads</div>
+          <div class="buyer-stat-card__val" id="stat-in-transit">--</div>
+          <div class="buyer-stat-card__sub" style="color: #0369A1; font-weight: 600;">Dispatched freight loads</div>
         </a>
 
-        <a href="#/buyer/orders" class="kl-stat-card" style="text-decoration: none; background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700; letter-spacing: 0.04em;">Completed Orders</div>
-            <span style="width: 30px; height: 30px; border-radius: 6px; background: #D1FAE5; color: #065F46; display: flex; align-items: center; justify-content: center;"><i data-lucide="check-circle" style="width: 15px; height: 15px;"></i></span>
+        <a href="#/buyer/orders" class="buyer-stat-card">
+          <div class="buyer-stat-card__top">
+            <div class="buyer-stat-card__label">Completed Orders</div>
+            <span class="buyer-stat-card__icon" style="background: #D1FAE5; color: #065F46;"><i data-lucide="check-circle"></i></span>
           </div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;" id="stat-completed-orders">--</div>
-          <div style="font-size: 11px; color: #065F46; margin-top: 2px; font-weight: 600;">Quality verified & settled</div>
+          <div class="buyer-stat-card__val" id="stat-completed-orders">--</div>
+          <div class="buyer-stat-card__sub" style="color: #065F46; font-weight: 600;">Quality verified & settled</div>
         </a>
 
-        <a href="#/buyer/payments" class="kl-stat-card" style="text-decoration: none; background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700; letter-spacing: 0.04em;">Total Procurement</div>
-            <span style="width: 30px; height: 30px; border-radius: 6px; background: #FDF0EE; color: #C96D5B; display: flex; align-items: center; justify-content: center;"><i data-lucide="wallet" style="width: 15px; height: 15px;"></i></span>
+        <a href="#/buyer/payments" class="buyer-stat-card">
+          <div class="buyer-stat-card__top">
+            <div class="buyer-stat-card__label">Total Procurement</div>
+            <span class="buyer-stat-card__icon" style="background: #FDF0EE; color: #C96D5B;"><i data-lucide="wallet"></i></span>
           </div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;" id="stat-procurement-val">₹42.8L</div>
-          <div style="font-size: 11px; color: #777; margin-top: 2px;">FY procurement allocation</div>
+          <div class="buyer-stat-card__val" id="stat-procurement-val">₹42.8L</div>
+          <div class="buyer-stat-card__sub">FY procurement allocation</div>
         </a>
       </div>
 
       <!-- Quick Actions -->
-      <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;">
-        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #718E68; letter-spacing: 0.06em; margin-bottom: 10px;">
+      <div class="buyer-quick-actions-panel">
+        <div class="buyer-quick-actions-title">
           Quick Actions
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px;">
-          <a href="#/buyer/marketplace" class="kl-card" style="text-decoration: none; background: #FAF8F5; border: 1px solid #EAE6DF; border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
-            <div style="width: 34px; height: 34px; border-radius: 6px; background: #E5F0E7; color: #12372A; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i data-lucide="search"></i></div>
+        <div class="buyer-quick-actions-grid">
+          <a href="#/buyer/marketplace" class="buyer-quick-action-card">
+            <div class="buyer-quick-action-card__icon" style="background: #E8F5EC; color: #0D4435;"><i data-lucide="search"></i></div>
             <div>
-              <div style="font-size: 13px; font-weight: 700; color: #12372A;">Browse Produce</div>
-              <div style="font-size: 11px; color: #666;">Explore farm-gate lots</div>
+              <div class="buyer-quick-action-card__title">Browse Produce</div>
+              <div class="buyer-quick-action-card__desc">Explore farm-gate lots</div>
             </div>
           </a>
-          <a href="#/buyer/inquiries" class="kl-card" style="text-decoration: none; background: #FAF8F5; border: 1px solid #EAE6DF; border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
-            <div style="width: 34px; height: 34px; border-radius: 6px; background: #FEF3C7; color: #92400E; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i data-lucide="message-square"></i></div>
+          <a href="#/buyer/inquiries" class="buyer-quick-action-card">
+            <div class="buyer-quick-action-card__icon" style="background: #FEF3C7; color: #92400E;"><i data-lucide="message-square"></i></div>
             <div>
-              <div style="font-size: 13px; font-weight: 700; color: #12372A;">My Inquiries</div>
-              <div style="font-size: 11px; color: #666;">Track negotiations & bids</div>
+              <div class="buyer-quick-action-card__title">My Inquiries</div>
+              <div class="buyer-quick-action-card__desc">Track negotiations & bids</div>
             </div>
           </a>
-          <a href="#/buyer/orders" class="kl-card" style="text-decoration: none; background: #FAF8F5; border: 1px solid #EAE6DF; border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
-            <div style="width: 34px; height: 34px; border-radius: 6px; background: #DBEAFE; color: #1E40AF; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i data-lucide="truck"></i></div>
+          <a href="#/buyer/orders" class="buyer-quick-action-card">
+            <div class="buyer-quick-action-card__icon" style="background: #E0F2FE; color: #0369A1;"><i data-lucide="truck"></i></div>
             <div>
-              <div style="font-size: 13px; font-weight: 700; color: #12372A;">My Orders</div>
-              <div style="font-size: 11px; color: #666;">Track transit & escrow</div>
+              <div class="buyer-quick-action-card__title">My Orders</div>
+              <div class="buyer-quick-action-card__desc">Track transit & escrow</div>
             </div>
           </a>
-          <a href="#/buyer/directory" class="kl-card" style="text-decoration: none; background: #FAF8F5; border: 1px solid #EAE6DF; border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; transition: all 0.2s;">
-            <div style="width: 34px; height: 34px; border-radius: 6px; background: #E0E7FF; color: #3730A3; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i data-lucide="users"></i></div>
+          <a href="#/buyer/directory" class="buyer-quick-action-card">
+            <div class="buyer-quick-action-card__icon" style="background: #EEF2FF; color: #4F46E5;"><i data-lucide="users"></i></div>
             <div>
-              <div style="font-size: 13px; font-weight: 700; color: #12372A;">Find Sellers</div>
-              <div style="font-size: 11px; color: #666;">Farmers & FPOs</div>
+              <div class="buyer-quick-action-card__title">Find Sellers</div>
+              <div class="buyer-quick-action-card__desc">Farmers & FPOs</div>
             </div>
           </a>
         </div>
       </div>
 
-      <!-- 2-Column Split: Available for You & Recent Activity Timeline -->
-      <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px;" class="buyer-dash-grid">
+      <!-- 2-Column Split: Available for You (60%) & Recent Activity (40%) -->
+      <div class="buyer-dash-grid">
         <!-- Left: Available for You -->
         <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div class="buyer-section-title-row">
             <div>
-              <h3 style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin: 0;">Available for You</h3>
-              <span style="font-size: 12px; color: #777;">Verified direct farm-gate produce matching your procurement profile</span>
+              <h3 class="buyer-section-title">Available for You</h3>
+              <span class="buyer-section-subtitle">Verified direct farm-gate produce matching your procurement profile</span>
             </div>
-            <a href="#/buyer/marketplace" style="font-size: 12.5px; font-weight: 600; color: var(--ks-sage); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+            <a href="#/buyer/marketplace" class="btn btn--ghost btn--sm" style="font-weight: 700; color: var(--kl-sage);">
               View All <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
             </a>
           </div>
@@ -298,16 +294,16 @@ async function renderDashboardView(container) {
 
         <!-- Right: Recent Activity Timeline -->
         <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div class="buyer-section-title-row">
             <div>
-              <h3 style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin: 0;">Recent Procurement Activity</h3>
-              <span style="font-size: 12px; color: #777;">Real-time inquiry & dispatch updates</span>
+              <h3 class="buyer-section-title">Recent Procurement Activity</h3>
+              <span class="buyer-section-subtitle">Real-time inquiry & dispatch updates</span>
             </div>
-            <a href="#/buyer/inquiries" style="font-size: 12.5px; font-weight: 600; color: var(--ks-sage); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+            <a href="#/buyer/inquiries" class="btn btn--ghost btn--sm" style="font-weight: 700; color: var(--kl-sage);">
               All Activity <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
             </a>
           </div>
-          <div id="dash-activity-timeline" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 18px;">
+          <div id="dash-activity-timeline" class="buyer-activity-card">
             <!-- Rendered dynamically -->
           </div>
         </div>
@@ -410,27 +406,27 @@ async function loadDashboardData() {
     if (recLotsEl) {
       if (lots.length > 0) {
         recLotsEl.innerHTML = lots.map(lot => `
-          <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; gap: 14px; transition: all 0.2s;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: #FAF8F5; border: 1px solid #EAE6DF; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+          <div class="buyer-lot-row-card">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div class="buyer-lot-row-card__icon">
                 ${lot.emoji || '🌾'}
               </div>
               <div>
                 <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
-                  <span style="padding: 1px 6px; border-radius: 4px; background: #E5F0E7; color: #12372A; font-size: 10px; font-weight: 800;">GRADE ${lot.qualityGrade || 'A'}</span>
-                  <span style="font-size: 11px; color: #5B9A72; font-weight: 700;">✓ Verified</span>
+                  <span class="kl-badge kl-badge--confirmed">GRADE ${lot.qualityGrade || 'A'}</span>
+                  <span style="font-size: 11px; color: var(--kl-sage); font-weight: 700;">✓ Verified</span>
                 </div>
-                <h4 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 2px 0;">
-                  ${lot.cropName} <span style="font-weight: 400; font-size: 12.5px; color: #666;">(${lot.variety || 'Standard'})</span>
+                <h4 style="font-size: 15px; font-weight: 700; color: var(--kl-evergreen); margin: 0 0 2px 0;">
+                  ${lot.cropName} <span style="font-weight: 400; font-size: 12.5px; color: var(--kl-muted);">(${lot.variety || 'Standard'})</span>
                 </h4>
-                <div style="font-size: 12px; color: #666;">
+                <div style="font-size: 12px; color: var(--kl-muted);">
                   <strong>${lot.quantity} ${lot.quantityUnit || 'quintal'}</strong> • 📍 ${lot.district || 'Pune'}, ${lot.state || 'Maharashtra'}
                 </div>
               </div>
             </div>
             <div style="text-align: right; flex-shrink: 0;">
-              <div style="font-size: 17px; font-weight: 800; color: var(--ks-evergreen);">₹${lot.askingPrice?.toLocaleString('en-IN')}<span style="font-size: 11px; font-weight: 400; color: #666;"> / q</span></div>
-              <button class="btn btn--sm btn--primary" style="margin-top: 4px; font-size: 11.5px; padding: 5px 12px; background: #12372A; border-radius: 6px;" onclick="openLotDetailModal('${lot.lotId}')">
+              <div style="font-size: 17px; font-weight: 800; color: var(--kl-evergreen);">₹${lot.askingPrice?.toLocaleString('en-IN')}<span style="font-size: 11px; font-weight: 400; color: var(--kl-muted);"> / q</span></div>
+              <button class="btn btn--sm btn--primary" style="margin-top: 4px;" onclick="openLotDetailModal('${lot.lotId}')">
                 View & Inquire →
               </button>
             </div>
@@ -491,18 +487,21 @@ async function loadDashboardData() {
 // ═══════════════════════════════════════════════════════════════════════
 async function renderMarketplaceView(container) {
   container.innerHTML = `
-    <div class="buyer-view" style="padding-top: 24px;">
-      <!-- Marketplace Header -->
-      <div style="margin-bottom: 18px;">
-        <h2 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">Source Fresh Produce</h2>
-        <p style="font-size: 13.5px; color: #666; margin: 0;">Discover verified agricultural lots from farmers and FPOs.</p>
+    <div class="buyer-view">
+      <!-- Standardized Page Header -->
+      <div class="buyer-page-header">
+        <div class="buyer-page-header__left">
+          <span class="buyer-page-header__eyebrow">B2B Sourcing Hub</span>
+          <h1 class="buyer-page-header__title">Source Fresh Produce</h1>
+          <p class="buyer-page-header__desc">Discover verified agricultural lots from farmers and FPOs.</p>
+        </div>
       </div>
 
       <!-- Prominent Search Bar -->
-      <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 10px 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-        <i data-lucide="search" style="color: var(--ks-evergreen); width: 18px; height: 18px;"></i>
-        <input type="text" id="market-filter-search" class="dash-form-input" placeholder="🔍 Search crop, variety, seller or location" style="border: none; padding: 6px 0; font-size: 13.5px; flex: 1; outline: none; background: transparent;" value="${currentMarketSearch}">
-        <button class="btn btn--primary" id="btn-search-marketplace" style="padding: 8px 18px; font-size: 13px; background: #12372A; border-radius: 8px;">
+      <div class="buyer-market-search-bar">
+        <i data-lucide="search" style="color: var(--kl-sage); width: 18px; height: 18px; flex-shrink: 0;"></i>
+        <input type="text" id="market-filter-search" class="buyer-market-search-input" placeholder="Search crop, variety, seller, or location..." value="${currentMarketSearch}">
+        <button class="btn btn--primary btn--sm" id="btn-search-marketplace">
           Search
         </button>
       </div>
@@ -517,21 +516,20 @@ async function renderMarketplaceView(container) {
         <button class="kl-filter-chip ${currentQuickFilter === 'Oilseeds' ? 'active' : ''}" data-qf="Oilseeds">Oilseeds</button>
         <button class="kl-filter-chip ${currentQuickFilter === 'Spices' ? 'active' : ''}" data-qf="Spices">Spices</button>
         <button class="kl-filter-chip ${currentQuickFilter === 'Verified' ? 'active' : ''}" data-qf="Verified">Verified Suppliers</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'GradeA' ? 'active' : ''}" data-qf="GradeA">Grade A</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'AvailableNow' ? 'active' : ''}" data-qf="AvailableNow">Available Now</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'GradeA' ? 'active' : ''}" data-qf="GradeA">Grade A Only</button>
       </div>
 
       <!-- Main Layout: Sidebar Filters + Marketplace Results Grid -->
-      <div style="display: grid; grid-template-columns: 250px 1fr; gap: 20px; align-items: flex-start;" class="buyer-marketplace-layout">
+      <div class="buyer-marketplace-layout">
         <!-- Left Filter Sidebar -->
-        <aside style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 18px; position: sticky; top: 90px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <strong style="font-size: 12px; color: var(--ks-evergreen); text-transform: uppercase; letter-spacing: 0.05em;">Filters</strong>
-            <button id="btn-clear-all-filters" style="background: none; border: none; font-size: 11.5px; color: #5B9A72; font-weight: 700; cursor: pointer;">Clear All</button>
+        <aside class="buyer-filter-sidebar">
+          <div class="buyer-filter-sidebar__header">
+            <span class="buyer-filter-sidebar__title">Filters</span>
+            <button id="btn-clear-all-filters" class="buyer-filter-sidebar__clear">Clear All</button>
           </div>
 
-          <div style="margin-bottom: 14px;">
-            <label style="font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; display: block; margin-bottom: 5px;">Quality Grade</label>
+          <div class="buyer-filter-group">
+            <label class="buyer-filter-label" for="market-filter-grade">Quality Grade</label>
             <select id="market-filter-grade" class="kl-filter-select-b2b">
               <option value="" ${currentMarketGrade === '' ? 'selected' : ''}>All Quality Grades</option>
               <option value="A" ${currentMarketGrade === 'A' ? 'selected' : ''}>Grade A (Premium Export)</option>
@@ -540,8 +538,8 @@ async function renderMarketplaceView(container) {
             </select>
           </div>
 
-          <div style="margin-bottom: 14px; border-top: 1px solid #F0EFEA; padding-top: 12px;">
-            <label style="font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; display: block; margin-bottom: 5px;">Location</label>
+          <div class="buyer-filter-group">
+            <label class="buyer-filter-label" for="market-filter-location">Location</label>
             <select id="market-filter-location" class="kl-filter-select-b2b">
               <option value="" ${currentMarketState === '' ? 'selected' : ''}>All Regions</option>
               <option value="Maharashtra" ${currentMarketState === 'Maharashtra' ? 'selected' : ''}>Maharashtra</option>
@@ -553,8 +551,8 @@ async function renderMarketplaceView(container) {
             </select>
           </div>
 
-          <div style="margin-bottom: 14px; border-top: 1px solid #F0EFEA; padding-top: 12px;">
-            <label style="font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; display: block; margin-bottom: 5px;">Seller</label>
+          <div class="buyer-filter-group">
+            <label class="buyer-filter-label" for="market-filter-seller-type">Seller</label>
             <select id="market-filter-seller-type" class="kl-filter-select-b2b">
               <option value="all" ${currentMarketSellerType === 'all' ? 'selected' : ''}>All Verified Suppliers</option>
               <option value="FPO" ${currentMarketSellerType === 'FPO' ? 'selected' : ''}>Farmer Producer Orgs (FPOs)</option>
@@ -562,8 +560,8 @@ async function renderMarketplaceView(container) {
             </select>
           </div>
 
-          <div style="margin-bottom: 14px; border-top: 1px solid #F0EFEA; padding-top: 12px;">
-            <label style="font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; display: block; margin-bottom: 5px;">Quantity Available</label>
+          <div class="buyer-filter-group">
+            <label class="buyer-filter-label" for="market-filter-qty">Quantity Available</label>
             <select id="market-filter-qty" class="kl-filter-select-b2b">
               <option value="all" ${currentMarketQty === 'all' ? 'selected' : ''}>All Volumes</option>
               <option value="50" ${currentMarketQty === '50' ? 'selected' : ''}>50+ Quintals</option>
@@ -572,8 +570,8 @@ async function renderMarketplaceView(container) {
             </select>
           </div>
 
-          <div style="margin-bottom: 14px; border-top: 1px solid #F0EFEA; padding-top: 12px;">
-            <label style="font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; display: block; margin-bottom: 5px;">Price Range</label>
+          <div class="buyer-filter-group">
+            <label class="buyer-filter-label" for="market-filter-price">Price Range</label>
             <select id="market-filter-price" class="kl-filter-select-b2b">
               <option value="all" ${currentMarketPrice === 'all' ? 'selected' : ''}>All Price Ranges</option>
               <option value="under_2500" ${currentMarketPrice === 'under_2500' ? 'selected' : ''}>Under ₹2,500 / q</option>
@@ -582,24 +580,24 @@ async function renderMarketplaceView(container) {
             </select>
           </div>
 
-          <button class="btn btn--primary" id="btn-apply-sidebar-filters" style="width: 100%; justify-content: center; background: #12372A; font-size: 13px; border-radius: 8px; margin-top: 4px; height: 38px;">
+          <button class="btn btn--primary" id="btn-apply-sidebar-filters" style="width: 100%; margin-top: 14px;">
             Apply Filters
           </button>
         </aside>
 
         <!-- Right Results Column -->
-        <main>
+        <main style="min-width: 0;">
           <!-- Results Summary & Sorting Header -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
             <div>
-              <div id="market-result-count" style="font-size: 14.5px; font-weight: 700; color: #12372A;">Loading agricultural lots...</div>
-              <div style="font-size: 12px; color: #666; margin-top: 2px;" id="market-result-subtitle">Showing results based on your current filters</div>
-              <div id="market-active-chips" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px;"></div>
+              <div id="market-result-count" style="font-size: 15px; font-weight: 700; color: var(--kl-evergreen);">Loading verified lots...</div>
+              <div style="font-size: 12.5px; color: var(--kl-muted); margin-top: 2px;" id="market-result-subtitle">Showing results based on your current filters</div>
+              <div id="market-active-chips" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;"></div>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 3px 10px;">
-              <span style="font-size: 12px; color: #777; font-weight: 600; white-space: nowrap;">Sort by:</span>
-              <select id="market-filter-sort" style="border: none; font-size: 12px; padding: 4px 0; background: transparent; outline: none; font-weight: 600; cursor: pointer; color: #12372A;">
+            <div style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid var(--kl-border); border-radius: 8px; padding: 4px 12px;">
+              <span style="font-size: 12px; color: var(--kl-muted); font-weight: 600; white-space: nowrap;">Sort by:</span>
+              <select id="market-filter-sort" style="border: none; font-size: 12.5px; padding: 2px 0; background: transparent; outline: none; font-weight: 600; cursor: pointer; color: var(--kl-evergreen);">
                 <option value="recommended" ${currentMarketSort === 'recommended' ? 'selected' : ''}>Recommended</option>
                 <option value="price_asc" ${currentMarketSort === 'price_asc' ? 'selected' : ''}>Price: Low to High</option>
                 <option value="price_desc" ${currentMarketSort === 'price_desc' ? 'selected' : ''}>Price: High to Low</option>
@@ -896,22 +894,29 @@ async function renderMarketplaceView(container) {
     currentMarketPrice = 'all';
     currentMarketSearch = '';
     currentQuickFilter = 'all';
+    currentMarketSort = 'newest';
     if (searchInput) searchInput.value = '';
     if (gradeSelect) gradeSelect.value = '';
     if (locSelect) locSelect.value = '';
     if (sellerTypeSelect) sellerTypeSelect.value = 'all';
     if (qtySelect) qtySelect.value = 'all';
     if (priceSelect) priceSelect.value = 'all';
+    if (sortSelect) sortSelect.value = 'newest';
     document.querySelectorAll('#market-quick-filter-chips .kl-filter-chip').forEach(b => b.classList.remove('active'));
     document.querySelector('#market-quick-filter-chips .kl-filter-chip[data-qf="all"]')?.classList.add('active');
     fetchLots();
   };
 
-  searchBtn.addEventListener('click', fetchLots);
-  searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') fetchLots(); });
-  applyBtn.addEventListener('click', fetchLots);
-  sortSelect.addEventListener('change', fetchLots);
-  clearBtn.addEventListener('click', window.clearAllMarketFilters);
+  if (searchBtn) searchBtn.addEventListener('click', fetchLots);
+  if (searchInput) searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') fetchLots(); });
+  if (applyBtn) applyBtn.addEventListener('click', fetchLots);
+  if (sortSelect) sortSelect.addEventListener('change', fetchLots);
+  if (gradeSelect) gradeSelect.addEventListener('change', fetchLots);
+  if (locSelect) locSelect.addEventListener('change', fetchLots);
+  if (sellerTypeSelect) sellerTypeSelect.addEventListener('change', fetchLots);
+  if (qtySelect) qtySelect.addEventListener('change', fetchLots);
+  if (priceSelect) priceSelect.addEventListener('change', fetchLots);
+  if (clearBtn) clearBtn.addEventListener('click', window.clearAllMarketFilters);
 
   fetchLots();
 }
@@ -945,8 +950,23 @@ async function openLotDetailModal(lotId) {
   overlay.classList.add('active');
 
   let lot = null;
-  const found = currentMarketLots.find(l => (l.lotId || l.id) === lotId) || 
-                (window.B2B_LOTS_DATA && (window.B2B_LOTS_DATA.find(l => l.id === lotId) || window.B2B_LOTS_DATA[0]));
+  let found = currentMarketLots.find(l => (l.lotId || l.id) === lotId) || 
+              (window.B2B_LOTS_DATA && window.B2B_LOTS_DATA.find(l => l.id === lotId));
+
+  if (!found && window.api?.market?.getLot) {
+    try {
+      const res = await window.api.market.getLot(lotId);
+      if (res?.success && res.lot) {
+        found = res.lot;
+      }
+    } catch (e) {
+      console.warn('Could not fetch lot details:', e);
+    }
+  }
+
+  if (!found && window.B2B_LOTS_DATA && window.B2B_LOTS_DATA.length > 0) {
+    found = window.B2B_LOTS_DATA[0];
+  }
 
   if (found) {
     lot = {
@@ -1309,15 +1329,18 @@ async function renderInquiriesView(container) {
   const countRej = allOffers.filter(o => o.status === 'REJECTED').length;
 
   container.innerHTML = `
-    <div class="buyer-view" style="padding-top: 24px;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
-        <div>
-          <h2 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 3px 0;">My Inquiries</h2>
-          <p style="font-size: 13.5px; color: #666; margin: 0;">Manage your procurement requests and seller responses.</p>
+    <div class="buyer-view">
+      <div class="buyer-page-header">
+        <div class="buyer-page-header__left">
+          <span class="buyer-page-header__eyebrow">Procurement Requests</span>
+          <h1 class="buyer-page-header__title">My Inquiries</h1>
+          <p class="buyer-page-header__desc">Manage your procurement requests and seller responses.</p>
         </div>
-        <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none; background: #12372A; border-radius: 8px; padding: 8px 16px; font-weight: 700;">
-          <i data-lucide="plus"></i> + New Inquiry
-        </a>
+        <div class="buyer-page-header__actions">
+          <a href="#/buyer/marketplace" class="btn btn--primary btn--sm">
+            <i data-lucide="plus"></i> + New Inquiry
+          </a>
+        </div>
       </div>
 
       <!-- Professional Segmented Status Tabs -->
@@ -1340,13 +1363,13 @@ async function renderInquiriesView(container) {
       </div>
 
       <!-- Search / Filter Bar -->
-      <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; display: flex; gap: 10px; align-items: center;">
-        <i data-lucide="search" style="color: #777; width: 16px; height: 16px;"></i>
-        <input type="text" id="inq-search-input" class="dash-form-input" placeholder="Search inquiry, crop or seller..." style="border: none; padding: 4px 0; font-size: 13.5px; flex: 1; outline: none; background: transparent;">
+      <div class="buyer-market-search-bar" style="margin-bottom: 18px;">
+        <i data-lucide="search" style="color: var(--kl-muted); width: 16px; height: 16px;"></i>
+        <input type="text" id="inq-search-input" class="buyer-market-search-input" placeholder="Search inquiry, crop, or seller...">
       </div>
 
       <div id="buyer-inquiries-list">
-        <div style="padding: 30px; text-align: center; color: #888;">Loading inquiries...</div>
+        <div style="padding: 30px; text-align: center; color: var(--kl-muted);">Loading inquiries...</div>
       </div>
     </div>
   `;
@@ -1569,16 +1592,19 @@ function openCreateOrderModal(inquiryId) {
 // ═══════════════════════════════════════════════════════════════════════
 async function renderOrdersView(container) {
   container.innerHTML = `
-    <div class="buyer-view" style="padding-top: 24px;">
-      <!-- Orders Header -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
-        <div>
-          <h2 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 3px 0;">My Orders</h2>
-          <p style="font-size: 13.5px; color: #666; margin: 0;">Track every procurement from confirmation to delivery.</p>
+    <div class="buyer-view">
+      <!-- Standardized Orders Header -->
+      <div class="buyer-page-header">
+        <div class="buyer-page-header__left">
+          <span class="buyer-page-header__eyebrow">Fulfillment & Logistics</span>
+          <h1 class="buyer-page-header__title">My Orders</h1>
+          <p class="buyer-page-header__desc">Track every procurement from confirmation to delivery.</p>
         </div>
-        <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none; background: #12372A; border-radius: 8px; padding: 8px 16px; font-weight: 700;">
-          <i data-lucide="store"></i> Browse Marketplace
-        </a>
+        <div class="buyer-page-header__actions">
+          <a href="#/buyer/marketplace" class="btn btn--primary btn--sm">
+            <i data-lucide="store"></i> Browse Marketplace
+          </a>
+        </div>
       </div>
 
       <!-- Professional Segmented Status Tabs -->
@@ -1598,15 +1624,15 @@ async function renderOrdersView(container) {
       </div>
 
       <!-- Search & Sort Controls -->
-      <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div style="background: #FFFFFF; border: 1px solid var(--kl-border); border-radius: 10px; padding: 8px 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 240px;">
-          <i data-lucide="search" style="color: #777; width: 16px; height: 16px;"></i>
-          <input type="text" id="order-search-input" class="dash-form-input" placeholder="Search order ID, produce or seller..." style="border: none; padding: 4px 0; font-size: 13.5px; flex: 1; outline: none; background: transparent;" value="${currentOrderSearch}">
+          <i data-lucide="search" style="color: var(--kl-muted); width: 16px; height: 16px;"></i>
+          <input type="text" id="order-search-input" class="buyer-market-search-input" placeholder="Search order ID, produce, or seller..." value="${currentOrderSearch}">
         </div>
 
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 12px; color: #777; font-weight: 600; white-space: nowrap;">Sort:</span>
-          <select id="order-sort-select" style="border: 1px solid #E5E4DD; border-radius: 6px; font-size: 12px; padding: 4px 8px; background: #FAF9F5; outline: none; font-weight: 600; color: #12372A; cursor: pointer;">
+          <span style="font-size: 12px; color: var(--kl-muted); font-weight: 600; white-space: nowrap;">Sort:</span>
+          <select id="order-sort-select" style="border: 1px solid var(--kl-border); border-radius: 6px; font-size: 12px; padding: 4px 8px; background: #FAF9F5; outline: none; font-weight: 600; color: var(--kl-evergreen); cursor: pointer;">
             <option value="newest" ${currentOrderSort === 'newest' ? 'selected' : ''}>Newest</option>
             <option value="oldest" ${currentOrderSort === 'oldest' ? 'selected' : ''}>Oldest</option>
           </select>
@@ -1614,8 +1640,8 @@ async function renderOrdersView(container) {
       </div>
 
       <div id="buyer-orders-list">
-        <div style="padding: 48px; text-align: center; color: var(--ks-text-muted);">
-          <div class="spinner" style="margin: 0 auto 12px auto; width: 28px; height: 28px; border: 3px solid #E5E4DD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <div style="padding: 48px; text-align: center; color: var(--kl-muted);">
+          <div class="spinner" style="margin: 0 auto 12px auto;"></div>
           Loading orders...
         </div>
       </div>
@@ -1678,19 +1704,19 @@ async function renderOrdersView(container) {
         apiFailed = true;
       }
 
-      if ((apiFailed || (rawFetchedOrders && rawFetchedOrders.length === 0)) && isDev && window.INITIAL_ORDERS_DATA) {
+      if (apiFailed && isDev && window.INITIAL_ORDERS_DATA) {
         rawFetchedOrders = window.INITIAL_ORDERS_DATA;
         apiFailed = false;
       }
 
       if (apiFailed) {
         list.innerHTML = `
-          <div class="kl-compact-empty-state" style="border: 1px dashed #E5E4DD;">
-            <div class="kl-compact-empty-icon">⚠️</div>
-            <div class="kl-compact-empty-title">Unable to load orders</div>
-            <div class="kl-compact-empty-desc">We could not retrieve your orders at this time. Please check your connection and try again.</div>
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 14px;">
-              <button class="btn btn--primary btn--sm" onclick="fetchOrders()">Try Again</button>
+          <div class="kl-compact-empty-state" style="border: 1px dashed #E5E4DD; background: #FAF9F5; border-radius: 12px; padding: 48px 24px; text-align: center;">
+            <div class="kl-compact-empty-icon" style="font-size: 36px; margin-bottom: 12px;">⚠️</div>
+            <div class="kl-compact-empty-title" style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 6px;">Unable to load orders</div>
+            <div class="kl-compact-empty-desc" style="font-size: 13px; color: #666; max-width: 420px; margin: 0 auto 16px auto;">We could not retrieve your orders at this time. Please check your connection and try again.</div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+              <button class="btn btn--primary btn--sm" onclick="fetchOrders()" style="background: #12372A;">Try Again</button>
               <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm" style="text-decoration: none;">Browse Marketplace</a>
             </div>
           </div>
@@ -1805,15 +1831,29 @@ async function renderOrdersView(container) {
           </div>
         `;
       }).join('');
-    } else {
+    } else if (allOrders.length === 0) {
       list.innerHTML = `
-        <div class="kl-compact-empty-state">
-          <div class="kl-compact-empty-icon">📦</div>
-          <div class="kl-compact-empty-title">No orders yet</div>
-          <div class="kl-compact-empty-desc">Your confirmed purchases will appear here.</div>
-          <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none; background: #12372A; border-radius: 8px;">Browse Marketplace</a>
+        <div class="kl-compact-empty-state" style="border: 1px dashed #E5E4DD; background: #FAF9F5; border-radius: 12px; padding: 48px 24px; text-align: center;">
+          <div class="kl-compact-empty-icon" style="font-size: 40px; margin-bottom: 12px;">📦</div>
+          <div class="kl-compact-empty-title" style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 6px;">No Orders Yet</div>
+          <div class="kl-compact-empty-desc" style="font-size: 13px; color: #666; max-width: 440px; margin: 0 auto 18px auto;">Your confirmed purchases and active shipments will appear here.</div>
+          <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none; background: #12372A; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
+            <i data-lucide="store"></i> Browse Marketplace
+          </a>
         </div>
       `;
+    } else {
+      list.innerHTML = `
+        <div class="kl-compact-empty-state" style="border: 1px dashed #E5E4DD; background: #FAF9F5; border-radius: 12px; padding: 36px 24px; text-align: center;">
+          <div class="kl-compact-empty-icon" style="font-size: 32px; margin-bottom: 8px;">🔍</div>
+          <div class="kl-compact-empty-title" style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 4px;">No matching orders</div>
+          <div class="kl-compact-empty-desc" style="font-size: 13px; color: #666; margin-bottom: 14px;">No orders found with status '${currentOrderFilter}'.</div>
+          <button class="btn btn--secondary btn--sm" onclick="currentOrderFilter='all'; fetchOrders();">Show All Orders</button>
+        </div>
+      `;
+    }
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
     }
   };
 
@@ -1987,27 +2027,30 @@ async function renderDirectoryView(container) {
   ];
 
   container.innerHTML = `
-    <div class="buyer-view" style="padding-top: 24px;">
-      <div style="margin-bottom: 18px;">
-        <h2 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 3px 0;">Find Trusted Sellers</h2>
-        <p style="font-size: 13.5px; color: #666; margin: 0;">Connect directly with verified individual farmers and farmer producer cooperatives for contract sourcing.</p>
+    <div class="buyer-view">
+      <div class="buyer-page-header">
+        <div class="buyer-page-header__left">
+          <span class="buyer-page-header__eyebrow">Supplier Network</span>
+          <h1 class="buyer-page-header__title">Find Trusted Sellers</h1>
+          <p class="buyer-page-header__desc">Connect directly with verified individual farmers and farmer producer cooperatives for contract sourcing.</p>
+        </div>
       </div>
 
       <!-- Filter Controls Bar -->
-      <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+      <div style="background: #FFFFFF; border: 1px solid var(--kl-border); border-radius: 12px; padding: 12px 16px; margin-bottom: 22px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
         <input type="text" id="dir-filter-search" class="dash-form-input" placeholder="Search by farmer name, FPO, district, or crop..." style="flex: 2; min-width: 220px; background: transparent;">
         <select id="dir-filter-type" class="kl-filter-select-b2b" style="flex: 1; min-width: 160px;">
           <option value="all">All Organization Types</option>
           <option value="FPO">Farmer Producer Orgs (FPOs)</option>
           <option value="Farmer">Individual Farmers</option>
         </select>
-        <button class="btn btn--primary" id="btn-apply-dir-filter" style="padding: 9px 18px; white-space: nowrap; background: #12372A; border-radius: 8px;">
+        <button class="btn btn--primary" id="btn-apply-dir-filter" style="white-space: nowrap;">
           <i data-lucide="search"></i> Search Directory
         </button>
       </div>
 
       <!-- Directory Cards Grid -->
-      <div id="buyer-directory-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 18px;">
+      <div id="buyer-directory-grid" class="buyer-dir-grid">
         <!-- Rendered dynamically -->
       </div>
     </div>
@@ -2038,40 +2081,40 @@ async function renderDirectoryView(container) {
 
     if (filtered.length > 0) {
       grid.innerHTML = filtered.map(d => `
-        <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 3px 12px rgba(0,0,0,0.03);">
+        <div class="buyer-dir-card">
           <div>
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-              <span style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; background: #E5F0E7; color: #12372A; padding: 2px 7px; border-radius: 4px;">
+              <span class="kl-badge kl-badge--confirmed">
                 ${d.type}
               </span>
-              <span style="font-size: 11.5px; color: #5B9A72; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 11.5px; color: var(--kl-sage); font-weight: 700; display: flex; align-items: center; gap: 4px;">
                 ✓ Verified Supplier
               </span>
             </div>
 
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">${d.name}</h3>
-            <div style="font-size: 12.5px; color: #666; margin-bottom: 10px;"><i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle;"></i> ${d.location}</div>
+            <h3 style="font-size: 16.5px; font-weight: 800; color: var(--kl-evergreen); margin: 0 0 3px 0;">${d.name}</h3>
+            <div style="font-size: 12px; color: var(--kl-muted); margin-bottom: 10px;"><i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle;"></i> ${d.location}</div>
 
-            <div style="background: #FAF8F5; border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; font-size: 12px; color: #555;">
-              <div style="margin-bottom: 3px;"><strong>Member Base:</strong> ${d.farmersCount} Farmers • Est. ${d.established}</div>
+            <div style="background: #FAF8F5; border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; font-size: 12px; color: var(--kl-text-body); border: 1px solid var(--kl-border-subtle);">
+              <div style="margin-bottom: 2px;"><strong>Member Base:</strong> ${d.farmersCount} Farmers • Est. ${d.established}</div>
               <div><strong>Annual Capacity:</strong> ${d.annualVolume}</div>
             </div>
 
             <div style="margin-bottom: 14px;">
-              <div style="font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; margin-bottom: 5px;">Crops Cultivated:</div>
+              <div style="font-size: 10.5px; font-weight: 700; color: var(--kl-muted); text-transform: uppercase; margin-bottom: 5px;">Crops Cultivated:</div>
               <div style="display: flex; gap: 5px; flex-wrap: wrap;">
                 ${d.crops.map(c => `
-                  <span style="background: #F0EFEA; color: #333; font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600;">${c}</span>
+                  <span style="background: #FAF9F5; border: 1px solid var(--kl-border); color: var(--kl-charcoal); font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600;">${c}</span>
                 `).join('')}
               </div>
             </div>
           </div>
 
-          <div style="border-top: 1px solid #EEE; padding-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm" style="justify-content: center; text-decoration: none; font-size: 12px; border-radius: 6px;">
+          <div style="border-top: 1px solid var(--kl-border-subtle); padding-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm">
               View Profile
             </a>
-            <button class="btn btn--primary btn--sm" style="background: #12372A; color: #FFFFFF; justify-content: center; font-size: 12px; border-radius: 6px;" onclick="window.location.hash='#/buyer/marketplace'; showToast('Opening produce lots for ${d.name}');">
+            <button class="btn btn--primary btn--sm" onclick="window.location.hash='#/buyer/marketplace'; showToast('Opening produce lots for ${d.name}');">
               Send Inquiry →
             </button>
           </div>
@@ -2174,65 +2217,77 @@ async function renderPaymentsView(container) {
   }
 
   container.innerHTML = `
-    <div class="buyer-view" style="padding-top: 24px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
-        <div>
-          <h1 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 3px 0;">Escrow & Settlement Ledger</h1>
-          <p style="font-size: 13.5px; color: #666; margin: 0;">Secured B2B smart contract escrow accounts for zero-risk produce procurement</p>
+    <div class="buyer-view">
+      <div class="buyer-page-header">
+        <div class="buyer-page-header__left">
+          <span class="buyer-page-header__eyebrow">Financial Security</span>
+          <h1 class="buyer-page-header__title">Escrow & Settlement Ledger</h1>
+          <p class="buyer-page-header__desc">Secured B2B smart contract escrow accounts for zero-risk produce procurement.</p>
         </div>
-        <button class="btn btn--primary btn--sm" style="background: #12372A; border-radius: 8px; padding: 8px 16px;" onclick="openDepositModal()">
-          <i data-lucide="plus-circle"></i> Top-up Escrow Allocation
-        </button>
-      </div>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 22px;">
-        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 18px;">
-          <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Locked in Active Escrow</div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">${summary.pendingEscrow}</div>
-          <div style="font-size: 11.5px; color: #5B9A72; margin-top: 2px;">Protected for active orders</div>
-        </div>
-        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 18px;">
-          <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Released & Settled</div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">${summary.paidCompleted}</div>
-          <div style="font-size: 11.5px; color: #5B9A72; margin-top: 2px;">Completed farmer payouts</div>
-        </div>
-        <div class="kl-stat-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 18px;">
-          <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Total Procurement Budget</div>
-          <div style="font-size: 24px; font-weight: 800; color: var(--ks-evergreen); margin-top: 4px;">${summary.totalProcurement}</div>
-          <div style="font-size: 11.5px; color: #777; margin-top: 2px;">Current FY Allocation</div>
+        <div class="buyer-page-header__actions">
+          <button class="btn btn--primary btn--sm" onclick="openDepositModal()">
+            <i data-lucide="plus-circle"></i> Top-up Escrow Allocation
+          </button>
         </div>
       </div>
 
-      <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 22px;">
-        <h3 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 14px 0;">Escrow Transaction History</h3>
+      <div class="buyer-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 22px;">
+        <div class="buyer-stat-card">
+          <div class="buyer-stat-card__top">
+            <div class="buyer-stat-card__label">Locked in Active Escrow</div>
+            <span class="buyer-stat-card__icon" style="background: #FEF3C7; color: #92400E;"><i data-lucide="lock"></i></span>
+          </div>
+          <div class="buyer-stat-card__val" style="color: #92400E;">${summary.pendingEscrow}</div>
+          <div class="buyer-stat-card__sub" style="color: #92400E; font-weight: 600;">Protected for active orders</div>
+        </div>
+        <div class="buyer-stat-card">
+          <div class="buyer-stat-card__top">
+            <div class="buyer-stat-card__label">Released & Settled</div>
+            <span class="buyer-stat-card__icon" style="background: #E8F5EC; color: #0D4435;"><i data-lucide="check-circle-2"></i></span>
+          </div>
+          <div class="buyer-stat-card__val" style="color: var(--kl-evergreen);">${summary.paidCompleted}</div>
+          <div class="buyer-stat-card__sub" style="color: #059669; font-weight: 600;">Completed farmer payouts</div>
+        </div>
+        <div class="buyer-stat-card">
+          <div class="buyer-stat-card__top">
+            <div class="buyer-stat-card__label">Total Procurement Budget</div>
+            <span class="buyer-stat-card__icon" style="background: #EEF2FF; color: #4F46E5;"><i data-lucide="wallet"></i></span>
+          </div>
+          <div class="buyer-stat-card__val" style="color: var(--kl-evergreen);">${summary.totalProcurement}</div>
+          <div class="buyer-stat-card__sub">Current FY Allocation</div>
+        </div>
+      </div>
+
+      <div class="buyer-table-card" style="padding: 22px;">
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--kl-evergreen); margin: 0 0 14px 0;">Escrow Transaction History</h3>
         <div style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+          <table class="buyer-data-table">
             <thead>
-              <tr style="border-bottom: 2px solid #E5E4DD; text-align: left; color: #777; font-size: 11px; text-transform: uppercase; background: #FAF9F5;">
-                <th style="padding: 10px 12px;">Transaction / Invoice</th>
-                <th style="padding: 10px 12px;">Date</th>
-                <th style="padding: 10px 12px;">Supplier / Beneficiary</th>
-                <th style="padding: 10px 12px;">Produce & Volume</th>
-                <th style="padding: 10px 12px;">Amount</th>
-                <th style="padding: 10px 12px;">Escrow State</th>
+              <tr>
+                <th>TRANSACTION / INVOICE</th>
+                <th>DATE</th>
+                <th>SUPPLIER / BENEFICIARY</th>
+                <th>PRODUCE & VOLUME</th>
+                <th>AMOUNT</th>
+                <th>ESCROW STATE</th>
               </tr>
             </thead>
             <tbody>
-              <tr style="border-bottom: 1px solid #F0EFEA;">
-                <td style="padding: 12px; font-family: monospace; font-weight: 700;">INV-2026-88901</td>
-                <td style="padding: 12px;">29 Aug 2026</td>
-                <td style="padding: 12px;">Nashik Farmer Producer Co</td>
-                <td style="padding: 12px;">Onion (100 Q)</td>
-                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">₹2,85,500</td>
-                <td style="padding: 12px;"><span style="background: #FEF3C7; color: #92400E; padding: 3px 8px; border-radius: 4px; font-weight: 700; font-size: 11px;">HELD IN ESCROW</span></td>
+              <tr>
+                <td style="font-family: monospace; font-weight: 700;">INV-2026-88901</td>
+                <td>29 Aug 2026</td>
+                <td>Nashik Farmer Producer Co</td>
+                <td>Onion (100 Q)</td>
+                <td style="font-weight: 700; color: var(--kl-evergreen);">₹2,85,500</td>
+                <td><span class="kl-badge kl-badge--pending">HELD IN ESCROW</span></td>
               </tr>
-              <tr style="border-bottom: 1px solid #F0EFEA;">
-                <td style="padding: 12px; font-family: monospace; font-weight: 700;">INV-2026-88742</td>
-                <td style="padding: 12px;">17 Aug 2026</td>
-                <td style="padding: 12px;">Deccan Grain Growers FPO</td>
-                <td style="padding: 12px;">Rice (200 Q)</td>
-                <td style="padding: 12px; font-weight: 700; color: var(--ks-evergreen);">₹5,81,300</td>
-                <td style="padding: 12px;"><span style="background: #D1FAE5; color: #065F46; padding: 3px 8px; border-radius: 4px; font-weight: 700; font-size: 11px;">SETTLED & RELEASED</span></td>
+              <tr>
+                <td style="font-family: monospace; font-weight: 700;">INV-2026-88742</td>
+                <td>17 Aug 2026</td>
+                <td>Deccan Grain Growers FPO</td>
+                <td>Rice (200 Q)</td>
+                <td style="font-weight: 700; color: var(--kl-evergreen);">₹5,81,300</td>
+                <td><span class="kl-badge kl-badge--delivered">SETTLED & RELEASED</span></td>
               </tr>
             </tbody>
           </table>
@@ -2329,25 +2384,25 @@ function renderKycView(container) {
 // ═══════════════════════════════════════════════════════════════════════
 function getStatusBadge(status) {
   const map = {
-    pending: { bg: '#FEF3C7', color: '#92400E', text: 'Pending' },
-    negotiating: { bg: '#E0E7FF', color: '#3730A3', text: 'Negotiating' },
-    accepted: { bg: '#E5F0E7', color: '#12372A', text: 'Accepted' },
-    rejected: { bg: '#FEE2E2', color: '#991B1B', text: 'Rejected' },
-    expired: { bg: '#F1F5F9', color: '#64748B', text: 'Expired' },
-    completed: { bg: '#DBEAFE', color: '#1E40AF', text: 'Completed' }
+    pending: { bg: '#FEF3C7', color: '#92400E', border: '#FCD34D', text: 'Pending' },
+    negotiating: { bg: '#EEF2FF', color: '#4F46E5', border: '#C7D2FE', text: 'Negotiating' },
+    accepted: { bg: '#E8F5EC', color: '#0D4435', border: '#A3D9B5', text: 'Accepted' },
+    rejected: { bg: '#FDF0EE', color: '#991B1B', border: '#FECACA', text: 'Rejected' },
+    expired: { bg: '#F1F5F9', color: '#64748B', border: '#CBD5E1', text: 'Expired' },
+    completed: { bg: '#D1FAE5', color: '#065F46', border: '#A7F3D0', text: 'Completed' }
   };
   return map[status] || map.pending;
 }
 
 function getOrderStatusBadge(status) {
   const map = {
-    pending: { bg: '#FEF3C7', color: '#92400E', text: 'Pending' },
-    confirmed: { bg: '#E5F0E7', color: '#12372A', text: 'Confirmed' },
-    processing: { bg: '#E0E7FF', color: '#3730A3', text: 'Preparing' },
-    ready_for_pickup: { bg: '#FDE68A', color: '#78350F', text: 'Ready For Pickup' },
-    in_transit: { bg: '#CFFAFE', color: '#155E75', text: 'In Transit' },
-    delivered: { bg: '#D1FAE5', color: '#065F46', text: 'Delivered' },
-    cancelled: { bg: '#FEE2E2', color: '#991B1B', text: 'Cancelled' }
+    pending: { bg: '#FEF3C7', color: '#92400E', border: '#FCD34D', text: 'Pending' },
+    confirmed: { bg: '#E8F5EC', color: '#0D4435', border: '#A3D9B5', text: 'Confirmed' },
+    processing: { bg: '#EEF2FF', color: '#4F46E5', border: '#C7D2FE', text: 'Preparing' },
+    ready_for_pickup: { bg: '#FEF3C7', color: '#92400E', border: '#FCD34D', text: 'Ready For Pickup' },
+    in_transit: { bg: '#E0F2FE', color: '#0369A1', border: '#BAE6FD', text: 'In Transit' },
+    delivered: { bg: '#D1FAE5', color: '#065F46', border: '#A7F3D0', text: 'Delivered' },
+    cancelled: { bg: '#FDF0EE', color: '#991B1B', border: '#FECACA', text: 'Cancelled' }
   };
   return map[status] || map.pending;
 }
@@ -2378,6 +2433,23 @@ function toggleMobileNav() {
   const menu = document.getElementById('dash-mobile-menu');
   if (menu) menu.classList.toggle('active');
 }
+
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('dash-profile-wrap');
+  const dropdown = document.getElementById('dash-profile-dropdown');
+  if (dropdown && dropdown.classList.contains('active')) {
+    if (wrap && !wrap.contains(e.target)) {
+      dropdown.classList.remove('active');
+    }
+  }
+  const mobileMenu = document.getElementById('dash-mobile-menu');
+  const toggleBtn = document.getElementById('dash-nav-toggle');
+  if (mobileMenu && mobileMenu.classList.contains('active')) {
+    if (toggleBtn && !toggleBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+      mobileMenu.classList.remove('active');
+    }
+  }
+});
 
 function openModal(title, bodyHtml, footerHtml) {
   const overlay = document.getElementById('kl-modal-overlay');

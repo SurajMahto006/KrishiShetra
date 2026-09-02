@@ -1189,27 +1189,29 @@ body.dashboard-body {
 
 .dash-market__grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   align-items: stretch;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .dash-market__grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .dash-market__grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 16px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .dash-market__grid {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 }
 
@@ -1231,29 +1233,30 @@ body.dashboard-body {
 
 .dash-crop-card {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 12px;
+  border: 1px solid var(--ks-border, #EAE6DF);
+  border-radius: 14px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   height: 100%;
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.2s ease;
+  box-shadow: 0 3px 10px rgba(18, 55, 42, 0.04);
 }
 
 .dash-crop-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
-  border-color: #CBD5E1;
+  box-shadow: 0 10px 24px rgba(18, 55, 42, 0.09);
+  border-color: #CBD7CE;
 }
 
 .dash-crop-card__image-wrap {
   position: relative;
   width: 100%;
-  height: 135px;
+  height: 140px;
   overflow: hidden;
-  background: #F8FAFC;
+  background: #F5F4ED;
   flex-shrink: 0;
 }
 
@@ -1263,11 +1266,11 @@ body.dashboard-body {
   object-fit: cover;
   object-position: center;
   display: block;
-  transition: transform 0.35s ease;
+  transition: transform 0.4s ease;
 }
 
 .dash-crop-card:hover .dash-crop-card__img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .dash-crop-card__fallback {
@@ -1276,42 +1279,45 @@ body.dashboard-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 34px;
+  background: linear-gradient(135deg, #F5F4ED 0%, #EAE6DF 100%);
 }
 
 .dash-crop-card__demand-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  font-size: 10px;
+  top: 10px;
+  right: 10px;
+  font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
-  padding: 3px 8px;
+  letter-spacing: 0.03em;
+  padding: 3px 9px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   line-height: 1.2;
 }
 
 .dash-crop-card__demand-badge--high {
-  color: #B45309;
-  border: 1px solid #FDE68A;
+  background: #E5F0E7;
+  color: #12372A;
+  border: 1px solid #8FCB9B;
 }
 
 .dash-crop-card__demand-badge--medium {
-  color: #B45309;
+  background: #FEF3C7;
+  color: #92400E;
   border: 1px solid #FDE68A;
 }
 
 .dash-crop-card__demand-badge--low {
-  color: #64748B;
-  border: 1px solid #E2E8F0;
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #CBD5E1;
 }
 
 .dash-crop-card__body {
-  padding: 14px 14px 14px;
+  padding: 14px 16px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -1324,11 +1330,11 @@ body.dashboard-body {
 .dash-crop-card__title-row {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .dash-crop-card__emoji {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1;
 }
 
@@ -1336,21 +1342,22 @@ body.dashboard-body {
   font-family: var(--font-body);
   font-size: 16px;
   font-weight: 700;
-  color: #0F172A;
+  color: var(--ks-evergreen, #12372A);
+  letter-spacing: -0.01em;
 }
 
 .dash-crop-card__market {
-  font-size: 12px;
-  color: #94A3B8;
+  font-size: 12.5px;
+  color: var(--ks-text-muted, #6F7F75);
   display: block;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 .dash-crop-card__price-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 4px;
+  margin-top: 6px;
   margin-bottom: 12px;
 }
 
@@ -1361,39 +1368,54 @@ body.dashboard-body {
 }
 
 .dash-crop-card__price-value {
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 800;
-  color: #0F172A;
+  color: var(--ks-evergreen, #12372A);
 }
 
 .dash-crop-card__price-unit {
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 500;
-  color: #64748B;
+  color: var(--ks-text-muted, #6F7F75);
 }
 
 .dash-crop-card__change {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   padding: 3px 8px;
   border-radius: 6px;
 }
 
 .dash-crop-card__change--up {
-  background: #ECFDF5;
-  color: #059669;
+  background: #E8F5EC;
+  color: #2E7246;
 }
 
 .dash-crop-card__change--down {
-  background: #FEF2F2;
-  color: #DC2626;
+  background: #FDF0EE;
+  color: #C96D5B;
 }
 
 .dash-crop-card__btn {
   width: 100%;
   margin-top: auto;
-  font-size: 12px;
-  padding: 7px 12px;
+  font-size: 12.5px;
+  padding: 8px 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  background: var(--ks-evergreen, #12372A);
+  color: #FFFFFF;
+  border: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.dash-crop-card__btn:hover {
+  background: var(--ks-sage, #5B9A72);
+  transform: translateY(-1px);
 }
 
 /* ── 5. WHAT FARMERS ARE SELLING ── */
@@ -3956,19 +3978,14 @@ body.dashboard-body {
     flex-direction: column;
     gap: 12px;
   }
-}
 
-.dash-market__grid {
-  grid-template-columns: 1fr;
-}
+  .dash-welcome__ctas {
+    flex-direction: column;
+  }
 
-.dash-welcome__ctas {
-  flex-direction: column;
-}
-
-.dash-welcome__btn {
-  width: 100%;
-}
+  .dash-welcome__btn {
+    width: 100%;
+  }
 }
 
 /* ═════════════════════════════════════════════════════════════════════

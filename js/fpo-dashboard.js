@@ -825,6 +825,49 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// FPO Profile Dropdown & Logout
+function toggleFpoProfileDropdown() {
+  const dropdown = document.getElementById('fpoProfileDropdown');
+  if (dropdown) dropdown.classList.toggle('active');
+}
+
+function closeFpoProfileDropdown() {
+  const dropdown = document.getElementById('fpoProfileDropdown');
+  if (dropdown) dropdown.classList.remove('active');
+}
+
+function handleFpoLogout() {
+  if (window.Auth && typeof window.Auth.logout === 'function') {
+    window.Auth.logout();
+  } else {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = 'login.html';
+  }
+}
+
+// Click outside to dismiss FPO profile dropdown & mobile menu
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('fpoProfileWrap');
+  const dropdown = document.getElementById('fpoProfileDropdown');
+  if (dropdown && dropdown.classList.contains('active')) {
+    if (wrap && !wrap.contains(e.target)) {
+      dropdown.classList.remove('active');
+    }
+  }
+  const nav = document.getElementById('navMenu');
+  const toggleBtn = document.getElementById('mobileMenuToggle');
+  if (nav && nav.classList.contains('open')) {
+    if (toggleBtn && !toggleBtn.contains(e.target) && !nav.contains(e.target)) {
+      nav.classList.remove('open');
+    }
+  }
+});
+
+window.toggleFpoProfileDropdown = toggleFpoProfileDropdown;
+window.closeFpoProfileDropdown = closeFpoProfileDropdown;
+window.handleFpoLogout = handleFpoLogout;
+
 // Document Ready Initialization
 document.addEventListener('DOMContentLoaded', () => {
   initCharts();
