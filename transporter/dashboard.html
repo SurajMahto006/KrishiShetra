@@ -44,6 +44,7 @@
           <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
           <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
           <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
+          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a></li>
         </ul>
       </nav>
 
@@ -60,17 +61,44 @@
           <span class="trans-notif-dot"></span>
         </button>
 
-        <!-- User Profile Pill -->
-        <a href="profile.html" class="trans-user-pill">
-          <div class="trans-user-avatar">KE</div>
-          <div class="trans-user-info">
-            <span class="trans-user-name">Kisan Express</span>
-            <span class="trans-user-role">Gold Carrier ✓</span>
+        <!-- User Profile Pill with Dropdown Menu -->
+        <div class="trans-profile-wrap" id="transProfileWrap">
+          <button type="button" class="trans-user-pill" id="btnTransProfile" aria-expanded="false" aria-haspopup="true" aria-label="Transporter profile menu">
+            <div class="trans-user-avatar" id="transHeaderAvatar">KE</div>
+            <div class="trans-user-info">
+              <span class="trans-user-name" id="transHeaderName">Kisan Express</span>
+              <span class="trans-user-role">Gold Carrier ✓</span>
+            </div>
+            <i data-lucide="chevron-down" class="trans-user-chevron"></i>
+          </button>
+
+          <div class="trans-profile-dropdown" id="transProfileDropdown" role="menu" aria-label="Profile options">
+            <div class="trans-dropdown-header">
+              <div class="trans-user-avatar trans-user-avatar--lg" id="transDropdownAvatar">KE</div>
+              <div style="overflow:hidden;">
+                <div class="trans-dropdown-name" id="transDropdownName">Kisan Express Logistics</div>
+                <div class="trans-dropdown-sub" id="transDropdownSub">Gold Carrier · VAHAN Verified</div>
+              </div>
+            </div>
+            <div class="trans-dropdown-sep"></div>
+            <a href="profile.html" class="trans-dropdown-item" role="menuitem">
+              <i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile & Fleet Info
+            </a>
+            <a href="onboarding.html" class="trans-dropdown-item" role="menuitem">
+              <i data-lucide="shield-check" style="width:16px;height:16px;"></i> Compliance & Permits
+            </a>
+            <a href="earnings.html" class="trans-dropdown-item" role="menuitem">
+              <i data-lucide="wallet" style="width:16px;height:16px;"></i> FASTag & Earnings
+            </a>
+            <div class="trans-dropdown-sep"></div>
+            <a href="javascript:void(0)" class="trans-dropdown-item trans-dropdown-item--danger" id="transLogoutBtn" role="menuitem">
+              <i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out
+            </a>
           </div>
-        </a>
+        </div>
 
         <!-- Mobile Hamburger -->
-        <button class="trans-hamburger" id="transHamburger">
+        <button class="trans-hamburger" id="transHamburger" aria-label="Toggle navigation menu">
           <span></span>
           <span></span>
           <span></span>

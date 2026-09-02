@@ -626,3 +626,25 @@ const notificationService = {
     NOTIFICATIONS_DATA.forEach(n => n.unread = false);
   }
 };
+
+// ═══════════════════════════════════════════════════════════════════════
+// EXPORT ALL DATASETS & SERVICES TO WINDOW SCOPE
+// ═══════════════════════════════════════════════════════════════════════
+if (typeof window !== 'undefined') {
+  window.BUYER_PROFILE_DEMO = BUYER_PROFILE_DEMO;
+  window.B2B_LOTS_DATA = B2B_LOTS_DATA;
+  window.INITIAL_OFFERS_DATA = INITIAL_OFFERS_DATA;
+  window.INITIAL_ORDERS_DATA = INITIAL_ORDERS_DATA;
+  window.INITIAL_TRANSACTIONS_DATA = INITIAL_TRANSACTIONS_DATA;
+  window.NOTIFICATIONS_DATA = NOTIFICATIONS_DATA;
+  window.buyerService = buyerService;
+  window.buyerProfileService = buyerService;
+  window.marketService = marketService;
+  window.offerService = offerService;
+  window.orderService = orderService;
+  window.logisticsService = logisticsService;
+  window.paymentService = paymentService;
+  window.searchService = searchService;
+  window.notificationService = notificationService;
+  window.SEARCH_INDEX = SEARCH_INDEX;
+}

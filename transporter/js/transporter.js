@@ -24,6 +24,75 @@ function initCommonHeader() {
       navMenu.classList.toggle('mobile-open');
     });
   }
+
+  initTransporterProfileDropdown();
+  populateTransporterUserData();
+}
+
+function initTransporterProfileDropdown() {
+  const btn = document.getElementById('btnTransProfile');
+  const wrap = document.getElementById('transProfileWrap');
+  const logoutBtn = document.getElementById('transLogoutBtn');
+
+  if (btn && wrap) {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isOpen = wrap.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!wrap.contains(e.target)) {
+        wrap.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && wrap.classList.contains('open')) {
+        wrap.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.focus();
+      }
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.Auth && typeof window.Auth.logout === 'function') {
+        window.Auth.logout();
+      } else {
+        localStorage.removeItem('krishi_token');
+        localStorage.removeItem('krishi_user');
+        localStorage.removeItem('krishi_is_logged_in');
+        localStorage.removeItem('krishishetra_dev_session');
+        window.location.href = '../login.html';
+      }
+    });
+  }
+}
+
+function populateTransporterUserData() {
+  if (!window.Auth || typeof window.Auth.getUser !== 'function') return;
+  const user = window.Auth.getUser();
+  if (user) {
+    const name = user.name || user.companyName || (user.email ? user.email.split('@')[0] : 'Kisan Express');
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'KE';
+    
+    const hName = document.getElementById('transHeaderName');
+    const hAvatar = document.getElementById('transHeaderAvatar');
+    const dName = document.getElementById('transDropdownName');
+    const dAvatar = document.getElementById('transDropdownAvatar');
+    const dSub = document.getElementById('transDropdownSub');
+
+    if (hName) hName.textContent = name;
+    if (hAvatar) hAvatar.textContent = initials;
+    if (dName) dName.textContent = user.companyName || name;
+    if (dAvatar) dAvatar.textContent = initials;
+    if (dSub && user.email) dSub.textContent = `${user.email} · Verified Carrier`;
+  }
 }
 
 // Toast notification helper

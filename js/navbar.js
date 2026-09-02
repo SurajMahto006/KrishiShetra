@@ -35,27 +35,41 @@ function initRoleAwareNav() {
       { page: 'lots.html', id: 'nav-lots', icon: 'package', label: 'My Lots' },
       { page: 'market.html', id: 'nav-market', icon: 'store', label: 'Marketplace' },
       { page: 'ai-forecast.html', id: 'nav-forecast', icon: 'brain', label: 'AI Forecast' },
-      { page: 'orders.html', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' }
+      { page: 'orders.html', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
+      { page: 'buyers.html', id: 'nav-buyers', icon: 'users', label: 'Buyer Inquiries' }
     ],
     buyer: [
-      { page: 'buyer.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-      { page: 'market.html', id: 'nav-market', icon: 'store', label: 'Marketplace' },
-      { page: 'buyer-inquiries.html', id: 'nav-inquiries', icon: 'message-square', label: 'My Inquiries' },
-      { page: 'orders.html', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' }
+      { page: 'buyer.html#/buyer/dashboard', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
+      { page: 'buyer.html#/buyer/marketplace', id: 'nav-market', icon: 'store', label: 'Marketplace' },
+      { page: 'buyer.html#/buyer/inquiries', id: 'nav-inquiries', icon: 'message-square', label: 'My Inquiries' },
+      { page: 'buyer.html#/buyer/orders', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
+      { page: 'buyer.html#/buyer/directory', id: 'nav-directory', icon: 'users', label: 'Farmers & FPOs' },
+      { page: 'buyer.html#/buyer/payments', id: 'nav-payments', icon: 'wallet', label: 'Escrow & Payments' }
     ],
     transporter: [
       { page: 'transporter/dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-      { page: 'transporter/available-loads.html', id: 'nav-loads', icon: 'package-search', label: 'Available Deliveries' },
-      { page: 'transporter/active-trips.html', id: 'nav-trips', icon: 'truck', label: 'Active Trips' }
+      { page: 'transporter/available-loads.html', id: 'nav-loads', icon: 'package-search', label: 'Available Loads' },
+      { page: 'transporter/active-trips.html', id: 'nav-trips', icon: 'truck', label: 'Active Trips' },
+      { page: 'transporter/fleet.html', id: 'nav-fleet', icon: 'shield-check', label: 'Fleet' },
+      { page: 'transporter/drivers.html', id: 'nav-drivers', icon: 'users', label: 'Drivers' },
+      { page: 'transporter/earnings.html', id: 'nav-earnings', icon: 'wallet', label: 'Earnings' },
+      { page: 'transporter/profile.html', id: 'nav-profile', icon: 'user-check', label: 'Profile' }
     ],
     fpo: [
-      { page: 'fpo-dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' }
+      { page: 'fpo-dashboard.html#dashboard', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
+      { page: 'fpo-dashboard.html#farmers', id: 'nav-farmers', icon: 'users', label: 'Farmers' },
+      { page: 'fpo-dashboard.html#lots', id: 'nav-lots', icon: 'package', label: 'Lots' },
+      { page: 'fpo-dashboard.html#market', id: 'nav-market', icon: 'store', label: 'Market' },
+      { page: 'fpo-dashboard.html#buyers', id: 'nav-buyers', icon: 'briefcase', label: 'Buyers' },
+      { page: 'fpo-dashboard.html#orders', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
+      { page: 'fpo-dashboard.html#analytics', id: 'nav-analytics', icon: 'bar-chart-3', label: 'Analytics' }
     ],
     admin: [
       { page: 'admin/dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
       { page: 'admin/users.html', id: 'nav-users', icon: 'users', label: 'Users' },
       { page: 'admin/farmers.html', id: 'nav-farmers', icon: 'user-check', label: 'Farmers' },
-      { page: 'admin/reports.html', id: 'nav-reports', icon: 'bar-chart-2', label: 'Reports' }
+      { page: 'admin/reports.html', id: 'nav-reports', icon: 'bar-chart-2', label: 'Reports' },
+      { page: 'admin/settings.html', id: 'nav-settings', icon: 'settings', label: 'Settings' }
     ]
   };
 
@@ -68,6 +82,27 @@ function initRoleAwareNav() {
     </a>
   `).join('');
 
+  // Render mobile nav links if container is present
+  if (mobileNavContainer) {
+    mobileNavContainer.innerHTML = menuItems.map(item => `
+      <a href="${prefix}${item.page}" class="dash-mobile-nav__link" id="m${item.id}">
+        <i data-lucide="${item.icon}"></i> ${item.label}
+      </a>
+    `).join('');
+  }
+
+  // Ensure role badge beside logo
+  const logoElem = document.getElementById('dash-logo') || document.querySelector('.dash-header__logo');
+  if (logoElem) {
+    let roleBadge = logoElem.querySelector('.dash-header__role-badge');
+    if (!roleBadge) {
+      roleBadge = document.createElement('span');
+      roleBadge.className = 'dash-header__role-badge';
+      logoElem.appendChild(roleBadge);
+    }
+    roleBadge.textContent = currentRole.toUpperCase();
+  }
+
   // Re-initialize Lucide icons
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
@@ -79,15 +114,18 @@ function initRoleAwareNav() {
  */
 function initActiveRouteHighlight() {
   const currentPath = window.location.pathname.toLowerCase();
+  const currentHash = window.location.hash.toLowerCase();
 
-  document.querySelectorAll('.dash-header__link').forEach(link => {
-    const href = link.getAttribute('href').toLowerCase();
-    if (href && (currentPath.endsWith(href) || currentPath.endsWith(href.replace('../', '')))) {
-      link.classList.add('dash-header__link--active');
-    } else if (href.includes('dashboard') && (currentPath.endsWith('/') || currentPath.endsWith('index.html'))) {
-      link.classList.add('dash-header__link--active');
+  document.querySelectorAll('.dash-header__link, .dash-mobile-nav__link').forEach(link => {
+    const href = (link.getAttribute('href') || '').toLowerCase();
+    if (currentHash && href.includes(currentHash)) {
+      link.classList.add('dash-header__link--active', 'dash-mobile-nav__link--active');
+    } else if (!currentHash && href && (currentPath.endsWith(href) || currentPath.endsWith(href.replace('../', '')))) {
+      link.classList.add('dash-header__link--active', 'dash-mobile-nav__link--active');
+    } else if (!currentHash && href.includes('dashboard') && (currentPath.endsWith('/') || currentPath.endsWith('index.html'))) {
+      link.classList.add('dash-header__link--active', 'dash-mobile-nav__link--active');
     } else {
-      link.classList.remove('dash-header__link--active');
+      link.classList.remove('dash-header__link--active', 'dash-mobile-nav__link--active');
     }
   });
 }
@@ -109,7 +147,15 @@ function initUserProfileHeader() {
   const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'KU';
   const subtitle = (user && user.email) ? user.email : (role.toUpperCase());
 
-  if (nameElem) nameElem.textContent = displayName.split(' ')[0];
+  let shortName = displayName.split(' ')[0] || 'User';
+  if (shortName.length > 9) {
+    shortName = shortName.slice(0, 8) + '…';
+  }
+
+  if (nameElem) {
+    nameElem.textContent = shortName;
+    nameElem.title = displayName;
+  }
   if (avatarElem) avatarElem.textContent = initials;
   if (dropdownName) dropdownName.textContent = displayName;
   if (dropdownPhone) dropdownPhone.textContent = subtitle;
@@ -126,14 +172,16 @@ function initMobileNavDrawer() {
   if (toggleBtn && mobileNav) {
     toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      toggleBtn.classList.toggle('open');
-      mobileNav.classList.toggle('open');
+      const isOpen = toggleBtn.classList.toggle('open');
+      toggleBtn.classList.toggle('active', isOpen);
+      mobileNav.classList.toggle('open', isOpen);
+      mobileNav.classList.toggle('active', isOpen);
     });
 
     document.addEventListener('click', (e) => {
       if (!mobileNav.contains(e.target) && !toggleBtn.contains(e.target)) {
-        toggleBtn.classList.remove('open');
-        mobileNav.classList.remove('open');
+        toggleBtn.classList.remove('open', 'active');
+        mobileNav.classList.remove('open', 'active');
       }
     });
   }

@@ -30,6 +30,7 @@ let currentMarketPrice = 'all';
 let currentMarketSort = 'recommended';
 let currentMarketSearch = '';
 let currentQuickFilter = 'all';
+let currentMarketLots = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   // Enforce Buyer Role Guard
@@ -779,6 +780,7 @@ async function renderMarketplaceView(container) {
       }));
     }
 
+    currentMarketLots = lots;
     if (countEl) {
       countEl.textContent = `${lots.length} agricultural lots available`;
     }
@@ -943,33 +945,35 @@ async function openLotDetailModal(lotId) {
   overlay.classList.add('active');
 
   let lot = null;
-  if (window.B2B_LOTS_DATA) {
-    const mock = window.B2B_LOTS_DATA.find(l => l.id === lotId) || window.B2B_LOTS_DATA[0];
+  const found = currentMarketLots.find(l => (l.lotId || l.id) === lotId) || 
+                (window.B2B_LOTS_DATA && (window.B2B_LOTS_DATA.find(l => l.id === lotId) || window.B2B_LOTS_DATA[0]));
+
+  if (found) {
     lot = {
-      lotId: mock.id,
-      cropName: mock.crop,
-      variety: mock.variety,
-      emoji: mock.emoji || '🌾',
-      quantity: mock.quantity,
-      quantityUnit: 'quintal',
-      askingPrice: mock.sellerAskPrice,
-      priceUnit: 'q',
-      qualityGrade: mock.grade.replace('Grade ', ''),
-      location: mock.location,
-      district: mock.location.split(',')[0].trim(),
-      state: mock.location.split(',')[1]?.trim() || 'Maharashtra',
-      mandi: mock.mandi || 'APMC Yard',
-      distanceKm: mock.distanceKm || 45,
-      sellerName: mock.sellerName,
-      sellerVerified: mock.sellerVerified !== false,
-      sellerTrustScore: mock.sellerTrustScore || 94,
-      mandiCess: mock.mandiCessPerQ || 15,
-      moistureContent: mock.qualityMetrics?.moisturePct || '11.5%',
-      sizeSpec: mock.qualityMetrics?.sizeMm || 'Clean bold quality',
-      defectsPct: mock.qualityMetrics?.defectsPct || 'Nil (< 0.5%)',
-      packaging: '50kg Jute Bags',
-      harvestDate: mock.harvestDate || '2026-08-24',
-      availableUntil: mock.availableUntil || '2026-09-15'
+      lotId: found.lotId || found.id || lotId,
+      cropName: found.cropName || found.crop || 'Agricultural Produce',
+      variety: found.variety || 'Standard Variety',
+      emoji: found.emoji || '🌾',
+      quantity: found.quantity || 100,
+      quantityUnit: found.quantityUnit || 'quintal',
+      askingPrice: found.askingPrice || found.sellerAskPrice || 2500,
+      priceUnit: found.priceUnit || 'q',
+      qualityGrade: (found.qualityGrade || found.grade || 'A').toString().replace('Grade ', ''),
+      location: found.location || `${found.district || 'Pune'}, ${found.state || 'Maharashtra'}`,
+      district: found.district || (found.location ? found.location.split(',')[0].trim() : 'Pune'),
+      state: found.state || (found.location ? found.location.split(',')[1]?.trim() : 'Maharashtra') || 'Maharashtra',
+      mandi: found.mandi || 'APMC Yard',
+      distanceKm: found.distanceKm || 45,
+      sellerName: found.sellerName || 'Verified Supplier',
+      sellerVerified: found.sellerVerified !== false,
+      sellerTrustScore: found.sellerTrustScore || 94,
+      mandiCess: found.mandiCess || found.mandiCessPerQ || 15,
+      moistureContent: found.moistureContent || found.qualityMetrics?.moisturePct || '11.5%',
+      sizeSpec: found.sizeSpec || found.qualityMetrics?.sizeMm || 'Clean bold quality',
+      defectsPct: found.defectsPct || found.qualityMetrics?.defectsPct || 'Nil (< 0.5%)',
+      packaging: found.packaging || '50kg Jute Bags',
+      harvestDate: found.harvestDate || '2026-08-24',
+      availableUntil: found.availableUntil || '2026-09-15'
     };
   }
 
@@ -1108,7 +1112,12 @@ function openSendInquiryModal(lotId, askingPrice, maxQty) {
     document.body.appendChild(overlay);
   }
 
-  const lot = window.B2B_LOTS_DATA?.find(l => l.id === lotId) || { crop: 'Produce Lot', variety: 'Standard', sellerName: 'Verified Supplier' };
+  const lot = currentMarketLots.find(l => (l.lotId || l.id) === lotId) || 
+              (window.B2B_LOTS_DATA && window.B2B_LOTS_DATA.find(l => l.id === lotId)) || 
+              { crop: 'Produce Lot', variety: 'Standard', sellerName: 'Verified Supplier' };
+  const cropName = lot.cropName || lot.crop || 'Produce Lot';
+  const variety = lot.variety || 'Standard';
+  const sellerName = lot.sellerName || 'Verified Supplier';
 
   overlay.innerHTML = `
     <div class="dash-modal" style="max-width: 520px;">
@@ -1126,11 +1135,11 @@ function openSendInquiryModal(lotId, askingPrice, maxQty) {
         <div style="background: #F5F4ED; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; font-size: 13px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
             <span>Produce:</span>
-            <strong>${lot.crop} (${lot.variety})</strong>
+            <strong>${cropName} (${variety})</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
             <span>Seller:</span>
-            <strong>${lot.sellerName}</strong>
+            <strong>${sellerName}</strong>
           </div>
           <div style="display: flex; justify-content: space-between;">
             <span>Asking Price:</span>
@@ -1559,12 +1568,6 @@ function openCreateOrderModal(inquiryId) {
 // 6. ORDERS VIEW (Professional Segmented Tabs, Cards & 8-Stage Tracker)
 // ═══════════════════════════════════════════════════════════════════════
 async function renderOrdersView(container) {
-  let allOrders = window.INITIAL_ORDERS_DATA || [];
-  const countAll = allOrders.length;
-  const countConf = allOrders.filter(o => o.status === 'CONFIRMED').length;
-  const countTransit = allOrders.filter(o => o.status === 'IN_TRANSIT').length;
-  const countDelivered = allOrders.filter(o => o.status === 'DELIVERED').length;
-
   container.innerHTML = `
     <div class="buyer-view" style="padding-top: 24px;">
       <!-- Orders Header -->
@@ -1581,16 +1584,16 @@ async function renderOrdersView(container) {
       <!-- Professional Segmented Status Tabs -->
       <div class="kl-segmented-tabs" id="orders-segmented-tabs">
         <button class="kl-segmented-tab ${currentOrderFilter === 'all' ? 'active' : ''}" data-status="all">
-          All Orders <span class="kl-tab-badge">${countAll}</span>
+          All Orders <span class="kl-tab-badge" id="tab-badge-all">-</span>
         </button>
         <button class="kl-segmented-tab ${currentOrderFilter === 'CONFIRMED' ? 'active' : ''}" data-status="CONFIRMED">
-          Confirmed <span class="kl-tab-badge">${countConf}</span>
+          Confirmed <span class="kl-tab-badge" id="tab-badge-confirmed">-</span>
         </button>
         <button class="kl-segmented-tab ${currentOrderFilter === 'IN_TRANSIT' ? 'active' : ''}" data-status="IN_TRANSIT">
-          In Transit <span class="kl-tab-badge">${countTransit}</span>
+          In Transit <span class="kl-tab-badge" id="tab-badge-transit">-</span>
         </button>
         <button class="kl-segmented-tab ${currentOrderFilter === 'DELIVERED' ? 'active' : ''}" data-status="DELIVERED">
-          Delivered <span class="kl-tab-badge">${countDelivered}</span>
+          Delivered <span class="kl-tab-badge" id="tab-badge-delivered">-</span>
         </button>
       </div>
 
@@ -1611,7 +1614,10 @@ async function renderOrdersView(container) {
       </div>
 
       <div id="buyer-orders-list">
-        <!-- Rendered dynamically -->
+        <div style="padding: 48px; text-align: center; color: var(--ks-text-muted);">
+          <div class="spinner" style="margin: 0 auto 12px auto; width: 28px; height: 28px; border: 3px solid #E5E4DD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          Loading orders...
+        </div>
       </div>
     </div>
   `;
@@ -1644,18 +1650,84 @@ async function renderOrdersView(container) {
     fetchOrders();
   });
 
-  const fetchOrders = () => {
+  let rawFetchedOrders = null;
+
+  const fetchOrders = async () => {
     const list = document.getElementById('buyer-orders-list');
     if (!list) return;
 
-    let ords = window.INITIAL_ORDERS_DATA || [];
+    if (!rawFetchedOrders) {
+      list.innerHTML = `
+        <div style="padding: 48px; text-align: center; color: var(--ks-text-muted);">
+          <div class="spinner" style="margin: 0 auto 12px auto; width: 28px; height: 28px; border: 3px solid #E5E4DD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          Loading orders...
+        </div>
+      `;
+
+      const isDev = window.Auth && typeof window.Auth.isLocalEnv === 'function' && window.Auth.isLocalEnv() && localStorage.getItem('krishishetra_dev_session');
+      let apiFailed = false;
+
+      try {
+        const res = await window.api?.orders?.getMine?.();
+        if (res?.success && Array.isArray(res.orders)) {
+          rawFetchedOrders = res.orders;
+        } else if (!res?.success) {
+          apiFailed = true;
+        }
+      } catch (err) {
+        apiFailed = true;
+      }
+
+      if ((apiFailed || (rawFetchedOrders && rawFetchedOrders.length === 0)) && isDev && window.INITIAL_ORDERS_DATA) {
+        rawFetchedOrders = window.INITIAL_ORDERS_DATA;
+        apiFailed = false;
+      }
+
+      if (apiFailed) {
+        list.innerHTML = `
+          <div class="kl-compact-empty-state" style="border: 1px dashed #E5E4DD;">
+            <div class="kl-compact-empty-icon">⚠️</div>
+            <div class="kl-compact-empty-title">Unable to load orders</div>
+            <div class="kl-compact-empty-desc">We could not retrieve your orders at this time. Please check your connection and try again.</div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 14px;">
+              <button class="btn btn--primary btn--sm" onclick="fetchOrders()">Try Again</button>
+              <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm" style="text-decoration: none;">Browse Marketplace</a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+    }
+
+    const allOrders = rawFetchedOrders || [];
+
+    // Update Tab Badges
+    const countAll = allOrders.length;
+    const countConf = allOrders.filter(o => (o.status || '').toUpperCase() === 'CONFIRMED').length;
+    const countTransit = allOrders.filter(o => (o.status || '').toUpperCase() === 'IN_TRANSIT').length;
+    const countDelivered = allOrders.filter(o => (o.status || '').toUpperCase() === 'DELIVERED').length;
+
+    const bAll = document.getElementById('tab-badge-all');
+    const bConf = document.getElementById('tab-badge-confirmed');
+    const bTran = document.getElementById('tab-badge-transit');
+    const bDel = document.getElementById('tab-badge-delivered');
+    if (bAll) bAll.textContent = countAll;
+    if (bConf) bConf.textContent = countConf;
+    if (bTran) bTran.textContent = countTransit;
+    if (bDel) bDel.textContent = countDelivered;
+
+    let ords = [...allOrders];
     if (currentOrderFilter !== 'all') {
-      ords = ords.filter(o => o.status === currentOrderFilter);
+      ords = ords.filter(o => (o.status || '').toUpperCase() === currentOrderFilter.toUpperCase());
     }
 
     if (currentOrderSearch) {
       const q = currentOrderSearch.toLowerCase();
-      ords = ords.filter(o => o.id.toLowerCase().includes(q) || o.crop.toLowerCase().includes(q) || o.sellerName.toLowerCase().includes(q));
+      ords = ords.filter(o => 
+        (o.id || o.orderId || '').toLowerCase().includes(q) || 
+        (o.crop || o.cropName || '').toLowerCase().includes(q) || 
+        (o.sellerName || o.farmerName || '').toLowerCase().includes(q)
+      );
     }
 
     if (currentOrderSort === 'oldest') {
@@ -1664,22 +1736,40 @@ async function renderOrdersView(container) {
 
     if (ords.length > 0) {
       list.innerHTML = ords.map(ord => {
-        const s = getOrderStatusBadge(ord.status.toLowerCase());
+        const id = ord.orderId || ord.id || 'KS-000';
+        const crop = ord.cropName || ord.crop || 'Produce';
+        const variety = ord.variety || 'Standard Variety';
+        const sellerName = ord.farmerName || ord.sellerName || 'Verified Farm';
+        const grandTotal = ord.totalAmount || ord.grandTotal || (ord.agreedPrice ? ord.agreedPrice * ord.quantity : 0);
+        const pricePerQ = ord.agreedPrice || ord.pricePerQ || Math.round(grandTotal / (ord.quantity || 1));
+        const quantity = ord.quantity || 0;
+        const rawStatus = (ord.status || 'confirmed').toLowerCase();
+        const s = getOrderStatusBadge(rawStatus);
+        const paymentStatus = ord.paymentStatus || (rawStatus === 'delivered' ? 'RELEASED' : 'HELD IN ESCROW');
+        const orderedAt = ord.createdAt || ord.orderedAt || 'Recently';
+        let deliveryAddress = 'Warehouse Terminal';
+        if (typeof ord.deliveryAddress === 'string') {
+          deliveryAddress = ord.deliveryAddress;
+        } else if (ord.deliveryAddress && typeof ord.deliveryAddress === 'object') {
+          deliveryAddress = [ord.deliveryAddress.addressLine1, ord.deliveryAddress.village, ord.deliveryAddress.state].filter(Boolean).join(', ');
+        }
+        const logisticsStatus = (ord.logistics && ord.logistics.status) ? ord.logistics.status : (rawStatus === 'in_transit' ? 'In Transit' : rawStatus === 'delivered' ? 'Delivered' : 'Scheduled');
+
         return `
           <div class="kl-order-card">
             <!-- Header Row -->
             <div class="kl-order-card-header">
               <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-family: monospace; font-size: 13.5px; font-weight: 800; color: var(--ks-evergreen);">ORDER #KS-${ord.id.replace('ord-', '')}</span>
+                <span style="font-family: monospace; font-size: 13.5px; font-weight: 800; color: var(--ks-evergreen);">ORDER #${id.toUpperCase().replace('ORD-', 'KS-')}</span>
                 <span style="background: ${s.bg}; color: ${s.color}; padding: 3px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 800; text-transform: uppercase;">
                   ${s.text}
                 </span>
                 <span style="font-size: 11px; color: #5B9A72; font-weight: 700; background: #E5F0E7; padding: 2px 6px; border-radius: 4px;">
-                  ${ord.paymentStatus}
+                  ${paymentStatus}
                 </span>
               </div>
               <div style="font-size: 12px; color: #777;">
-                Ordered: ${ord.orderedAt?.split(' ')[0] || 'Recently'}
+                Ordered: ${orderedAt.toString().split('T')[0].split(' ')[0]}
               </div>
             </div>
 
@@ -1687,27 +1777,27 @@ async function renderOrdersView(container) {
             <div class="kl-order-grid-3col">
               <div>
                 <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 2px;">Produce Sourced</div>
-                <div style="font-size: 15px; font-weight: 800; color: #12372A;">${ord.crop} <span style="font-size: 13px; font-weight: 500; color: #666;">(${ord.variety})</span></div>
-                <div style="font-size: 12px; color: #666; margin-top: 2px;">Seller: <strong>${ord.sellerName}</strong></div>
+                <div style="font-size: 15px; font-weight: 800; color: #12372A;">${crop} <span style="font-size: 13px; font-weight: 500; color: #666;">(${variety})</span></div>
+                <div style="font-size: 12px; color: #666; margin-top: 2px;">Seller: <strong>${sellerName}</strong></div>
               </div>
 
               <div>
                 <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 2px;">Quantity & Value</div>
-                <div style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen);">₹${ord.grandTotal?.toLocaleString('en-IN')}</div>
-                <div style="font-size: 12px; color: #666; margin-top: 2px;">Volume: <strong>${ord.quantity} quintals</strong> (@ ₹${ord.pricePerQ}/q)</div>
+                <div style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen);">₹${grandTotal.toLocaleString('en-IN')}</div>
+                <div style="font-size: 12px; color: #666; margin-top: 2px;">Volume: <strong>${quantity} quintals</strong> (@ ₹${pricePerQ}/q)</div>
               </div>
 
               <div>
                 <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 2px;">Delivery Destination</div>
-                <div style="font-size: 12.5px; font-weight: 600; color: #333;">${ord.deliveryAddress || 'Warehouse Terminal'}</div>
-                <div style="font-size: 11.5px; color: #155E75; margin-top: 2px; font-weight: 600;">Status: ${ord.logistics?.status || 'Scheduled'}</div>
+                <div style="font-size: 12.5px; font-weight: 600; color: #333;">${deliveryAddress}</div>
+                <div style="font-size: 11.5px; color: #155E75; margin-top: 2px; font-weight: 600;">Status: ${logisticsStatus}</div>
               </div>
 
               <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-end;">
-                <button class="btn btn--secondary btn--sm" style="border-radius: 6px; font-size: 12px; padding: 6px 14px;" onclick="openOrderTrackingModal('${ord.id}')">
+                <button class="btn btn--secondary btn--sm" style="border-radius: 6px; font-size: 12px; padding: 6px 14px;" onclick="openOrderTrackingModal('${id}')">
                   View Order
                 </button>
-                <button class="btn btn--primary btn--sm" style="background: #12372A; border-radius: 6px; font-size: 12px; padding: 6px 14px;" onclick="openOrderTrackingModal('${ord.id}')">
+                <button class="btn btn--primary btn--sm" style="background: #12372A; border-radius: 6px; font-size: 12px; padding: 6px 14px;" onclick="openOrderTrackingModal('${id}')">
                   Track
                 </button>
               </div>

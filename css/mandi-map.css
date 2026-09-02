@@ -467,6 +467,46 @@
   color: var(--ks-text-muted);
 }
 
+.mandi-map-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--ks-bg-ivory, #FAF8F5);
+  z-index: 20;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--ks-text-muted, #777);
+  padding: 30px;
+  text-align: center;
+}
+
+.mandi-map-error__icon {
+  font-size: 38px;
+  margin-bottom: 2px;
+}
+
+.mandi-map-error__msg {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ks-evergreen, #12372A);
+  margin: 0;
+}
+
+.mandi-map-error__sub {
+  font-size: 13px;
+  color: var(--ks-text-muted, #777);
+  margin: 0 0 10px 0;
+}
+
+.mandi-map-error__btns {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 .mandi-map-controls {
   position: absolute;
   top: 12px;

@@ -594,31 +594,111 @@ const FarmerFlow = {
       </div>
     `;
 
+    const isDev = window.Auth && typeof window.Auth.isLocalEnv === 'function' && window.Auth.isLocalEnv() && localStorage.getItem('krishishetra_dev_session');
+
     try {
       const params = {};
       if (filter !== 'all') params.status = filter;
       const res = await window.api.lots.getMine(params);
 
-      if (res.success && Array.isArray(res.lots)) {
+      if (res.success && Array.isArray(res.lots) && res.lots.length > 0) {
         this.lots = res.lots;
         this.renderLotsList(res.lots);
         this.updateStatsCounters(res.lots);
+      } else if (res.success && Array.isArray(res.lots) && res.lots.length === 0) {
+        if (isDev) {
+          const demo = this.getDemoLots(filter);
+          this.lots = demo;
+          this.renderLotsList(demo);
+          this.updateStatsCounters(demo);
+        } else {
+          this.lots = [];
+          this.renderLotsList([]);
+          this.updateStatsCounters([]);
+        }
       } else {
-        container.innerHTML = `
-          <div style="padding: 30px; text-align: center; color: #dc2626;">
-            Unable to load lots from database.<br>
-            <button class="btn btn--sm btn--secondary" style="margin-top: 10px;" onclick="FarmerFlow.loadMyLots()">Try Again</button>
-          </div>
-        `;
+        if (isDev) {
+          const demo = this.getDemoLots(filter);
+          this.lots = demo;
+          this.renderLotsList(demo);
+          this.updateStatsCounters(demo);
+        } else {
+          this.renderLotsError(container);
+        }
       }
     } catch (err) {
-      container.innerHTML = `
-        <div style="padding: 30px; text-align: center; color: #dc2626;">
-          Server connection error.<br>
-          <button class="btn btn--sm btn--secondary" style="margin-top: 10px;" onclick="FarmerFlow.loadMyLots()">Try Again</button>
-        </div>
-      `;
+      if (isDev) {
+        const demo = this.getDemoLots(filter);
+        this.lots = demo;
+        this.renderLotsList(demo);
+        this.updateStatsCounters(demo);
+      } else {
+        this.renderLotsError(container);
+      }
     }
+  },
+
+  getDemoLots(filter = 'all') {
+    const demo = [
+      {
+        lotId: 'LOT-2026-001',
+        cropName: 'Wheat',
+        variety: 'Lokwan (High Yield)',
+        quantity: 25,
+        quantityUnit: 'quintal',
+        askingPrice: 3000,
+        priceUnit: 'q',
+        qualityGrade: 'A',
+        district: 'Pune',
+        state: 'Maharashtra',
+        status: 'active',
+        harvestDate: '2026-08-15'
+      },
+      {
+        lotId: 'LOT-2026-002',
+        cropName: 'Onion',
+        variety: 'Red Garwa',
+        quantity: 12,
+        quantityUnit: 'quintal',
+        askingPrice: 2800,
+        priceUnit: 'q',
+        qualityGrade: 'A',
+        district: 'Nashik',
+        state: 'Maharashtra',
+        status: 'active',
+        harvestDate: '2026-08-20'
+      },
+      {
+        lotId: 'LOT-2026-003',
+        cropName: 'Rice',
+        variety: 'Basmati Long Grain',
+        quantity: 25,
+        quantityUnit: 'quintal',
+        askingPrice: 3800,
+        priceUnit: 'q',
+        qualityGrade: 'A',
+        district: 'Pune',
+        state: 'Maharashtra',
+        status: 'draft',
+        harvestDate: '2026-08-10'
+      }
+    ];
+    if (filter === 'all') return demo;
+    return demo.filter(l => l.status === filter);
+  },
+
+  renderLotsError(container) {
+    if (!container) return;
+    container.innerHTML = `
+      <div style="padding: 40px 24px; text-align: center; background: #FAF9F5; border-radius: 12px; border: 1px dashed #DDD;">
+        <div style="font-size: 36px; margin-bottom: 10px;">🌾</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">Unable to load lots from database</h4>
+        <p style="font-size: 13px; color: var(--ks-text-muted); margin: 0 0 16px 0;">We couldn't connect to the produce database. Please check your connection and try again.</p>
+        <button class="btn btn--sm btn--primary" onclick="FarmerFlow.loadMyLots('${this.currentFilter || 'all'}')">
+          Try Again
+        </button>
+      </div>
+    `;
   },
 
   renderLotsList(lots) {

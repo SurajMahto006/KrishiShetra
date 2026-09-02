@@ -247,6 +247,13 @@ const Auth = {
     if (currentRole === 'admin') return true;
 
     if (currentRole !== expectedRole.toLowerCase()) {
+      // In local development mode with an active dev session:
+      // Adapt the dev session to expected role to prevent redirect loops between farmer and buyer portals
+      if (this.isLocalEnv() && localStorage.getItem(this.DEV_SESSION_KEY)) {
+        this.setDevSession(expectedRole.toLowerCase());
+        return true;
+      }
+
       console.warn(`[PageGuard] Role mismatch. Expected: '${expectedRole}', Current: '${currentRole}'. Redirecting...`);
       this.redirectUserByRole();
       return false;

@@ -145,7 +145,21 @@ async function loadOrders() {
     }
     if (window.lucide) lucide.createIcons();
   } catch (err) {
-    grid.innerHTML = `<div style="padding: 30px; text-align: center; color: #dc2626; grid-column: 1 / -1;">Unable to load orders. Please refresh.</div>`;
+    grid.innerHTML = `
+      <div style="padding: 48px 24px; text-align: center; color: var(--ks-text-muted); grid-column: 1 / -1; background: #FAF9F5; border-radius: 14px; border: 1px dashed #DDD;">
+        <div style="font-size: 38px; margin-bottom: 12px;">⚠️</div>
+        <h3 style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">Unable to connect to order service</h3>
+        <p style="font-size: 13.5px; color: #666; margin: 0 0 20px 0; max-width: 440px; margin-left: auto; margin-right: auto;">
+          We could not load your active orders right now. Please check your connection and try again.
+        </p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button class="btn btn--primary" onclick="loadOrders()">Try Again</button>
+          <a href="${role === 'farmer' ? 'dashboard.html' : 'market.html'}" class="btn btn--secondary" style="text-decoration: none;">
+            ${role === 'farmer' ? 'Dashboard' : 'Marketplace'}
+          </a>
+        </div>
+      </div>
+    `;
   }
 }
 
