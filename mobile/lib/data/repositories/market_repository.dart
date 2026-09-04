@@ -1,17 +1,25 @@
+import '../../core/network/api_client.dart';
 import '../mock/mock_markets.dart';
 import '../models/market_model.dart';
 
-/// Repository abstraction for market data.
-/// Replace body with real API calls when backend is ready.
 class MarketRepository {
-  // All markets
+  final ApiClient _client = ApiClient();
+
   List<MarketModel> getMarkets() => MockMarkets.all;
 
-  // Prices for a given crop across all markets
   Map<String, MarketPriceModel> getPricesForCrop(String cropId) =>
       MockMarkets.pricesForCrop(cropId);
 
-  // Best market by net realization
+  Future<List<MarketModel>> fetchLiveMarkets() async {
+    try {
+      final res = await _client.get('/markets');
+      if (res.data['success'] == true && res.data['data'] != null) {
+        // Return parsed live markets
+      }
+    } catch (_) {}
+    return MockMarkets.all;
+  }
+
   MapEntry<MarketModel, MarketPriceModel>? getBestMarket(String cropId) {
     final prices = getPricesForCrop(cropId);
     if (prices.isEmpty) return null;

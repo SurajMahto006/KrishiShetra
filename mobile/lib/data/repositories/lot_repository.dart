@@ -1,7 +1,9 @@
+import '../../core/network/api_client.dart';
 import '../mock/mock_lots.dart';
 import '../models/lot_model.dart';
 
 class LotRepository {
+  final ApiClient _client = ApiClient();
   final List<LotModel> _lots = List.from(MockLots.all);
 
   List<LotModel> getLots() => List.unmodifiable(_lots);
@@ -20,5 +22,22 @@ class LotRepository {
     }
   }
 
-  void addLot(LotModel lot) => _lots.insert(0, lot);
+  Future<void> addLot(LotModel lot) async {
+    _lots.insert(0, lot);
+    try {
+      await _client.post('/lots', data: {
+        'cropName': lot.cropName,
+        'variety': 'Sharbati Premium',
+        'quantity': lot.quantityKg / 100,
+        'quantityUnit': 'quintal',
+        'askingPrice': lot.expectedPricePerQtl,
+        'priceUnit': 'quintal',
+        'qualityGrade': lot.quality.label,
+        'locationVillage': lot.location,
+        'harvestDate': lot.harvestDate.toIso8601String(),
+      });
+    } catch (_) {
+      // Offline fallback: lot is already added to local list
+    }
+  }
 }

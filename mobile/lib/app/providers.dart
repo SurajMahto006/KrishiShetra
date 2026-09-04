@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/models/crop_model.dart';
 import '../data/models/lot_model.dart';
 import '../data/mock/mock_crops.dart';
+import '../data/repositories/auth_repository.dart';
 import '../data/repositories/market_repository.dart';
 import '../data/repositories/lot_repository.dart';
 import '../data/repositories/buyer_repository.dart';
@@ -9,15 +10,20 @@ import '../data/repositories/offer_repository.dart';
 import '../data/repositories/order_repository.dart';
 import '../data/repositories/notification_repository.dart';
 import '../data/repositories/transaction_repository.dart';
+import '../data/repositories/ai_repository.dart';
+import '../data/repositories/tracking_repository.dart';
 
 // ── Repositories ──────────────────────────────────────────────
-final marketRepositoryProvider = Provider((_) => MarketRepository());
-final lotRepositoryProvider    = Provider((_) => LotRepository());
-final buyerRepositoryProvider  = Provider((_) => BuyerRepository());
-final offerRepositoryProvider  = Provider((_) => OfferRepository());
-final orderRepositoryProvider  = Provider((_) => OrderRepository());
-final notifRepositoryProvider  = Provider((_) => NotificationRepository());
-final txnRepositoryProvider    = Provider((_) => TransactionRepository());
+final authRepositoryProvider     = Provider((_) => AuthRepository());
+final marketRepositoryProvider   = Provider((_) => MarketRepository());
+final lotRepositoryProvider      = Provider((_) => LotRepository());
+final buyerRepositoryProvider    = Provider((_) => BuyerRepository());
+final offerRepositoryProvider    = Provider((_) => OfferRepository());
+final orderRepositoryProvider    = Provider((_) => OrderRepository());
+final notifRepositoryProvider    = Provider((_) => NotificationRepository());
+final txnRepositoryProvider      = Provider((_) => TransactionRepository());
+final aiRepositoryProvider       = Provider((_) => AiRepository());
+final trackingRepositoryProvider = Provider((_) => TrackingRepository());
 
 // ── Selected crop (shared across Market / AI screens) ─────────
 final selectedCropProvider = StateProvider<CropModel>((_) => MockCrops.wheat);
@@ -39,8 +45,8 @@ class LotsNotifier extends StateNotifier<List<LotModel>> {
   final LotRepository _repo;
   LotsNotifier(this._repo) : super(_repo.getLots());
 
-  void addLot(LotModel lot) {
-    _repo.addLot(lot);
+  Future<void> addLot(LotModel lot) async {
+    await _repo.addLot(lot);
     state = _repo.getLots();
   }
 

@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../app/providers.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/localization/app_localizations.dart';
 import '../../../shared/widgets/agricultural_background.dart';
 import '../../../shared/components/ks_button.dart';
 
 enum _LoginStep { phone, otp }
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin {
+class _LoginScreenState extends ConsumerState<LoginScreen> with TickerProviderStateMixin {
   _LoginStep _step = _LoginStep.phone;
   final _phoneCtrl = TextEditingController();
   final List<TextEditingController> _otpCtrls = List.generate(6, (_) => TextEditingController());
@@ -51,15 +54,27 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   }
 
   Future<void> _sendOtp() async {
-    if (_phoneCtrl.text.length < 10) {
+    final phone = _phoneCtrl.text.trim();
+    if (phone.length < 10) {
       setState(() => _error = 'Please enter a valid 10-digit mobile number.');
       return;
     }
     setState(() { _loading = true; _error = null; });
-    await Future.delayed(const Duration(milliseconds: 1200));
-    if (!mounted) return;
-    setState(() { _loading = false; _step = _LoginStep.otp; });
-    Future.delayed(const Duration(milliseconds: 100), () => _otpFocus[0].requestFocus());
+    try {
+      await ref.read(authRepositoryProvider).requestOtp(phone);
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _step = _LoginStep.otp;
+      });
+      Future.delayed(const Duration(milliseconds: 100), () => _otpFocus[0].requestFocus());
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _error = e.toString();
+      });
+    }
   }
 
   Future<void> _verifyOtp() async {
@@ -69,12 +84,18 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
       return;
     }
     setState(() { _loading = true; _error = null; });
-    await Future.delayed(const Duration(milliseconds: 1200));
-    if (!mounted) return;
-    // Demo: any OTP works
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(AppConstants.keyLoggedIn, true);
-    if (mounted) context.go('/home');
+    try {
+      final phone = _phoneCtrl.text.trim();
+      await ref.read(authRepositoryProvider).verifyOtp(phone, otp);
+      if (!mounted) return;
+      context.go('/home');
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _error = 'Invalid OTP or server error. Please retry.';
+      });
+    }
   }
 
   @override
@@ -96,42 +117,90 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        _LangChip(label: 'EN',  selected: _language == 'EN',  onTap: () => setState(() => _language = 'EN')),
+                        _LangChip(
+                          label: 'EN',
+                          selected: _language == 'EN',
+                          onTap: () {
+                            setState(() => _language = 'EN');
+                            ref.read(localeProvider.notifier).setLocale('en');
+                          },
+                        ),
                         const SizedBox(width: 8),
-                        _LangChip(label: 'हि',  selected: _language == 'HI',  onTap: () => setState(() => _language = 'HI')),
+                        _LangChip(
+                          label: 'हि',
+                          selected: _language == 'HI',
+                          onTap: () {
+                            setState(() => _language = 'HI');
+                            ref.read(localeProvider.notifier).setLocale('hi');
+                          },
+                        ),
                         const SizedBox(width: 8),
-                        _LangChip(label: 'मर', selected: _language == 'MR', onTap: () => setState(() => _language = 'MR')),
+                        _LangChip(
+                          label: 'मर',
+                          selected: _language == 'MR',
+                          onTap: () {
+                            setState(() => _language = 'MR');
+                            ref.read(localeProvider.notifier).setLocale('mr');
+                          },
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 40),
-                    // Logo + headline
-                    Row(
-                      children: [
-                        Container(
-                          width: 52,
-                          height: 52,
-                          decoration: BoxDecoration(
-                            gradient: AppColors.evergreenGradient,
-                            borderRadius: BorderRadius.circular(14),
-                            boxShadow: [
-                              BoxShadow(color: AppColors.greenAccent.withOpacity(0.35), blurRadius: 20),
-                            ],
+                    const SizedBox(height: 32),
+                    // ── KrishiShetra Logo ──────────────────────────────────
+                    Center(
+                      child: Column(
+                        children: [
+                          // Glowing backdrop circle
+                          Container(
+                            width: 148,
+                            height: 148,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.greenAccent.withOpacity(0.28),
+                                  blurRadius: 40,
+                                  spreadRadius: 6,
+                                ),
+                                BoxShadow(
+                                  color: AppColors.gold.withOpacity(0.18),
+                                  blurRadius: 60,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: SvgPicture.asset(
+                              'assets/icons/krishishetra_logo.svg',
+                              width: 148,
+                              height: 148,
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                          child: const Icon(Icons.eco_outlined, color: Colors.white, size: 26),
-                        ),
-                        const SizedBox(width: 14),
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(AppConstants.appName,
-                                style: TextStyle(fontFamily: 'PlayfairDisplay', fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white)),
-                            Text('Your market intelligence platform',
-                                style: TextStyle(fontSize: 12, color: Colors.white60)),
-                          ],
-                        ),
-                      ],
+                          const SizedBox(height: 14),
+                          // App name below logo
+                          const Text(
+                            AppConstants.appName,
+                            style: TextStyle(
+                              fontFamily: 'PlayfairDisplay',
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Apni Fasal, Apna Bazaar, Apna Behtar Daam.',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.goldLight.withOpacity(0.75),
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 48),
+                    const SizedBox(height: 36),
                     // Card
                     Container(
                       padding: const EdgeInsets.all(24),
@@ -152,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                     // Trust line
                     Center(
                       child: Text(
-                        '🔒  Secure login · No account creation needed',
+                        '🔒  Secure login · Protected with instant SMS OTP',
                         style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.45)),
                         textAlign: TextAlign.center,
                       ),
@@ -176,7 +245,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         const Text('Enter Mobile Number',
             style: TextStyle(fontFamily: 'PlayfairDisplay', fontSize: 22, fontWeight: FontWeight.w700, color: Colors.white)),
         const SizedBox(height: 6),
-        Text("We'll send you a verification code.",
+        Text("We'll send you a 6-digit verification code.",
             style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.6))),
         const SizedBox(height: 24),
         // Phone field
@@ -223,12 +292,11 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         Center(
           child: TextButton(
             onPressed: () async {
-              // Demo quick login
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.setBool(AppConstants.keyLoggedIn, true);
+              // Direct login
+              await ref.read(authRepositoryProvider).verifyOtp('9876543210', '123456');
               if (mounted) context.go('/home');
             },
-            child: Text('Demo Login (skip OTP)', style: TextStyle(color: AppColors.goldLight.withOpacity(0.8), fontSize: 13)),
+            child: Text('Demo Login (Instant Access)', style: TextStyle(color: AppColors.goldLight.withOpacity(0.8), fontSize: 13)),
           ),
         ),
       ],
@@ -313,6 +381,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
             onPressed: () {
               for (final c in _otpCtrls) c.clear();
               _otpFocus[0].requestFocus();
+              _sendOtp();
             },
             child: Text('Resend OTP', style: TextStyle(color: AppColors.greenLight.withOpacity(0.8), fontSize: 13)),
           ),

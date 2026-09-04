@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/providers.dart';
 import '../../../app/theme/app_colors.dart';
@@ -31,6 +32,14 @@ class DashboardScreen extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
                   child: Row(
                     children: [
+                      // KrishiShetra logo
+                      SvgPicture.asset(
+                        'assets/icons/krishishetra_logo.svg',
+                        width: 42,
+                        height: 42,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,18 +48,18 @@ class DashboardScreen extends ConsumerWidget {
                               'Namaste, ${user.name.split(' ').first} 👋',
                               style: const TextStyle(
                                 fontFamily: 'PlayfairDisplay',
-                                fontSize: 22,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.evergreen,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Row(
                               children: [
-                                const Icon(Icons.location_on_outlined, size: 14, color: AppColors.textMutedDash),
+                                const Icon(Icons.location_on_outlined, size: 13, color: AppColors.textMutedDash),
                                 const SizedBox(width: 3),
                                 Text(user.location,
-                                    style: const TextStyle(fontSize: 13, color: AppColors.textMutedDash)),
+                                    style: const TextStyle(fontSize: 12, color: AppColors.textMutedDash)),
                               ],
                             ),
                           ],

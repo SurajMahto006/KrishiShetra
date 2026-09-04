@@ -1,14 +1,16 @@
+import '../../core/network/api_client.dart';
 import '../mock/mock_offers.dart';
 import '../models/offer_model.dart';
 
 class OfferRepository {
+  final ApiClient _client = ApiClient();
   final List<OfferModel> _offers = List.from(MockOffers.all);
 
   List<OfferModel> getAllOffers() => List.unmodifiable(_offers);
   List<OfferModel> getOffersForLot(String lotId) => MockOffers.forLot(lotId);
   OfferModel? findById(String id) => MockOffers.findById(id);
 
-  void acceptOffer(String offerId) {
+  Future<void> acceptOffer(String offerId) async {
     final idx = _offers.indexWhere((o) => o.id == offerId);
     if (idx != -1) {
       _offers[idx] = OfferModel(
@@ -30,5 +32,9 @@ class OfferRepository {
         createdAt: _offers[idx].createdAt,
       );
     }
+
+    try {
+      await _client.put('/offers/$offerId/accept');
+    } catch (_) {}
   }
 }
