@@ -1,1 +1,296 @@
-﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fleet & Vehicle Management | KrishiShetra Transporter</title>
+  <meta name="description" content="Manage your commercial agri-fleet, VAHAN RC verifications, fitness certificates, FASTags, and live vehicle GPS telemetry.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="css/transporter.css">
+</head>
+<body data-require-role="transporter">
+
+  <!-- =========================================================================
+       HEADER & NAVIGATION BAR
+       ========================================================================= -->
+  <header class="trans-header">
+    <div class="trans-header-inner">
+      <a href="dashboard.html" class="trans-brand">
+        <div class="brand-icon-box"><i data-lucide="sprout"></i></div>
+        <span class="trans-brand-text">
+          Krishi<span>Shetra</span>
+          <span class="trans-brand-badge">Transporter Hub</span>
+        </span>
+      </a>
+
+      <nav>
+        <ul class="trans-nav-menu" id="transNavMenu">
+          <li><a href="dashboard.html" class="trans-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search" style="width:16px;height:16px;"></i> Available Loads</a></li>
+          <li><a href="active-trips.html" class="trans-nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> Active Trips</a></li>
+          <li><a href="fleet.html" class="trans-nav-link active"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Fleet</a></li>
+          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
+          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
+          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
+          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a></li>
+        </ul>
+      </nav>
+
+      <div class="trans-header-actions">
+        <a href="../index.html" class="portal-switch-btn" title="Go to FPO Dashboard">
+          <i data-lucide="repeat" style="width:14px;height:14px;"></i> FPO Hub
+        </a>
+
+        <button class="trans-btn-icon" title="Notifications" onclick="showToast('All 14 fleet trucks passed quarterly fitness audit.')">
+          <i data-lucide="bell" style="width:18px;height:18px;"></i>
+          <span class="trans-notif-dot"></span>
+        </button>
+
+        <div class="trans-profile-wrap" id="transProfileWrap">
+          <button type="button" class="trans-user-pill" id="btnTransProfile" aria-expanded="false" aria-haspopup="true" aria-label="Transporter profile menu">
+            <div class="trans-user-avatar" id="transHeaderAvatar">KE</div>
+            <div class="trans-user-info">
+              <span class="trans-user-name" id="transHeaderName">Kisan Express</span>
+              <span class="trans-user-role">Gold Carrier ✓</span>
+            </div>
+            <i data-lucide="chevron-down" class="trans-user-chevron"></i>
+          </button>
+
+          <div class="trans-profile-dropdown" id="transProfileDropdown" role="menu">
+            <div class="trans-dropdown-header">
+              <div class="trans-user-avatar trans-user-avatar--lg" id="transDropdownAvatar">KE</div>
+              <div style="overflow:hidden;">
+                <div class="trans-dropdown-name" id="transDropdownName">Kisan Express Logistics</div>
+                <div class="trans-dropdown-sub" id="transDropdownSub">Gold Carrier · VAHAN Verified</div>
+              </div>
+            </div>
+            <div class="trans-dropdown-sep"></div>
+            <a href="profile.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile & Fleet Info</a>
+            <a href="onboarding.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Compliance & Permits</a>
+            <a href="earnings.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="wallet" style="width:16px;height:16px;"></i> FASTag & Earnings</a>
+            <div class="trans-dropdown-sep"></div>
+            <a href="javascript:void(0)" class="trans-dropdown-item trans-dropdown-item--danger" id="transLogoutBtn" role="menuitem"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a>
+          </div>
+        </div>
+
+        <button class="trans-hamburger" id="transHamburger" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================= -->
+  <main class="trans-main">
+    <div class="trans-container">
+
+      <!-- Page Header & Action -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:24px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="badge-tag" style="background:#D1FAE5;color:#065F46;font-weight:700;font-size:12px;">VAHAN / Sarathi Verified Fleet</span>
+            <span style="font-size:12px;color:var(--text-muted);">● 14 Registered Vehicles</span>
+          </div>
+          <h1 style="font-size:28px;font-weight:800;color:var(--text-heading);font-family:var(--font-serif);">Commercial Fleet & Vehicle Roster</h1>
+          <p style="color:var(--text-secondary);font-size:14px;margin-top:2px;">
+            Manage heavy multi-axles, open-body trucks, cold chain reefers, fitness certifications, and FASTag balances.
+          </p>
+        </div>
+        
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn btn-secondary" onclick="showToast('Fleet compliance report exported as PDF!', 'success')"><i data-lucide="download" style="width:15px;height:15px;"></i> Export PDF</button>
+          <button class="btn btn-amber" onclick="openAddVehicleModal()"><i data-lucide="plus-circle" style="width:15px;height:15px;"></i> Register New Vehicle</button>
+        </div>
+      </div>
+
+      <!-- Fleet Metrics Grid -->
+      <div class="stats-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px;">
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">Total Fleet</span>
+            <span class="stat-kpi-badge up">100% AIS-140</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">14 Trucks</div>
+          <div class="stat-kpi-sub">Total Capacity: 218 Metric Tons</div>
+        </div>
+
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">In Active Transit</span>
+            <span class="stat-kpi-badge up">Live Highway</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">5 Trucks</div>
+          <div class="stat-kpi-sub">3 Onion · 1 Reefer · 1 Wheat</div>
+        </div>
+
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">Available at Hubs</span>
+            <span class="stat-kpi-badge info">Ready to Load</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">8 Trucks</div>
+          <div class="stat-kpi-sub">Nashik (4) · Pune (2) · Surat (2)</div>
+        </div>
+
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">FASTag Wallet Balance</span>
+            <span class="stat-kpi-badge up">Auto-Recharge</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">₹14,850</div>
+          <div class="stat-kpi-sub">Linked to NETC Fleet FASTag</div>
+        </div>
+      </div>
+
+      <!-- Vehicle Filter and Search -->
+      <div class="card-panel" style="padding:16px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="pill-chip active" onclick="filterFleet('ALL', this)">All Fleet (14)</button>
+            <button class="pill-chip" onclick="filterFleet('Available', this)">Available (8)</button>
+            <button class="pill-chip" onclick="filterFleet('In Transit', this)">In Transit (5)</button>
+            <button class="pill-chip" onclick="filterFleet('Maintenance', this)">Maintenance (1)</button>
+          </div>
+
+          <div style="position:relative;min-width:240px;">
+            <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-muted);"></i>
+            <input type="text" id="fleetSearchInput" class="form-input" placeholder="Search vehicle no, type, driver..." style="padding-left:32px;font-size:13px;" oninput="searchFleetTable()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Fleet Table / Card Panel -->
+      <div class="card-panel" style="padding:0;overflow:hidden;">
+        <div style="overflow-x:auto;">
+          <table class="data-table" id="fleetTable">
+            <thead>
+              <tr>
+                <th>Vehicle No / Model</th>
+                <th>Type & Capacity</th>
+                <th>Assigned Driver</th>
+                <th>Status</th>
+                <th>VAHAN RC & Fitness</th>
+                <th>Insurance</th>
+                <th>GPS Status</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="fleetTableBody">
+              <!-- Rendered via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="trans-footer">
+    <div class="trans-footer-inner">
+      <div>© 2026 KrishiShetra Agri-Logistics Infrastructure Ltd. · VAHAN & Sarathi Integrated</div>
+      <div style="display:flex;gap:16px;">
+        <a href="onboarding.html" style="color:var(--text-secondary);text-decoration:none;">Compliance & Permits</a>
+        <a href="earnings.html" style="color:var(--text-secondary);text-decoration:none;">FASTag Escrow</a>
+        <a href="profile.html" style="color:var(--text-secondary);text-decoration:none;">Carrier Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/transporter-data.js"></script>
+  <script src="js/transporter.js"></script>
+  <script>
+    let currentFleetFilter = 'ALL';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderFleetTable();
+    });
+
+    function filterFleet(status, btn) {
+      document.querySelectorAll('.pill-chip').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      currentFleetFilter = status;
+      renderFleetTable();
+    }
+
+    function searchFleetTable() {
+      renderFleetTable();
+    }
+
+    function renderFleetTable() {
+      const tbody = document.getElementById('fleetTableBody');
+      const search = (document.getElementById('fleetSearchInput')?.value || '').toLowerCase();
+      if (!tbody) return;
+
+      let list = TransporterData.fleet;
+      if (currentFleetFilter !== 'ALL') {
+        list = list.filter(f => f.status.toLowerCase() === currentFleetFilter.toLowerCase());
+      }
+      if (search) {
+        list = list.filter(f => 
+          f.regNo.toLowerCase().includes(search) ||
+          f.type.toLowerCase().includes(search) ||
+          f.driver.toLowerCase().includes(search)
+        );
+      }
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted);">No vehicles match your search criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(veh => `
+        <tr>
+          <td>
+            <div style="font-weight:800;font-size:14px;color:var(--text-heading);font-family:monospace;">${veh.regNo}</div>
+            <div style="font-size:11.5px;color:var(--text-secondary);">${veh.id} · AIS-140 GPS</div>
+          </td>
+          <td>
+            <div style="font-weight:700;font-size:13px;">${veh.type}</div>
+            <div style="font-size:11.5px;color:var(--green-mid);font-weight:600;">Payload: ${veh.capacity}</div>
+          </td>
+          <td>
+            <div style="font-size:13px;font-weight:700;color:var(--text-primary);">${veh.driver}</div>
+            <div style="font-size:11.5px;color:var(--text-muted);">${veh.driver !== 'Unassigned' ? 'Commercial DL Active' : 'Standby'}</div>
+          </td>
+          <td>
+            <span class="trip-status-badge ${veh.status === 'In Transit' ? 'in-transit' : (veh.status === 'Available' ? 'loading' : 'toll-plaza')}">
+              ● ${veh.status}
+            </span>
+          </td>
+          <td>
+            <div style="font-size:12px;font-weight:700;color:var(--status-success-text);"><i data-lucide="check-circle" style="width:12px;height:12px;display:inline;"></i> RC Valid (${veh.rcExpiry.split('-')[0]})</div>
+            <div style="font-size:11px;color:var(--text-secondary);">Fitness: ${veh.fitnessExpiry}</div>
+          </td>
+          <td>
+            <div style="font-size:12px;color:var(--text-primary);">${veh.insuranceExpiry}</div>
+            <div style="font-size:11px;color:var(--status-success-text);">National Form 48 Active</div>
+          </td>
+          <td>
+            <span style="font-size:12px;font-weight:700;color:#065F46;background:#D1FAE5;padding:2px 8px;border-radius:4px;display:inline-flex;align-items:center;gap:4px;">
+              <span style="width:6px;height:6px;border-radius:50%;background:#10B981;"></span> Online
+            </span>
+          </td>
+          <td style="text-align:right;">
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Vehicle ${veh.regNo} telemetry stream opened.')" title="Vehicle Details"><i data-lucide="eye" style="width:13px;height:13px;"></i></button>
+            <button class="btn btn-outline-green btn-sm" onclick="showToast('FASTag wallet recharged for ${veh.regNo}.')" title="Recharge FASTag"><i data-lucide="zap" style="width:13px;height:13px;"></i></button>
+          </td>
+        </tr>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

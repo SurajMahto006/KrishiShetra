@@ -1,1 +1,377 @@
-﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Loads & Freight Marketplace | KrishiShetra Transporter</title>
+  <meta name="description" content="Browse and bid on farm-to-mandi agri-freight loads across India. Guaranteed escrow payouts and zero deadhead return loads.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="css/transporter.css">
+</head>
+<body data-require-role="transporter">
+
+  <!-- =========================================================================
+       HEADER & NAVIGATION BAR
+       ========================================================================= -->
+  <header class="trans-header">
+    <div class="trans-header-inner">
+      <!-- Brand -->
+      <a href="dashboard.html" class="trans-brand">
+        <div class="brand-icon-box"><i data-lucide="sprout"></i></div>
+        <span class="trans-brand-text">
+          Krishi<span>Shetra</span>
+          <span class="trans-brand-badge">Transporter Hub</span>
+        </span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav>
+        <ul class="trans-nav-menu" id="transNavMenu">
+          <li><a href="dashboard.html" class="trans-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="available-loads.html" class="trans-nav-link active"><i data-lucide="package-search" style="width:16px;height:16px;"></i> Available Loads</a></li>
+          <li><a href="active-trips.html" class="trans-nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> Active Trips</a></li>
+          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Fleet</a></li>
+          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
+          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
+          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
+          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a></li>
+        </ul>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="trans-header-actions">
+        <a href="../index.html" class="portal-switch-btn" title="Go to FPO Dashboard">
+          <i data-lucide="repeat" style="width:14px;height:14px;"></i> FPO Hub
+        </a>
+
+        <button class="trans-btn-icon" title="Notifications" onclick="showToast('3 new loads posted near Nashik & Pune!')">
+          <i data-lucide="bell" style="width:18px;height:18px;"></i>
+          <span class="trans-notif-dot"></span>
+        </button>
+
+        <div class="trans-profile-wrap" id="transProfileWrap">
+          <button type="button" class="trans-user-pill" id="btnTransProfile" aria-expanded="false" aria-haspopup="true" aria-label="Transporter profile menu">
+            <div class="trans-user-avatar" id="transHeaderAvatar">KE</div>
+            <div class="trans-user-info">
+              <span class="trans-user-name" id="transHeaderName">Kisan Express</span>
+              <span class="trans-user-role">Gold Carrier ✓</span>
+            </div>
+            <i data-lucide="chevron-down" class="trans-user-chevron"></i>
+          </button>
+
+          <div class="trans-profile-dropdown" id="transProfileDropdown" role="menu">
+            <div class="trans-dropdown-header">
+              <div class="trans-user-avatar trans-user-avatar--lg" id="transDropdownAvatar">KE</div>
+              <div style="overflow:hidden;">
+                <div class="trans-dropdown-name" id="transDropdownName">Kisan Express Logistics</div>
+                <div class="trans-dropdown-sub" id="transDropdownSub">Gold Carrier · VAHAN Verified</div>
+              </div>
+            </div>
+            <div class="trans-dropdown-sep"></div>
+            <a href="profile.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile & Fleet Info</a>
+            <a href="onboarding.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Compliance & Permits</a>
+            <a href="earnings.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="wallet" style="width:16px;height:16px;"></i> FASTag & Earnings</a>
+            <div class="trans-dropdown-sep"></div>
+            <a href="javascript:void(0)" class="trans-dropdown-item trans-dropdown-item--danger" id="transLogoutBtn" role="menuitem"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a>
+          </div>
+        </div>
+
+        <button class="trans-hamburger" id="transHamburger" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================= -->
+  <main class="trans-main">
+    <div class="trans-container">
+
+      <!-- Page Title & Quick Actions -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:24px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="badge-tag" style="background:var(--green-pale);color:var(--green-deep);font-weight:700;font-size:12px;">Live Freight Exchange</span>
+            <span style="font-size:12px;color:var(--text-muted);">● Updated 2 mins ago</span>
+          </div>
+          <h1 style="font-size:28px;font-weight:800;color:var(--text-heading);font-family:var(--font-serif);">Available Agricultural Loads Board</h1>
+          <p style="color:var(--text-secondary);font-size:14px;margin-top:2px;">
+            Verified farm-to-mandi cargo requests with 100% Escrow protected payments and instant booking.
+          </p>
+        </div>
+        
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn btn-secondary" onclick="refreshLoads()"><i data-lucide="refresh-cw" style="width:15px;height:15px;"></i> Refresh Feed</button>
+          <a href="active-trips.html" class="btn btn-amber"><i data-lucide="navigation" style="width:15px;height:15px;"></i> View Active Trips</a>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Ribbon -->
+      <div class="stats-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px;">
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">Active Load Postings</span>
+            <span class="stat-kpi-badge up">18 Open</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">₹8.42 Lakhs</div>
+          <div class="stat-kpi-sub">Total Available Freight GMV</div>
+        </div>
+
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">Top Corridor Rate</span>
+            <span class="stat-kpi-badge up">High Margin</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">₹6,800 / MT</div>
+          <div class="stat-kpi-sub">Ratnagiri ➔ Azadpur (Reefer)</div>
+        </div>
+
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">Return Loads Nearby</span>
+            <span class="stat-kpi-badge info">Zero Deadhead</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">6 Matches</div>
+          <div class="stat-kpi-sub">Near Vashi APMC & Surat</div>
+        </div>
+
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">Escrow Payout SLA</span>
+            <span class="stat-kpi-badge up">Instant</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">&lt; 15 Mins</div>
+          <div class="stat-kpi-sub">Post POD OTP verification</div>
+        </div>
+      </div>
+
+      <!-- Search, Filters and Sort Toolbar -->
+      <div class="card-panel" style="margin-bottom:24px;padding:18px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;align-items:center;">
+          <!-- Search Input -->
+          <div style="position:relative;">
+            <i data-lucide="search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);"></i>
+            <input type="text" id="loadSearchInput" class="form-input" placeholder="Search commodity, origin, destination..." style="padding-left:36px;" oninput="applyFilters()">
+          </div>
+
+          <!-- Commodity Filter -->
+          <div>
+            <select id="commodityFilter" class="form-select" onchange="applyFilters()">
+              <option value="ALL">All Commodities (All)</option>
+              <option value="Onion">Onions & Bulbs</option>
+              <option value="Mango">Mangoes & Fruits (Cold-Chain)</option>
+              <option value="Wheat">Wheat & Grains</option>
+              <option value="Tomato">Tomatoes & Vegetables</option>
+              <option value="Cotton">Raw Cotton (Bales)</option>
+              <option value="Soybean">Soybean & Pulses</option>
+            </select>
+          </div>
+
+          <!-- Vehicle Type Filter -->
+          <div>
+            <select id="truckTypeFilter" class="form-select" onchange="applyFilters()">
+              <option value="ALL">All Vehicle Types</option>
+              <option value="10-Wheeler">10-Wheeler (16 - 20 MT)</option>
+              <option value="Reefer">Cold Chain Reefer</option>
+              <option value="Eicher">14ft / 19ft Eicher Closed</option>
+              <option value="Tata 407">Tata 407 / Pickup (2.5 - 4 MT)</option>
+              <option value="Multi-Axle">Multi-Axle 25+ MT</option>
+            </select>
+          </div>
+
+          <!-- Sort Order -->
+          <div>
+            <select id="sortFilter" class="form-select" onchange="applyFilters()">
+              <option value="PAYOUT_DESC">Highest Total Freight (₹ High to Low)</option>
+              <option value="RATE_DESC">Highest Rate per MT (₹/MT)</option>
+              <option value="DISTANCE_ASC">Shortest Route Distance</option>
+              <option value="URGENCY">Urgency & Express Pickup</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Filter Pill Chips -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--border-subtle);">
+          <span style="font-size:12px;font-weight:700;color:var(--text-muted);display:flex;align-items:center;gap:4px;"><i data-lucide="sliders-horizontal" style="width:13px;height:13px;"></i> Quick Corridors:</span>
+          <button class="pill-chip active" onclick="setCorridorFilter('ALL', this)">All Corridors</button>
+          <button class="pill-chip" onclick="setCorridorFilter('Nashik', this)">Nashik ➔ Mumbai APMC</button>
+          <button class="pill-chip" onclick="setCorridorFilter('Pune', this)">Pune ➔ Surat APMC</button>
+          <button class="pill-chip" onclick="setCorridorFilter('Ratnagiri', this)">Konkan ➔ Delhi Reefer</button>
+          <button class="pill-chip" onclick="setCorridorFilter('MP', this)">MP ➔ Gujarat Corridors</button>
+        </div>
+      </div>
+
+      <!-- Loads Grid Container -->
+      <div id="loadsGrid" class="dashboard-grid-2">
+        <!-- Rendered dynamically via transporter.js / TransporterData -->
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="trans-footer">
+    <div class="trans-footer-inner">
+      <div>© 2026 KrishiShetra Agri-Logistics Infrastructure Ltd. · VAHAN & Sarathi Integrated</div>
+      <div style="display:flex;gap:16px;">
+        <a href="onboarding.html" style="color:var(--text-secondary);text-decoration:none;">Compliance & Permits</a>
+        <a href="earnings.html" style="color:var(--text-secondary);text-decoration:none;">FASTag Escrow</a>
+        <a href="profile.html" style="color:var(--text-secondary);text-decoration:none;">Carrier Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/transporter-data.js"></script>
+  <script src="js/transporter.js"></script>
+  <script>
+    let currentCorridor = 'ALL';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderLoads();
+    });
+
+    function setCorridorFilter(corridor, btn) {
+      document.querySelectorAll('.pill-chip').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      currentCorridor = corridor;
+      applyFilters();
+    }
+
+    function refreshLoads() {
+      showToast('Refreshing real-time agricultural load feed from Mandi APMCs...');
+      renderLoads();
+    }
+
+    function applyFilters() {
+      const search = (document.getElementById('loadSearchInput')?.value || '').toLowerCase();
+      const commodity = document.getElementById('commodityFilter')?.value || 'ALL';
+      const truck = document.getElementById('truckTypeFilter')?.value || 'ALL';
+      const sort = document.getElementById('sortFilter')?.value || 'PAYOUT_DESC';
+
+      let list = [...TransporterData.availableLoads];
+
+      if (search) {
+        list = list.filter(l => 
+          l.commodity.toLowerCase().includes(search) ||
+          l.origin.toLowerCase().includes(search) ||
+          l.destination.toLowerCase().includes(search) ||
+          l.fpoName.toLowerCase().includes(search)
+        );
+      }
+
+      if (commodity !== 'ALL') {
+        list = list.filter(l => l.commodity.toLowerCase().includes(commodity.toLowerCase()));
+      }
+
+      if (truck !== 'ALL') {
+        list = list.filter(l => l.truckRequired.toLowerCase().includes(truck.toLowerCase()));
+      }
+
+      if (currentCorridor !== 'ALL') {
+        list = list.filter(l => l.origin.includes(currentCorridor) || l.destination.includes(currentCorridor));
+      }
+
+      if (sort === 'PAYOUT_DESC') {
+        list.sort((a, b) => b.totalPayout - a.totalPayout);
+      } else if (sort === 'RATE_DESC') {
+        list.sort((a, b) => b.ratePerMT - a.ratePerMT);
+      } else if (sort === 'DISTANCE_ASC') {
+        list.sort((a, b) => parseInt(a.distance) - parseInt(b.distance));
+      }
+
+      renderLoadsGrid(list);
+    }
+
+    function renderLoads() {
+      renderLoadsGrid(TransporterData.availableLoads);
+    }
+
+    function renderLoadsGrid(loads) {
+      const grid = document.getElementById('loadsGrid');
+      if (!grid) return;
+
+      if (!loads || loads.length === 0) {
+        grid.innerHTML = `
+          <div class="card-panel" style="grid-column: 1 / -1; text-align:center; padding: 48px 24px;">
+            <div style="font-size:48px;margin-bottom:12px;">🚚</div>
+            <h3 style="font-size:18px;font-weight:700;color:var(--text-heading);">No matching loads found</h3>
+            <p style="font-size:14px;color:var(--text-secondary);margin-top:6px;max-width:400px;margin-left:auto;margin-right:auto;">
+              Try clearing search filters or changing vehicle types to see all live agri-freight requests across India.
+            </p>
+            <button class="btn btn-secondary btn-sm" style="margin-top:16px;" onclick="document.getElementById('loadSearchInput').value='';document.getElementById('commodityFilter').value='ALL';document.getElementById('truckTypeFilter').value='ALL';setCorridorFilter('ALL', document.querySelector('.pill-chip'));applyFilters();">Reset All Filters</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = loads.map(load => `
+        <div class="load-card">
+          <div class="load-card-header">
+            <div>
+              <span class="load-crop-name">${load.icon || '🌾'} ${load.commodity}</span>
+              <div class="load-fpo-name"><i data-lucide="building-2" style="width:13px;height:13px;display:inline;vertical-align:middle;"></i> ${load.fpoName}</div>
+            </div>
+            <span class="urgency-badge ${load.urgency.toLowerCase().includes('express') || load.urgency.toLowerCase().includes('high') ? 'express' : 'normal'}">${load.urgency}</span>
+          </div>
+
+          <div class="route-timeline">
+            <div class="route-point">
+              <span class="route-dot origin"></span>
+              <div class="route-city">${load.origin}</div>
+              <div class="route-mandi">Loading: ${load.pickupDate}</div>
+            </div>
+            <div class="route-point">
+              <span class="route-dot dest"></span>
+              <div class="route-city">${load.destination}</div>
+              <div class="route-mandi">Transit: ~${load.transitEst} (${load.distance})</div>
+            </div>
+          </div>
+
+          <div class="load-specs-grid">
+            <div class="load-spec-item">
+              <span class="spec-label">Weight</span>
+              <span class="spec-val">${load.weightMT} MT</span>
+            </div>
+            <div class="load-spec-item">
+              <span class="spec-label">Truck Type</span>
+              <span class="spec-val" style="font-size:11.5px;">${load.truckRequired}</span>
+            </div>
+            <div class="load-spec-item">
+              <span class="spec-label">Cold-Chain / Temp</span>
+              <span class="spec-val" style="font-size:11.5px;color:${load.tempRequired.includes('Ambient')?'var(--text-primary)':'#B45309'}">${load.tempRequired}</span>
+            </div>
+            <div class="load-spec-item">
+              <span class="spec-label">Payment Escrow</span>
+              <span class="spec-val" style="color:var(--status-success-text);font-size:11.5px;">100% Escrow</span>
+            </div>
+          </div>
+
+          <div class="load-card-footer">
+            <div class="load-price-box">
+              <div class="load-rate-total">₹${load.totalPayout.toLocaleString()}</div>
+              <div class="load-rate-sub">₹${load.ratePerMT} / MT · Guaranteed</div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary btn-sm" onclick="viewLoadDetail('${load.id}')"><i data-lucide="info" style="width:14px;height:14px;"></i> Details</button>
+              <button class="btn btn-amber btn-sm" onclick="viewLoadDetail('${load.id}')"><i data-lucide="check" style="width:14px;height:14px;"></i> Accept Load</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

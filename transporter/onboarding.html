@@ -1,1 +1,311 @@
-﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYC & Fleet Compliance Center | KrishiShetra Transporter</title>
+  <meta name="description" content="Transporter KYC Verification, VAHAN RC Validation, Sarathi DL Check, All-India Form 48 Goods Permit, and NETC FASTag setup.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="css/transporter.css">
+</head>
+<body data-require-role="transporter">
+
+  <!-- =========================================================================
+       HEADER & NAVIGATION BAR
+       ========================================================================= -->
+  <header class="trans-header">
+    <div class="trans-header-inner">
+      <a href="dashboard.html" class="trans-brand">
+        <div class="brand-icon-box"><i data-lucide="sprout"></i></div>
+        <span class="trans-brand-text">
+          Krishi<span>Shetra</span>
+          <span class="trans-brand-badge">Transporter Hub</span>
+        </span>
+      </a>
+
+      <nav>
+        <ul class="trans-nav-menu" id="transNavMenu">
+          <li><a href="dashboard.html" class="trans-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search" style="width:16px;height:16px;"></i> Available Loads</a></li>
+          <li><a href="active-trips.html" class="trans-nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> Active Trips</a></li>
+          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Fleet</a></li>
+          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
+          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
+          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
+          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a></li>
+        </ul>
+      </nav>
+
+      <div class="trans-header-actions">
+        <a href="../index.html" class="portal-switch-btn" title="Go to FPO Dashboard">
+          <i data-lucide="repeat" style="width:14px;height:14px;"></i> FPO Hub
+        </a>
+
+        <button class="trans-btn-icon" title="Notifications" onclick="showToast('Your Form 48 National Permit renewal was verified by VAHAN!')">
+          <i data-lucide="bell" style="width:18px;height:18px;"></i>
+          <span class="trans-notif-dot"></span>
+        </button>
+
+        <div class="trans-profile-wrap" id="transProfileWrap">
+          <button type="button" class="trans-user-pill" id="btnTransProfile" aria-expanded="false" aria-haspopup="true" aria-label="Transporter profile menu">
+            <div class="trans-user-avatar" id="transHeaderAvatar">KE</div>
+            <div class="trans-user-info">
+              <span class="trans-user-name" id="transHeaderName">Kisan Express</span>
+              <span class="trans-user-role">Gold Carrier ✓</span>
+            </div>
+            <i data-lucide="chevron-down" class="trans-user-chevron"></i>
+          </button>
+
+          <div class="trans-profile-dropdown" id="transProfileDropdown" role="menu">
+            <div class="trans-dropdown-header">
+              <div class="trans-user-avatar trans-user-avatar--lg" id="transDropdownAvatar">KE</div>
+              <div style="overflow:hidden;">
+                <div class="trans-dropdown-name" id="transDropdownName">Kisan Express Logistics</div>
+                <div class="trans-dropdown-sub" id="transDropdownSub">Gold Carrier · VAHAN Verified</div>
+              </div>
+            </div>
+            <div class="trans-dropdown-sep"></div>
+            <a href="profile.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile & Fleet Info</a>
+            <a href="onboarding.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Compliance & Permits</a>
+            <a href="earnings.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="wallet" style="width:16px;height:16px;"></i> FASTag & Earnings</a>
+            <div class="trans-dropdown-sep"></div>
+            <a href="javascript:void(0)" class="trans-dropdown-item trans-dropdown-item--danger" id="transLogoutBtn" role="menuitem"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a>
+          </div>
+        </div>
+
+        <button class="trans-hamburger" id="transHamburger" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================= -->
+  <main class="trans-main">
+    <div class="trans-container" style="max-width:980px;">
+
+      <!-- Page Header -->
+      <div style="text-align:center;margin-bottom:32px;">
+        <span class="badge-tag" style="background:#D1FAE5;color:#065F46;font-weight:700;font-size:12px;margin-bottom:8px;display:inline-block;">Ministry of Road Transport & Highways Compliant</span>
+        <h1 style="font-size:30px;font-weight:800;color:var(--text-heading);font-family:var(--font-serif);">Carrier Verification & Compliance Center</h1>
+        <p style="color:var(--text-secondary);font-size:15px;max-width:640px;margin:8px auto 0;">
+          Unlock high-value agri-corridor loads and instant escrow payouts by maintaining verified VAHAN, Sarathi, and FASTag credentials.
+        </p>
+      </div>
+
+      <!-- Stepper Indicator -->
+      <div class="onboarding-stepper-wrap" style="position:relative;margin-bottom:36px;">
+        <div class="stepper-track-bg" style="position:absolute;top:20px;left:10%;right:10%;height:3px;background:var(--border-light);z-index:0;"></div>
+        <div id="stepperProgressLine" style="position:absolute;top:20px;left:10%;width:0%;height:3px;background:var(--green-mid);z-index:1;transition:width 0.3s ease;"></div>
+
+        <div style="display:flex;justify-content:space-between;position:relative;z-index:2;">
+          <div class="step-node active" data-step="1" onclick="goToStep(1)" style="cursor:pointer;text-align:center;">
+            <div class="step-circle" style="width:42px;height:42px;border-radius:50%;background:var(--green-primary);color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:800;margin:0 auto 6px;box-shadow:0 0 0 4px var(--green-pale);">1</div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--text-heading);">Business & GST</div>
+          </div>
+
+          <div class="step-node" data-step="2" onclick="goToStep(2)" style="cursor:pointer;text-align:center;">
+            <div class="step-circle" style="width:42px;height:42px;border-radius:50%;background:var(--bg-elevated);color:var(--text-secondary);border:2px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-weight:800;margin:0 auto 6px;">2</div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--text-heading);">VAHAN RC & Permit</div>
+          </div>
+
+          <div class="step-node" data-step="3" onclick="goToStep(3)" style="cursor:pointer;text-align:center;">
+            <div class="step-circle" style="width:42px;height:42px;border-radius:50%;background:var(--bg-elevated);color:var(--text-secondary);border:2px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-weight:800;margin:0 auto 6px;">3</div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--text-heading);">Driver Sarathi DL</div>
+          </div>
+
+          <div class="step-node" data-step="4" onclick="goToStep(4)" style="cursor:pointer;text-align:center;">
+            <div class="step-circle" style="width:42px;height:42px;border-radius:50%;background:var(--bg-elevated);color:var(--text-secondary);border:2px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-weight:800;margin:0 auto 6px;">4</div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--text-heading);">Escrow & FASTag</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1: Business & GST -->
+      <div class="card-panel step-content-card" data-step="1" style="padding:28px;">
+        <h3 style="font-size:18px;font-weight:800;color:var(--text-heading);margin-bottom:4px;">1. Carrier Business & Identity Verification</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;">Provide your registered commercial transport entity details and GSTIN/PAN.</p>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Transport Entity Name</label>
+            <input type="text" class="form-input" value="Kisan Express Logistics Pvt Ltd">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Proprietor / Managing Director</label>
+            <input type="text" class="form-input" value="Virendra Patil">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">GSTIN (Commercial Goods Carriage)</label>
+            <input type="text" class="form-input" value="27AAECK1298P1Z8">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company PAN</label>
+            <input type="text" class="form-input" value="AAECK1298P">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload Certificate of Incorporation / GST Registration Certificate</label>
+          <div class="upload-dropzone" onclick="simulateDocUpload('gstCert', 'gstUploadStatus')">
+            <div class="upload-icon"><i data-lucide="file-check"></i></div>
+            <div style="font-size:14px;font-weight:700;">Click to upload GSTIN / PAN Certificate (PDF or JPG)</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="gstUploadStatus">
+              <span style="color:var(--status-success-text);font-weight:700;">✓ GSTIN Active & Matched with GST Portal</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:24px;">
+          <button class="btn btn-amber" onclick="nextStep()"><i data-lucide="arrow-right" style="width:16px;height:16px;"></i> Proceed to VAHAN RC</button>
+        </div>
+      </div>
+
+      <!-- Step 2: VAHAN RC & Form 48 Permit -->
+      <div class="card-panel step-content-card" data-step="2" style="padding:28px;display:none;">
+        <h3 style="font-size:18px;font-weight:800;color:var(--text-heading);margin-bottom:4px;">2. Vehicle Registration (RC) & National Permits</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;">Link your fleet to VAHAN 4.0 database for instant load eligibility across state borders.</p>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Primary Lead Vehicle Reg No.</label>
+            <input type="text" class="form-input" value="MH 15 EG 4820">
+          </div>
+          <div class="form-group">
+            <label class="form-label">All India Goods Permit Form 48 No.</label>
+            <input type="text" class="form-input" value="MH/NP/2024/091244">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Vehicle Fitness Expiry Date</label>
+            <input type="date" class="form-input" value="2027-08-20">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Comprehensive Commercial Insurance Expiry</label>
+            <input type="date" class="form-input" value="2027-04-15">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload National Permit (Form 48) or Smart RC</label>
+          <div class="upload-dropzone" onclick="simulateDocUpload('rcCert', 'rcUploadStatus')">
+            <div class="upload-icon"><i data-lucide="truck"></i></div>
+            <div style="font-size:14px;font-weight:700;">Upload National Permit Form 48 / RC Document</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="rcUploadStatus">
+              <span style="color:var(--status-success-text);font-weight:700;">✓ Form 48 Verified across 28 Indian States & UTs</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;margin-top:24px;">
+          <button class="btn btn-secondary" onclick="prevStep()"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
+          <button class="btn btn-amber" onclick="nextStep()"><i data-lucide="arrow-right" style="width:16px;height:16px;"></i> Proceed to Sarathi DL</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Driver Sarathi DL -->
+      <div class="card-panel step-content-card" data-step="3" style="padding:28px;display:none;">
+        <h3 style="font-size:18px;font-weight:800;color:var(--text-heading);margin-bottom:4px;">3. Driver SARATHI Driving License Verification</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;">Ensure all fleet drivers hold valid commercial Heavy Motor Vehicle (HMV/Trans) credentials.</p>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Lead Driver Name</label>
+            <input type="text" class="form-input" value="Sanjay Shinde">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Driving License Number (SARATHI)</label>
+            <input type="text" class="form-input" value="MH-15-2016-003892">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload Driving License Front & Back</label>
+          <div class="upload-dropzone" onclick="simulateDocUpload('dlCert', 'dlUploadStatus')">
+            <div class="upload-icon"><i data-lucide="id-card"></i></div>
+            <div style="font-size:14px;font-weight:700;">Upload Commercial HMV Driving License</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="dlUploadStatus">
+              <span style="color:var(--status-success-text);font-weight:700;">✓ SARATHI Database Record Verified · Valid till 2031</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;margin-top:24px;">
+          <button class="btn btn-secondary" onclick="prevStep()"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
+          <button class="btn btn-amber" onclick="nextStep()"><i data-lucide="arrow-right" style="width:16px;height:16px;"></i> Proceed to Bank & FASTag</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Bank Escrow & FASTag NETC -->
+      <div class="card-panel step-content-card" data-step="4" style="padding:28px;display:none;">
+        <h3 style="font-size:18px;font-weight:800;color:var(--text-heading);margin-bottom:4px;">4. Bank Account for Instant Payouts & NETC FASTag</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;">Receive freight earnings directly within 15 minutes of POD OTP verification.</p>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Bank Name</label>
+            <input type="text" class="form-input" value="HDFC Bank (Nashik City Branch)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Account Holder Name</label>
+            <input type="text" class="form-input" value="Kisan Express Logistics Pvt Ltd">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Account Number</label>
+            <input type="text" class="form-input" value="50200049281729">
+          </div>
+          <div class="form-group">
+            <label class="form-label">IFSC Code</label>
+            <input type="text" class="form-input" value="HDFC0001048">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Commercial Fleet FASTag Wallet ID / UPI VPA</label>
+          <input type="text" class="form-input" value="kisanlogistics@hdfcbank">
+        </div>
+
+        <div style="display:flex;justify-content:space-between;margin-top:24px;">
+          <button class="btn btn-secondary" onclick="prevStep()"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
+          <button class="btn btn-amber" onclick="nextStep()"><i data-lucide="check-circle-2" style="width:16px;height:16px;"></i> Complete Compliance Verification</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="trans-footer">
+    <div class="trans-footer-inner">
+      <div>© 2026 KrishiShetra Agri-Logistics Infrastructure Ltd. · VAHAN & Sarathi Integrated</div>
+      <div style="display:flex;gap:16px;">
+        <a href="onboarding.html" style="color:var(--text-secondary);text-decoration:none;">Compliance & Permits</a>
+        <a href="earnings.html" style="color:var(--text-secondary);text-decoration:none;">FASTag Escrow</a>
+        <a href="profile.html" style="color:var(--text-secondary);text-decoration:none;">Carrier Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/transporter-data.js"></script>
+  <script src="js/transporter.js"></script>
+</body>
+</html>

@@ -1,1 +1,290 @@
-﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver Roster & Crew Management | KrishiShetra Transporter</title>
+  <meta name="description" content="Manage verified commercial truck drivers, Sarathi driving licenses, safety scores, assigned vehicles, and real-time duty logs.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="css/transporter.css">
+</head>
+<body data-require-role="transporter">
+
+  <!-- =========================================================================
+       HEADER & NAVIGATION BAR
+       ========================================================================= -->
+  <header class="trans-header">
+    <div class="trans-header-inner">
+      <a href="dashboard.html" class="trans-brand">
+        <div class="brand-icon-box"><i data-lucide="sprout"></i></div>
+        <span class="trans-brand-text">
+          Krishi<span>Shetra</span>
+          <span class="trans-brand-badge">Transporter Hub</span>
+        </span>
+      </a>
+
+      <nav>
+        <ul class="trans-nav-menu" id="transNavMenu">
+          <li><a href="dashboard.html" class="trans-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search" style="width:16px;height:16px;"></i> Available Loads</a></li>
+          <li><a href="active-trips.html" class="trans-nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> Active Trips</a></li>
+          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Fleet</a></li>
+          <li><a href="drivers.html" class="trans-nav-link active"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
+          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
+          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
+          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a></li>
+        </ul>
+      </nav>
+
+      <div class="trans-header-actions">
+        <a href="../index.html" class="portal-switch-btn" title="Go to FPO Dashboard">
+          <i data-lucide="repeat" style="width:14px;height:14px;"></i> FPO Hub
+        </a>
+
+        <button class="trans-btn-icon" title="Notifications" onclick="showToast('Driver safety audit: 100% compliant this week!')">
+          <i data-lucide="bell" style="width:18px;height:18px;"></i>
+          <span class="trans-notif-dot"></span>
+        </button>
+
+        <div class="trans-profile-wrap" id="transProfileWrap">
+          <button type="button" class="trans-user-pill" id="btnTransProfile" aria-expanded="false" aria-haspopup="true" aria-label="Transporter profile menu">
+            <div class="trans-user-avatar" id="transHeaderAvatar">KE</div>
+            <div class="trans-user-info">
+              <span class="trans-user-name" id="transHeaderName">Kisan Express</span>
+              <span class="trans-user-role">Gold Carrier ✓</span>
+            </div>
+            <i data-lucide="chevron-down" class="trans-user-chevron"></i>
+          </button>
+
+          <div class="trans-profile-dropdown" id="transProfileDropdown" role="menu">
+            <div class="trans-dropdown-header">
+              <div class="trans-user-avatar trans-user-avatar--lg" id="transDropdownAvatar">KE</div>
+              <div style="overflow:hidden;">
+                <div class="trans-dropdown-name" id="transDropdownName">Kisan Express Logistics</div>
+                <div class="trans-dropdown-sub" id="transDropdownSub">Gold Carrier · VAHAN Verified</div>
+              </div>
+            </div>
+            <div class="trans-dropdown-sep"></div>
+            <a href="profile.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile & Fleet Info</a>
+            <a href="onboarding.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Compliance & Permits</a>
+            <a href="earnings.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="wallet" style="width:16px;height:16px;"></i> FASTag & Earnings</a>
+            <div class="trans-dropdown-sep"></div>
+            <a href="javascript:void(0)" class="trans-dropdown-item trans-dropdown-item--danger" id="transLogoutBtn" role="menuitem"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a>
+          </div>
+        </div>
+
+        <button class="trans-hamburger" id="transHamburger" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================= -->
+  <main class="trans-main">
+    <div class="trans-container">
+
+      <!-- Page Header & Action -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:24px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="badge-tag" style="background:#D1FAE5;color:#065F46;font-weight:700;font-size:12px;">Sarathi Govt Verified Crew</span>
+            <span style="font-size:12px;color:var(--text-muted);">● 12 Active Drivers</span>
+          </div>
+          <h1 style="font-size:28px;font-weight:800;color:var(--text-heading);font-family:var(--font-serif);">Driver Roster & Crew Dispatch</h1>
+          <p style="color:var(--text-secondary);font-size:14px;margin-top:2px;">
+            Monitor driver ratings, commercial HMV license validity, trip histories, and emergency contacts.
+          </p>
+        </div>
+        
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn btn-secondary" onclick="showToast('Driver roster sync complete.')"><i data-lucide="refresh-cw" style="width:15px;height:15px;"></i> Refresh</button>
+          <button class="btn btn-amber" onclick="openAddDriverModal()"><i data-lucide="user-plus" style="width:15px;height:15px;"></i> Onboard New Driver</button>
+        </div>
+      </div>
+
+      <!-- Driver Metrics -->
+      <div class="stats-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px;">
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">Total Roster</span>
+            <span class="stat-kpi-badge up">100% Verified</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">12 Drivers</div>
+          <div class="stat-kpi-sub">Commercial HMV & Reefer certified</div>
+        </div>
+
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">On Highway Duty</span>
+            <span class="stat-kpi-badge up">5 Active</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">5 Drivers</div>
+          <div class="stat-kpi-sub">Real-time GPS connected</div>
+        </div>
+
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">Average Safety Rating</span>
+            <span class="stat-kpi-badge up">★ 4.88 / 5.0</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">98.4%</div>
+          <div class="stat-kpi-sub">Zero-accident safety record</div>
+        </div>
+
+        <div class="stat-kpi-card" style="padding:16px;">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl" style="font-size:12px;font-weight:700;text-transform:uppercase;">Standby Drivers</span>
+            <span class="stat-kpi-badge info">Ready</span>
+          </div>
+          <div class="stat-kpi-val" style="font-size:24px;margin:4px 0;">7 Available</div>
+          <div class="stat-kpi-sub">Nashik (4) · Pune (3)</div>
+        </div>
+      </div>
+
+      <!-- Driver Filter & Search -->
+      <div class="card-panel" style="padding:16px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="pill-chip active" onclick="filterDrivers('ALL', this)">All Drivers (12)</button>
+            <button class="pill-chip" onclick="filterDrivers('Available', this)">Available (7)</button>
+            <button class="pill-chip" onclick="filterDrivers('On Trip', this)">On Trip (5)</button>
+          </div>
+
+          <div style="position:relative;min-width:240px;">
+            <i data-lucide="search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-muted);"></i>
+            <input type="text" id="driverSearchInput" class="form-input" placeholder="Search driver name, DL, phone..." style="padding-left:32px;font-size:13px;" oninput="searchDriversTable()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Drivers Grid -->
+      <div id="driversGrid" class="dashboard-grid-3">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="trans-footer">
+    <div class="trans-footer-inner">
+      <div>© 2026 KrishiShetra Agri-Logistics Infrastructure Ltd. · VAHAN & Sarathi Integrated</div>
+      <div style="display:flex;gap:16px;">
+        <a href="onboarding.html" style="color:var(--text-secondary);text-decoration:none;">Compliance & Permits</a>
+        <a href="earnings.html" style="color:var(--text-secondary);text-decoration:none;">FASTag Escrow</a>
+        <a href="profile.html" style="color:var(--text-secondary);text-decoration:none;">Carrier Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/transporter-data.js"></script>
+  <script src="js/transporter.js"></script>
+  <script>
+    let currentDriverFilter = 'ALL';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDriversTable();
+    });
+
+    function filterDrivers(status, btn) {
+      document.querySelectorAll('.pill-chip').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      currentDriverFilter = status;
+      renderDriversTable();
+    }
+
+    function searchDriversTable() {
+      renderDriversTable();
+    }
+
+    function renderDriversTable() {
+      const grid = document.getElementById('driversGrid');
+      const search = (document.getElementById('driverSearchInput')?.value || '').toLowerCase();
+      if (!grid) return;
+
+      let list = TransporterData.drivers;
+      if (currentDriverFilter !== 'ALL') {
+        list = list.filter(d => d.status.toLowerCase() === currentDriverFilter.toLowerCase());
+      }
+      if (search) {
+        list = list.filter(d => 
+          d.name.toLowerCase().includes(search) ||
+          d.phone.toLowerCase().includes(search) ||
+          d.dlNumber.toLowerCase().includes(search) ||
+          d.assignedTruck.toLowerCase().includes(search)
+        );
+      }
+
+      if (list.length === 0) {
+        grid.innerHTML = `<div class="card-panel" style="grid-column: 1/-1; text-align:center; padding:32px; color:var(--text-muted);">No drivers match your search criteria.</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(drv => `
+        <div class="card-panel" style="padding:18px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+              <div style="display:flex;gap:12px;align-items:center;">
+                <div class="trans-user-avatar" style="width:44px;height:44px;font-size:16px;background:var(--green-primary);color:var(--amber);">
+                  ${drv.name.split(' ').map(n=>n[0]).join('').slice(0,2)}
+                </div>
+                <div>
+                  <h4 style="font-size:16px;font-weight:800;color:var(--text-heading);">${drv.name}</h4>
+                  <div style="font-size:11.5px;color:var(--text-secondary);">${drv.id} · ${drv.experience} Exp</div>
+                </div>
+              </div>
+              <span class="trip-status-badge ${drv.status==='On Trip'?'in-transit':'loading'}">
+                ● ${drv.status}
+              </span>
+            </div>
+
+            <div style="background:var(--bg-surface);padding:10px 12px;border-radius:var(--radius-sm);margin-bottom:12px;border:1px solid var(--border-subtle);font-size:12px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="color:var(--text-muted);">Sarathi DL:</span>
+                <span style="font-weight:700;font-family:monospace;color:var(--text-primary);">${drv.dlNumber}</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="color:var(--text-muted);">DL Class:</span>
+                <span style="font-weight:600;color:var(--green-mid);">${drv.dlType}</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;">
+                <span style="color:var(--text-muted);">Assigned Truck:</span>
+                <span style="font-weight:700;color:var(--text-heading);">${drv.assignedTruck}</span>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:14px;padding:0 4px;">
+              <div>
+                <span style="color:var(--amber-dark);font-weight:700;">★ ${drv.safetyRating.toFixed(2)}</span>
+                <span style="color:var(--text-muted);"> Safety Score</span>
+              </div>
+              <div style="color:var(--text-secondary);font-weight:600;">
+                ${drv.trips} Trips Completed
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;border-top:1px solid var(--border-subtle);padding-top:12px;">
+            <a href="tel:${drv.phone}" class="btn btn-secondary btn-sm" style="flex:1;text-align:center;text-decoration:none;"><i data-lucide="phone" style="width:13px;height:13px;"></i> Call</a>
+            <button class="btn btn-outline-green btn-sm" style="flex:1;" onclick="showToast('Assigned truck MH 15 EG 4820 route info sent to ${drv.name}.')"><i data-lucide="send" style="width:13px;height:13px;"></i> Dispatch</button>
+          </div>
+        </div>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

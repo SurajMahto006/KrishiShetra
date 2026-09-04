@@ -1,1 +1,366 @@
-﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Active Trips & Live GPS Telemetry Radar | KrishiShetra Transporter</title>
+  <meta name="description" content="Live GPS Telemetry Console, Real-time Agri-Corridor Tracking, Reefer Temperature Sensors, FASTag Toll Crossing, and Digital POD Verification.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS & JS for Live GPS Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="css/transporter.css">
+  <style>
+    .trip-map-card {
+      position: relative;
+      background: #092F25;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(91, 154, 114, 0.3);
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+    #activeTripsMap {
+      width: 100%;
+      height: 440px;
+      background: #061e18;
+      z-index: 1;
+    }
+    .map-overlay-panel {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 1000;
+      background: rgba(13, 68, 53, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(200, 150, 62, 0.35);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      color: #FFF;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      max-width: 300px;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #0D4435 !important;
+      color: #FFFFFF !important;
+      border-radius: 12px !important;
+      border: 1px solid #D97706 !important;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
+    }
+    .leaflet-popup-tip {
+      background: #0D4435 !important;
+    }
+  </style>
+</head>
+<body data-require-role="transporter">
+
+  <!-- =========================================================================
+       HEADER & NAVIGATION BAR
+       ========================================================================= -->
+  <header class="trans-header">
+    <div class="trans-header-inner">
+      <a href="dashboard.html" class="trans-brand">
+        <div class="brand-icon-box"><i data-lucide="sprout"></i></div>
+        <span class="trans-brand-text">
+          Krishi<span>Shetra</span>
+          <span class="trans-brand-badge">Transporter Hub</span>
+        </span>
+      </a>
+
+      <nav>
+        <ul class="trans-nav-menu" id="transNavMenu">
+          <li><a href="dashboard.html" class="trans-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search" style="width:16px;height:16px;"></i> Available Loads</a></li>
+          <li><a href="active-trips.html" class="trans-nav-link active"><i data-lucide="truck" style="width:16px;height:16px;"></i> Active Trips</a></li>
+          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Fleet</a></li>
+          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
+          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
+          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
+          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a></li>
+        </ul>
+      </nav>
+
+      <div class="trans-header-actions">
+        <a href="../index.html" class="portal-switch-btn" title="Go to FPO Dashboard">
+          <i data-lucide="repeat" style="width:14px;height:14px;"></i> FPO Hub
+        </a>
+
+        <button class="trans-btn-icon" title="Notifications" onclick="showToast('Truck MH 15 EG 4820 crossed Kasara Ghat Toll plaza.')">
+          <i data-lucide="bell" style="width:18px;height:18px;"></i>
+          <span class="trans-notif-dot"></span>
+        </button>
+
+        <div class="trans-profile-wrap" id="transProfileWrap">
+          <button type="button" class="trans-user-pill" id="btnTransProfile" aria-expanded="false" aria-haspopup="true" aria-label="Transporter profile menu">
+            <div class="trans-user-avatar" id="transHeaderAvatar">KE</div>
+            <div class="trans-user-info">
+              <span class="trans-user-name" id="transHeaderName">Kisan Express</span>
+              <span class="trans-user-role">Gold Carrier ✓</span>
+            </div>
+            <i data-lucide="chevron-down" class="trans-user-chevron"></i>
+          </button>
+
+          <div class="trans-profile-dropdown" id="transProfileDropdown" role="menu">
+            <div class="trans-dropdown-header">
+              <div class="trans-user-avatar trans-user-avatar--lg" id="transDropdownAvatar">KE</div>
+              <div style="overflow:hidden;">
+                <div class="trans-dropdown-name" id="transDropdownName">Kisan Express Logistics</div>
+                <div class="trans-dropdown-sub" id="transDropdownSub">Gold Carrier · VAHAN Verified</div>
+              </div>
+            </div>
+            <div class="trans-dropdown-sep"></div>
+            <a href="profile.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile & Fleet Info</a>
+            <a href="onboarding.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Compliance & Permits</a>
+            <a href="earnings.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="wallet" style="width:16px;height:16px;"></i> FASTag & Earnings</a>
+            <div class="trans-dropdown-sep"></div>
+            <a href="javascript:void(0)" class="trans-dropdown-item trans-dropdown-item--danger" id="transLogoutBtn" role="menuitem"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a>
+          </div>
+        </div>
+
+        <button class="trans-hamburger" id="transHamburger" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================= -->
+  <main class="trans-main">
+    <div class="trans-container">
+
+      <!-- Page Title & Actions -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:20px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="badge-tag" style="background:#D1FAE5;color:#065F46;font-weight:700;font-size:12px;">5 Trucks Live GPS Telemetry</span>
+            <span style="font-size:12px;color:var(--text-muted);">● AIS 140 Govt GPS Connected</span>
+          </div>
+          <h1 style="font-size:28px;font-weight:800;color:var(--text-heading);font-family:var(--font-serif);">Active Highway Transit & Telemetry</h1>
+          <p style="color:var(--text-secondary);font-size:14px;margin-top:2px;">
+            Live satellite tracking, reefer temperature graphs, FASTag toll updates, and instant digital Proof of Delivery (POD).
+          </p>
+        </div>
+        
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn btn-secondary" onclick="simulateGpsSync()"><i data-lucide="radio" style="width:15px;height:15px;color:var(--amber);"></i> Sync GPS Radar</button>
+          <a href="available-loads.html" class="btn btn-amber"><i data-lucide="plus" style="width:15px;height:15px;"></i> Find Return Loads</a>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           INTERACTIVE LEAFLET HIGHWAY MAP CONSOLE
+           ===================================================================== -->
+      <div class="trip-map-card">
+        <div id="activeTripsMap"></div>
+        <div class="map-overlay-panel">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#10B981;box-shadow:0 0 10px #10B981;animation:pulse 1.5s infinite;"></div>
+            <strong style="font-size:13px;color:#FFF;">Live GPS Fleet Stream</strong>
+          </div>
+          <div style="font-size:12px;color:#8FCB9B;line-height:1.5;">
+            5 active trucks tracked across Western & Central India corridors. Click any marker for speed & temperature stats.
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters Ribbon -->
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="pill-chip active" onclick="filterTrips('ALL', this)">All Active Trips (5)</button>
+          <button class="pill-chip" onclick="filterTrips('in-transit', this)">In Transit (3)</button>
+          <button class="pill-chip" onclick="filterTrips('toll-plaza', this)">At Toll Plaza (1)</button>
+          <button class="pill-chip" onclick="filterTrips('loading', this)">Loading / Gate (1)</button>
+        </div>
+
+        <div style="font-size:13px;color:var(--text-secondary);font-weight:600;">
+          Auto-refreshing every 15s ✓
+        </div>
+      </div>
+
+      <!-- Active Trips Detailed Cards List -->
+      <div id="tripsListContainer" style="display:flex;flex-direction:column;gap:18px;">
+        <!-- Rendered via transporter.js / TransporterData -->
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="trans-footer">
+    <div class="trans-footer-inner">
+      <div>© 2026 KrishiShetra Agri-Logistics Infrastructure Ltd. · VAHAN & Sarathi Integrated</div>
+      <div style="display:flex;gap:16px;">
+        <a href="onboarding.html" style="color:var(--text-secondary);text-decoration:none;">Compliance & Permits</a>
+        <a href="earnings.html" style="color:var(--text-secondary);text-decoration:none;">FASTag Escrow</a>
+        <a href="profile.html" style="color:var(--text-secondary);text-decoration:none;">Carrier Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/transporter-data.js"></script>
+  <script src="js/transporter.js"></script>
+  <script>
+    let leafletMap = null;
+    let markersLayer = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTripsMap();
+      renderTripsList('ALL');
+    });
+
+    function initTripsMap() {
+      const mapEl = document.getElementById('activeTripsMap');
+      if (!mapEl || !window.L) return;
+
+      // Center map on Central/Western India (Nashik/Maharashtra region)
+      leafletMap = L.map('activeTripsMap', {
+        zoomControl: true,
+        scrollWheelZoom: false
+      }).setView([19.7515, 75.7139], 6);
+
+      // CartoDB Dark Matter / Positron tiles for high-tech aesthetic
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(leafletMap);
+
+      markersLayer = L.layerGroup().addTo(leafletMap);
+      plotTripMarkers();
+    }
+
+    function plotTripMarkers() {
+      if (!markersLayer || !window.L) return;
+      markersLayer.clearLayers();
+
+      const tripLocations = [
+        { id: 'TRIP-9021', name: 'MH 15 EG 4820 (Onion 18.5 MT)', lat: 19.6890, lng: 73.5412, loc: 'Kasara Ghat (NH 160)', speed: '48 km/h', eta: '09:45 PM' },
+        { id: 'TRIP-9022', name: 'MH 15 BX 1094 (Apple Reefer 14 MT)', lat: 18.3582, lng: 73.8471, loc: 'Khed-Shivapur Toll', speed: '54 km/h', eta: '11:15 PM' },
+        { id: 'TRIP-9023', name: 'MH 15 DC 7712 (Wheat 22 MT)', lat: 21.7051, lng: 72.9959, loc: 'Ankleshwar Narmada Bridge', speed: '52 km/h', eta: 'Tomorrow 05:30 AM' },
+        { id: 'TRIP-9024', name: 'MH 15 AK 3390 (Tomato 7.5 MT)', lat: 19.0760, lng: 72.8777, loc: 'Vashi APMC Gate #2', speed: '12 km/h', eta: 'Arrived (Unloading)' },
+        { id: 'TRIP-9025', name: 'MH 15 ZZ 5501 (Cotton Bales 16 MT)', lat: 20.9374, lng: 77.7796, loc: 'Amravati Bypass', speed: '50 km/h', eta: 'Tomorrow 02:00 PM' }
+      ];
+
+      tripLocations.forEach(t => {
+        const marker = L.circleMarker([t.lat, t.lng], {
+          radius: 9,
+          fillColor: '#D97706',
+          color: '#FFFFFF',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.95
+        });
+
+        marker.bindPopup(`
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;padding:6px;min-width:180px;">
+            <div style="font-size:12px;font-weight:700;color:#8FCB9B;">${t.id}</div>
+            <div style="font-size:14px;font-weight:800;color:#FFF;margin-top:2px;">${t.name}</div>
+            <div style="font-size:12px;color:#EDE9DC;margin-top:4px;"><strong>Location:</strong> ${t.loc}</div>
+            <div style="font-size:12px;color:#D97706;margin-top:2px;"><strong>Speed:</strong> ${t.speed} · <strong>ETA:</strong> ${t.eta}</div>
+            <button class="btn btn-amber btn-sm" style="margin-top:8px;width:100%;font-size:11px;padding:4px 8px;" onclick="viewTripDetail('${t.id}')">Open Telemetry</button>
+          </div>
+        `);
+
+        markersLayer.addLayer(marker);
+      });
+    }
+
+    function filterTrips(status, btn) {
+      document.querySelectorAll('.pill-chip').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderTripsList(status);
+    }
+
+    function renderTripsList(filter) {
+      const container = document.getElementById('tripsListContainer');
+      if (!container) return;
+
+      let list = TransporterData.activeTrips;
+      if (filter !== 'ALL') {
+        list = list.filter(t => t.statusBadgeClass.includes(filter));
+      }
+
+      container.innerHTML = list.map(trip => `
+        <div class="card-panel" style="padding:20px;border-left:4px solid ${trip.statusBadgeClass==='in-transit'?'var(--green-mid)':(trip.statusBadgeClass==='toll-plaza'?'var(--amber)':'var(--blue-accent)')};">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span class="trip-id-badge">${trip.id}</span>
+                <span class="trip-status-badge ${trip.statusBadgeClass}">● ${trip.status} (${trip.speedKmh})</span>
+                <span style="font-size:12px;color:var(--text-muted);"><i data-lucide="map-pin" style="width:12px;height:12px;display:inline;"></i> Current: ${trip.currentLocation}</span>
+              </div>
+              <h3 style="font-size:18px;font-weight:800;color:var(--text-heading);margin-top:6px;">
+                ${trip.commodity} — ${trip.vehicleNo}
+              </h3>
+              <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">
+                Driver: <strong>${trip.driverName}</strong> (<a href="tel:${trip.driverPhone}" style="color:var(--green-mid);font-weight:700;">${trip.driverPhone}</a>) · E-Way Bill: <code>${trip.eWayBill}</code>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary btn-sm" onclick="showToast('Driver pinged via SMS & WhatsApp.')"><i data-lucide="phone-forwarded" style="width:13px;height:13px;"></i> Call Driver</button>
+              <button class="btn btn-amber btn-sm" onclick="viewTripDetail('${trip.id}')"><i data-lucide="gauge" style="width:13px;height:13px;"></i> Telemetry & POD</button>
+            </div>
+          </div>
+
+          <!-- Trip Progress Route Bar -->
+          <div class="trip-progress-container" style="margin-bottom:16px;">
+            <div class="trip-progress-meta">
+              <span><strong>Origin:</strong> ${trip.origin}</span>
+              <span><strong>ETA:</strong> ${trip.eta}</span>
+              <span><strong>Destination:</strong> ${trip.destination}</span>
+            </div>
+            <div class="trip-progress-track">
+              <div class="trip-progress-fill" style="width:${trip.progressPct}%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-top:4px;">
+              <span>${trip.completedDistance} covered</span>
+              <span style="font-weight:700;color:var(--green-primary);">${trip.progressPct}% Completed</span>
+              <span>${trip.totalDistance} Total</span>
+            </div>
+          </div>
+
+          <!-- Telemetry Badges Grid -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:10px;background:var(--bg-surface);padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);">
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">FASTag Toll Status</div>
+              <div style="font-size:12.5px;font-weight:700;color:var(--text-primary);margin-top:2px;">${trip.tollCrossed}</div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Reefer / Cargo Temp</div>
+              <div style="font-size:12.5px;font-weight:700;color:${trip.reeferTemp.includes('Ambient')?'var(--text-primary)':'#B45309'};margin-top:2px;">${trip.reeferTemp}</div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">FPO / Mandi Consignee</div>
+              <div style="font-size:12.5px;font-weight:700;color:var(--green-primary);margin-top:2px;">Verified Partner ✓</div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">POD Verification</div>
+              <div style="font-size:12.5px;font-weight:700;color:var(--status-success-text);margin-top:2px;">OTP Settlement Ready</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function simulateGpsSync() {
+      showToast('📡 Satellite GPS Telemetry Synchronized across all 14 Fleet AIS-140 Trackers.', 'success');
+      plotTripMarkers();
+    }
+  </script>
+</body>
+</html>
