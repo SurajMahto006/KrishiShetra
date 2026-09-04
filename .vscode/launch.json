@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "🌾 KrishiShetra — Farmer Dashboard",
+            "url": "http://localhost:3000/dashboard.html",
+            "webRoot": "${workspaceFolder}/KrishiShetra"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "📊 KrishiShetra — Mandi Price Comparison",
+            "url": "http://localhost:3000/mandi-compare.html",
+            "webRoot": "${workspaceFolder}/KrishiShetra"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "🚀 Start KrishiShetra Server",
+            "program": "${workspaceFolder}/KrishiShetra/server/server.js",
+            "cwd": "${workspaceFolder}/KrishiShetra",
+            "env": {
+                "NODE_ENV": "development",
+                "PORT": "3000"
+            }
+        }
+    ]
+}
