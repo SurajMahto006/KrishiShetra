@@ -4288,3 +4288,403 @@ body.dashboard-body {
   .mpc-entry-card__right { width: 100%; justify-content: space-between; }
   .mpc-entry-card__stats { gap: 14px; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   RURAL TECH & KISAN UX ENHANCEMENTS (3-TAP ACTION INTERFACE)
+   ════════════════════════════════════════════════════════════════ */
+
+/* 1. FLOATING / PINNED 1-TAP LANGUAGE PILL */
+.kisan-lang-pill-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 2px solid #D8C28A;
+  padding: 4px 6px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px rgba(18, 55, 42, 0.08);
+}
+
+.kisan-lang-pill-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ks-evergreen, #12372A);
+  padding-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kisan-lang-btn {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  background: transparent;
+  color: #4A5568;
+  transition: all 0.2s ease;
+  min-height: 36px;
+}
+
+.kisan-lang-btn:hover {
+  background: #F5F4ED;
+  color: var(--ks-evergreen, #12372A);
+}
+
+.kisan-lang-btn.active {
+  background: var(--ks-evergreen, #12372A);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(18, 55, 42, 0.25);
+}
+
+/* 2. DAILY KISAN AI ADVICE BANNER */
+.kisan-tip-banner {
+  background: linear-gradient(135deg, #12372A 0%, #1A4D3B 60%, #2D5A3D 100%);
+  border: 2px solid #D8C28A;
+  border-radius: 18px;
+  padding: 18px 24px;
+  color: #FFFFFF;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(18, 55, 42, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.kisan-tip-banner__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.kisan-tip-banner__icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(216, 194, 138, 0.25);
+  border: 1.5px solid #D8C28A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.kisan-tip-banner__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.kisan-tip-banner__badge {
+  background: #D8C28A;
+  color: #12372A;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.kisan-tip-banner__text {
+  font-size: 15px;
+  line-height: 1.45;
+  color: #F5F4ED;
+  font-weight: 600;
+  margin: 0;
+}
+
+.kisan-tip-banner__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kisan-voice-btn {
+  background: #FFFFFF;
+  color: #12372A;
+  border: 2px solid #D8C28A;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 48px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.kisan-voice-btn:hover {
+  background: #F5F4ED;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.kisan-voice-btn.speaking {
+  background: #E8F5E9;
+  border-color: #2E7D32;
+  color: #2E7D32;
+  animation: pulse-border 1.2s infinite;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.5); }
+  70% { box-shadow: 0 0 0 10px rgba(46, 125, 50, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+}
+
+/* 3. 4 LARGE KISAN ACTION CARDS (3-TAP RULE) */
+.kisan-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 680px) {
+  .kisan-action-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+.kisan-action-card {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 22px 24px;
+  border: 2px solid #E5E4DD;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  min-height: 160px;
+}
+
+.kisan-action-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(18, 55, 42, 0.12);
+  border-color: var(--ks-evergreen, #12372A);
+}
+
+.kisan-action-card--price {
+  border-left: 6px solid #D6A84F;
+}
+.kisan-action-card--sell {
+  border-left: 6px solid #2E7D32;
+}
+.kisan-action-card--storage {
+  border-left: 6px solid #1565C0;
+}
+.kisan-action-card--decision {
+  border-left: 6px solid #7B1FA2;
+}
+
+.kisan-action-card__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.kisan-action-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.kisan-action-card--price .kisan-action-card__icon { background: #FEF7E6; border: 1px solid #F6D68F; }
+.kisan-action-card--sell .kisan-action-card__icon { background: #E8F5E9; border: 1px solid #C8E6C9; }
+.kisan-action-card--storage .kisan-action-card__icon { background: #E3F2FD; border: 1px solid #BBDEFB; }
+.kisan-action-card--decision .kisan-action-card__icon { background: #F3E5F5; border: 1px solid #E1BEE7; }
+
+.kisan-action-card__info {
+  flex: 1;
+}
+
+.kisan-action-card__title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kisan-action-card__subtitle {
+  font-size: 13px;
+  color: #555555;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.kisan-action-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #F0EFE9;
+}
+
+.kisan-action-card__stat {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.kisan-action-card__stat strong {
+  font-size: 16px;
+  color: var(--ks-evergreen, #12372A);
+}
+
+.kisan-action-card__btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  min-height: 48px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kisan-action-card--price .kisan-action-card__btn { background: #FEF3C7; color: #92400E; }
+.kisan-action-card--sell .kisan-action-card__btn { background: #12372A; color: #FFFFFF; }
+.kisan-action-card--storage .kisan-action-card__btn { background: #E3F2FD; color: #0D47A1; }
+.kisan-action-card--decision .kisan-action-card__btn { background: #7B1FA2; color: #FFFFFF; }
+
+.kisan-action-card:hover .kisan-action-card__btn {
+  filter: brightness(0.95);
+  transform: translateX(2px);
+}
+
+/* 4. HIGH CONTRAST TOUCH-FRIENDLY BUTTONS (MIN 48PX) */
+.btn-kisan-primary {
+  min-height: 48px;
+  padding: 12px 20px;
+  font-size: 14.5px;
+  font-weight: 700;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-kisan-secondary {
+  min-height: 48px;
+  padding: 12px 20px;
+  font-size: 14.5px;
+  font-weight: 700;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1.5px solid #D8C28A;
+  color: var(--ks-evergreen, #12372A);
+}
+
+/* 5. SIMPLIFIED KISAN CROP CARDS */
+.kisan-lot-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E5E4DD;
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  transition: all 0.2s ease;
+}
+
+.kisan-lot-card:hover {
+  border-color: #C9973B;
+  box-shadow: 0 6px 18px rgba(201, 151, 59, 0.12);
+}
+
+.kisan-lot-card__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.kisan-lot-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #F5F4ED;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  border: 1px solid #E5E4DD;
+  flex-shrink: 0;
+}
+
+.kisan-lot-card__details h4 {
+  font-size: 16.5px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+  margin: 0 0 3px 0;
+}
+
+.kisan-lot-card__details p {
+  font-size: 13px;
+  color: #555;
+  margin: 0;
+}
+
+.kisan-lot-card__price-tag {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+}
+
+.kisan-lot-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kisan-lot-card__btn {
+  min-height: 48px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+

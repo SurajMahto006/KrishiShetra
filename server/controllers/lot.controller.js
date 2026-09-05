@@ -180,6 +180,13 @@ const createLot = async (req, res) => {
       qualityNotes,
       storageType,
       storageLocation,
+      storageRequired,
+      preferredStorageType,
+      storageFacility,
+      storageDurationDays,
+      currentStorageStatus,
+      estimatedStorageCost,
+      sellNowOrHoldDecision,
       askingPrice,
       priceUnit,
       state,
@@ -205,6 +212,13 @@ const createLot = async (req, res) => {
       qualityNotes: qualityNotes ? String(qualityNotes).trim() : '',
       storageType: storageType || 'farm',
       storageLocation: storageLocation ? String(storageLocation).trim() : '',
+      storageRequired: Boolean(storageRequired),
+      preferredStorageType: preferredStorageType || storageType || 'farm',
+      storageFacility: storageFacility || null,
+      storageDurationDays: Number(storageDurationDays) || 0,
+      currentStorageStatus: currentStorageStatus || 'on_farm',
+      estimatedStorageCost: Number(estimatedStorageCost) || 0,
+      sellNowOrHoldDecision: sellNowOrHoldDecision || {},
       askingPrice: Number(askingPrice),
       priceUnit: priceUnit || 'quintal',
       state: state ? String(state).trim() : (farmerProfile.state || ''),
@@ -213,7 +227,7 @@ const createLot = async (req, res) => {
       village: village ? String(village).trim() : (farmerProfile.village || ''),
       pincode: pincode ? String(pincode).trim() : (farmerProfile.pincode || ''),
       photos: Array.isArray(photos) ? photos : [],
-      status: (status === 'active' || status === 'draft') ? status : 'draft'
+      status: (status === 'active' || status === 'draft') ? status : 'active'
     });
 
     return res.status(201).json({
@@ -436,10 +450,68 @@ const deleteLot = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get recommended storage options for a specific produce lot
+ * @route   GET /api/lots/:lotId/storage-options
+ * @access  Private (Farmer role only)
+ */
+const getLotStorageOptions = async (req, res) => {
+  try {
+    const lot = await findLotForUser(req.params.lotId, req.user._id);
+    if (!lot) {
+      return res.status(404).json({ success: false, message: 'Produce lot not found' });
+    }
+
+    const { getNearbyStorage } = require('./storage.controller');
+    // Delegate to storage query filtering for lot's crop and state/district
+    req.query.crop = lot.cropName.toLowerCase();
+    req.query.state = lot.state || 'Maharashtra';
+    return getNearbyStorage(req, res);
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Failed to retrieve storage options for lot' });
+  }
+};
+
+/**
+ * @desc    Get real-time AI Sell-vs-Store decision analysis for a specific produce lot
+ * @route   GET /api/lots/:lotId/selling-decision
+ * @access  Private (Farmer role only)
+ */
+const getLotSellingDecision = async (req, res) => {
+  try {
+    const lot = await findLotForUser(req.params.lotId, req.user._id);
+    if (!lot) {
+      return res.status(404).json({ success: false, message: 'Produce lot not found' });
+    }
+
+    const { evaluateSellVsStore } = require('../services/decision.service');
+    const decision = evaluateSellVsStore({
+      cropName: lot.cropName,
+      quantity: lot.quantity,
+      currentPrice: lot.askingPrice,
+      holdingDays: lot.storageDurationDays || 45,
+      distanceKm: 12
+    });
+
+    return res.status(200).json({
+      success: true,
+      lotId: lot.lotId,
+      cropName: lot.cropName,
+      quantity: lot.quantity,
+      decision
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Failed to calculate selling decision for lot' });
+  }
+};
+
 module.exports = {
   createLot,
   getMyLots,
   getSingleLot,
   updateLot,
-  deleteLot
+  deleteLot,
+  getLotStorageOptions,
+  getLotSellingDecision
 };
+

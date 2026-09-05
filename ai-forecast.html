@@ -59,6 +59,9 @@
         <a href="market.html" class="dash-header__link" id="nav-market">
           <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
         </a>
+        <a href="storage.html" class="dash-header__link" id="nav-storage">
+          <i data-lucide="warehouse" class="dash-header__link-icon"></i> Storage
+        </a>
         <a href="ai-forecast.html" class="dash-header__link dash-header__link--active" id="nav-forecast">
           <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
         </a>
@@ -74,9 +77,6 @@
         <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
-        </button>
-        <button class="dash-header__action-btn" id="btn-language" aria-label="Language" title="Change Language">
-          <i data-lucide="globe"></i>
         </button>
         <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
           <i data-lucide="help-circle"></i>
@@ -194,7 +194,7 @@
               </div>
             </div>
             <div class="dash-forecast-btn-wrap">
-              <button class="btn btn--primary dash-forecast-btn" id="btn-generate-forecast">
+              <button class="btn btn--primary dash-forecast-btn" id="btn-generate-forecast" style="min-height: 48px; font-weight: 700;">
                 <i data-lucide="sparkles"></i> <span>Generate Forecast</span>
               </button>
             </div>
@@ -205,8 +205,18 @@
         <div class="dash-ai-card" id="ai-insight-card" style="margin-top: 24px;">
           <div class="dash-ai-card__glow"></div>
           <div class="dash-ai-card__inner">
-            <div class="dash-ai-card__badge" id="forecast-badge">
-              <i data-lucide="brain"></i> <span id="forecast-badge-text">AI Recommendation · Live</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+              <div class="dash-ai-card__badge" id="forecast-badge">
+                <i data-lucide="brain"></i> <span id="forecast-badge-text">AI Recommendation · Live</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="background: #E8F5E9; color: #2E7D32; font-weight: 800; font-size: 13px; padding: 6px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
+                  <span>📈</span> <span id="forecast-trend-label">Price Rising</span>
+                </span>
+                <button class="kisan-voice-btn" id="btn-speak-forecast" onclick="speakForecastRecommendation()" style="min-height: 42px; padding: 6px 14px; font-size: 12.5px;" title="Listen to recommendation">
+                  <span id="forecast-voice-icon">🔊</span> <span id="forecast-voice-text">Listen</span>
+                </button>
+              </div>
             </div>
 
             <div class="dash-ai-card__content" id="forecast-result-content">
@@ -217,7 +227,7 @@
                   strong procurement demand."
                 </p>
                 <div class="dash-ai-card__recommendation">
-                  <div class="dash-ai-card__rec-badge" id="forecast-rec-badge">WAIT 3 DAYS</div>
+                  <div class="dash-ai-card__rec-badge" id="forecast-rec-badge" style="font-size: 15px; font-weight: 800; padding: 8px 16px;">⏳ WAIT 3 DAYS</div>
                   <div class="dash-ai-card__rec-details">
                     <div class="dash-ai-card__rec-detail">
                       <span class="dash-ai-card__rec-label">Current Price</span>
@@ -244,9 +254,9 @@
                   </p>
                 </div>
                 <div class="dash-ai-card__btns">
-                  <a href="lots.html" class="btn btn--primary" id="btn-forecast-sell-action"><i
+                  <a href="lots.html" class="btn btn--primary" id="btn-forecast-sell-action" style="min-height: 48px; font-weight: 700;"><i
                       data-lucide="plus-circle"></i> Create Lot at Target Price</a>
-                  <button class="btn btn--secondary" id="btn-set-alert-ai" onclick="openAlertModal()"><i
+                  <button class="btn btn--secondary" id="btn-set-alert-ai" onclick="openAlertModal()" style="min-height: 48px; font-weight: 700;"><i
                       data-lucide="bell-ring"></i> Set Target Alert (₹2,970)</button>
                 </div>
               </div>
@@ -283,6 +293,52 @@
               <div class="dash-spinner"></div>
               <h4>Analyzing market data across 42 mandis...</h4>
               <p>Evaluating buyer inquiries, weather projections, arrival volumes, and historical seasonality.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 1.5 SELL NOW VS STORE & HOLD ROI DECISION PANEL ── -->
+        <div class="dash-card" style="margin-top:20px; background:#FFFFFF; border:2px solid #D8C28A; border-radius:16px; padding:22px 24px; box-shadow:0 4px 18px rgba(201,151,59,0.08);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:22px;">⚖️</span>
+              <div>
+                <h3 style="font-size:17px; font-weight:800; color:var(--ks-evergreen); margin:0;">Sell Now vs. Store &amp; Hold AI Analysis</h3>
+                <span style="font-size:12px; color:#666;">Will storing your crop yield higher net profit after deducting warehouse rent &amp; weight loss?</span>
+              </div>
+            </div>
+            <span style="background:#E8F5E9; color:#2E7D32; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+              <i data-lucide="check-circle" style="width:13px;height:13px;"></i> RECOMMENDATION: STORE &amp; HOLD
+            </span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px;">
+            <!-- Option A -->
+            <div style="background:#FDFBF7; border:1.5px solid #E5E1D8; border-radius:12px; padding:14px 16px;">
+              <div style="font-size:11px; font-weight:800; color:#795548;">OPTION A — SELL NOW</div>
+              <div style="font-size:20px; font-weight:800; color:#222; margin:4px 0;">₹71,250 <span style="font-size:12px; font-weight:500; color:#666;">(₹2,850/q × 25q)</span></div>
+              <div style="font-size:12px; color:#666;">Immediate payment · 0 storage cost · 0 shrinkage risk</div>
+            </div>
+
+            <!-- Option B -->
+            <div style="background:#F1F8F3; border:2px solid #2E7D32; border-radius:12px; padding:14px 16px;">
+              <div style="font-size:11px; font-weight:800; color:#2E7D32;">OPTION B — STORE FOR 30 DAYS (RECOMMENDED)</div>
+              <div style="font-size:20px; font-weight:800; color:#2E7D32; margin:4px 0;">₹74,250 <span style="font-size:12px; font-weight:700; color:#2E7D32;">(+₹3,000 net extra gain)</span></div>
+              <div style="font-size:12px; color:#555;">After ₹950 warehouse rent, ₹350 handling &amp; ₹650 moisture shrinkage</div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; border-top:1px solid #EFEFEF; padding-top:12px;">
+            <div style="font-size:12.5px; color:#555;">
+              📍 Nearest Facility: <strong>Sahyadri Agro Cold Chain &amp; Warehouse (12 km)</strong> · ₹38/bag/month
+            </div>
+            <div style="display:flex; gap:8px;">
+              <a href="storage.html" class="btn btn--primary" style="padding:7px 12px; font-size:12px;">
+                <i data-lucide="warehouse"></i> Explore Storage Options
+              </a>
+              <a href="storage.html#storage-calculator" class="btn btn--secondary" style="padding:7px 12px; font-size:12px;">
+                <i data-lucide="calculator"></i> Custom Calculator
+              </a>
             </div>
           </div>
         </div>
@@ -329,7 +385,6 @@
         <div class="footer__links">
           <a href="#" class="footer__link" onclick="openHelpModal()">Kisan Support</a>
           <a href="buyers.html" class="footer__link">For Buyers</a>
-          <a href="#" class="footer__link" onclick="openLanguageModal()">Languages</a>
           <a href="index.html" class="footer__link">About KrishiShetra</a>
         </div>
       </div>
@@ -429,23 +484,7 @@
     </div>
   </div>
 
-  <div class="dash-modal-overlay" id="language-modal-overlay">
-    <div class="dash-modal dash-modal--sm" id="language-modal">
-      <div class="dash-modal__header">
-        <h3>Select Language</h3>
-        <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
-      </div>
-      <div class="dash-modal__body-pad">
-        <div class="dash-lang-list">
-          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span>
-            <strong>Active</strong></button>
-          <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NOTIFICATIONS / PROFILE / HELPLINE / LANG MODALS -->
+  <!-- NOTIFICATIONS / PROFILE / HELPLINE MODALS -->
   <div class="dash-modal-overlay" id="notifications-modal-overlay">
     <div class="dash-modal dash-modal--sm" id="notifications-modal">
       <div class="dash-modal__header">
@@ -487,21 +526,6 @@
             <div style="font-weight:700; color:var(--ks-evergreen);">Kisan Call Center (Toll Free)</div>
             <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="dash-modal-overlay" id="language-modal-overlay">
-    <div class="dash-modal dash-modal--sm" id="language-modal">
-      <div class="dash-modal__header">
-        <h3>Select Language</h3>
-        <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
-      </div>
-      <div class="dash-modal__body-pad">
-        <div class="dash-lang-list">
-          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span> <strong>Active</strong></button>
-          <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
         </div>
       </div>
     </div>

@@ -212,21 +212,21 @@ var MPC_DATA = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 var MPC_CROP_META = {
-  rice:       { emoji:'🌾', name:'Rice',       hindi:'धान',       unit:'₹/q', trend:5.2 },
-  wheat:      { emoji:'🌾', name:'Wheat',      hindi:'गेहूं',      unit:'₹/q', trend:6.2 },
-  onion:      { emoji:'🧅', name:'Onion',      hindi:'प्याज',     unit:'₹/q', trend:3.8 },
-  tomato:     { emoji:'🍅', name:'Tomato',     hindi:'टमाटर',     unit:'₹/q', trend:-1.4 },
-  maize:      { emoji:'🌽', name:'Maize',      hindi:'मक्का',     unit:'₹/q', trend:2.1 },
-  soybean:    { emoji:'🫘', name:'Soybean',    hindi:'सोयाबीन',   unit:'₹/q', trend:4.8 },
-  potato:     { emoji:'🥔', name:'Potato',     hindi:'आलू',      unit:'₹/q', trend:0.8 },
-  chilli:     { emoji:'🌶️', name:'Chilli',     hindi:'मिर्च',      unit:'₹/q', trend:7.2 },
-  groundnut:  { emoji:'🥜', name:'Groundnut',  hindi:'मूंगफली',   unit:'₹/q', trend:3.4 },
-  cotton:     { emoji:'☁️', name:'Cotton',     hindi:'कपास',     unit:'₹/q', trend:-0.6 },
-  sugarcane:  { emoji:'🎋', name:'Sugarcane',  hindi:'गन्ना',     unit:'₹/q', trend:1.8 },
-  mango:      { emoji:'🥭', name:'Mango',      hindi:'आम',       unit:'₹/q', trend:6.5 },
-  banana:     { emoji:'🍌', name:'Banana',     hindi:'केला',      unit:'₹/q', trend:2.2 },
-  grapes:     { emoji:'🍇', name:'Grapes',     hindi:'अंगूर',     unit:'₹/q', trend:4.1 },
-  pulses:     { emoji:'🥣', name:'Pulses',     hindi:'दालें',      unit:'₹/q', trend:3.9 }
+  rice:       { emoji:'🌾', name:'Rice',       unit:'₹/q', trend:5.2 },
+  wheat:      { emoji:'🌾', name:'Wheat',      unit:'₹/q', trend:6.2 },
+  onion:      { emoji:'🧅', name:'Onion',      unit:'₹/q', trend:3.8 },
+  tomato:     { emoji:'🍅', name:'Tomato',     unit:'₹/q', trend:-1.4 },
+  maize:      { emoji:'🌽', name:'Maize',      unit:'₹/q', trend:2.1 },
+  soybean:    { emoji:'🫘', name:'Soybean',    unit:'₹/q', trend:4.8 },
+  potato:     { emoji:'🥔', name:'Potato',     unit:'₹/q', trend:0.8 },
+  chilli:     { emoji:'🌶️', name:'Chilli',     unit:'₹/q', trend:7.2 },
+  groundnut:  { emoji:'🥜', name:'Groundnut',  unit:'₹/q', trend:3.4 },
+  cotton:     { emoji:'☁️', name:'Cotton',     unit:'₹/q', trend:-0.6 },
+  sugarcane:  { emoji:'🎋', name:'Sugarcane',  unit:'₹/q', trend:1.8 },
+  mango:      { emoji:'🥭', name:'Mango',      unit:'₹/q', trend:6.5 },
+  banana:     { emoji:'🍌', name:'Banana',     unit:'₹/q', trend:2.2 },
+  grapes:     { emoji:'🍇', name:'Grapes',     unit:'₹/q', trend:4.1 },
+  pulses:     { emoji:'🥣', name:'Pulses',     unit:'₹/q', trend:3.9 }
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

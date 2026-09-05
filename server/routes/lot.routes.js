@@ -9,6 +9,8 @@ router.use(authorize('farmer'));
 
 router.post('/', lotController.createLot);
 router.get('/my', lotController.getMyLots);
+router.get('/:lotId/storage-options', lotController.getLotStorageOptions);
+router.get('/:lotId/selling-decision', lotController.getLotSellingDecision);
 router.get('/:lotId', lotController.getSingleLot);
 router.put('/:lotId', lotController.updateLot);
 router.delete('/:lotId', lotController.deleteLot);

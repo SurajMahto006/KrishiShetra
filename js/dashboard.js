@@ -864,13 +864,20 @@ function applyForecastResults(res) {
   const miniTarget = document.getElementById('forecast-mini-target');
   const miniLabel = document.getElementById('forecast-mini-target-label');
   const alertBtn = document.getElementById('btn-set-alert-ai');
+  const trendLabel = document.getElementById('forecast-trend-label');
 
   if (headline) headline.textContent = `${res.cropName} — ${res.mandi} Forecast`;
   if (insight) {
     insight.innerHTML = `"${res.cropName} prices are projected to <em>${res.isUp ? 'rise by ' + res.changePct : 'soften by ' + res.changePct}</em> over the next ${res.days} days."`;
   }
+  if (trendLabel) {
+    trendLabel.textContent = res.isUp ? '📈 Price Rising' : '📉 Price Falling';
+    trendLabel.parentElement.style.background = res.isUp ? '#E8F5E9' : '#FFEBEE';
+    trendLabel.parentElement.style.color = res.isUp ? '#2E7D32' : '#C62828';
+  }
   if (recBadge) {
-    recBadge.textContent = res.recommendation;
+    const verdictText = res.isUp ? '⏳ WAIT 3 DAYS' : '⚡ SELL NOW';
+    recBadge.textContent = verdictText;
     recBadge.style.background = res.isUp ? 'var(--ks-amber)' : 'var(--ks-terracotta)';
     recBadge.style.color = res.isUp ? 'var(--ks-evergreen)' : '#FFFFFF';
   }
@@ -898,6 +905,63 @@ function applyForecastResults(res) {
 
   if (window.lucide) lucide.createIcons();
 }
+
+let isSpeakingForecast = false;
+function speakForecastRecommendation() {
+  const insight = document.getElementById('forecast-insight-text')?.textContent || '';
+  const reason = document.getElementById('forecast-reason-text')?.textContent || '';
+  const text = `${insight}. ${reason}`;
+  if (!text.trim()) return;
+
+  const btn = document.getElementById('btn-speak-forecast');
+  const voiceIcon = document.getElementById('forecast-voice-icon');
+  const voiceText = document.getElementById('forecast-voice-text');
+
+  if (isSpeakingForecast) {
+    window.speechSynthesis?.cancel();
+    isSpeakingForecast = false;
+    btn?.classList.remove('speaking');
+    if (voiceIcon) voiceIcon.textContent = '🔊';
+    if (voiceText) voiceText.textContent = 'Listen';
+    return;
+  }
+
+  if (!('speechSynthesis' in window)) {
+    showToast('Voice read-aloud is not supported on this browser.');
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-IN';
+  utterance.rate = 0.92;
+
+  utterance.onstart = () => {
+    isSpeakingForecast = true;
+    btn?.classList.add('speaking');
+    if (voiceIcon) voiceIcon.textContent = '⏹️';
+    if (voiceText) voiceText.textContent = 'Stop';
+  };
+
+  utterance.onend = () => {
+    isSpeakingForecast = false;
+    btn?.classList.remove('speaking');
+    if (voiceIcon) voiceIcon.textContent = '🔊';
+    if (voiceText) voiceText.textContent = 'Listen';
+  };
+
+  utterance.onerror = () => {
+    isSpeakingForecast = false;
+    btn?.classList.remove('speaking');
+    if (voiceIcon) voiceIcon.textContent = '🔊';
+    if (voiceText) voiceText.textContent = 'Listen';
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+window.speakForecastRecommendation = speakForecastRecommendation;
+
 
 // ═════════════════════════════════════════════════════════════════════
 // 7. MODALS WORKFLOW (Create, Edit, Pause, Delete, Offers, Buyers, Orders)
@@ -1563,24 +1627,84 @@ function initPasswordForm() {
   });
 }
 
-// 14. Help & Language Modals
+// ═════════════════════════════════════════════════════════════════════
+// 14. KISAN VOICE SYNTHESIS SYSTEM
+// ═════════════════════════════════════════════════════════════════════
+
+let isSpeakingTip = false;
+
+function speakCurrentTip() {
+  const tipText = document.getElementById('kisan-tip-text')?.textContent?.trim() || '';
+  if (!tipText) return;
+
+  const btn = document.getElementById('btn-speak-tip');
+  const voiceIcon = document.getElementById('voice-icon');
+  const voiceText = document.getElementById('voice-btn-text');
+
+  if (isSpeakingTip) {
+    window.speechSynthesis?.cancel();
+    isSpeakingTip = false;
+    btn?.classList.remove('speaking');
+    if (voiceIcon) voiceIcon.textContent = '🔊';
+    if (voiceText) voiceText.textContent = 'Listen';
+    return;
+  }
+
+  if (!('speechSynthesis' in window)) {
+    showToast('Voice read-aloud is not supported on this browser.');
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(tipText);
+  utterance.lang = 'en-IN';
+  utterance.rate = 0.95;
+
+  utterance.onstart = () => {
+    isSpeakingTip = true;
+    btn?.classList.add('speaking');
+    if (voiceIcon) voiceIcon.textContent = '⏹️';
+    if (voiceText) voiceText.textContent = 'Stop';
+  };
+
+  utterance.onend = () => {
+    isSpeakingTip = false;
+    btn?.classList.remove('speaking');
+    if (voiceIcon) voiceIcon.textContent = '🔊';
+    if (voiceText) voiceText.textContent = 'Listen';
+  };
+
+  utterance.onerror = () => {
+    isSpeakingTip = false;
+    btn?.classList.remove('speaking');
+    if (voiceIcon) voiceIcon.textContent = '🔊';
+    if (voiceText) voiceText.textContent = 'Listen';
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function speakText(text) {
+  if (!('speechSynthesis' in window) || !text) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-IN';
+  utterance.rate = 0.95;
+  window.speechSynthesis.speak(utterance);
+}
+
+window.speakCurrentTip = speakCurrentTip;
+window.speakText = speakText;
+
+// 14. Help Modal
 function openHelpModal() {
   const closeBtn = document.getElementById('help-modal-close');
   if (closeBtn) closeBtn.onclick = () => closeModal('help-modal-overlay');
   openModal('help-modal-overlay');
 }
 
-function openLanguageModal() {
-  const closeBtn = document.getElementById('language-modal-close');
-  if (closeBtn) closeBtn.onclick = () => closeModal('language-modal-overlay');
-  openModal('language-modal-overlay');
-}
 
-function setLanguage(lang) {
-  closeModal('language-modal-overlay');
-  const map = { en: 'English', mr: 'मराठी', hi: 'हिन्दी', te: 'తెలుగు', ta: 'தமிழ்' };
-  showToast(`Language changed to ${map[lang] || 'English'}`);
-}
+
 
 // ═════════════════════════════════════════════════════════════════════
 // 8. INTERACTIVE SEARCH & FILTERS
@@ -1824,8 +1948,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const notifBtn = document.getElementById('btn-notifications');
   if (notifBtn) notifBtn.onclick = openNotificationsModal;
 
-  const langBtn = document.getElementById('btn-language');
-  if (langBtn) langBtn.onclick = openLanguageModal;
+
 
   const helpBtn = document.getElementById('btn-help');
   if (helpBtn) helpBtn.onclick = openHelpModal;
@@ -1913,3 +2036,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize Lucide icons
   if (window.lucide) lucide.createIcons();
 });
+

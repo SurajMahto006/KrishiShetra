@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiShetra — Admin Storage Management</title>
+  <meta name="description" content="KrishiShetra Admin — Manage storage facilities, warehouse capacities, tariff rates, and farmer booking requests.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="admin-header" id="adminHeader">
+    <div class="admin-header-inner">
+      <a href="index.html" class="admin-brand">
+        <span class="brand-icon">🌾</span>
+        <span class="brand-text">KrishiShetra</span>
+        <span class="brand-badge">Admin</span>
+      </a>
+
+      <nav>
+        <ul class="admin-nav-menu" id="adminNavMenu">
+          <li><a href="dashboard.html" class="admin-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="users.html" class="admin-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Users</a></li>
+          <li><a href="farmers.html" class="admin-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Farmers</a></li>
+          <li><a href="storage.html" class="admin-nav-link active"><i data-lucide="warehouse" style="width:16px;height:16px;"></i> Storage Hub</a></li>
+          <li><a href="reports.html" class="admin-nav-link"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Reports</a></li>
+          <li><a href="settings.html" class="admin-nav-link"><i data-lucide="settings" style="width:16px;height:16px;"></i> Settings</a></li>
+        </ul>
+      </nav>
+
+      <div class="admin-header-actions">
+        <a href="../storage.html" class="portal-switch-btn" target="_blank" style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:9999px;color:#F5F2EB;font-size:12.5px;font-weight:600;text-decoration:none;">
+          <i data-lucide="external-link" style="width:14px;height:14px;color:#E8B96A;"></i> Farmer Storage View
+        </a>
+
+        <div class="admin-header-user">
+          <div class="admin-header-avatar">AD</div>
+          <div class="admin-header-user-info">
+            <span class="admin-header-user-name">Admin User</span>
+            <span class="admin-header-user-role">Super Admin</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-main">
+
+    <!-- Page Header -->
+    <div class="admin-page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+      <div>
+        <h1 class="admin-page-title">Warehouse &amp; Storage Infrastructure</h1>
+        <p class="admin-page-subtitle">Monitor accredited warehouse capacities, cold chain facilities, tariffs, and farmer space requests</p>
+      </div>
+      <div>
+        <button class="btn btn--primary" onclick="openAddFacilityModal()" style="background:#2E7D32; border-color:#2E7D32; padding:10px 18px; font-weight:700; display:flex; align-items:center; gap:6px; cursor:pointer; color:#FFF; border-radius:8px;">
+          <i data-lucide="plus-circle" style="width:16px;height:16px;"></i> + Add Storage Facility
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-grid" style="margin-bottom: 24px;">
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <i data-lucide="warehouse" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="metric-total-facilities">9</div>
+          <div class="stat-label">Accredited Facilities</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <i data-lucide="database" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="metric-total-capacity">57,800 MT</div>
+          <div class="stat-label">Total Storage Capacity</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon gold">
+          <i data-lucide="pie-chart" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="metric-utilization">61.5%</div>
+          <div class="stat-label">Average Utilization</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <i data-lucide="calendar-check" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="metric-requests">14</div>
+          <div class="stat-label">Active Space Bookings</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Facilities Table -->
+    <div class="admin-card" style="background:#FFFFFF; border:1px solid #E8E6DF; border-radius:14px; padding:22px; margin-bottom:30px; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+        <h3 style="font-size:16px; font-weight:700; color:#1A3320; margin:0;">Active Storage &amp; Cold Chain Facilities</h3>
+        <span style="font-size:12.5px; color:#777;">Live Real-Time Capacity Tracking</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+          <thead>
+            <tr style="background:#FAF8F3; border-bottom:2px solid #EAE6DF; color:#555;">
+              <th style="padding:10px 14px;">Facility Name</th>
+              <th style="padding:10px 14px;">Type</th>
+              <th style="padding:10px 14px;">Location</th>
+              <th style="padding:10px 14px;">Capacity (Free / Total)</th>
+              <th style="padding:10px 14px;">Tariff Rate</th>
+              <th style="padding:10px 14px;">Accreditation</th>
+              <th style="padding:10px 14px;">Status</th>
+              <th style="padding:10px 14px; text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-facility-tbody">
+            <tr style="border-bottom:1px solid #F0EEE9;">
+              <td style="padding:12px 14px; font-weight:700;">MSWC Warehouse — Pune Hub</td>
+              <td style="padding:12px 14px;"><span style="background:#E8F5E9; color:#2E7D32; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">WAREHOUSE</span></td>
+              <td style="padding:12px 14px; color:#666;">Pune, Maharashtra</td>
+              <td style="padding:12px 14px;"><strong>1,850</strong> / 5,000 MT</td>
+              <td style="padding:12px 14px;">₹38/bag/month</td>
+              <td style="padding:12px 14px; color:#2E7D32; font-weight:600;">MSWC State Corp</td>
+              <td style="padding:12px 14px;"><span style="color:#2E7D32; font-weight:700;">🟢 Operational</span></td>
+              <td style="padding:12px 14px; text-align:right;">
+                <button class="btn btn--secondary btn--sm" onclick="alert('Facility configuration loaded')">Edit</button>
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid #F0EEE9;">
+              <td style="padding:12px 14px; font-weight:700;">Sahyadri Agro Cold Chain &amp; Packhouse</td>
+              <td style="padding:12px 14px;"><span style="background:#E1F5FE; color:#0288D1; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">COLD STORAGE</span></td>
+              <td style="padding:12px 14px; color:#666;">Nashik, Maharashtra</td>
+              <td style="padding:12px 14px;"><strong>920</strong> / 3,500 MT</td>
+              <td style="padding:12px 14px;">₹65/bag/month</td>
+              <td style="padding:12px 14px; color:#0288D1; font-weight:600;">APMC Licensed</td>
+              <td style="padding:12px 14px;"><span style="color:#2E7D32; font-weight:700;">🟢 Operational</span></td>
+              <td style="padding:12px 14px; text-align:right;">
+                <button class="btn btn--secondary btn--sm" onclick="alert('Facility configuration loaded')">Edit</button>
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid #F0EEE9;">
+              <td style="padding:12px 14px; font-weight:700;">Vidarbha Agri Silos</td>
+              <td style="padding:12px 14px;"><span style="background:#FFF3E0; color:#E65100; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">SILO</span></td>
+              <td style="padding:12px 14px; color:#666;">Nagpur, Maharashtra</td>
+              <td style="padding:12px 14px;"><strong>3,400</strong> / 8,000 MT</td>
+              <td style="padding:12px 14px;">₹42/bag/month</td>
+              <td style="padding:12px 14px; color:#E65100; font-weight:600;">CWC Hub</td>
+              <td style="padding:12px 14px;"><span style="color:#2E7D32; font-weight:700;">🟢 Operational</span></td>
+              <td style="padding:12px 14px; text-align:right;">
+                <button class="btn btn--secondary btn--sm" onclick="alert('Facility configuration loaded')">Edit</button>
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid #F0EEE9;">
+              <td style="padding:12px 14px; font-weight:700;">PSWC Khanna Grain Hub</td>
+              <td style="padding:12px 14px;"><span style="background:#E8F5E9; color:#2E7D32; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">WAREHOUSE</span></td>
+              <td style="padding:12px 14px; color:#666;">Ludhiana, Punjab</td>
+              <td style="padding:12px 14px;"><strong>4,500</strong> / 12,000 MT</td>
+              <td style="padding:12px 14px;">₹32/bag/month</td>
+              <td style="padding:12px 14px; color:#2E7D32; font-weight:600;">CWC Central Hub</td>
+              <td style="padding:12px 14px;"><span style="color:#2E7D32; font-weight:700;">🟢 Operational</span></td>
+              <td style="padding:12px 14px; text-align:right;">
+                <button class="btn btn--secondary btn--sm" onclick="alert('Facility configuration loaded')">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    if (window.lucide) window.lucide.createIcons();
+    function openAddFacilityModal() {
+      alert('Add Facility Modal: You can add new warehouse/cold storage coordinates, total capacity, tariff rates, and accreditation certificates.');
+    }
+  </script>
+</body>
+</html>
