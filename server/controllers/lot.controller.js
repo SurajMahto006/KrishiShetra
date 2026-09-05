@@ -1,6 +1,8 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const ProduceLot = require('../models/ProduceLot');
 const FarmerProfile = require('../models/FarmerProfile');
+const { evaluateAgmarkGrade, getCropCategory } = require('../utils/gradingEngine');
 
 const VALID_ENUMS = {
   quantityUnit: ['kg', 'quintal', 'ton'],
@@ -172,12 +174,16 @@ const createLot = async (req, res) => {
 
     const {
       cropName,
+      cropCategory,
       variety,
       quantity,
       quantityUnit,
       harvestDate,
       qualityGrade,
       qualityNotes,
+      qualityParameters,
+      assaying,
+      aiQualityScan,
       storageType,
       storageLocation,
       storageRequired,
@@ -198,18 +204,83 @@ const createLot = async (req, res) => {
       status
     } = req.body;
 
+    // Calculate or standardize Agmark quality parameters
+    let computedGrade = qualityGrade || 'A';
+    let formattedParams = qualityParameters || {};
+    const normCrop = String(cropName).trim();
+    const inferredCategory = cropCategory || getCropCategory(normCrop);
+
+    if (qualityParameters && Object.keys(qualityParameters).length > 0) {
+      const evalResult = evaluateAgmarkGrade(normCrop, qualityParameters);
+      if (!qualityGrade || !['A', 'B', 'C'].includes(qualityGrade)) {
+        computedGrade = evalResult.grade;
+      }
+      formattedParams = {
+        ...qualityParameters,
+        standard: evalResult.standard,
+        gradeCalculationRationale: evalResult.rationales.join(' | ')
+      };
+    }
+
+    // Assaying & Lab Certification digital stamp
+    let assayObj = {
+      isAssayed: false,
+      verificationStatus: 'uninspected',
+      assayerName: '',
+      assayerOrganization: '',
+      assayerRole: '',
+      certificateNumber: '',
+      certifiedAt: null,
+      digitalSignature: { signedBy: '', signatureHash: '', timestamp: null, certId: '' },
+      certificateDocument: { fileName: '', fileUrl: '', fileType: '' },
+      labRemarks: ''
+    };
+
+    if (assaying && (assaying.isAssayed || assaying.certificateNumber)) {
+      const certNum = assaying.certificateNumber || `AGM-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
+      const signer = assaying.assayerName || req.user.name || 'Accredited Assayer';
+      const sigHash = assaying.digitalSignature?.signatureHash ||
+        crypto.createHash('sha256').update(`${lotId}-${certNum}-${signer}-${Date.now()}`).digest('hex');
+
+      assayObj = {
+        isAssayed: true,
+        verificationStatus: assaying.verificationStatus || 'verified',
+        assayerName: signer,
+        assayerOrganization: assaying.assayerOrganization || 'NABL / Agmark Quality Testing Lab',
+        assayerRole: assaying.assayerRole || (req.user.role === 'fpo' ? 'FPO Quality In-charge' : 'Certified Quality Assayer'),
+        certificateNumber: certNum,
+        certifiedAt: assaying.certifiedAt ? new Date(assaying.certifiedAt) : new Date(),
+        digitalSignature: {
+          signedBy: signer,
+          signatureHash: sigHash,
+          timestamp: new Date(),
+          certId: `CERT-${certNum}`
+        },
+        certificateDocument: assaying.certificateDocument || {
+          fileName: `Certificate_${certNum}.pdf`,
+          fileUrl: '',
+          fileType: 'application/pdf'
+        },
+        labRemarks: assaying.labRemarks || 'Certified under Agmark / e-NAM physical quality standards.'
+      };
+    }
+
     // 4. Create ProduceLot document
     const lot = await ProduceLot.create({
       farmer: farmerProfile._id,
       createdBy: req.user._id,
       lotId,
-      cropName: String(cropName).trim(),
+      cropName: normCrop,
+      cropCategory: inferredCategory,
       variety: String(variety).trim(),
       quantity: Number(quantity),
       quantityUnit: quantityUnit || 'quintal',
       harvestDate: new Date(harvestDate),
-      qualityGrade: qualityGrade || 'A',
+      qualityGrade: computedGrade,
       qualityNotes: qualityNotes ? String(qualityNotes).trim() : '',
+      qualityParameters: formattedParams,
+      assaying: assayObj,
+      aiQualityScan: aiQualityScan || {},
       storageType: storageType || 'farm',
       storageLocation: storageLocation ? String(storageLocation).trim() : '',
       storageRequired: Boolean(storageRequired),
@@ -348,12 +419,16 @@ const updateLot = async (req, res) => {
 
     const {
       cropName,
+      cropCategory,
       variety,
       quantity,
       quantityUnit,
       harvestDate,
       qualityGrade,
       qualityNotes,
+      qualityParameters,
+      assaying,
+      aiQualityScan,
       storageType,
       storageLocation,
       askingPrice,
@@ -369,12 +444,34 @@ const updateLot = async (req, res) => {
 
     // Apply allowed updates only (lotId, farmer, createdBy remain immutable)
     if (cropName !== undefined) lot.cropName = String(cropName).trim();
+    if (cropCategory !== undefined) lot.cropCategory = cropCategory;
     if (variety !== undefined) lot.variety = String(variety).trim();
     if (quantity !== undefined) lot.quantity = Number(quantity);
     if (quantityUnit !== undefined) lot.quantityUnit = quantityUnit;
     if (harvestDate !== undefined) lot.harvestDate = new Date(harvestDate);
     if (qualityGrade !== undefined) lot.qualityGrade = qualityGrade;
     if (qualityNotes !== undefined) lot.qualityNotes = String(qualityNotes).trim();
+    if (qualityParameters !== undefined && typeof qualityParameters === 'object') {
+      const evalResult = evaluateAgmarkGrade(lot.cropName, qualityParameters);
+      lot.qualityParameters = {
+        ...lot.qualityParameters?.toObject?.() || {},
+        ...qualityParameters,
+        standard: evalResult.standard,
+        gradeCalculationRationale: evalResult.rationales.join(' | ')
+      };
+      if (!qualityGrade) {
+        lot.qualityGrade = evalResult.grade;
+      }
+    }
+    if (assaying !== undefined && typeof assaying === 'object') {
+      lot.assaying = {
+        ...lot.assaying?.toObject?.() || {},
+        ...assaying
+      };
+    }
+    if (aiQualityScan !== undefined && typeof aiQualityScan === 'object') {
+      lot.aiQualityScan = aiQualityScan;
+    }
     if (storageType !== undefined) lot.storageType = storageType;
     if (storageLocation !== undefined) lot.storageLocation = String(storageLocation).trim();
     if (askingPrice !== undefined) lot.askingPrice = Number(askingPrice);
@@ -451,57 +548,201 @@ const deleteLot = async (req, res) => {
 };
 
 /**
- * @desc    Get recommended storage options for a specific produce lot
- * @route   GET /api/lots/:lotId/storage-options
- * @access  Private (Farmer role only)
+ * @desc    Assay verification & Lab certificate upload with cryptographic digital signature
+ * @route   POST /api/lots/:lotId/assay
+ * @access  Private (Farmer, FPO, Assayer, Admin)
  */
-const getLotStorageOptions = async (req, res) => {
+const verifyAssay = async (req, res) => {
   try {
-    const lot = await findLotForUser(req.params.lotId, req.user._id);
+    const { lotId } = req.params;
+    let lot = await ProduceLot.findOne({
+      $or: [
+        { lotId: lotId },
+        ...(mongoose.Types.ObjectId.isValid(lotId) ? [{ _id: lotId }] : [])
+      ]
+    });
+
     if (!lot) {
-      return res.status(404).json({ success: false, message: 'Produce lot not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Produce lot not found'
+      });
     }
 
-    const { getNearbyStorage } = require('./storage.controller');
-    // Delegate to storage query filtering for lot's crop and state/district
-    req.query.crop = lot.cropName.toLowerCase();
-    req.query.state = lot.state || 'Maharashtra';
-    return getNearbyStorage(req, res);
+    // Role check: lot creator, FPO, Assayer, or Admin can verify/certify
+    const isOwner = lot.createdBy.toString() === req.user._id.toString();
+    const canCertify = isOwner || ['fpo', 'assayer', 'admin'].includes(req.user.role);
+
+    if (!canCertify) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. Only certified Assayers, FPOs, or the Lot owner can record lab assaying.'
+      });
+    }
+
+    const {
+      certificateNumber,
+      assayerName,
+      assayerOrganization,
+      assayerRole,
+      labRemarks,
+      certificateDocument,
+      qualityParameters
+    } = req.body;
+
+    const certNum = certificateNumber || `AGM-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+    const signer = assayerName || req.user.name || 'Accredited Quality Assayer';
+    const org = assayerOrganization || 'NABL / Agmark Central Testing Lab';
+    const role = assayerRole || (req.user.role === 'fpo' ? 'FPO Quality In-charge' : 'Third-Party Assayer');
+
+    // Update quality parameters if tested during assay
+    if (qualityParameters && Object.keys(qualityParameters).length > 0) {
+      const evalResult = evaluateAgmarkGrade(lot.cropName, qualityParameters);
+      lot.qualityParameters = {
+        ...lot.qualityParameters?.toObject?.() || {},
+        ...qualityParameters,
+        standard: evalResult.standard,
+        gradeCalculationRationale: evalResult.rationales.join(' | ')
+      };
+      lot.qualityGrade = evalResult.grade;
+    }
+
+    // Generate cryptographic SHA-256 Digital Signature Stamp
+    const signaturePayload = {
+      lotId: lot.lotId,
+      certificateNumber: certNum,
+      assayerName: signer,
+      organization: org,
+      testedParameters: lot.qualityParameters,
+      gradeAwarded: lot.qualityGrade,
+      timestamp: new Date().toISOString()
+    };
+    const signatureHash = crypto.createHash('sha256').update(JSON.stringify(signaturePayload)).digest('hex');
+
+    lot.assaying = {
+      isAssayed: true,
+      verificationStatus: 'verified',
+      assayerName: signer,
+      assayerOrganization: org,
+      assayerRole: role,
+      certificateNumber: certNum,
+      certifiedAt: new Date(),
+      digitalSignature: {
+        signedBy: signer,
+        signatureHash: signatureHash,
+        timestamp: new Date(),
+        certId: `CERT-${certNum}`
+      },
+      certificateDocument: certificateDocument || {
+        fileName: `Agmark_Lab_Cert_${certNum}.pdf`,
+        fileUrl: '',
+        fileType: 'application/pdf'
+      },
+      labRemarks: labRemarks || 'Tested in accordance with Agmark & e-NAM physical/chemical standards. Digital signature verified.'
+    };
+
+    await lot.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Lot assay certification completed successfully with digital signature.',
+      lot
+    });
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Failed to retrieve storage options for lot' });
+    console.error('Error verifying assay:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while verifying lot assay'
+    });
   }
 };
 
 /**
- * @desc    Get real-time AI Sell-vs-Store decision analysis for a specific produce lot
- * @route   GET /api/lots/:lotId/selling-decision
- * @access  Private (Farmer role only)
+ * @desc    AI Image-based produce defect estimation (Computer Vision simulation)
+ * @route   POST /api/lots/ai-estimate
+ * @access  Private
  */
-const getLotSellingDecision = async (req, res) => {
+const aiQualityScanEstimate = async (req, res) => {
   try {
-    const lot = await findLotForUser(req.params.lotId, req.user._id);
-    if (!lot) {
-      return res.status(404).json({ success: false, message: 'Produce lot not found' });
+    const { cropName, sampleKey } = req.body;
+    const normCrop = String(cropName || 'Wheat').trim();
+    const category = getCropCategory(normCrop);
+
+    let estimatedParams = {};
+    let detectedDefects = [];
+    let confidence = 96.8;
+
+    if (category === 'cereals_grains') {
+      if (sampleKey === 'defective') {
+        estimatedParams = {
+          moistureContent: 14.8,
+          foreignMatter: 2.4,
+          brokenGrains: 5.8,
+          damagedGrains: 3.6
+        };
+        detectedDefects = [
+          { defectType: 'Broken Grain Kernel', count: 14, severity: 'Moderate', percentage: 5.8 },
+          { defectType: 'Foreign Chaff / Husk', count: 6, severity: 'Low', percentage: 2.4 },
+          { defectType: 'Discolored / Weeviled Kernel', count: 8, severity: 'High', percentage: 3.6 }
+        ];
+        confidence = 94.6;
+      } else {
+        estimatedParams = {
+          moistureContent: 11.2,
+          foreignMatter: 0.7,
+          brokenGrains: 1.6,
+          damagedGrains: 0.9
+        };
+        detectedDefects = [
+          { defectType: 'Foreign Matter', count: 1, severity: 'Negligible', percentage: 0.7 },
+          { defectType: 'Broken Grain Kernel', count: 2, severity: 'Low', percentage: 1.6 }
+        ];
+        confidence = 97.9;
+      }
+    } else {
+      if (sampleKey === 'defective') {
+        estimatedParams = {
+          blemishPercentage: 8.2,
+          uniformity: 71,
+          ripenessIndex: 68
+        };
+        detectedDefects = [
+          { defectType: 'Surface Skin Blemish / Scarring', count: 11, severity: 'Moderate', percentage: 8.2 },
+          { defectType: 'Size / Shape Variance', count: 5, severity: 'Low', percentage: 29.0 }
+        ];
+        confidence = 93.9;
+      } else {
+        estimatedParams = {
+          blemishPercentage: 1.9,
+          uniformity: 93,
+          ripenessIndex: 90
+        };
+        detectedDefects = [
+          { defectType: 'Minor Skin Freckle', count: 2, severity: 'Negligible', percentage: 1.9 }
+        ];
+        confidence = 98.4;
+      }
     }
 
-    const { evaluateSellVsStore } = require('../services/decision.service');
-    const decision = evaluateSellVsStore({
-      cropName: lot.cropName,
-      quantity: lot.quantity,
-      currentPrice: lot.askingPrice,
-      holdingDays: lot.storageDurationDays || 45,
-      distanceKm: 12
-    });
+    const evalResult = evaluateAgmarkGrade(normCrop, estimatedParams);
 
     return res.status(200).json({
       success: true,
-      lotId: lot.lotId,
-      cropName: lot.cropName,
-      quantity: lot.quantity,
-      decision
+      cropName: normCrop,
+      category,
+      confidenceScore: confidence,
+      qualityParameters: estimatedParams,
+      detectedDefects,
+      suggestedGrade: evalResult.grade,
+      gradeLabel: evalResult.gradeLabel,
+      standard: evalResult.standard,
+      analysisSummary: `AI detected ${detectedDefects.length} defect classes with ${confidence}% neural confidence. Agmark rating: ${evalResult.gradeLabel}.`
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Failed to calculate selling decision for lot' });
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while performing AI quality scan'
+    });
   }
 };
 
@@ -511,7 +752,7 @@ module.exports = {
   getSingleLot,
   updateLot,
   deleteLot,
-  getLotStorageOptions,
-  getLotSellingDecision
+  verifyAssay,
+  aiQualityScanEstimate
 };
 

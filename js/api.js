@@ -195,11 +195,8 @@ const api = {
     getById: (lotId) => client.get(`/lots/${lotId}`),
     update: (lotId, lotData) => client.put(`/lots/${lotId}`, lotData),
     cancel: (lotId) => client.delete(`/lots/${lotId}`),
-    getStorageOptions: (lotId, params = {}) => {
-      const qs = new URLSearchParams(params).toString();
-      return client.get(`/lots/${lotId}/storage-options${qs ? `?${qs}` : ''}`);
-    },
-    getSellingDecision: (lotId) => client.get(`/lots/${lotId}/selling-decision`)
+    assay: (lotId, assayData) => client.post(`/lots/${lotId}/assay`, assayData),
+    aiEstimate: (scanData) => client.post('/lots/ai-estimate', scanData)
   },
 
   // 4. Public Marketplace & Government Mandi Prices (/api/market & /api/mandi-prices)

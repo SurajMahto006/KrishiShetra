@@ -64,28 +64,22 @@
       <!-- Navigation Links -->
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link dash-header__link--active" id="nav-dashboard">
-          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+          <i data-lucide="home" class="dash-header__link-icon"></i> Home
         </a>
-        <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+        <a href="javascript:void(0)" onclick="FarmerFlow.openCreateLotModal()" class="dash-header__link" id="nav-sell">
+          <i data-lucide="plus-circle" class="dash-header__link-icon"></i> Sell Crop
         </a>
-        <a href="market.html" class="dash-header__link" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
-        </a>
-        <a href="storage.html" class="dash-header__link" id="nav-storage">
-          <i data-lucide="warehouse" class="dash-header__link-icon"></i> Storage
-        </a>
-        <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
+        <a href="mandi-compare.html" class="dash-header__link" id="nav-compare">
+          <i data-lucide="trending-up" class="dash-header__link-icon"></i> Best Prices
         </a>
         <a href="buyers.html" class="dash-header__link" id="nav-buyers">
           <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> My Sales
         </a>
-        <a href="mandi-compare.html" class="dash-header__link" id="nav-compare">
-          <i data-lucide="bar-chart-2" class="dash-header__link-icon"></i> Compare
+        <a href="lots.html" class="dash-header__link" id="nav-lots">
+          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
         </a>
       </nav>
 
@@ -314,9 +308,9 @@
           <div class="dash-stat" id="stat-best-price" onclick="location.href='market.html'" tabindex="0" role="button" aria-label="Check Best Market Price">
             <div class="dash-stat__icon dash-stat__icon--gold"><i data-lucide="trending-up"></i></div>
             <div class="dash-stat__body">
-              <div class="dash-stat__label" id="lbl-stat-best-price">Best Market Price</div>
+              <div class="dash-stat__label">Best Mandi Price</div>
               <div class="dash-stat__value" id="stat-best-val">₹2,920/q</div>
-              <div class="dash-stat__sub">Mumbai APMC · ↑ 6.1% this week</div>
+              <div class="dash-stat__sub">Nashik APMC · Net ₹2,780/q</div>
             </div>
             <div class="dash-stat__trend dash-stat__trend--up"><i data-lucide="arrow-up-right"></i> 6.1%</div>
           </div>
@@ -332,11 +326,11 @@
           <div class="dash-stat" id="stat-pending-orders" onclick="location.href='orders.html'" tabindex="0" role="button" aria-label="Track Pending Orders">
             <div class="dash-stat__icon dash-stat__icon--orange"><i data-lucide="clock"></i></div>
             <div class="dash-stat__body">
-              <div class="dash-stat__label" id="lbl-stat-pending-orders">Pending Orders</div>
-              <div class="dash-stat__value" id="stat-orders-val" data-count="2">2</div>
-              <div class="dash-stat__sub">₹99,500 in progress</div>
+              <div class="dash-stat__label">Order & Payment Status</div>
+              <div class="dash-stat__value" id="stat-orders-val" data-count="3">3</div>
+              <div class="dash-stat__sub">₹31,000 pending settlement</div>
             </div>
-            <div class="dash-stat__trend dash-stat__trend--neutral"><i data-lucide="truck"></i> Pickup</div>
+            <div class="dash-stat__trend dash-stat__trend--neutral"><i data-lucide="arrow-right"></i> View Payment</div>
           </div>
         </div>
       </div>
@@ -408,46 +402,89 @@
                 <h3 style="font-size:16.5px; font-weight:800; color:var(--ks-evergreen); margin:0;">Storage & Selling Decision Support</h3>
                 <span style="font-size:12px; color:#666;">AI comparison: Sell at current mandi rate vs. Store in nearby accredited warehouse</span>
               </div>
+              <p style="font-size: 13px; color: var(--ks-text-muted); margin: 2px 0 0 0;">
+                Hold your harvest safely when mandi prices are low and sell when rates rebound.
+              </p>
             </div>
-            <span style="background:#E8F5E9; color:#2E7D32; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-              <i data-lucide="sparkles" style="width:13px;height:13px;"></i> AI ADVICE: STORE &amp; HOLD
-            </span>
+            <button class="btn btn--secondary btn--sm" onclick="openStorageModal()"><i data-lucide="search"></i> View All Warehouses</button>
           </div>
 
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; margin-bottom:14px;">
-            <!-- Crop Inventory Status -->
-            <div style="background:#FAF8F3; padding:12px 14px; border-radius:10px; border-left:3px solid var(--ks-gold);">
-              <div style="font-size:11px; font-weight:700; color:#777;">ACTIVE HARVEST INVENTORY</div>
-              <div style="font-size:14px; font-weight:800; color:#222; margin-top:2px;">🌾 Wheat — 50 Quintals</div>
-              <div style="font-size:12px; color:#555; margin-top:4px;">Current Mandi Price: <strong>₹2,400/q</strong></div>
-              <div style="font-size:12px; color:#2E7D32; margin-top:2px;">Projected in 45 Days: <strong>₹2,700/q (↑ +12.5%)</strong></div>
+          <div class="storage-grid" id="storage-quick-grid">
+            <!-- Storage Card 1 -->
+            <div class="storage-card">
+              <div>
+                <div class="storage-card__header">
+                  <div>
+                    <h4 class="storage-card__title">Nashik Agro Cold Storage</h4>
+                    <span class="storage-card__loc">📍 8.4 km · Dindori Road, Nashik</span>
+                  </div>
+                  <span class="storage-type-badge">Cold Chain</span>
+                </div>
+                <div class="storage-card__specs">
+                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>12 Tonnes</strong></div>
+                  <div class="storage-spec-row"><span>Storage Cost:</span><strong>₹2.5/kg/day</strong></div>
+                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Tomato, Onion, Grapes</span></div>
+                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
+                </div>
+                <div class="distress-savings-box">
+                  <span>💡</span>
+                  <span><strong>Save ₹3,400:</strong> Storing for 7 days avoids current mandi glut drop.</span>
+                </div>
+              </div>
+              <button class="btn btn--primary btn--sm" style="width:100%;" onclick="bookStorageDirect('Nashik Agro Cold Storage', 'Cold Chain', 2.5)">
+                <i data-lucide="bookmark-check"></i> Book Storage Space
+              </button>
             </div>
 
-            <!-- Financial Gain Breakdown -->
-            <div style="background:#F1F8F3; padding:12px 14px; border-radius:10px; border-left:3px solid #2E7D32;">
-              <div style="font-size:11px; font-weight:700; color:#2E7D32;">ESTIMATED NET EXTRA GAIN</div>
-              <div style="font-size:18px; font-weight:800; color:#2E7D32; margin-top:2px;">+₹7,450 (+6.2%)</div>
-              <div style="font-size:11.5px; color:#555; margin-top:4px;">After ₹3,800 storage rent, ₹700 handling &amp; 0.8% weight shrinkage</div>
+            <!-- Storage Card 2 -->
+            <div class="storage-card">
+              <div>
+                <div class="storage-card__header">
+                  <div>
+                    <h4 class="storage-card__title">Pune Krishi Dry Warehouse</h4>
+                    <span class="storage-card__loc">📍 14.2 km · Gultekdi Market Yard, Pune</span>
+                  </div>
+                  <span class="storage-type-badge" style="background:#FEF3C7; color:#92400E;">Dry Storage</span>
+                </div>
+                <div class="storage-card__specs">
+                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>45 Tonnes</strong></div>
+                  <div class="storage-spec-row"><span>Storage Cost:</span><strong>₹45/quintal/month</strong></div>
+                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Wheat, Rice, Soybean, Pulses</span></div>
+                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
+                </div>
+                <div class="distress-savings-box">
+                  <span>💡</span>
+                  <span><strong>Govt Subsidy:</strong> WDRA registered negotiable warehouse receipt eligible.</span>
+                </div>
+              </div>
+              <button class="btn btn--primary btn--sm" style="width:100%;" onclick="bookStorageDirect('Pune Krishi Dry Warehouse', 'Dry Storage', 1.5)">
+                <i data-lucide="bookmark-check"></i> Book Storage Space
+              </button>
             </div>
 
-            <!-- Best Storage Facility Option -->
-            <div style="background:#FAF8F3; padding:12px 14px; border-radius:10px; border-left:3px solid #1976D2;">
-              <div style="font-size:11px; font-weight:700; color:#1976D2;">NEAREST ACCREDITED WAREHOUSE</div>
-              <div style="font-size:13.5px; font-weight:800; color:#222; margin-top:2px;">MSWC Warehouse — Pune Hub</div>
-              <div style="font-size:11.5px; color:#555; margin-top:4px;">8.5 km away · ₹38/bag/month · 1,850 MT free space</div>
-            </div>
-          </div>
-
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; border-top:1px solid #EAE8E0; padding-top:12px;">
-            <p style="font-size:12.5px; color:#555; margin:0; max-width:650px;">
-              💡 <em>Avoid distress selling:</em> Store your produce to capture the expected post-harvest price surge or apply for <strong>Pledge Financing (e-NWR loan up to 75% value)</strong> for urgent cash requirements.
-            </p>
-            <div style="display:flex; gap:8px;">
-              <a href="storage.html" class="btn btn--primary" style="padding:8px 14px; font-size:12.5px;">
-                <i data-lucide="warehouse" style="width:14px;height:14px;"></i> View Storage Options
-              </a>
-              <button class="btn btn--secondary" onclick="location.href='storage.html#storage-calculator'" style="padding:8px 14px; font-size:12.5px;">
-                <i data-lucide="calculator" style="width:14px;height:14px;"></i> Sell vs Store Calculator
+            <!-- Storage Card 3 -->
+            <div class="storage-card">
+              <div>
+                <div class="storage-card__header">
+                  <div>
+                    <h4 class="storage-card__title">Solapur Central Cold Chain</h4>
+                    <span class="storage-card__loc">📍 22.0 km · Mohol Highway, Solapur</span>
+                  </div>
+                  <span class="storage-type-badge">Controlled Temp</span>
+                </div>
+                <div class="storage-card__specs">
+                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>18 Tonnes</strong></div>
+                  <div class="storage-spec-row"><span>Storage Cost:</span><strong>₹2.8/kg/day</strong></div>
+                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Chilli, Onion, Pomegranate</span></div>
+                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
+                </div>
+                <div class="distress-savings-box">
+                  <span>💡</span>
+                  <span><strong>Zero Loss:</strong> Multi-chamber dehumidifier preservation.</span>
+                </div>
+              </div>
+              <button class="btn btn--primary btn--sm" style="width:100%;" onclick="bookStorageDirect('Solapur Central Cold Chain', 'Controlled Temp', 2.8)">
+                <i data-lucide="bookmark-check"></i> Book Storage Space
               </button>
             </div>
           </div>
@@ -940,30 +977,48 @@
   </nav>
 
   <!-- MODALS -->
-  <!-- CREATE LOT MODAL -->
+  <!-- 1. MULTI-STEP CROP LOT CREATION WIZARD (8-Step Flow) -->
   <div class="dash-modal-overlay" id="create-lot-modal-overlay">
-    <div class="dash-modal" id="create-lot-modal">
+    <div class="dash-modal dash-modal--lg" id="create-lot-modal" style="max-width: 680px;">
       <div class="dash-modal__header">
         <h3>+ Create New Crop Lot</h3>
         <button class="dash-modal__close" id="create-lot-modal-close" aria-label="Close"><i
             data-lucide="x"></i></button>
       </div>
-      <form class="dash-modal__form" id="create-lot-form">
-        <div class="dash-modal__field">
-          <label for="lot-crop-select">Crop</label>
-          <select id="lot-crop-select" class="dash-filter-select" required>
-            <option value="rice">Rice</option>
-            <option value="wheat">Wheat</option>
-            <option value="onion">Onion</option>
-            <option value="tomato">Tomato</option>
-            <option value="maize">Maize</option>
-            <option value="soybean">Soybean</option>
-            <option value="potato">Potato</option>
-            <option value="chilli">Chilli</option>
-            <option value="pulses">Pulses</option>
-          </select>
+
+      <!-- 8-Step Stepper Progress Bar -->
+      <div class="lot-wizard-stepper" id="lot-wizard-stepper">
+        <div class="lot-wizard-step active" data-step="1"><div class="lot-wizard-step-node">1</div><div class="lot-wizard-step-label">Crop</div></div>
+        <div class="lot-wizard-step" data-step="2"><div class="lot-wizard-step-node">2</div><div class="lot-wizard-step-label">Qty</div></div>
+        <div class="lot-wizard-step" data-step="3"><div class="lot-wizard-step-node">3</div><div class="lot-wizard-step-label">Grade</div></div>
+        <div class="lot-wizard-step" data-step="4"><div class="lot-wizard-step-node">4</div><div class="lot-wizard-step-label">Farm</div></div>
+        <div class="lot-wizard-step" data-step="5"><div class="lot-wizard-step-node">5</div><div class="lot-wizard-step-label">Price</div></div>
+        <div class="lot-wizard-step" data-step="6"><div class="lot-wizard-step-node">6</div><div class="lot-wizard-step-label">Dates</div></div>
+        <div class="lot-wizard-step" data-step="7"><div class="lot-wizard-step-node">7</div><div class="lot-wizard-step-label">Specs</div></div>
+        <div class="lot-wizard-step" data-step="8"><div class="lot-wizard-step-node">8</div><div class="lot-wizard-step-label">Publish</div></div>
+      </div>
+
+      <form id="create-lot-form">
+        <!-- Step 1: Crop Selection -->
+        <div class="lot-wizard-pane active" id="wizard-pane-1">
+          <label style="font-weight:700; color:var(--ks-evergreen); font-size:14px; display:block; margin-bottom:6px;">Choose Your Crop:</label>
+          <div class="lot-crop-chips-grid">
+            <div class="lot-crop-chip selected" data-crop="tomato"><div class="lot-crop-chip-icon">🍅</div><div class="lot-crop-chip-name">Tomato</div><div class="lot-crop-chip-price">₹2,400/q</div></div>
+            <div class="lot-crop-chip" data-crop="rice"><div class="lot-crop-chip-icon">🌾</div><div class="lot-crop-chip-name">Rice</div><div class="lot-crop-chip-price">₹2,850/q</div></div>
+            <div class="lot-crop-chip" data-crop="wheat"><div class="lot-crop-chip-icon">🌾</div><div class="lot-crop-chip-name">Wheat</div><div class="lot-crop-chip-price">₹2,650/q</div></div>
+            <div class="lot-crop-chip" data-crop="onion"><div class="lot-crop-chip-icon">🧅</div><div class="lot-crop-chip-name">Onion</div><div class="lot-crop-chip-price">₹2,850/q</div></div>
+            <div class="lot-crop-chip" data-crop="soybean"><div class="lot-crop-chip-icon">🫘</div><div class="lot-crop-chip-name">Soybean</div><div class="lot-crop-chip-price">₹4,650/q</div></div>
+            <div class="lot-crop-chip" data-crop="potato"><div class="lot-crop-chip-icon">🥔</div><div class="lot-crop-chip-name">Potato</div><div class="lot-crop-chip-price">₹1,800/q</div></div>
+            <div class="lot-crop-chip" data-crop="chilli"><div class="lot-crop-chip-icon">🌶️</div><div class="lot-crop-chip-name">Chilli</div><div class="lot-crop-chip-price">₹8,500/q</div></div>
+            <div class="lot-crop-chip" data-crop="cotton"><div class="lot-crop-chip-icon">☁️</div><div class="lot-crop-chip-name">Cotton</div><div class="lot-crop-chip-price">₹6,800/q</div></div>
+            <div class="lot-crop-chip" data-crop="maize"><div class="lot-crop-chip-icon">🌽</div><div class="lot-crop-chip-name">Maize</div><div class="lot-crop-chip-price">₹2,300/q</div></div>
+            <div class="lot-crop-chip" data-crop="pulses"><div class="lot-crop-chip-icon">🥣</div><div class="lot-crop-chip-name">Pulses</div><div class="lot-crop-chip-price">₹5,200/q</div></div>
+          </div>
+          <input type="hidden" id="wiz-crop-val" value="tomato">
         </div>
-        <div class="dash-form-row">
+
+        <!-- Step 2: Available Quantity -->
+        <div class="lot-wizard-pane" id="wizard-pane-2">
           <div class="dash-modal__field">
             <label for="lot-qty-input">Quantity (Quintals)</label>
             <input type="number" id="lot-qty-input" class="dash-form-input" placeholder="e.g. 25" min="1" max="10000"
@@ -975,19 +1030,21 @@
               required>
           </div>
         </div>
-        <div class="dash-form-row">
+
+        <!-- Step 3: Quality / Grade & Certification -->
+        <div class="lot-wizard-pane" id="wizard-pane-3">
           <div class="dash-modal__field">
-            <label for="lot-grade-select">Quality / Grade</label>
-            <select id="lot-grade-select" class="dash-filter-select">
-              <option value="Grade A">Grade A (Premium)</option>
-              <option value="Grade B">Grade B (Standard)</option>
-              <option value="Export Quality">Export Quality</option>
-              <option value="Organic Certified">Organic Certified</option>
+            <label for="wiz-grade-select">Quality Grade</label>
+            <select id="wiz-grade-select" class="dash-filter-select">
+              <option value="Grade A" selected>Grade A (Premium / Clean / High Sortex)</option>
+              <option value="Grade B">Grade B (FAQ Commercial Standard)</option>
+              <option value="Export Quality">Export Quality (Global GAP / MRL Tested)</option>
+              <option value="Organic Certified">Organic Certified (NPOP / Jaivik Bharat)</option>
             </select>
           </div>
           <div class="dash-modal__field">
-            <label for="lot-harvest-input">Harvest Date</label>
-            <input type="date" id="lot-harvest-input" class="dash-form-input" required>
+            <label for="wiz-cert-input">Certification or Lab Test (Optional)</label>
+            <input type="text" id="wiz-cert-input" class="dash-form-input" placeholder="e.g. AGMARK A-Grade / Spices Board Verified / Organic NPOP-2026">
           </div>
         </div>
         <div class="dash-modal__field">
@@ -997,19 +1054,12 @@
         </div>
         <div class="dash-form-row">
           <div class="dash-modal__field">
-            <label for="lot-storage-type">Storage Location / Facility</label>
-            <select id="lot-storage-type" class="dash-filter-select">
-              <option value="farm">On Farm / Field</option>
-              <option value="warehouse">Nearby Warehouse</option>
-              <option value="cold_storage">Cold Storage</option>
-            </select>
+            <label for="wiz-location-input">Farm Village / Dispatch Hub</label>
+            <input type="text" id="wiz-location-input" class="dash-form-input" value="Nashik, Maharashtra" placeholder="Village, Taluka, District, State" required>
           </div>
           <div class="dash-modal__field">
-            <label for="lot-storage-decision">Selling Strategy</label>
-            <select id="lot-storage-decision" class="dash-filter-select">
-              <option value="sell_now">Sell Now (Immediate)</option>
-              <option value="store_and_hold">Store &amp; Hold for Higher Price</option>
-            </select>
+            <label for="wiz-pincode-input">Pincode (For automatic buyer & transporter distance calculation)</label>
+            <input type="text" id="wiz-pincode-input" class="dash-form-input" value="422003" maxlength="6">
           </div>
         </div>
         <div class="dash-modal__field">
@@ -1020,6 +1070,216 @@
         <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-submit-lot"><i
             data-lucide="check"></i> Create & List Lot</button>
       </form>
+    </div>
+  </div>
+
+  <!-- 2. STORAGE NEAR YOU MODAL (Warehouse & Cold Storage Discovery) -->
+  <div class="dash-modal-overlay" id="storage-modal-overlay">
+    <div class="dash-modal dash-modal--lg" id="storage-modal" style="max-width: 780px;">
+      <div class="dash-modal__header">
+        <div>
+          <h3>🏢 Storage Facilities & Cold Warehouses</h3>
+          <span class="dash-crop-modal__sub">Prevent forced distress selling by storing produce at negotiable warehouse receipt (NWR) facilities</span>
+        </div>
+        <button class="dash-modal__close" id="storage-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <input type="text" id="storage-search-input" class="dash-form-input" style="max-width:280px;" placeholder="Search by district or crop...">
+          <div style="font-size:12px; color:var(--ks-text-muted);">Showing 4 verified facilities in Maharashtra</div>
+        </div>
+        <div class="storage-grid" id="storage-modal-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. STORAGE BOOKING CONFIRMATION MODAL -->
+  <div class="dash-modal-overlay" id="storage-booking-modal-overlay">
+    <div class="dash-modal dash-modal--sm" id="storage-booking-modal">
+      <div class="dash-modal__header">
+        <h3>Book Storage Space</h3>
+        <button class="dash-modal__close" id="storage-booking-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <form class="dash-modal__form" id="storage-booking-form">
+        <div class="dash-modal__field">
+          <label>Facility</label>
+          <input type="text" id="sb-facility-name" class="dash-form-input" readonly>
+        </div>
+        <div class="dash-form-row">
+          <div class="dash-modal__field">
+            <label for="sb-crop-select">Crop</label>
+            <select id="sb-crop-select" class="dash-filter-select">
+              <option value="Tomato">Tomato</option>
+              <option value="Onion">Onion</option>
+              <option value="Rice">Rice</option>
+              <option value="Wheat">Wheat</option>
+              <option value="Soybean">Soybean</option>
+              <option value="Potato">Potato</option>
+            </select>
+          </div>
+          <div class="dash-modal__field">
+            <label for="sb-qty-input">Quantity (Tonnes)</label>
+            <input type="number" id="sb-qty-input" class="dash-form-input" value="5" min="1" max="100" required>
+          </div>
+        </div>
+        <div class="dash-modal__field">
+          <label for="sb-duration-days">Duration (Days)</label>
+          <input type="number" id="sb-duration-days" class="dash-form-input" value="14" min="1" max="180" required>
+        </div>
+        <div id="sb-cost-summary" style="background:#FAF9F5; border:1px solid #E2E0D5; border-radius:8px; padding:10px 12px; font-size:13px; margin-bottom:12px;">
+          Estimated Total Cost: <strong>₹1,750</strong> (₹2.5/kg/day)
+        </div>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="check"></i> Confirm Reservation</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. ARRANGE TRANSPORT MODAL -->
+  <div class="dash-modal-overlay" id="transport-modal-overlay">
+    <div class="dash-modal dash-modal--lg" id="transport-modal" style="max-width: 780px;">
+      <div class="dash-modal__header">
+        <div>
+          <h3>🚚 Arrange Farm Gate Transport</h3>
+          <span class="dash-crop-modal__sub">Verified agri-logistics drivers with transparent per-km rates</span>
+        </div>
+        <button class="dash-modal__close" id="transport-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <div class="transport-grid" id="transport-modal-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. KISAN HELP & DISPUTES / GRIEVANCE MODAL -->
+  <div class="dash-modal-overlay" id="disputes-modal-overlay">
+    <div class="dash-modal dash-modal--lg" id="disputes-modal" style="max-width: 720px;">
+      <div class="dash-modal__header">
+        <div>
+          <h3>🛡️ Kisan Grievance & Dispute Redressal</h3>
+          <span class="dash-crop-modal__sub">Raise and track issues regarding payments, quality, or transport</span>
+        </div>
+        <button class="dash-modal__close" id="disputes-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <!-- Tabs -->
+        <div style="display:flex; gap:10px; border-bottom:1px solid #E2E0D5; padding-bottom:10px; margin-bottom:16px;">
+          <button type="button" class="btn btn--sm btn--primary" id="tab-dispute-raise" onclick="switchDisputeTab('raise')">+ Raise New Complaint</button>
+          <button type="button" class="btn btn--sm btn--secondary" id="tab-dispute-history" onclick="switchDisputeTab('history')">My Active Disputes (<span id="dispute-count-badge">1</span>)</button>
+        </div>
+
+        <!-- Tab 1: Raise Dispute Form -->
+        <div id="dispute-pane-raise">
+          <form class="dash-modal__form" id="dispute-form">
+            <div class="dash-modal__field">
+              <label for="disp-trx-select">Select Order / Transaction</label>
+              <select id="disp-trx-select" class="dash-filter-select" required>
+                <option value="KS-ORD-2026-000102">KS-ORD-2026-000102 · Rice (25q) · ABC Foods Ltd (₹71,250)</option>
+                <option value="KS-ORD-2026-000098">KS-ORD-2026-000098 · Onion (12q) · Reliance Fresh (₹34,200)</option>
+                <option value="General Inquiry">General / Non-Order Grievance</option>
+              </select>
+            </div>
+
+            <div class="dash-modal__field">
+              <label for="disp-reason-select">Complaint Category</label>
+              <select id="disp-reason-select" class="dash-filter-select" required>
+                <option value="Payment not received">Payment not received / Delay past 24 hours</option>
+                <option value="Quantity mismatch">Quantity mismatch at delivery weighbridge</option>
+                <option value="Quality disagreement">Quality / Grading deduction disagreement</option>
+                <option value="Buyer cancelled order">Buyer cancelled after dispatch</option>
+                <option value="Transport issue">Transport delay / Truck no-show</option>
+                <option value="Damaged goods">Produce damaged during transit</option>
+                <option value="Incorrect offer">Incorrect offer settlement amount</option>
+                <option value="Other">Other grievance</option>
+              </select>
+            </div>
+
+            <div class="dash-modal__field">
+              <label for="disp-desc-input">Describe the Issue in Detail</label>
+              <textarea id="disp-desc-input" class="dash-form-textarea" rows="3" placeholder="Please provide specific details including dates, weighment slip numbers, and communication with the buyer." required></textarea>
+            </div>
+
+            <div class="dash-modal__field">
+              <label for="disp-file-input">Upload Supporting Receipt / Weighment Slip / Photo (Optional)</label>
+              <input type="file" id="disp-file-input" class="dash-form-input" accept="image/*,.pdf">
+            </div>
+
+            <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="send"></i> Submit Dispute Ticket</button>
+          </form>
+        </div>
+
+        <!-- Tab 2: Dispute History Tracker -->
+        <div id="dispute-pane-history" style="display:none;">
+          <div id="dispute-history-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST-LISTING GUIDANCE MODAL (Section 7: Smart Guidance after listing) -->
+  <div class="dash-modal-overlay" id="post-listing-modal-overlay">
+    <div class="dash-modal dash-modal--sm" id="post-listing-modal" style="text-align:center;">
+      <div class="dash-modal__header" style="justify-content:flex-end;">
+        <button class="dash-modal__close" onclick="closeModal('post-listing-modal-overlay')"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad" style="padding-top:0;">
+        <div style="font-size:48px; margin-bottom:8px;">🎉</div>
+        <h3 style="font-size:22px; font-weight:800; color:var(--ks-evergreen); margin-bottom:4px;">Your Crop is Ready to Sell! ✓</h3>
+        <p style="font-size:13px; color:#666; margin-bottom:18px;">Your lot has been listed across the KrishiShetra network.</p>
+
+        <div style="background:#F5F4ED; border:1px solid #E5E4DD; border-radius:12px; padding:16px; margin-bottom:20px; text-align:left;">
+          <div style="font-size:12px; font-weight:700; color:var(--ks-evergreen); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:10px;">
+            ✨ Automatically Found for Your Listing:
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div style="background:#FFFFFF; padding:10px; border-radius:8px; border:1px solid #EAE8DC; display:flex; align-items:center; gap:8px;">
+              <span style="font-size:20px;">🤝</span>
+              <div>
+                <strong style="font-size:15px; color:#12372A;">5 Buyers</strong>
+                <div style="font-size:11px; color:#777;">Interested today</div>
+              </div>
+            </div>
+            <div style="background:#FFFFFF; padding:10px; border-radius:8px; border:1px solid #EAE8DC; display:flex; align-items:center; gap:8px;">
+              <span style="font-size:20px;">📍</span>
+              <div>
+                <strong style="font-size:15px; color:#12372A;">3 Mandis</strong>
+                <div style="font-size:11px; color:#777;">High prices near you</div>
+              </div>
+            </div>
+            <div style="background:#FFFFFF; padding:10px; border-radius:8px; border:1px solid #EAE8DC; display:flex; align-items:center; gap:8px;">
+              <span style="font-size:20px;">🚚</span>
+              <div>
+                <strong style="font-size:15px; color:#12372A;">2 Transports</strong>
+                <div style="font-size:11px; color:#777;">Ready for pickup</div>
+              </div>
+            </div>
+            <div style="background:#FFFFFF; padding:10px; border-radius:8px; border:1px solid #EAE8DC; display:flex; align-items:center; gap:8px;">
+              <span style="font-size:20px;">🏢</span>
+              <div>
+                <strong style="font-size:15px; color:#12372A;">1 Cold Storage</strong>
+                <div style="font-size:11px; color:#777;">Available 8 km</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn btn--primary" style="width:100%; background:var(--ks-evergreen); color:#FFFFFF;" onclick="closeModal('post-listing-modal-overlay'); location.href='buyers.html';">
+            <i data-lucide="users"></i> See Best Buyers (5 Matched)
+          </button>
+          <button class="btn btn--secondary" style="width:100%;" onclick="closeModal('post-listing-modal-overlay'); location.href='mandi-compare.html';">
+            <i data-lucide="bar-chart-2"></i> Compare Mandi Prices
+          </button>
+          <button class="btn btn--secondary" style="width:100%;" onclick="closeModal('post-listing-modal-overlay'); openTransportModal();">
+            <i data-lucide="truck"></i> Arrange Transport
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1167,6 +1427,7 @@
   <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/mandi-map.js"></script>
+  <script src="js/grading-engine.js"></script>
   <script src="js/farmer.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
