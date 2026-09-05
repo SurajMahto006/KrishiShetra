@@ -16,13 +16,20 @@ const activityRoutes = require('./routes/activity.routes');
 const lotRoutes = require('./routes/lot.routes');
 const marketRoutes = require('./routes/market.routes');
 const offerRoutes = require('./routes/offer.routes');
+const storageRoutes = require('./routes/storage.routes');
+const decisionRoutes = require('./routes/decision.routes');
 const connectDB = require('./config/db');
+const { seedInitialFacilities } = require('./controllers/storage.controller');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB & Seed initial storage facilities
+connectDB().then(() => {
+  seedInitialFacilities();
+}).catch(() => {
+  seedInitialFacilities();
+});
 
 // Dynamic Production & Development CORS Configuration
 const allowedOrigins = [
@@ -78,6 +85,8 @@ app.use('/api/activity', activityRoutes);
 app.use('/api/lots', lotRoutes);
 app.use('/api/market', marketRoutes);
 app.use('/api/offers', offerRoutes);
+app.use('/api/storage', storageRoutes);
+app.use('/api/decision', decisionRoutes);
 app.use('/api/test', testRoutes);
 
 

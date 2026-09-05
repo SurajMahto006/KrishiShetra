@@ -462,8 +462,8 @@ const FarmerFlow = {
     }
     if (!harvestDate) {
       this.showToast('Please select a harvest date', 'error');
-      return;
-    }
+    const storageTypeVal = document.getElementById('lot-storage-type')?.value || 'farm';
+    const storageDecisionVal = document.getElementById('lot-storage-decision')?.value || 'sell_now';
 
     const payload = {
       cropName: cropName,
@@ -475,7 +475,14 @@ const FarmerFlow = {
       harvestDate: harvestDate,
       qualityGrade: gradeVal,
       qualityNotes: desc,
-      storageType: 'farm',
+      storageType: storageTypeVal,
+      preferredStorageType: storageTypeVal,
+      storageRequired: storageTypeVal !== 'farm',
+      currentStorageStatus: storageTypeVal !== 'farm' ? 'stored_in_warehouse' : 'on_farm',
+      sellNowOrHoldDecision: {
+        recommendation: storageDecisionVal === 'store_and_hold' ? 'STORE_AND_HOLD' : 'SELL_NOW',
+        calculatedAt: new Date()
+      },
       storageLocation: this.profile ? `${this.profile.district || ''}, ${this.profile.state || ''}` : '',
       state: this.profile?.state || 'Maharashtra',
       district: this.profile?.district || 'Pune',
@@ -652,6 +659,9 @@ const FarmerFlow = {
         district: 'Pune',
         state: 'Maharashtra',
         status: 'active',
+        storageType: 'warehouse',
+        storageFacilityName: 'MSWC Pune Warehouse',
+        sellNowOrHoldDecision: 'STORE_AND_HOLD',
         harvestDate: '2026-08-15'
       },
       {
@@ -666,6 +676,9 @@ const FarmerFlow = {
         district: 'Nashik',
         state: 'Maharashtra',
         status: 'active',
+        storageType: 'cold_storage',
+        storageFacilityName: 'Sahyadri Agro Cold Chain',
+        sellNowOrHoldDecision: 'STORE_AND_HOLD',
         harvestDate: '2026-08-20'
       },
       {
@@ -680,10 +693,14 @@ const FarmerFlow = {
         district: 'Pune',
         state: 'Maharashtra',
         status: 'draft',
+        storageType: 'farm',
         harvestDate: '2026-08-10'
       }
     ];
     if (filter === 'all') return demo;
+    if (filter === 'stored') {
+      return demo.filter(l => l.storageType === 'warehouse' || l.storageType === 'cold_storage' || l.storageRequired);
+    }
     return demo.filter(l => l.status === filter);
   },
 
@@ -722,53 +739,89 @@ const FarmerFlow = {
       return;
     }
 
-    const statusBadge = (status) => {
-      const map = {
-        active: { bg: '#E5F0E7', color: '#12372A', text: 'Active' },
-        draft: { bg: '#FEF3C7', color: '#92400E', text: 'Draft' },
-        sold: { bg: '#DBEAFE', color: '#1E40AF', text: 'Sold' },
-        cancelled: { bg: '#FEE2E2', color: '#991B1B', text: 'Cancelled' }
-      };
-      const s = map[status] || map.active;
-      return `<span style="padding: 3px 8px; border-radius: 6px; background: ${s.bg}; color: ${s.color}; font-size: 11px; font-weight: 700; text-transform: uppercase;">${s.text}</span>`;
+    const cropIcon = (name = '') => {
+      const n = name.toLowerCase();
+      if (n.includes('onion')) return '🧅';
+      if (n.includes('wheat')) return '🌾';
+      if (n.includes('rice')) return '🌾';
+      if (n.includes('potato')) return '🥔';
+      if (n.includes('tomato')) return '🍅';
+      if (n.includes('soybean')) return '🫘';
+      if (n.includes('maize')) return '🌽';
+      if (n.includes('chilli')) return '🌶️';
+      if (n.includes('groundnut')) return '🥜';
+      if (n.includes('cotton')) return '☁️';
+      if (n.includes('sugarcane')) return '🎋';
+      if (n.includes('mango')) return '🥭';
+      if (n.includes('banana')) return '🍌';
+      if (n.includes('grapes')) return '🍇';
+      if (n.includes('pulses')) return '🥣';
+      return '🌾';
+    };
+
+    const statusBadge = (status, storageType) => {
+      if (storageType === 'warehouse') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #E8F5E9; color: #2E7D32; font-size: 12px; font-weight: 800;">🏬 Stored in Warehouse</span>`;
+      }
+      if (storageType === 'cold_storage') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #E1F5FE; color: #0288D1; font-size: 12px; font-weight: 800;">❄️ Cold Storage</span>`;
+      }
+      if (status === 'active') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #E8F5E9; color: #12372A; font-size: 12px; font-weight: 800; border: 1px solid #C8E6C9;">🟢 Active for Sale</span>`;
+      }
+      if (status === 'draft') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #FEF3C7; color: #92400E; font-size: 12px; font-weight: 800;">📝 Draft</span>`;
+      }
+      if (status === 'sold') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800;">✓ Sold</span>`;
+      }
+      return `<span style="padding: 4px 10px; border-radius: 8px; background: #F5F4ED; color: #666; font-size: 12px; font-weight: 700;">${status}</span>`;
     };
 
     container.innerHTML = lots.map(lot => `
-      <div class="dash-lot-card" style="background: #FFFFFF; border: 1px solid var(--border-light, #E5E4DD); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <div style="width: 44px; height: 44px; border-radius: 10px; background: #F5F4ED; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: var(--ks-evergreen);">
-            🌾
+      <div class="kisan-lot-card">
+        <div class="kisan-lot-card__left">
+          <div class="kisan-lot-card__icon">
+            ${cropIcon(lot.cropName)}
           </div>
-          <div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-family: monospace; font-size: 12px; color: var(--ks-text-muted); font-weight: 600;">${lot.lotId}</span>
-              ${statusBadge(lot.status)}
+          <div class="kisan-lot-card__details">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+              <span style="font-family: monospace; font-size: 12px; color: #777; font-weight: 700;">${lot.lotId}</span>
+              ${statusBadge(lot.status, lot.storageType)}
             </div>
-            <h4 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 2px 0;">${lot.cropName} <span style="font-size: 13px; font-weight: 400; color: #666;">(${lot.variety || 'Standard'})</span></h4>
-            <div style="font-size: 12.5px; color: var(--ks-text-muted);">
-              <strong>${lot.quantity} ${lot.quantityUnit || 'quintal'}</strong> • Grade ${lot.qualityGrade || 'A'} • ${lot.district || 'Pune'}, ${lot.state || 'Maharashtra'}
-            </div>
+            <h4>${lot.cropName} <span style="font-size: 13.5px; font-weight: 500; color: #666;">(${lot.variety || 'Standard Grade'})</span></h4>
+            <p>
+              <strong>${lot.quantity} ${lot.quantityUnit || 'quintal'}</strong> • Grade: <strong>Grade ${lot.qualityGrade || 'A'}</strong> • 📍 ${lot.district || 'Pune'}, ${lot.state || 'Maharashtra'}
+            </p>
           </div>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
           <div style="text-align: right;">
-            <div style="font-size: 11px; text-transform: uppercase; color: var(--ks-text-muted); font-weight: 600;">Asking Price</div>
-            <div style="font-size: 16px; font-weight: 800; color: var(--ks-evergreen);">₹${lot.askingPrice?.toLocaleString('en-IN')} <span style="font-size: 11px; font-weight: 400;">/ ${lot.priceUnit || 'q'}</span></div>
+            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Asking Price</div>
+            <div class="kisan-lot-card__price-tag">
+              ₹${lot.askingPrice?.toLocaleString('en-IN')} <span style="font-size: 12px; font-weight: 500; color: #555;">/ ${lot.priceUnit || 'quintal'}</span>
+            </div>
           </div>
 
-          <div style="display: flex; gap: 6px;">
-            <button class="btn btn--sm btn--secondary" onclick="FarmerFlow.viewLotDetails('${lot.lotId}')" title="View details">
-              Details
-            </button>
+          <div class="kisan-lot-card__actions">
             ${lot.status === 'active' || lot.status === 'draft' ? `
-              <button class="btn btn--sm btn--secondary" onclick="FarmerFlow.openEditLotModal('${lot.lotId}')" title="Edit lot">
-                Edit
+              <button class="btn btn--secondary" onclick="FarmerFlow.openEditLotModal('${lot.lotId}')" title="Edit Lot" style="min-height: 48px; padding: 10px 14px;">
+                <i data-lucide="edit-3"></i>
               </button>
-              <button class="btn btn--sm" style="background: rgba(220, 38, 38, 0.08); color: #dc2626; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;" onclick="FarmerFlow.confirmCancelLot('${lot.lotId}')" title="Cancel listing">
-                Cancel
+              <button class="btn" style="min-height: 48px; padding: 10px 14px; background: #FEE2E2; color: #991B1B; border: none; border-radius: 10px; cursor: pointer;" onclick="FarmerFlow.confirmCancelLot('${lot.lotId}')" title="Delete Lot">
+                <i data-lucide="trash-2"></i>
               </button>
             ` : ''}
+            <button class="btn btn--primary kisan-lot-card__btn" onclick="FarmerFlow.viewLotOffers('${lot.lotId}')" style="background: #12372A; border-color: #12372A; min-height: 48px; padding: 10px 18px; font-weight: 800;">
+              <i data-lucide="handshake"></i> <span>Sell & View Offers</span>
+            </button>
+            <a href="storage.html?crop=${encodeURIComponent(lot.cropName)}&qty=${lot.quantity}&price=${lot.askingPrice}" class="btn btn--secondary kisan-lot-card__btn" style="min-height: 48px; padding: 10px 18px; font-weight: 700; border-color: #D8C28A; color: #12372A;">
+              <i data-lucide="warehouse"></i> <span>Storage Options</span>
+            </a>
+            <button class="btn btn--secondary" onclick="FarmerFlow.viewLotDetails('${lot.lotId}')" title="View Details" style="min-height: 48px; padding: 10px 14px;">
+              <i data-lucide="eye"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -1338,9 +1391,35 @@ const FarmerFlow = {
 
 window.FarmerFlow = FarmerFlow;
 
+window.filterLotTab = function(filter) {
+  document.querySelectorAll('.dash-lot-tab').forEach(btn => {
+    btn.classList.remove('active');
+    btn.style.background = '#FFF';
+    btn.style.color = '#444';
+    btn.style.border = '1px solid #DDD';
+    btn.style.fontWeight = '600';
+  });
+
+  const activeBtn = document.getElementById(`tab-lot-${filter}`);
+  if (activeBtn) {
+    activeBtn.classList.add('active');
+    activeBtn.style.background = 'var(--ks-evergreen, #12372A)';
+    activeBtn.style.color = '#FFF';
+    activeBtn.style.border = 'none';
+    activeBtn.style.fontWeight = '700';
+  }
+
+  const titleElem = document.getElementById('lots-panel-title');
+  if (titleElem) {
+    if (filter === 'stored') titleElem.textContent = '🏬 Stored & Warehouse Lots (Storage Linkages)';
+    else if (filter === 'active') titleElem.textContent = '🌾 Active Farm Lots';
+    else titleElem.textContent = 'My Active Produce Lots';
+  }
+
+  FarmerFlow.loadMyLots(filter);
+};
+
 // Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => FarmerFlow.init());
-} else {
+document.addEventListener('DOMContentLoaded', () => {
   FarmerFlow.init();
-}
+});

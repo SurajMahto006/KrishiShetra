@@ -104,6 +104,39 @@ const produceLotSchema = new mongoose.Schema(
       trim: true,
       default: ''
     },
+    storageRequired: {
+      type: Boolean,
+      default: false
+    },
+    preferredStorageType: {
+      type: String,
+      enum: ['warehouse', 'cold_storage', 'silo', 'farm', 'other'],
+      default: 'warehouse'
+    },
+    storageFacility: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'StorageFacility',
+      default: null
+    },
+    storageDurationDays: {
+      type: Number,
+      default: 0
+    },
+    currentStorageStatus: {
+      type: String,
+      enum: ['on_farm', 'stored_in_warehouse', 'in_transit_to_storage', 'dispatched_from_storage'],
+      default: 'on_farm'
+    },
+    estimatedStorageCost: {
+      type: Number,
+      default: 0
+    },
+    sellNowOrHoldDecision: {
+      recommendation: { type: String, default: '' },
+      projectedNetGain: { type: Number, default: 0 },
+      holdingPeriodDays: { type: Number, default: 0 },
+      calculatedAt: { type: Date, default: null }
+    },
     // Pricing
     askingPrice: {
       type: Number,
