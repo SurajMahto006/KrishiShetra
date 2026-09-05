@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mandi Price Comparison & Profitability Intelligence — KrishiShetra</title>
-  <meta name="description" content="Enterprise B2B Mandi Price Comparison Dashboard. Compare prices, distance, freight rates, weather, and net realizations across 45+ Indian APMC mandis.">
+  <meta name="description"
+    content="Enterprise B2B Mandi Price Comparison Dashboard. Compare prices, distance, freight rates, weather, and net realizations across 45+ Indian APMC mandis.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap"
+    rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -22,6 +26,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
+
 <body class="dashboard-body" data-require-role="farmer">
 
   <!-- AMBIENT BACKGROUND -->
@@ -42,13 +47,20 @@
       </a>
 
       <nav class="dash-header__nav" id="dash-nav">
-        <a href="dashboard.html" class="dash-header__link"><i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard</a>
-        <a href="lots.html" class="dash-header__link"><i data-lucide="package" class="dash-header__link-icon"></i> My Lots</a>
-        <a href="market.html" class="dash-header__link"><i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market</a>
-        <a href="ai-forecast.html" class="dash-header__link"><i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast</a>
-        <a href="buyers.html" class="dash-header__link"><i data-lucide="users" class="dash-header__link-icon"></i> Buyers</a>
-        <a href="orders.html" class="dash-header__link"><i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders</a>
-        <a href="mandi-compare.html" class="dash-header__link dash-header__link--active"><i data-lucide="bar-chart-2" class="dash-header__link-icon"></i> Compare</a>
+        <a href="dashboard.html" class="dash-header__link"><i data-lucide="layout-dashboard"
+            class="dash-header__link-icon"></i> Dashboard</a>
+        <a href="lots.html" class="dash-header__link"><i data-lucide="package" class="dash-header__link-icon"></i> My
+          Lots</a>
+        <a href="market.html" class="dash-header__link"><i data-lucide="bar-chart-3" class="dash-header__link-icon"></i>
+          Market</a>
+        <a href="ai-forecast.html" class="dash-header__link"><i data-lucide="brain" class="dash-header__link-icon"></i>
+          AI Forecast</a>
+        <a href="buyers.html" class="dash-header__link"><i data-lucide="users" class="dash-header__link-icon"></i>
+          Buyers</a>
+        <a href="orders.html" class="dash-header__link"><i data-lucide="clipboard-list"
+            class="dash-header__link-icon"></i> Orders</a>
+        <a href="mandi-compare.html" class="dash-header__link dash-header__link--active"><i data-lucide="bar-chart-2"
+            class="dash-header__link-icon"></i> Compare</a>
       </nav>
 
       <div class="dash-header__actions">
@@ -67,10 +79,12 @@
               </div>
             </div>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="layout-dashboard"></i>
+              Dashboard</a>
             <a href="lots.html" class="dash-profile-dropdown__item"><i data-lucide="package"></i> My Lots</a>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
+            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
+                data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
       </div>
@@ -87,7 +101,8 @@
       <a href="dashboard.html" class="dash-mobile-nav__link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
       <a href="lots.html" class="dash-mobile-nav__link"><i data-lucide="package"></i> My Lots</a>
       <a href="market.html" class="dash-mobile-nav__link"><i data-lucide="bar-chart-3"></i> Market Prices</a>
-      <a href="mandi-compare.html" class="dash-mobile-nav__link dash-mobile-nav__link--active"><i data-lucide="bar-chart-2"></i> Compare Prices</a>
+      <a href="mandi-compare.html" class="dash-mobile-nav__link dash-mobile-nav__link--active"><i
+          data-lucide="bar-chart-2"></i> Compare Prices</a>
       <a href="buyers.html" class="dash-mobile-nav__link"><i data-lucide="users"></i> Buyers</a>
       <a href="orders.html" class="dash-mobile-nav__link"><i data-lucide="clipboard-list"></i> Orders</a>
     </div>
@@ -109,7 +124,8 @@
             <h1 class="mpc-page-hero__title">Mandi Price Comparison</h1>
             <span class="mpc-live-badge"><span class="mpc-live-dot"></span> Live Intelligence</span>
           </div>
-          <p class="mpc-page-hero__sub">Compare prices, logistics costs, distance and market conditions to find the most profitable mandi.</p>
+          <p class="mpc-page-hero__sub">Compare prices, logistics costs, distance and market conditions to find the most
+            profitable mandi.</p>
         </div>
 
         <div class="mpc-page-hero__actions">
@@ -130,6 +146,21 @@
        ═════════════════════════════════════════════════ -->
   <main class="mpc-main">
     <div class="container">
+
+      <!-- Official Government Data Disclosure Banner -->
+      <div class="mpc-gov-banner" id="mpc-gov-banner" style="background:#E5F0E7; border:1px solid #8FCB9B; border-radius:10px; padding:12px 18px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:18px;">🏛️</span>
+          <div>
+            <strong style="color:#12372A; font-size:13.5px;" id="mpc-gov-status-title">Government of India Mandi Data (Agmarknet)</strong>
+            <span style="color:#486653; font-size:12px; display:block;" id="mpc-gov-status-desc">Live and latest daily market price records from official data.gov.in repository</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span class="ks-badge ks-badge-protected" id="mpc-gov-status-badge" style="font-size:11px;">✓ Gov Data Connected</span>
+          <a href="https://data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi" target="_blank" rel="noopener" style="font-size:12px; color:#5B9A72; font-weight:600; text-decoration:underline;">Source: data.gov.in ↗</a>
+        </div>
+      </div>
 
       <!-- ── B) COMPARISON CONTROL & INPUT PANEL ── -->
       <section class="mpc-control-panel" id="mpc-controls-section">
@@ -174,7 +205,8 @@
             </label>
             <div class="mpc-qty-row">
               <div class="mpc-qty-input-wrap">
-                <input type="number" id="mpc-qty-input" class="mpc-input" value="25" min="1" max="10000" placeholder="Qty">
+                <input type="number" id="mpc-qty-input" class="mpc-input" value="25" min="1" max="10000"
+                  placeholder="Qty">
                 <span class="mpc-qty-unit-label">Quintals</span>
               </div>
               <div class="mpc-qty-presets">
@@ -363,7 +395,8 @@
         <div class="mpc-section-header">
           <div>
             <h2 class="mpc-section-title"><i data-lucide="table"></i> Multi-Mandi Decision Matrix</h2>
-            <p class="mpc-section-subtitle">Real-time comparison across prices, logistics deductions, net realization, and weather</p>
+            <p class="mpc-section-subtitle">Real-time comparison across prices, logistics deductions, net realization,
+              and weather</p>
           </div>
           <span class="mpc-badge mpc-badge--neutral" id="mpc-table-count">Loading...</span>
         </div>
@@ -383,7 +416,7 @@
                   <th>Arrivals</th>
                   <th>Demand</th>
                   <th>Weather</th>
-                  <th>7D Trend</th>
+                  <th>Gov Freshness</th>
                   <th>Recommendation</th>
                 </tr>
               </thead>
@@ -429,7 +462,8 @@
         <div class="mpc-section-header">
           <div>
             <h2 class="mpc-section-title"><i data-lucide="cloud-sun"></i> Market Conditions & Weather</h2>
-            <p class="mpc-section-subtitle">Live weather forecast, arrival pressures, and buyer liquidity in key mandis</p>
+            <p class="mpc-section-subtitle">Live weather forecast, arrival pressures, and buyer liquidity in key mandis
+            </p>
           </div>
         </div>
         <div class="mpc-weather-grid" id="mpc-weather-strip">
@@ -459,7 +493,9 @@
     <div class="container">
       <div class="footer__inner">
         <div>
-          <div class="footer__brand"><i data-lucide="sprout" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> KrishiShetra</div>
+          <div class="footer__brand"><i data-lucide="sprout"
+              style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
+            KrishiShetra</div>
           <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
         </div>
         <div class="footer__links">
@@ -484,8 +520,10 @@
       }
     })();
   </script>
+  <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/mandi-compare.js"></script>
 </body>
+
 </html>

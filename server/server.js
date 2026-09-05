@@ -18,6 +18,7 @@ const marketRoutes = require('./routes/market.routes');
 const offerRoutes = require('./routes/offer.routes');
 const storageRoutes = require('./routes/storage.routes');
 const decisionRoutes = require('./routes/decision.routes');
+const disputeRoutes = require('./routes/dispute.routes');
 const connectDB = require('./config/db');
 const { seedInitialFacilities } = require('./controllers/storage.controller');
 
@@ -84,9 +85,11 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/lots', lotRoutes);
 app.use('/api/market', marketRoutes);
+app.get('/api/mandi-prices', require('./controllers/market.controller').getMandiPrices);
 app.use('/api/offers', offerRoutes);
 app.use('/api/storage', storageRoutes);
 app.use('/api/decision', decisionRoutes);
+app.use('/api/disputes', disputeRoutes);
 app.use('/api/test', testRoutes);
 
 

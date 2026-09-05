@@ -255,6 +255,47 @@ const INITIAL_OFFERS_DATA = [
 // ═══════════════════════════════════════════════
 const INITIAL_ORDERS_DATA = [
   {
+    id: 'KS-ORD-DEMO-001',
+    orderId: 'KS-ORD-DEMO-001',
+    lotId: 'lot-107',
+    crop: 'Tomato',
+    cropName: 'Tomato',
+    variety: 'Hybrid Abhinav',
+    quantity: 50,
+    pricePerQ: 2500,
+    agreedPrice: 2500,
+    totalAmount: 125000,
+    productTotal: 125000,
+    transportCost: 0,
+    taxesTotal: 0,
+    grandTotal: 125000,
+    sellerName: 'Nashik Farmer Producer Co (FPO)',
+    farmerName: 'Nashik Farmer Producer Co (FPO)',
+    buyerName: 'ABC Foods Pvt Ltd',
+    status: 'CONFIRMED',
+    paymentStatus: 'ESCROW_PROTECTED',
+    hasDispute: true,
+    disputeId: 'KS-DSP-DEMO-001',
+    pickupAddress: 'Nashik APMC Yard No 2',
+    deliveryAddress: 'ABC Foods Warehouse, Chakan, Pune',
+    orderedAt: '2026-09-03 11:30',
+    logistics: {
+      truckNumber: 'MH 15 AB 4589',
+      driverName: 'Suresh Patil',
+      driverPhone: '+91 98222 33445',
+      currentLocation: 'Nashik APMC Terminal',
+      distanceRemainingKm: 0,
+      eta: 'Under Review',
+      status: 'DISPUTE_HELD'
+    },
+    timeline: [
+      { stage: 'ORDER_CREATED', label: 'Order Created', time: '03 Sep 11:30', done: true, party: 'Buyer' },
+      { stage: 'OFFER_ACCEPTED', label: 'Offer Accepted', time: '03 Sep 11:45', done: true, party: 'Seller' },
+      { stage: 'ORDER_CONFIRMED', label: 'Order Confirmed', time: '03 Sep 12:00', done: true, party: 'Escrow System' },
+      { stage: 'DISPUTE_OPENED', label: 'Dispute Raised: Quality Mismatch', time: '04 Sep 09:30', done: true, active: true, party: 'Buyer' }
+    ]
+  },
+  {
     id: 'ord-10245', lotId: 'lot-101', crop: 'Onion', variety: 'Red Garwa',
     quantity: 100, pricePerQ: 2800,
     productTotal: 280000, transportCost: 4000, taxesTotal: 1500,

@@ -94,7 +94,7 @@ const Auth = {
       email: `dev.${r}@krishishetra.local`,
       isDev: true
     };
-    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.setItem(this.TOKEN_KEY, `dev_${r}_token`);
     localStorage.setItem(this.DEV_SESSION_KEY, JSON.stringify(devUser));
     localStorage.setItem(this.USER_KEY, JSON.stringify(devUser));
     localStorage.setItem(this.ROLE_KEY, r);

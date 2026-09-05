@@ -37,6 +37,7 @@ function initRoleAwareNav() {
       { page: 'market.html', id: 'nav-market', icon: 'store', label: 'Marketplace' },
       { page: 'ai-forecast.html', id: 'nav-forecast', icon: 'brain', label: 'AI Forecast' },
       { page: 'orders.html', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
+      { page: 'disputes.html', id: 'nav-disputes', icon: 'shield-alert', label: 'Disputes' },
       { page: 'buyers.html', id: 'nav-buyers', icon: 'users', label: 'Buyer Inquiries' }
     ],
     buyer: [
@@ -44,6 +45,7 @@ function initRoleAwareNav() {
       { page: 'buyer.html#/buyer/marketplace', id: 'nav-market', icon: 'store', label: 'Marketplace' },
       { page: 'buyer.html#/buyer/inquiries', id: 'nav-inquiries', icon: 'message-square', label: 'My Inquiries' },
       { page: 'buyer.html#/buyer/orders', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
+      { page: 'disputes.html', id: 'nav-disputes', icon: 'shield-alert', label: 'Disputes' },
       { page: 'buyer.html#/buyer/directory', id: 'nav-directory', icon: 'users', label: 'Farmers & FPOs' },
       { page: 'buyer.html#/buyer/payments', id: 'nav-payments', icon: 'wallet', label: 'Escrow & Payments' }
     ],
@@ -64,12 +66,14 @@ function initRoleAwareNav() {
       { page: 'fpo-dashboard.html#market', id: 'nav-market', icon: 'store', label: 'Market' },
       { page: 'fpo-dashboard.html#buyers', id: 'nav-buyers', icon: 'briefcase', label: 'Buyers' },
       { page: 'fpo-dashboard.html#orders', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
+      { page: 'disputes.html', id: 'nav-disputes', icon: 'shield-alert', label: 'Disputes' },
       { page: 'fpo-dashboard.html#analytics', id: 'nav-analytics', icon: 'bar-chart-3', label: 'Analytics' }
     ],
     admin: [
       { page: 'admin/dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
       { page: 'admin/users.html', id: 'nav-users', icon: 'users', label: 'Users' },
       { page: 'admin/farmers.html', id: 'nav-farmers', icon: 'user-check', label: 'Farmers' },
+      { page: 'disputes.html', id: 'nav-disputes', icon: 'shield-alert', label: 'Disputes' },
       { page: 'admin/reports.html', id: 'nav-reports', icon: 'bar-chart-2', label: 'Reports' },
       { page: 'admin/settings.html', id: 'nav-settings', icon: 'settings', label: 'Settings' }
     ]

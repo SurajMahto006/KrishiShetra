@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dispute Redressal & Mediation — KrishiShetra</title>
+  <meta name="description"
+    content="Fair, transparent grievance redressal, payment protection, and neutral FPO mediation for farmers and buyers on KrishiShetra.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap"
+    rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* Dispute Center Specific Scoped Styles */
+    .dispute-page-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 992px) {
+      .dispute-page-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dispute-item-card {
+      background: var(--ks-card-white, #FFFFFF);
+      border: 1px solid var(--ks-border, #E2E0D5);
+      border-radius: var(--radius-md, 14px);
+      padding: 18px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .dispute-item-card:hover {
+      border-color: var(--ks-sage, #5B9A72);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .dispute-item-card--active {
+      border-color: var(--ks-evergreen, #12372A);
+      background: #FAF9F5;
+      box-shadow: 0 4px 14px rgba(18, 55, 42, 0.06);
+    }
+
+    .dispute-item-card--active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 14px;
+      bottom: 14px;
+      width: 4px;
+      background: var(--ks-evergreen, #12372A);
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Protection Banner */
+    .protection-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full, 9999px);
+      font-size: 11.5px;
+      font-weight: 600;
+      background: var(--ks-pale-sage, #E5F0E7);
+      color: var(--ks-evergreen, #12372A);
+      border: 1px solid var(--ks-mint, #8FCB9B);
+    }
+
+    .protection-banner-card {
+      background: var(--ks-card-white, #FFFFFF);
+      border: 1px solid var(--ks-border-sage, #D2E4D6);
+      border-left: 4px solid var(--ks-sage, #5B9A72);
+      border-radius: var(--radius-md, 14px);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* 5-Step Visual Timeline */
+    .dispute-timeline-stepper {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 24px 0 28px 0;
+      padding: 0 10px;
+    }
+
+    .dispute-timeline-stepper::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 36px;
+      right: 36px;
+      height: 2px;
+      background: var(--ks-border, #E2E0D5);
+      z-index: 1;
+    }
+
+    .timeline-step-node {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      flex: 1;
+    }
+
+    .timeline-step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin: 0 auto 8px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--ks-card-white, #FFFFFF);
+      color: var(--ks-text-muted, #6F7F75);
+      border: 2px solid var(--ks-border, #E2E0D5);
+      transition: all 0.2s ease;
+    }
+
+    .timeline-step-node.is-done .timeline-step-circle {
+      background: var(--ks-evergreen, #12372A);
+      border-color: var(--ks-evergreen, #12372A);
+      color: #FFFFFF;
+    }
+
+    .timeline-step-node.is-active .timeline-step-circle {
+      background: var(--ks-amber, #D6A84F);
+      border-color: var(--ks-amber, #D6A84F);
+      color: #FFFFFF;
+      box-shadow: 0 0 0 4px var(--ks-pale-sage, #E5F0E7);
+    }
+
+    .timeline-step-node.is-rejected .timeline-step-circle {
+      background: var(--ks-terracotta, #C96D5B);
+      border-color: var(--ks-terracotta, #C96D5B);
+      color: #FFFFFF;
+    }
+
+    .timeline-step-label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--ks-text-muted, #6F7F75);
+    }
+
+    .timeline-step-node.is-active .timeline-step-label {
+      color: var(--ks-evergreen, #12372A);
+      font-weight: 700;
+    }
+
+    .timeline-step-node.is-done .timeline-step-label {
+      color: var(--ks-charcoal, #17221D);
+      font-weight: 600;
+    }
+
+    /* Detail View Tabs & Panels */
+    .detail-section-block {
+      background: var(--ks-card-white, #FFFFFF);
+      border: 1px solid var(--ks-border, #E2E0D5);
+      border-radius: var(--radius-md, 14px);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Evidence Thumbnails */
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .evidence-preview-box {
+      border: 1px solid var(--ks-border, #E2E0D5);
+      border-radius: var(--radius-sm, 8px);
+      padding: 8px;
+      background: #FAF9F5;
+      text-align: center;
+      position: relative;
+    }
+
+    .evidence-preview-box img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .evidence-preview-box span {
+      display: block;
+      font-size: 11px;
+      color: var(--ks-charcoal, #17221D);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Status Badges */
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-status--raised {
+      background: var(--ks-pale-sage, #E5F0E7);
+      color: var(--ks-evergreen, #12372A);
+      border: 1px solid var(--ks-mint, #8FCB9B);
+    }
+
+    .badge-status--review {
+      background: #FDF7EA;
+      color: #946914;
+      border: 1px solid #EED79D;
+    }
+
+    .badge-status--mediation {
+      background: #EEF4FD;
+      color: #1A569E;
+      border: 1px solid #B8D4FB;
+    }
+
+    .badge-status--resolved {
+      background: #E8F7EC;
+      color: #166534;
+      border: 1px solid #A7F3D0;
+    }
+
+    .badge-status--rejected {
+      background: var(--ks-terracotta-light, #FBEFEF);
+      color: var(--ks-terracotta, #C96D5B);
+      border: 1px solid #F5C5BE;
+    }
+
+    /* Filter Tabs */
+    .filter-pills-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill-btn {
+      padding: 6px 14px;
+      border-radius: var(--radius-full, 9999px);
+      border: 1px solid var(--ks-border, #E2E0D5);
+      background: var(--ks-card-white, #FFFFFF);
+      color: var(--ks-text-muted, #6F7F75);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill-btn:hover {
+      border-color: var(--ks-sage, #5B9A72);
+      color: var(--ks-evergreen, #12372A);
+    }
+
+    .filter-pill-btn.active {
+      background: var(--ks-evergreen, #12372A);
+      color: #FFFFFF;
+      border-color: var(--ks-evergreen, #12372A);
+    }
+
+    /* Clean Modal */
+    .dispute-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 55, 42, 0.4);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    .dispute-modal-overlay.open {
+      display: flex;
+    }
+
+    .dispute-modal-card {
+      background: var(--ks-card-white, #FFFFFF);
+      border-radius: var(--radius-md, 14px);
+      width: 100%;
+      max-width: 580px;
+      box-shadow: var(--shadow-lg);
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid var(--ks-border, #E2E0D5);
+    }
+  </style>
+</head>
+
+<body class="dashboard-body" data-protected>
+
+  <!-- AMBIENT FARMER SUNLIGHT BACKGROUND -->
+  <div class="dash-ambient-bg" aria-hidden="true">
+    <div class="dash-ambient-bg__img"></div>
+    <div class="dash-ambient-bg__overlay"></div>
+    <div class="dash-ambient-bg__sunlight-glow"></div>
+  </div>
+
+  <!-- HEADER / NAVBAR -->
+  <header class="dash-header" id="dash-header">
+    <div class="dash-header__inner">
+      <a href="index.html" class="dash-header__logo" id="dash-logo">
+        <span class="dash-header__logo-icon"><i data-lucide="sprout"></i></span>
+        <span class="dash-header__logo-text">KrishiShetra</span>
+        <span class="dash-header__role-badge">USER</span>
+      </a>
+
+      <div class="dash-search" id="dash-search">
+        <i data-lucide="search" class="dash-search__icon"></i>
+        <input type="text" id="dash-search-input" class="dash-search__input"
+          placeholder="Search dispute ID, orders, crops..." autocomplete="off" aria-label="Dispute search">
+      </div>
+
+      <nav class="dash-header__nav" id="dash-nav">
+        <!-- Dynamically rendered by navbar.js -->
+      </nav>
+
+      <div class="dash-header__actions">
+        <div class="dash-header__user" id="header-user-profile">
+          <div class="dash-header__avatar" id="header-avatar">KS</div>
+          <div class="dash-header__user-info">
+            <span class="dash-header__user-name" id="header-user-name">User</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Slide Nav -->
+  <div class="dash-mobile-nav" id="dash-mobile-nav">
+    <div class="dash-mobile-nav__links" id="mnav-links">
+      <!-- Populated by navbar.js -->
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="dash-main" id="dash-main">
+    <div class="container" style="padding-top: 24px;">
+
+      <!-- Breadcrumb -->
+      <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #6F7F75); margin-bottom: 14px;" id="dash-breadcrumb-nav">
+        <a href="dashboard.html" style="color: var(--ks-sage, #5B9A72); text-decoration: none;" id="bc-home-link">Dashboard</a> /
+        <a href="orders.html" style="color: var(--ks-sage, #5B9A72); text-decoration: none;" id="bc-orders-link">Orders</a> /
+        <strong>Dispute & Grievance Redressal</strong>
+      </nav>
+
+      <!-- Page Header Banner -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <h1 style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen, #12372A); margin: 0 0 6px 0;">
+            🛡️ Dispute & Grievance Redressal Center
+          </h1>
+          <p style="font-size: 14px; color: var(--ks-text-muted, #6F7F75); margin: 0; max-width: 680px;">
+            Fair, transparent conflict resolution for trade orders. Protect your payments and resolve quality or delivery issues through certified FPO and Admin mediation.
+          </p>
+        </div>
+        <button class="btn btn--primary" id="open-raise-modal-btn" onclick="openRaiseDisputeModal()" style="display: inline-flex; align-items: center; gap: 8px;">
+          <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Raise a Dispute
+        </button>
+      </div>
+
+      <!-- Payment Protection Banner -->
+      <div class="protection-banner-card">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div style="width: 42px; height: 42px; border-radius: 50%; background: var(--ks-pale-sage, #E5F0E7); color: var(--ks-evergreen, #12372A); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+            🔒
+          </div>
+          <div>
+            <div style="font-size: 14.5px; font-weight: 700; color: var(--ks-evergreen, #12372A);">
+              KrishiShetra Payment Protection Active
+            </div>
+            <div style="font-size: 12.5px; color: var(--ks-text-muted, #6F7F75);">
+              When an order is disputed, transaction funds are automatically held in simulated protection. No funds are cleared until both parties agree or a mediation settlement is recorded.
+            </div>
+          </div>
+        </div>
+        <div class="protection-pill">
+          <span>✓ 100% Neutral Protection</span>
+        </div>
+      </div>
+
+      <!-- Main 2-Column Work Area -->
+      <div class="dispute-page-layout">
+
+        <!-- Left Column: Disputes List & Filter -->
+        <div>
+          <!-- Filter Tabs -->
+          <div class="filter-pills-bar">
+            <button class="filter-pill-btn active" data-filter="all" onclick="filterDisputes('all')">All</button>
+            <button class="filter-pill-btn" data-filter="active" onclick="filterDisputes('active')">Active</button>
+            <button class="filter-pill-btn" data-filter="review" onclick="filterDisputes('review')">Review / Mediation</button>
+            <button class="filter-pill-btn" data-filter="resolved" onclick="filterDisputes('resolved')">Resolved</button>
+          </div>
+
+          <div style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin-bottom: 12px;" id="disputes-list-heading">
+            My Disputes
+          </div>
+
+          <!-- Dispute Cards List Container -->
+          <div id="disputes-list-container">
+            <div style="text-align: center; padding: 40px 16px; color: var(--ks-text-muted, #6F7F75); background: #FFFFFF; border-radius: 14px; border: 1px dashed var(--ks-border, #E2E0D5);">
+              <div class="spinner" style="margin: 0 auto 10px auto; width: 24px; height: 24px; border: 2px solid #E5E4DD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+              Loading disputes...
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Dispute Detail & Mediation Panel -->
+        <div id="dispute-detail-panel">
+          <!-- Populated dynamically by js/disputes.js -->
+          <div class="detail-section-block" style="text-align: center; padding: 60px 24px; color: var(--ks-text-muted, #6F7F75);">
+            <div style="font-size: 40px; margin-bottom: 12px;">⚖️</div>
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin: 0 0 6px 0;">Select a Dispute</h3>
+            <p style="font-size: 13.5px; max-width: 420px; margin: 0 auto 20px auto;">
+              Click on any dispute card from the left panel to inspect the full timeline, evidence documents, simulated payment protection status, and mediation options.
+            </p>
+            <button class="btn btn--primary btn--sm" onclick="openRaiseDisputeModal()">
+              <i data-lucide="plus-circle" style="width: 14px; height: 14px;"></i> Raise a Dispute
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- RAISE DISPUTE MODAL -->
+  <div class="dispute-modal-overlay" id="raise-dispute-modal">
+    <div class="dispute-modal-card">
+      <div style="padding: 20px 24px; border-bottom: 1px solid var(--ks-border, #E2E0D5); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h3 style="font-size: 18px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin: 0;">
+            Raise Order Dispute
+          </h3>
+          <p style="font-size: 12.5px; color: var(--ks-text-muted, #6F7F75); margin: 2px 0 0 0;">
+            Payment will be held in protection until resolved.
+          </p>
+        </div>
+        <button onclick="closeRaiseDisputeModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--ks-text-muted, #6F7F75);">&times;</button>
+      </div>
+
+      <form id="raise-dispute-form" onsubmit="handleDisputeSubmit(event)" style="padding: 22px 24px;">
+        <!-- Order ID Selection -->
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;">
+            Select Order <span style="color: var(--ks-terracotta, #C96D5B);">*</span>
+          </label>
+          <select id="modal-order-select" required style="width: 100%; padding: 10px 12px; border: 1px solid var(--ks-border, #E2E0D5); border-radius: 8px; font-size: 13.5px; background: #FFFFFF; color: var(--ks-charcoal, #17221D);">
+            <option value="">Select an order to dispute...</option>
+          </select>
+        </div>
+
+        <!-- Dispute Reason -->
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;">
+            Reason for Dispute <span style="color: var(--ks-terracotta, #C96D5B);">*</span>
+          </label>
+          <select id="modal-dispute-reason" required style="width: 100%; padding: 10px 12px; border: 1px solid var(--ks-border, #E2E0D5); border-radius: 8px; font-size: 13.5px; background: #FFFFFF; color: var(--ks-charcoal, #17221D);">
+            <option value="">Select a reason...</option>
+            <option value="Quality Mismatch">Quality Mismatch (Moisture, grade, purity differences)</option>
+            <option value="Quantity Shortage">Quantity Shortage (Delivered weight less than contracted)</option>
+            <option value="Transit Damage">Transit Damage (Produce spoiled/damaged during transport)</option>
+            <option value="Payment Delay">Payment Delay (Payment withheld or overdue)</option>
+            <option value="Other">Other Issues</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;">
+            Describe the Problem Clearly <span style="color: var(--ks-terracotta, #C96D5B);">*</span>
+          </label>
+          <textarea id="modal-dispute-description" rows="4" required placeholder="Explain what happened, including dates, lot condition, weighbridge readings, or communication with counterparty..." style="width: 100%; padding: 10px 12px; border: 1px solid var(--ks-border, #E2E0D5); border-radius: 8px; font-size: 13.5px; font-family: inherit; color: var(--ks-charcoal, #17221D); resize: vertical;"></textarea>
+        </div>
+
+        <!-- Evidence Attachment (Client-side lightweight preview) -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;">
+            Evidence / Proof (Photos, Weighbridge Slips, Lab Reports)
+          </label>
+          <div style="border: 2px dashed var(--ks-border, #E2E0D5); border-radius: 8px; padding: 14px; text-align: center; background: #FAF9F5; cursor: pointer;" onclick="document.getElementById('evidence-file-input').click()">
+            <i data-lucide="upload-cloud" style="width: 24px; height: 24px; color: var(--ks-sage, #5B9A72); margin-bottom: 4px;"></i>
+            <div style="font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D);">Click to attach photos or files</div>
+            <div style="font-size: 11.5px; color: var(--ks-text-muted, #6F7F75);">JPEG, PNG, or PDF (client-side preview)</div>
+            <input type="file" id="evidence-file-input" accept="image/*,.pdf" multiple style="display: none;" onchange="handleEvidenceFileSelect(event)">
+          </div>
+
+          <!-- Preview thumbnails container -->
+          <div id="modal-evidence-preview" class="evidence-grid"></div>
+        </div>
+
+        <!-- Submit & Cancel -->
+        <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--ks-border, #E2E0D5); padding-top: 16px;">
+          <button type="button" class="btn" onclick="closeRaiseDisputeModal()" style="background: transparent; border: 1px solid var(--ks-border, #E2E0D5); color: var(--ks-charcoal, #17221D);">
+            Cancel
+          </button>
+          <button type="submit" id="submit-dispute-btn" class="btn btn--primary" style="display: inline-flex; align-items: center; gap: 6px;">
+            <i data-lucide="shield-check" style="width: 15px; height: 15px;"></i> Submit Dispute & Protect Payment
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer dash-footer" style="margin-top: 60px;">
+    <div class="container">
+      <div class="footer__inner">
+        <div>
+          <div class="footer__brand">
+            <i data-lucide="sprout" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
+            KrishiShetra
+          </div>
+          <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
+        </div>
+        <div class="footer__links">
+          <a href="orders.html" class="footer__link">Orders</a>
+          <a href="disputes.html" class="footer__link" style="color: var(--ks-sage, #5B9A72); font-weight: 600;">Disputes</a>
+          <a href="dashboard.html" class="footer__link">Dashboard</a>
+          <a href="index.html" class="footer__link">Home</a>
+        </div>
+      </div>
+      <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/page-guard.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/disputes.js"></script>
+</body>
+
+</html>

@@ -8,6 +8,46 @@ const { logActivity } = require('../services/activity.service');
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 const PINCODE_REGEX = /^[1-9][0-9]{5}$/;
 
+const DEMO_ORDER_ID = 'KS-ORD-DEMO-001';
+
+// Seed demo order state for continuous farmer journey
+let demoOrderState = {
+  orderId: DEMO_ORDER_ID,
+  cropName: 'Tomato',
+  variety: 'Hybrid Abhinav',
+  quantity: 50,
+  quantityUnit: 'quintal',
+  agreedPrice: 2500,
+  priceUnit: 'quintal',
+  totalAmount: 125000,
+  status: 'delivered',
+  paymentStatus: 'completed',
+  paymentMethod: 'escrow',
+  farmerName: 'Rajesh Patil (Nashik Farmer)',
+  buyerName: 'ABC Foods Pvt Ltd',
+  deliveryAddress: {
+    name: 'ABC Foods Warehouse',
+    phone: '+91 98230 45678',
+    addressLine1: 'Plot 42, MIDC Industrial Area',
+    village: 'Chakan',
+    state: 'Maharashtra',
+    pincode: '410501'
+  },
+  transport: {
+    assigned: true,
+    transporterName: 'Kisan Express Logistics',
+    vehicleNumber: 'MH 15 AB 4589',
+    driverName: 'Suresh Patil',
+    driverPhone: '+91 98230 45891',
+    pickupLocation: 'Rajesh Patil Farm Gate, Nashik',
+    destination: 'ABC Foods Warehouse, MIDC Chakan, Pune',
+    status: 'Delivered'
+  },
+  notes: 'Express perishable agricultural delivery with digital proof of delivery',
+  createdAt: new Date(Date.now() - 36 * 3600 * 1000).toISOString(),
+  updatedAt: new Date().toISOString()
+};
+
 /**
  * Generate unique sequential Order ID (KS-ORD-YYYY-XXXXXX)
  */
@@ -348,7 +388,7 @@ const createOrder = async (req, res) => {
     if (session && useTransaction) {
       try {
         await session.abortTransaction();
-      } catch (_) {}
+      } catch (_) { }
     }
 
     if (error.code === 11000) {
@@ -427,6 +467,9 @@ const getMyOrders = async (req, res) => {
       .limit(limitNum);
 
     const formattedOrders = rawOrders.map(formatOrderListItem);
+    if (!formattedOrders.some(o => o.orderId === DEMO_ORDER_ID)) {
+      formattedOrders.unshift({ ...demoOrderState });
+    }
 
     return res.status(200).json({
       success: true,
@@ -497,6 +540,9 @@ const getFarmerOrders = async (req, res) => {
       .limit(limitNum);
 
     const formattedOrders = rawOrders.map(formatOrderListItem);
+    if (!formattedOrders.some(o => o.orderId === DEMO_ORDER_ID)) {
+      formattedOrders.unshift({ ...demoOrderState });
+    }
 
     return res.status(200).json({
       success: true,
@@ -525,6 +571,13 @@ const getFarmerOrders = async (req, res) => {
 const getSingleOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
+
+    if (orderId === DEMO_ORDER_ID) {
+      return res.status(200).json({
+        success: true,
+        order: { ...demoOrderState }
+      });
+    }
 
     let query = {};
     if (mongoose.Types.ObjectId.isValid(orderId)) {
@@ -595,6 +648,16 @@ const updateOrderStatus = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Status is required'
+      });
+    }
+
+    if (orderId === DEMO_ORDER_ID) {
+      demoOrderState.status = newStatus.trim().toLowerCase();
+      demoOrderState.updatedAt = new Date().toISOString();
+      return res.status(200).json({
+        success: true,
+        message: 'Demo order status updated successfully',
+        order: { ...demoOrderState }
       });
     }
 

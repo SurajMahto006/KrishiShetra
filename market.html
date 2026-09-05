@@ -139,16 +139,21 @@
         <!-- Breadcrumb -->
         <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
           <a href="index.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Home</a> /
-          <a href="dashboard.html" id="breadcrumb-dash-link" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
+          <a href="dashboard.html" id="breadcrumb-dash-link"
+            style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
           <strong>Marketplace</strong>
         </nav>
+
+        <!-- Dynamic Farmer Demo Opportunity Banner -->
+        <div id="farmer-demo-opportunity" style="display:none; margin-bottom: 24px;"></div>
 
         <div class="dash-section__header">
           <div>
             <h2 class="dash-section__title">Market Overview</h2>
             <p class="dash-section__subtitle">Live prices from verified nearby mandis</p>
           </div>
-          <button class="dash-section__action" id="btn-refresh-market"><i data-lucide="refresh-cw"></i> Refresh Prices</button>
+          <button class="dash-section__action" id="btn-refresh-market"><i data-lucide="refresh-cw"></i> Refresh
+            Prices</button>
         </div>
 
         <!-- Filter Bar -->
@@ -264,14 +269,18 @@
             <thead>
               <tr>
                 <th>Market Mandi</th>
-                <th>Price (₹/q)</th>
-                <th>Weekly Trend</th>
-                <th>Demand Level</th>
+                <th>Modal Price (₹/q)</th>
+                <th>Price Range (Min – Max)</th>
+                <th>Date & Source</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody id="compare-table-body"></tbody>
           </table>
+        </div>
+        <div class="dash-compare-source-note" style="margin-top: 10px; font-size: 12px; color: var(--ks-text-muted, #6F7F75); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <span>🏛️ Source: Government of India · <a href="https://data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi" target="_blank" rel="noopener" style="color: var(--ks-sage, #5B9A72); text-decoration: underline;">data.gov.in (Agmarknet Daily Prices)</a></span>
+          <a href="mandi-compare.html" style="color: var(--ks-evergreen, #12372A); font-weight: 700; text-decoration: none;">Open Full Mandi Decision Engine →</a>
         </div>
         <div class="dash-compare-cards" id="compare-cards"></div>
       </div>
@@ -351,26 +360,32 @@
           </div>
         </div>
         <div class="dash-insights__grid" id="insights-grid">
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-up" style="color:var(--ks-mint);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-up"
+                style="color:var(--ks-mint);"></i></span>
             <p>Rice demand is <strong>increasing by 14%</strong> across Maharashtra mandis due to institutional buying.
             </p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="flame" style="color:var(--ks-coral);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="flame"
+                style="color:var(--ks-coral);"></i></span>
             <p>Onion prices are <strong>rising in Pune & Nashik</strong>. Current price is ₹2,850/q, 12% above seasonal
               average.</p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-down" style="color:var(--ks-coral);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="trending-down"
+                style="color:var(--ks-coral);"></i></span>
             <p>Tomato market arrivals are <strong>up by 20%</strong> in Solapur. Recommended to sell fresh harvest
               within 2 days.</p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="award" style="color:var(--ks-gold);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="award"
+                style="color:var(--ks-gold);"></i></span>
             <p><strong>Mumbai APMC</strong> currently offers highest realization on premium grade grains.</p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="tractor" style="color:var(--ks-sage);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="tractor"
+                style="color:var(--ks-sage);"></i></span>
             <p>Soybean millers in <strong>Indore</strong> are offering premium contracts for moisture level under 10%.
             </p>
           </div>
-          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="lightbulb" style="color:var(--ks-gold);"></i></span>
+          <div class="dash-insight-card"><span class="dash-insight-card__emoji"><i data-lucide="lightbulb"
+                style="color:var(--ks-gold);"></i></span>
             <p>Set a <strong>Target Price Alert</strong> on chilli and cotton to receive direct SMS when prices spike.
             </p>
           </div>
@@ -385,7 +400,9 @@
     <div class="container">
       <div class="footer__inner">
         <div>
-          <div class="footer__brand"><i data-lucide="sprout" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> KrishiShetra</div>
+          <div class="footer__brand"><i data-lucide="sprout"
+              style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
+            KrishiShetra</div>
           <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
         </div>
         <div class="footer__links">
@@ -521,6 +538,118 @@
         <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="bell-ring"></i> Set Price
           Alert</button>
       </form>
+    </div>
+  </div>
+
+  <!-- CONFIRM ORDER MODAL -->
+  <div class="dash-modal-overlay" id="confirm-order-modal-overlay">
+    <div class="dash-modal" id="confirm-order-modal" style="max-width: 580px;">
+      <div class="dash-modal__header" style="border-bottom: 1px solid #E5E4DD; padding-bottom: 14px;">
+        <div>
+          <div style="font-size: 11px; text-transform: uppercase; color: var(--ks-sage, #5B9A72); font-weight: 700; letter-spacing: 0.5px;">Step 4: Create Order</div>
+          <h3 style="font-size: 20px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin: 2px 0 0 0;">Confirm Buying Opportunity</h3>
+        </div>
+        <button class="dash-modal__close" id="confirm-order-modal-close" aria-label="Close modal"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad" style="padding: 20px;">
+        <div style="background: #F5F4ED; border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px dashed #DDD; padding-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 28px;">🍅</span>
+              <div>
+                <strong style="font-size: 16px; color: var(--ks-evergreen, #12372A);" id="confirm-crop-name">Tomato</strong>
+                <span style="font-size: 12px; color: #666; display: block;" id="confirm-crop-sub">Hybrid Abhinav · Grade A</span>
+              </div>
+            </div>
+            <span style="padding: 4px 10px; border-radius: 6px; background: #E5F0E7; color: #12372A; font-weight: 700; font-size: 11.5px;">PRODUCE LOT</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+            <div>
+              <span style="color: #6F7F75; display: block; font-size: 11.5px; text-transform: uppercase; font-weight: 600;">Quantity</span>
+              <strong style="color: #17221D; font-size: 15px;" id="confirm-crop-qty">50 Quintals (Qtl)</strong>
+            </div>
+            <div>
+              <span style="color: #6F7F75; display: block; font-size: 11.5px; text-transform: uppercase; font-weight: 600;">Buyer</span>
+              <strong style="color: #17221D; font-size: 15px;" id="confirm-buyer-name">ABC Foods Ltd</strong>
+            </div>
+            <div>
+              <span style="color: #6F7F75; display: block; font-size: 11.5px; text-transform: uppercase; font-weight: 600;">Agreed Rate</span>
+              <strong style="color: #17221D; font-size: 15px;" id="confirm-price-rate">₹2,500 / Qtl</strong>
+            </div>
+            <div>
+              <span style="color: #6F7F75; display: block; font-size: 11.5px; text-transform: uppercase; font-weight: 600;">Total Order Value</span>
+              <strong style="color: var(--ks-evergreen, #12372A); font-size: 18px; font-weight: 800;" id="confirm-total-val">₹1,25,000</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transport & Delivery Info -->
+        <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 10px; padding: 14px; margin-bottom: 20px;">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin-bottom: 8px;">
+            <span>🚚</span> Transport & Logistics (Arranged by Buyer)
+          </div>
+          <div style="font-size: 12.5px; color: #555; line-height: 1.5;">
+            <div><strong>Pickup:</strong> Rajesh Patil Farm Gate, Nashik (MH)</div>
+            <div><strong>Destination:</strong> ABC Foods Processing Warehouse, MIDC Chakan, Pune (MH)</div>
+            <div><strong>Carrier:</strong> Kisan Express Logistics (Gold Tier Agri Fleet)</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" class="btn btn--secondary" id="btn-cancel-order-modal">Cancel</button>
+          <button type="button" class="btn btn--primary" id="btn-execute-confirm-order" style="padding: 10px 24px; font-weight: 700;">
+            Confirm Order →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER CREATED SUCCESS MODAL -->
+  <div class="dash-modal-overlay" id="order-created-modal-overlay">
+    <div class="dash-modal" id="order-created-modal" style="max-width: 520px; text-align: center;">
+      <div class="dash-modal__body-pad" style="padding: 32px 24px;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: #E5F0E7; color: var(--ks-evergreen, #12372A); font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+          ✓
+        </div>
+        <h3 style="font-size: 22px; font-weight: 800; color: var(--ks-evergreen, #12372A); margin: 0 0 6px 0;">Order Created Successfully!</h3>
+        <p style="font-size: 13.5px; color: #6F7F75; margin: 0 0 20px 0;">
+          Your purchase contract is confirmed. Your order is ready for transport.
+        </p>
+
+        <div style="background: #F5F4ED; border: 1px solid #E5E4DD; border-radius: 12px; padding: 18px; margin-bottom: 22px; text-align: left;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 12.5px; color: #666;">Order ID:</span>
+            <strong style="font-family: monospace; font-size: 13.5px; color: var(--ks-evergreen, #12372A);" id="created-order-id">KS-ORD-DEMO-001</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 12.5px; color: #666;">Order Status:</span>
+            <span style="padding: 2px 8px; border-radius: 6px; background: #E5F0E7; color: #12372A; font-size: 11.5px; font-weight: 700; text-transform: uppercase;">Confirmed</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 12.5px; color: #666;">Buyer:</span>
+            <strong style="color: #222; font-size: 13.5px;" id="created-order-buyer">ABC Foods</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 12.5px; color: #666;">Quantity:</span>
+            <strong style="color: #222; font-size: 13.5px;" id="created-order-qty">50 Qtl</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px dashed #DDD; padding-top: 8px;">
+            <strong style="color: var(--ks-evergreen, #12372A); font-size: 14px;">Total Amount:</strong>
+            <strong style="color: var(--ks-evergreen, #12372A); font-size: 16px;" id="created-order-amt">₹1,25,000</strong>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-direction: column;">
+          <a href="orders.html?orderId=KS-ORD-DEMO-001&flow=track" class="btn btn--primary" style="text-decoration: none; justify-content: center; font-size: 14.5px; padding: 12px; font-weight: 700;">
+            Track Order & Transport →
+          </a>
+          <a href="orders.html" class="btn btn--secondary" style="text-decoration: none; justify-content: center; font-size: 13px;">
+            View All Orders
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 

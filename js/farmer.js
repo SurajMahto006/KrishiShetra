@@ -462,6 +462,9 @@ const FarmerFlow = {
     }
     if (!harvestDate) {
       this.showToast('Please select a harvest date', 'error');
+      return;
+    }
+
     const storageTypeVal = document.getElementById('lot-storage-type')?.value || 'farm';
     const storageDecisionVal = document.getElementById('lot-storage-decision')?.value || 'sell_now';
 
@@ -648,6 +651,20 @@ const FarmerFlow = {
   getDemoLots(filter = 'all') {
     const demo = [
       {
+        lotId: 'LOT-DEMO-001',
+        cropName: 'Tomato',
+        variety: 'Hybrid Abhinav',
+        quantity: 50,
+        quantityUnit: 'quintal',
+        askingPrice: 2500,
+        priceUnit: 'q',
+        qualityGrade: 'A',
+        district: 'Nashik',
+        state: 'Maharashtra',
+        status: 'active',
+        harvestDate: '2026-08-25'
+      },
+      {
         lotId: 'LOT-2026-001',
         cropName: 'Wheat',
         variety: 'Lokwan (High Yield)',
@@ -805,6 +822,9 @@ const FarmerFlow = {
           </div>
 
           <div class="kisan-lot-card__actions">
+            <a href="market.html?crop=${encodeURIComponent(lot.cropName.toLowerCase())}&lotId=${lot.lotId}" class="btn btn--secondary kisan-lot-card__btn" style="min-height: 48px; padding: 10px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="Check market prices for ${lot.cropName}">
+              <i data-lucide="trending-up"></i> <span>Prices →</span>
+            </a>
             ${lot.status === 'active' || lot.status === 'draft' ? `
               <button class="btn btn--secondary" onclick="FarmerFlow.openEditLotModal('${lot.lotId}')" title="Edit Lot" style="min-height: 48px; padding: 10px 14px;">
                 <i data-lucide="edit-3"></i>
@@ -932,7 +952,10 @@ const FarmerFlow = {
                 Login to Send Inquiry →
               </a>
             ` : (lot.status === 'active' || lot.status === 'draft') ? `
-              <button class="btn btn--primary" onclick="document.getElementById('lot-detail-modal-overlay').classList.remove('active'); FarmerFlow.openEditLotModal('${lot.lotId}')">Edit Lot</button>
+              <a href="market.html?crop=${encodeURIComponent(lot.cropName.toLowerCase())}&lotId=${lot.lotId}" class="btn btn--primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                Check Market Prices →
+              </a>
+              <button class="btn btn--secondary" onclick="document.getElementById('lot-detail-modal-overlay').classList.remove('active'); FarmerFlow.openEditLotModal('${lot.lotId}')">Edit Lot</button>
             ` : ''}
           </div>
         `;

@@ -267,7 +267,29 @@ const getSinglePublicLot = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get live Government of India mandi prices from data.gov.in
+ * @route   GET /api/market/mandi-prices
+ * @access  Public
+ */
+const getMandiPrices = async (req, res) => {
+  try {
+    const { getGovernmentMandiPrices } = require('../services/mandi.service');
+    const result = await getGovernmentMandiPrices(req.query);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      source: 'Government of India - data.gov.in',
+      message: 'Government mandi prices are temporarily unavailable. Please try again.',
+      data: []
+    });
+  }
+};
+
 module.exports = {
   getMarketLots,
-  getSinglePublicLot
+  getSinglePublicLot,
+  getMandiPrices
 };
+

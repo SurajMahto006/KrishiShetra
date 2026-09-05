@@ -61,6 +61,21 @@ class KrishiStore {
     return {
       lots: [
         {
+          id: 'lot-demo-tomato',
+          cropId: 'tomato',
+          crop: 'Tomato',
+          quantity: 50,
+          expectedPrice: 2500,
+          marketPrice: 2400,
+          location: 'Nashik, Maharashtra',
+          harvestDate: '2026-08-25',
+          grade: 'Grade A',
+          description: 'Hybrid Abhinav fresh farm harvest, graded premium export quality.',
+          image: 'assets/images/crop-tomato.jpg',
+          status: 'listed',
+          createdAt: new Date().toISOString()
+        },
+        {
           id: 'lot-1',
           cropId: 'wheat',
           crop: 'Wheat',
@@ -107,6 +122,18 @@ class KrishiStore {
         }
       ],
       offers: [
+        {
+          id: 'off-demo-tomato',
+          lotId: 'lot-demo-tomato',
+          crop: 'Tomato',
+          buyerName: 'ABC Foods Ltd',
+          verified: true,
+          quantity: 50,
+          pricePerQ: 2500,
+          totalAmount: 125000,
+          status: 'pending',
+          date: 'Just now'
+        },
         {
           id: 'off-1',
           lotId: 'lot-3',
@@ -157,6 +184,17 @@ class KrishiStore {
         }
       ],
       orders: [
+        {
+          id: 'KS-ORD-DEMO-001',
+          crop: 'Tomato',
+          cropImage: 'assets/images/crop-tomato.jpg',
+          buyer: 'ABC Foods Ltd',
+          quantity: 50,
+          price: 2500,
+          total: 125000,
+          status: 'Delivered · Payment Completed',
+          date: 'Today'
+        },
         {
           id: 'ORD-9482',
           crop: 'Wheat',
@@ -1051,7 +1089,11 @@ function openCropDetails(cropId) {
           <strong>${b.name}</strong>
           <span style="font-size:11px; color:var(--ks-sage); display:block;">✓ Verified · ${b.rating}</span>
         </div>
-        <button class="btn btn--primary btn--sm" onclick="closeModal('crop-modal-overlay'); openCreateLotModal('${crop.id}')">Sell to Buyer</button>
+        ${crop.id === 'tomato' ? `
+          <button class="btn btn--primary btn--sm" onclick="closeModal('crop-modal-overlay'); openConfirmOrderModal();">Sell at Best Price →</button>
+        ` : `
+          <button class="btn btn--primary btn--sm" onclick="closeModal('crop-modal-overlay'); openCreateLotModal('${crop.id}')">Sell to Buyer</button>
+        `}
       </div>
     `).join('');
   }
@@ -1059,10 +1101,20 @@ function openCropDetails(cropId) {
   // Action Buttons
   const sellBtn = document.getElementById('crop-modal-sell-btn');
   if (sellBtn) {
-    sellBtn.onclick = () => {
-      closeModal('crop-modal-overlay');
-      openCreateLotModal(crop.id);
-    };
+    if (crop.id === 'tomato') {
+      sellBtn.innerHTML = '<i data-lucide="check-circle"></i> Sell at Best Price (₹2,500/q) →';
+      sellBtn.onclick = (e) => {
+        e.preventDefault();
+        closeModal('crop-modal-overlay');
+        openConfirmOrderModal();
+      };
+    } else {
+      sellBtn.innerHTML = '<i data-lucide="plus-circle"></i> Sell This Crop';
+      sellBtn.onclick = () => {
+        closeModal('crop-modal-overlay');
+        openCreateLotModal(crop.id);
+      };
+    }
   }
 
   const alertBtn = document.getElementById('crop-modal-alert-btn');
@@ -1795,40 +1847,159 @@ function initMarketComparison() {
   const locSelect = document.getElementById('compare-location');
   const tableBody = document.getElementById('compare-table-body');
   const cardsWrap = document.getElementById('compare-cards');
+  const bestBadgeName = document.getElementById('best-market-name');
+  const bestBadgePrice = document.getElementById('best-market-price');
 
-  function renderComparison() {
+  async function renderComparison() {
     const cropId = cropSelect ? cropSelect.value : 'rice';
-    const crop = CROPS_DATA.find(c => c.id === cropId) || CROPS_DATA[0];
-
-    const mandis = [
-      { name: 'Mumbai APMC (Vashi)', price: crop.price + 70, change: '+6.1%', dir: 'up', demand: 'Very High', best: true },
-      { name: 'Pune APMC', price: crop.price, change: '+5.2%', dir: 'up', demand: 'High', best: false },
-      { name: 'Nashik APMC', price: crop.price - 90, change: '+3.8%', dir: 'up', demand: 'Medium', best: false },
-      { name: 'Nagpur APMC', price: crop.price - 150, change: '-1.2%', dir: 'down', demand: 'Medium', best: false },
-      { name: 'Solapur APMC', price: crop.price - 40, change: '+2.4%', dir: 'up', demand: 'High', best: false }
-    ];
+    const locId = locSelect ? locSelect.value : 'maharashtra';
 
     if (tableBody) {
-      tableBody.innerHTML = mandis.map(m => `
-        <tr class="${m.best ? 'tr-best' : ''}">
-          <td><strong>${m.name}</strong> ${m.best ? '⭐' : ''}</td>
-          <td class="td-price">₹${m.price.toLocaleString('en-IN')}/q</td>
-          <td class="td-change--${m.dir}">${m.change}</td>
-          <td class="td-demand">${m.demand}</td>
-          <td class="td-btn"><a href="javascript:void(0)" onclick="openCropDetails('${crop.id}')">View Mandi</a></td>
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align: center; padding: 24px; color: var(--ks-text-muted);">
+            <div class="spinner" style="margin: 0 auto 8px auto; width: 22px; height: 22px; border: 2px solid #E5E4DD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+            Fetching live Government of India (data.gov.in) mandi prices...
+          </td>
         </tr>
-      `).join('');
+      `;
     }
 
-    if (cardsWrap) {
-      cardsWrap.innerHTML = mandis.map(m => `
-        <div class="dash-compare-mobile-card">
-          <div class="dash-compare-mobile-card__name">${m.name} ${m.best ? '⭐ (Best Market)' : ''}</div>
-          <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Price</span><span class="dash-compare-mobile-card__val">₹${m.price.toLocaleString('en-IN')}/q</span></div>
-          <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Trend</span><span class="dash-compare-mobile-card__val dash-compare-mobile-card__val--${m.dir}">${m.change}</span></div>
-          <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Demand</span><span class="dash-compare-mobile-card__val">${m.demand}</span></div>
-        </div>
-      `).join('');
+    try {
+      const res = await (window.api?.market?.getMandiPrices
+        ? window.api.market.getMandiPrices({ commodity: cropId, state: locId, limit: 15 })
+        : fetch(`/api/market/mandi-prices?commodity=${encodeURIComponent(cropId)}&state=${encodeURIComponent(locId)}&limit=15`).then(r => r.json()));
+
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        // Sort descending by modalPrice
+        const mandis = [...res.data].sort((a, b) => (b.modalPrice || 0) - (a.modalPrice || 0));
+        const best = mandis[0];
+
+        if (bestBadgeName) bestBadgeName.textContent = `${best.market} APMC`;
+        if (bestBadgePrice) bestBadgePrice.textContent = `₹${best.modalPrice?.toLocaleString('en-IN')}/q`;
+
+        const updateLabel = res.updatedAt ? new Date(res.updatedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Latest';
+
+        // Update Compare Mandi Prices entry card summary (Farmer quick glance)
+        const govCropNameEl = document.getElementById('dash-gov-crop-name');
+        const govBestPriceEl = document.getElementById('dash-gov-best-price');
+        const govNetRealEl = document.getElementById('dash-gov-net-realization');
+        const govFreshnessText = document.getElementById('dash-gov-freshness-text');
+
+        if (govCropNameEl) {
+          const cropDisplay = cropSelect ? cropSelect.options[cropSelect.selectedIndex]?.text || cropId : 'Rice';
+          govCropNameEl.textContent = cropDisplay;
+        }
+        if (govBestPriceEl && best) {
+          govBestPriceEl.textContent = `₹${best.modalPrice?.toLocaleString('en-IN')}/qtl`;
+        }
+        if (govNetRealEl && best) {
+          const estTransport = 200; // estimated regional transport cost
+          const net = Math.max(0, (best.modalPrice || 0) - estTransport);
+          govNetRealEl.textContent = `₹${net.toLocaleString('en-IN')}/qtl`;
+        }
+        if (govFreshnessText) {
+          govFreshnessText.textContent = best && best.arrivalDate ? `· Updated ${best.arrivalDate}` : `· Updated ${updateLabel}`;
+        }
+
+        if (tableBody) {
+          tableBody.innerHTML = mandis.map((m, idx) => {
+            const isBest = idx === 0;
+            const arrivalDateStr = m.arrivalDate || updateLabel;
+            return `
+              <tr class="${isBest ? 'tr-best' : ''}">
+                <td>
+                  <strong>${m.market} APMC</strong>
+                  <span style="font-size: 11px; color: #666; display: block;">${m.district ? m.district + ', ' : ''}${m.state}</span>
+                  ${isBest ? '<span class="ks-badge ks-badge-protected" style="margin-top: 2px; font-size: 10px;">⭐ HIGHEST MODAL PRICE</span>' : ''}
+                </td>
+                <td class="td-price" style="font-weight: 800; color: var(--ks-evergreen);">
+                  ₹${m.modalPrice?.toLocaleString('en-IN')}/q
+                </td>
+                <td style="font-size: 12.5px; color: #444;">
+                  ₹${m.minPrice?.toLocaleString('en-IN')} – ₹${m.maxPrice?.toLocaleString('en-IN')}/q
+                </td>
+                <td>
+                  <div style="font-size: 11.5px; color: #555;">Updated ${arrivalDateStr}</div>
+                  <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; background: #E5F0E7; color: #12372A; font-size: 10px; font-weight: 700; margin-top: 2px;">✓ Gov Data</span>
+                </td>
+                <td class="td-btn">
+                  <a href="mandi-compare.html" style="font-weight: 700; color: var(--ks-sage); text-decoration: none;">Compare →</a>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        if (cardsWrap) {
+          cardsWrap.innerHTML = mandis.map((m, idx) => {
+            const isBest = idx === 0;
+            return `
+              <div class="dash-compare-mobile-card" style="border: ${isBest ? '2px solid var(--ks-sage)' : '1px solid #E5E4DD'}; border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #FFF;">
+                <div class="dash-compare-mobile-card__name" style="font-weight: 800; color: var(--ks-evergreen); font-size: 15px;">
+                  ${m.market} APMC ${isBest ? '⭐ (Top Price)' : ''}
+                </div>
+                <div style="font-size: 11.5px; color: #666; margin-bottom: 8px;">${m.district ? m.district + ', ' : ''}${m.state}</div>
+                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Modal Price</span><span class="dash-compare-mobile-card__val" style="font-weight: 800; color: var(--ks-evergreen);">₹${m.modalPrice?.toLocaleString('en-IN')}/q</span></div>
+                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Price Range</span><span class="dash-compare-mobile-card__val">₹${m.minPrice?.toLocaleString('en-IN')} – ₹${m.maxPrice?.toLocaleString('en-IN')}/q</span></div>
+                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Source</span><span class="dash-compare-mobile-card__val" style="color: #065F46; font-weight: 700;">✓ data.gov.in</span></div>
+              </div>
+            `;
+          }).join('');
+        }
+      } else {
+        // Government data temporarily unavailable (Never fake numbers!)
+        const govBestPriceEl = document.getElementById('dash-gov-best-price');
+        const govNetRealEl = document.getElementById('dash-gov-net-realization');
+        const govFreshnessText = document.getElementById('dash-gov-freshness-text');
+        if (govBestPriceEl) govBestPriceEl.textContent = 'Unavailable';
+        if (govNetRealEl) govNetRealEl.textContent = 'Unavailable';
+        if (govFreshnessText) govFreshnessText.textContent = '· Please try again';
+
+        if (tableBody) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 28px; color: #78350F; background: #FFFBEB; border-radius: 8px;">
+                <div style="font-size: 24px; margin-bottom: 6px;">🏛️</div>
+                <strong style="display: block; font-size: 14px; margin-bottom: 4px;">Government mandi prices are temporarily unavailable. Please try again.</strong>
+                <span style="font-size: 12px; color: #92400E;">Source: Government of India (data.gov.in Agmarknet)</span>
+                <div style="margin-top: 10px;">
+                  <button class="btn btn--sm btn--secondary" onclick="initMarketComparison()">Retry Fetch</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }
+        if (cardsWrap) {
+          cardsWrap.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #78350F; background: #FFFBEB; border-radius: 8px; font-size: 13px;">
+              ⚠️ Government mandi prices are temporarily unavailable. Please try again.
+            </div>
+          `;
+        }
+      }
+    } catch (err) {
+      const govBestPriceEl = document.getElementById('dash-gov-best-price');
+      const govNetRealEl = document.getElementById('dash-gov-net-realization');
+      const govFreshnessText = document.getElementById('dash-gov-freshness-text');
+      if (govBestPriceEl) govBestPriceEl.textContent = 'Unavailable';
+      if (govNetRealEl) govNetRealEl.textContent = 'Unavailable';
+      if (govFreshnessText) govFreshnessText.textContent = '· Please try again';
+
+      if (tableBody) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 28px; color: #78350F; background: #FFFBEB; border-radius: 8px;">
+              <div style="font-size: 24px; margin-bottom: 6px;">🏛️</div>
+              <strong style="display: block; font-size: 14px; margin-bottom: 4px;">Government mandi prices are temporarily unavailable. Please try again.</strong>
+              <span style="font-size: 12px; color: #92400E;">Source: Government of India (data.gov.in Agmarknet)</span>
+              <div style="margin-top: 10px;">
+                <button class="btn btn--sm btn--secondary" onclick="initMarketComparison()">Retry Fetch</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
     }
   }
 
@@ -1895,6 +2066,144 @@ function initPriceTrendChart() {
 }
 
 // ═════════════════════════════════════════════════════════════════════
+// 9. CONNECTED FARMER DEMO FLOW: PRICE DISCOVERY ➔ ORDER ➔ TRANSPORT
+// ═════════════════════════════════════════════════════════════════════
+
+function openConfirmOrderModal() {
+  openModal('confirm-order-modal-overlay');
+}
+
+function initFarmerOpportunityFlow() {
+  const oppContainer = document.getElementById('farmer-demo-opportunity');
+  const urlParams = new URLSearchParams(window.location.search);
+  const cropParam = (urlParams.get('crop') || '').toLowerCase();
+
+  if (oppContainer) {
+    // Show best buying opportunity for Tomato
+    oppContainer.style.display = 'block';
+    oppContainer.innerHTML = `
+      <div class="dash-card" style="background: #FFFFFF; border: 2px solid var(--ks-sage, #5B9A72); border-radius: 14px; padding: 22px; box-shadow: 0 4px 20px rgba(91, 154, 114, 0.12);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+          <div style="display:flex; gap:16px; align-items:center;">
+            <div style="width:54px; height:54px; border-radius:12px; background:#F5F4ED; display:flex; align-items:center; justify-content:center; font-size:32px;">
+              🍅
+            </div>
+            <div>
+              <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:6px; background:#E5F0E7; color:#12372A; font-size:11.5px; font-weight:700; text-transform:uppercase; margin-bottom:4px;">
+                ⭐ Best Buying Opportunity Matched
+              </div>
+              <h3 style="font-size:20px; font-weight:700; color:var(--ks-evergreen, #12372A); margin:0 0 4px 0;">
+                ABC Foods Ltd — Verified Institutional Procurement
+              </h3>
+              <p style="font-size:13.5px; color:#666; margin:0;">
+                Direct purchase contract for your <strong>50 Qtl Tomato</strong> lot at verified premium farm-gate rate.
+              </p>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:12px; color:#777; text-transform:uppercase; font-weight:600;">Offer Price</div>
+            <div style="font-size:24px; font-weight:800; color:var(--ks-evergreen, #12372A);">₹2,500 <span style="font-size:14px; font-weight:500;">/ Qtl</span></div>
+            <div style="font-size:13px; font-weight:700; color:var(--ks-sage, #5B9A72);">Total Value: ₹1,25,000</div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px; padding-top:14px; border-top:1px dashed #E5E4DD; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; gap:16px; font-size:12.5px; color:#555; flex-wrap:wrap;">
+            <span>🚚 <strong>Transport:</strong> Pickup from Farmer Gate (Nashik)</span>
+            <span>🔒 <strong>Payment:</strong> Escrow Protected 24h Bank Transfer</span>
+            <span>✓ <strong>Buyer Rating:</strong> 4.9 ★ (Verified Corporate)</span>
+          </div>
+          <button class="btn btn--primary" id="btn-sell-best-price" style="font-size:14px; font-weight:700; padding:10px 22px;">
+            Sell at Best Price →
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('btn-sell-best-price')?.addEventListener('click', () => {
+      openConfirmOrderModal();
+    });
+
+    if (cropParam === 'tomato') {
+      const cropFilter = document.getElementById('filter-crop');
+      if (cropFilter) {
+        cropFilter.value = 'tomato';
+        renderMarketGrid('', 'tomato', 'all', 'all');
+      }
+      const compareCrop = document.getElementById('compare-crop');
+      if (compareCrop) {
+        compareCrop.value = 'tomato';
+        if (typeof renderComparison === 'function') renderComparison();
+      }
+    }
+  }
+
+  // Bind Confirm Order Modal Buttons
+  const confirmCloseBtn = document.getElementById('confirm-order-modal-close');
+  if (confirmCloseBtn) confirmCloseBtn.onclick = () => closeModal('confirm-order-modal-overlay');
+
+  const cancelOrderBtn = document.getElementById('btn-cancel-order-modal');
+  if (cancelOrderBtn) cancelOrderBtn.onclick = () => closeModal('confirm-order-modal-overlay');
+
+  const executeConfirmBtn = document.getElementById('btn-execute-confirm-order');
+  if (executeConfirmBtn) {
+    executeConfirmBtn.onclick = async () => {
+      executeConfirmBtn.disabled = true;
+      executeConfirmBtn.innerHTML = 'Confirming Order… ⏳';
+
+      const demoOrder = {
+        orderId: 'KS-ORD-DEMO-001',
+        cropName: 'Tomato',
+        variety: 'Hybrid Abhinav',
+        quantity: 50,
+        quantityUnit: 'quintal',
+        agreedPrice: 2500,
+        priceUnit: 'quintal',
+        totalAmount: 125000,
+        status: 'confirmed',
+        farmerName: 'Rajesh Patil (Nashik Farmer)',
+        buyerName: 'ABC Foods Pvt Ltd',
+        deliveryAddress: {
+          name: 'ABC Foods Warehouse',
+          phone: '+91 98230 45678',
+          addressLine1: 'Plot 42, MIDC Industrial Area',
+          village: 'Chakan',
+          state: 'Maharashtra',
+          pincode: '410501'
+        },
+        transport: {
+          assigned: true,
+          transporterName: 'Kisan Express Logistics',
+          vehicleNumber: 'MH 15 AB 4589',
+          driverName: 'Suresh Patil',
+          driverPhone: '+91 98230 45891',
+          pickupLocation: 'Rajesh Patil Farm Gate, Nashik',
+          destination: 'ABC Foods Warehouse, MIDC Chakan, Pune',
+          status: 'In Transit'
+        },
+        createdAt: new Date().toISOString()
+      };
+
+      localStorage.setItem('krishi_demo_order', JSON.stringify(demoOrder));
+
+      // Attempt server sync if order API is available
+      try {
+        if (window.api && window.api.orders && typeof window.api.orders.create === 'function') {
+          await window.api.orders.create(demoOrder);
+        }
+      } catch (err) {
+        console.warn('Local offline order storage active:', err);
+      }
+
+      closeModal('confirm-order-modal-overlay');
+      openModal('order-created-modal-overlay');
+      executeConfirmBtn.disabled = false;
+      executeConfirmBtn.innerHTML = 'Confirm Order →';
+    };
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════
 // 10. INITIALIZATION
 // ═════════════════════════════════════════════════════════════════════
 
@@ -1932,6 +2241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSearchAndFilters();
   initMarketComparison();
   initPriceTrendChart();
+  initFarmerOpportunityFlow();
 
   // 4. Initialize Forms & Modals
   initModalCloseHandlers();

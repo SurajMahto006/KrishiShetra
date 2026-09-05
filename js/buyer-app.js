@@ -75,6 +75,8 @@ function handleRouteUpdate() {
     currentRoute = 'inquiries';
   } else if (hash.includes('/orders')) {
     currentRoute = 'orders';
+  } else if (hash.includes('/disputes')) {
+    currentRoute = 'disputes';
   } else if (hash.includes('/directory') || hash.includes('/sellers')) {
     currentRoute = 'directory';
   } else if (hash.includes('/logistics')) {
@@ -98,6 +100,7 @@ function handleRouteUpdate() {
       (currentRoute === 'marketplace' && r.includes('marketplace')) ||
       (currentRoute === 'inquiries' && (r.includes('inquiries') || r.includes('offers'))) ||
       (currentRoute === 'orders' && r.includes('orders')) ||
+      (currentRoute === 'disputes' && r.includes('disputes')) ||
       (currentRoute === 'directory' && (r.includes('directory') || r.includes('sellers'))) ||
       (currentRoute === 'payments' && (r.includes('payments') || r.includes('escrow'))) ||
       (currentRoute === 'profile' && r.includes('profile'))
@@ -125,6 +128,9 @@ function renderView(route) {
       break;
     case 'orders':
       renderOrdersView(container);
+      break;
+    case 'disputes':
+      renderBuyerDisputesView(container);
       break;
     case 'directory':
       renderDirectoryView(container);
@@ -333,7 +339,7 @@ async function loadDashboardData() {
       if (lotsRes?.success && Array.isArray(lotsRes.lots)) lots = lotsRes.lots;
       if (inqRes?.success && Array.isArray(inqRes.inquiries)) inquiries = inqRes.inquiries;
       if (ordRes?.success && Array.isArray(ordRes.orders)) orders = ordRes.orders;
-    } catch (e) {}
+    } catch (e) { }
 
     // Clean fallback to B2B datasets
     if (lots.length === 0 && window.B2B_LOTS_DATA) {
@@ -704,7 +710,7 @@ async function renderMarketplaceView(container) {
       if (res?.success && Array.isArray(res.lots) && res.lots.length > 0) {
         lots = res.lots;
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Fallback to rich B2B_LOTS_DATA
     if (lots.length === 0 && window.B2B_LOTS_DATA) {
@@ -950,8 +956,8 @@ async function openLotDetailModal(lotId) {
   overlay.classList.add('active');
 
   let lot = null;
-  let found = currentMarketLots.find(l => (l.lotId || l.id) === lotId) || 
-              (window.B2B_LOTS_DATA && window.B2B_LOTS_DATA.find(l => l.id === lotId));
+  let found = currentMarketLots.find(l => (l.lotId || l.id) === lotId) ||
+    (window.B2B_LOTS_DATA && window.B2B_LOTS_DATA.find(l => l.id === lotId));
 
   if (!found && window.api?.market?.getLot) {
     try {
@@ -1132,9 +1138,9 @@ function openSendInquiryModal(lotId, askingPrice, maxQty) {
     document.body.appendChild(overlay);
   }
 
-  const lot = currentMarketLots.find(l => (l.lotId || l.id) === lotId) || 
-              (window.B2B_LOTS_DATA && window.B2B_LOTS_DATA.find(l => l.id === lotId)) || 
-              { crop: 'Produce Lot', variety: 'Standard', sellerName: 'Verified Supplier' };
+  const lot = currentMarketLots.find(l => (l.lotId || l.id) === lotId) ||
+    (window.B2B_LOTS_DATA && window.B2B_LOTS_DATA.find(l => l.id === lotId)) ||
+    { crop: 'Produce Lot', variety: 'Standard', sellerName: 'Verified Supplier' };
   const cropName = lot.cropName || lot.crop || 'Produce Lot';
   const variety = lot.variety || 'Standard';
   const sellerName = lot.sellerName || 'Verified Supplier';
@@ -1242,7 +1248,7 @@ function openSendInquiryModal(lotId, askingPrice, maxQty) {
       if (res?.success && res.inquiry) {
         successInquiry = res.inquiry;
       }
-    } catch (err) {}
+    } catch (err) { }
 
     // Fallback simulated offer creation
     if (!successInquiry && window.offerService) {
@@ -1255,7 +1261,7 @@ function openSendInquiryModal(lotId, askingPrice, maxQty) {
           quantityRequired: sim.quantity,
           status: 'pending'
         };
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (successInquiry) {
@@ -1423,8 +1429,8 @@ async function renderInquiriesView(container) {
             </thead>
             <tbody>
               ${inqs.map(inq => {
-                const s = getStatusBadge(inq.status.toLowerCase());
-                return `
+        const s = getStatusBadge(inq.status.toLowerCase());
+        return `
                   <tr style="border-bottom: 1px solid #F0EFEA;">
                     <td style="padding: 12px 14px; font-family: monospace; font-weight: 700; color: var(--ks-evergreen);">#${inq.id}</td>
                     <td style="padding: 12px 14px; font-weight: 700; color: #12372A;">${inq.crop}</td>
@@ -1444,7 +1450,7 @@ async function renderInquiriesView(container) {
                     </td>
                   </tr>
                 `;
-              }).join('')}
+      }).join('')}
             </tbody>
           </table>
         </div>
@@ -1516,8 +1522,8 @@ async function openNegotiationModal(inquiryId) {
         <h4 style="font-size: 13px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 10px 0;">Negotiation History</h4>
         <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
           ${(mock.history || []).map(h => {
-            const isBuyer = h.party === 'Buyer';
-            return `
+    const isBuyer = h.party === 'Buyer';
+    return `
               <div style="background: ${isBuyer ? '#FAF8F5' : '#FFFBEB'}; border-left: 3px solid ${isBuyer ? 'var(--ks-evergreen)' : '#D97706'}; padding: 8px 12px; border-radius: 4px;">
                 <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
                   <strong style="color: ${isBuyer ? 'var(--ks-evergreen)' : '#D97706'};">${isBuyer ? 'BUYER OFFER' : 'SELLER RESPONSE'}</strong>
@@ -1526,7 +1532,7 @@ async function openNegotiationModal(inquiryId) {
                 <div style="font-size: 12.5px;">Price: <strong>₹${h.price?.toLocaleString('en-IN')}/q</strong> • ${h.note || ''}</div>
               </div>
             `;
-          }).join('')}
+  }).join('')}
         </div>
 
         <!-- Action CTAs -->
@@ -1749,9 +1755,9 @@ async function renderOrdersView(container) {
 
     if (currentOrderSearch) {
       const q = currentOrderSearch.toLowerCase();
-      ords = ords.filter(o => 
-        (o.id || o.orderId || '').toLowerCase().includes(q) || 
-        (o.crop || o.cropName || '').toLowerCase().includes(q) || 
+      ords = ords.filter(o =>
+        (o.id || o.orderId || '').toLowerCase().includes(q) ||
+        (o.crop || o.cropName || '').toLowerCase().includes(q) ||
         (o.sellerName || o.farmerName || '').toLowerCase().includes(q)
       );
     }
@@ -1819,7 +1825,16 @@ async function renderOrdersView(container) {
                 <div style="font-size: 11.5px; color: #155E75; margin-top: 2px; font-weight: 600;">Status: ${logisticsStatus}</div>
               </div>
 
-              <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-end;">
+              <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
+                ${(id.includes('DEMO') || ord.hasDispute) ? `
+                  <a href="disputes.html?disputeId=${ord.disputeId || 'KS-DSP-DEMO-001'}" class="btn btn--sm" style="background: #E5F0E7; color: #12372A; border: 1px solid #8FCB9B; text-decoration: none; font-size: 11.5px; font-weight: 600; padding: 6px 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                    🔒 Payment Protected · View Dispute
+                  </a>
+                ` : `
+                  <a href="disputes.html?orderId=${id}" style="color: #6F7F75; font-size: 11.5px; text-decoration: none; padding: 6px 4px;">
+                    Problem with this order? Raise Dispute
+                  </a>
+                `}
                 <button class="btn btn--secondary btn--sm" style="border-radius: 6px; font-size: 12px; padding: 6px 14px;" onclick="openOrderTrackingModal('${id}')">
                   View Order
                 </button>
@@ -1858,6 +1873,142 @@ async function renderOrdersView(container) {
   };
 
   fetchOrders();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// 6B. BUYER DISPUTES VIEW (My Disputes Workspace)
+// ═══════════════════════════════════════════════════════════════════════
+async function renderBuyerDisputesView(container) {
+  container.innerHTML = `
+    <div class="buyer-view">
+      <!-- Standardized Header -->
+      <div class="buyer-page-header">
+        <div class="buyer-page-header__left">
+          <span class="buyer-page-header__eyebrow">Trade Protection & Grievance Redressal</span>
+          <h1 class="buyer-page-header__title">My Disputes</h1>
+          <p class="buyer-page-header__desc">Track your raised trade grievances, payment protection status, and neutral FPO mediation.</p>
+        </div>
+        <div class="buyer-page-header__actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="disputes.html?open=modal" class="btn btn--primary btn--sm" style="display:inline-flex; align-items:center; gap:6px; background: #5B9A72; text-decoration: none;">
+            <i data-lucide="plus-circle" style="width:15px;height:15px;"></i> Raise a Dispute
+          </a>
+          <a href="disputes.html" class="btn btn--secondary btn--sm" style="display:inline-flex; align-items:center; gap:6px; text-decoration: none;">
+            <i data-lucide="shield-check" style="width:15px;height:15px;"></i> Dispute Center →
+          </a>
+        </div>
+      </div>
+
+      <!-- Payment Protection Banner -->
+      <div style="background: #FFFFFF; border: 1px solid #D2E4D6; border-left: 4px solid #5B9A72; border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; box-shadow: 0 2px 6px rgba(18, 55, 42, 0.04);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 38px; height: 38px; border-radius: 50%; background: #E5F0E7; color: #12372A; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+            🔒
+          </div>
+          <div>
+            <strong style="font-size: 14px; color: #12372A; display: block;">KrishiShetra Payment Protection Active</strong>
+            <span style="font-size: 12.5px; color: #6F7F75;">When an order is disputed, transaction funds are automatically held in simulated protection until both parties agree or FPO/Admin mediation concludes.</span>
+          </div>
+        </div>
+        <span style="font-size: 11.5px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; background: #E5F0E7; color: #12372A; border: 1px solid #8FCB9B;">
+          ✓ Protected During Dispute
+        </span>
+      </div>
+
+      <!-- Disputes Cards Grid -->
+      <div id="buyer-disputes-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 18px;">
+        <div style="padding: 40px; text-align: center; color: #6F7F75; grid-column: 1 / -1; background: #FFFFFF; border-radius: 14px; border: 1px dashed #E2E0D5;">
+          <div class="spinner" style="margin: 0 auto 10px auto; width: 24px; height: 24px; border: 2px solid #E5E4DD; border-top-color: #12372A; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          Loading your disputes...
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+
+  const listElem = document.getElementById('buyer-disputes-list');
+  if (!listElem) return;
+
+  let disputes = [];
+  try {
+    const res = await window.api?.disputes?.getAll?.();
+    if (res?.success && Array.isArray(res.disputes) && res.disputes.length > 0) {
+      disputes = res.disputes;
+    }
+  } catch (err) {
+    console.warn('Disputes API error in buyer portal:', err);
+  }
+
+  // Ensure demo dispute KS-DSP-DEMO-001 is present
+  if (disputes.length === 0 || !disputes.some(d => d.disputeId === 'KS-DSP-DEMO-001')) {
+    const demoDisp = {
+      disputeId: 'KS-DSP-DEMO-001',
+      orderId: 'KS-ORD-DEMO-001',
+      cropName: 'Tomato',
+      quantity: 50,
+      quantityUnit: 'Qtl',
+      orderAmount: 125000,
+      reason: 'Quality Mismatch',
+      description: 'Received produce does not match the agreed quality specification.',
+      status: 'Under Review',
+      paymentProtection: {
+        isProtected: true,
+        protectedAmount: 125000,
+        statusText: 'Protected During Dispute'
+      }
+    };
+    disputes = [demoDisp, ...disputes.filter(d => d.disputeId !== 'KS-DSP-DEMO-001')];
+  }
+
+  listElem.innerHTML = disputes.map(d => {
+    const isProtected = d.paymentProtection ? d.paymentProtection.isProtected : true;
+    return `
+      <div class="dash-card" style="background: #FFFFFF; border: 1px solid #E2E0D5; border-radius: 14px; padding: 22px; box-shadow: 0 2px 8px rgba(18, 55, 42, 0.04); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <!-- Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div>
+              <span style="font-family: monospace; font-size: 13.5px; font-weight: 800; color: #12372A;">
+                Order #${d.orderId}
+              </span>
+              <span style="font-size: 11.5px; color: #6F7F75; margin-left: 6px;">(${d.disputeId})</span>
+            </div>
+            <span style="padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; background: #FDF7EA; color: #946914; border: 1px solid #EED79D;">
+              🟡 ${d.status}
+            </span>
+          </div>
+
+          <!-- Produce & Reason -->
+          <h3 style="font-size: 18px; font-weight: 700; color: #17221D; margin: 0 0 4px 0;">
+            ${d.cropName} · ${d.quantity} ${d.quantityUnit || 'Qtl'}
+          </h3>
+          <div style="font-size: 13px; color: #6F7F75; margin-bottom: 12px;">
+            Reason: <strong style="color: #17221D;">${d.reason}</strong> · Value: <strong style="color: #12372A;">₹${d.orderAmount?.toLocaleString('en-IN')}</strong>
+          </div>
+
+          <div style="background: #FAF9F5; border: 1px solid #ECEAE1; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #17221D; margin-bottom: 16px; line-height: 1.5;">
+            “${d.description}”
+          </div>
+        </div>
+
+        <!-- Footer / Protection & Action -->
+        <div style="border-top: 1px dashed #E2E0D5; padding-top: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div style="font-size: 12px; font-weight: 600; color: #12372A; display: inline-flex; align-items: center; gap: 4px;">
+            ${isProtected ? '🔒 Payment Protected' : '✓ Settled'}
+          </div>
+          <a href="disputes.html?disputeId=${d.disputeId}" class="btn btn--sm" style="background: #5B9A72; color: #FFFFFF; text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+            View Dispute →
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
 }
 
 function openOrderTrackingModal(orderId) {

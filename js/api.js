@@ -202,13 +202,29 @@ const api = {
     getSellingDecision: (lotId) => client.get(`/lots/${lotId}/selling-decision`)
   },
 
-  // 4. Public Marketplace (/api/market)
+  // 4. Public Marketplace & Government Mandi Prices (/api/market & /api/mandi-prices)
   market: {
     getLots: (params = {}) => {
       const qs = new URLSearchParams(params).toString();
       return client.get(`/market/lots${qs ? `?${qs}` : ''}`);
     },
-    getLot: (lotId) => client.get(`/market/lots/${lotId}`)
+    getLot: (lotId) => client.get(`/market/lots/${lotId}`),
+    getMandiPrices: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return client.get(`/market/mandi-prices${qs ? `?${qs}` : ''}`);
+    }
+  },
+
+  mandi: {
+    getPrices: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return client.get(`/mandi-prices${qs ? `?${qs}` : ''}`);
+    }
+  },
+
+  getMandiPrices: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return client.get(`/market/mandi-prices${qs ? `?${qs}` : ''}`);
   },
 
   // 5. Inquiries & Negotiation (/api/inquiries)
@@ -326,6 +342,18 @@ const api = {
   pledgeFinancing: {
     createRequest: (data) => client.post('/storage/pledge-financing/request', data),
     getMyRequests: () => client.get('/storage/pledge-financing/my')
+  },
+
+  // 13. Dispute Management (/api/disputes)
+  disputes: {
+    getAll: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return client.get(`/disputes${qs ? `?${qs}` : ''}`);
+    },
+    getById: (id) => client.get(`/disputes/${id}`),
+    create: (data) => client.post('/disputes', data),
+    updateStatus: (id, status, note = '') => client.patch(`/disputes/${id}/status`, { status, note }),
+    resolve: (id, data) => client.post(`/disputes/${id}/resolve`, data)
   }
 };
 

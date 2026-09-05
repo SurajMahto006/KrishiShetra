@@ -2141,84 +2141,396 @@ body.dashboard-body {
   margin: 0 auto;
 }
 
-/* ── 9. SMART SELLING OPPORTUNITY ── */
+/* ── 9. SMART SELLING OPPORTUNITY (Modern, Calm & Premium) ── */
 .dash-opp-card {
   display: flex;
-  align-items: center;
-  gap: 24px;
-  background: var(--ks-pale-sage);
-  border: 1px solid var(--ks-border-sage);
+  flex-direction: column;
+  background: var(--ks-card-white);
+  border: 1.5px solid var(--ks-border-sage);
   border-radius: var(--radius-md);
-  padding: 26px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 18px rgba(18, 55, 42, 0.05);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.24s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-opp-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ks-sage), var(--ks-mint));
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.dash-opp-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(18, 55, 42, 0.09);
+  border-color: var(--ks-sage);
+}
+
+.dash-opp-card__badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
   flex-wrap: wrap;
-  box-shadow: var(--shadow-sm);
+  gap: 8px;
+}
+
+.dash-opp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--ks-pale-sage);
+  color: var(--ks-evergreen);
+  border: 1px solid var(--ks-border-sage);
+}
+
+.dash-opp-pill svg {
+  width: 13px;
+  height: 13px;
+  color: var(--ks-amber);
+}
+
+.dash-opp-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ks-sage);
+  background: var(--ks-mint-light);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.dash-opp-verified svg {
+  width: 13px;
+  height: 13px;
+}
+
+.dash-opp-card__main {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
 }
 
 .dash-opp-card__icon {
-  font-size: 36px;
+  font-size: 42px;
+  line-height: 1;
+  background: #FFF5F3;
+  border: 1px solid #FFE0DB;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(201, 109, 91, 0.08);
 }
 
 .dash-opp-card__content {
   flex: 1;
-  min-width: 240px;
+  min-width: 280px;
+}
+
+.dash-opp-card__crop-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
 }
 
 .dash-opp-card__title {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--ks-evergreen);
-  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-opp-card__qty-pill {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ks-charcoal);
+  background: var(--ks-bg-ivory);
+  padding: 2px 9px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--ks-border);
+}
+
+.dash-opp-card__tag {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ks-text-muted);
+  background: #F0EFEA;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
 }
 
 .dash-opp-card__desc {
   font-size: 13px;
   color: var(--ks-text-muted);
-  margin-bottom: 6px;
+  margin-bottom: 14px;
 }
 
-.dash-opp-card__value {
-  font-size: 34px;
-  font-weight: 800;
-  color: var(--ks-evergreen);
-  margin-bottom: 12px;
-}
-
-.dash-opp-card__details {
+.dash-opp-card__metrics {
   display: flex;
-  gap: 24px;
+  align-items: center;
+  gap: 16px;
   flex-wrap: wrap;
+  background: var(--ks-bg-ivory);
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--ks-border-subtle);
 }
 
-.dash-opp-card__detail {
+.dash-opp-metric {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
-.dash-opp-card__detail span {
+.dash-opp-metric__lbl {
   font-size: 11px;
   font-weight: 600;
   color: var(--ks-text-muted);
   text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-.dash-opp-card__detail strong {
-  font-size: 14px;
+.dash-opp-metric__val {
+  font-size: 16px;
+  font-weight: 800;
   color: var(--ks-charcoal);
+  line-height: 1.2;
 }
 
-.dash-opp-card__detail--highlight strong {
+.dash-opp-metric__val small {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ks-text-muted);
+}
+
+.dash-opp-metric__val--green {
   color: var(--ks-sage);
 }
 
-.dash-opp-card__extra {
-  font-size: 18px !important;
-  font-weight: 800;
+.dash-opp-metric__val--total {
+  font-size: 20px;
+  color: var(--ks-evergreen);
+  font-family: var(--font-display);
+}
+
+.dash-opp-metric__sub {
+  font-size: 11px;
+  color: var(--ks-text-muted-light);
+}
+
+.dash-opp-metric__premium {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ks-sage);
+  background: var(--ks-mint-light);
+  padding: 1px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.dash-opp-metric-divider {
+  color: var(--ks-text-muted-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.dash-opp-metric-divider svg {
+  width: 14px;
+  height: 14px;
 }
 
 .dash-opp-card__action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
   flex-shrink: 0;
+}
+
+.dash-opp-btn {
+  padding: 12px 22px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: 0 3px 12px rgba(91, 154, 114, 0.28) !important;
+}
+
+.dash-opp-action-hint {
+  font-size: 11px;
+  color: var(--ks-text-muted);
+}
+
+/* ── 9.5 FARM SELLING JOURNEY ROADMAP (Smooth & Integrated) ── */
+.dash-journey-card {
+  background: var(--ks-card-white);
+  border: 1px solid var(--ks-border);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  box-shadow: 0 2px 10px rgba(18, 55, 42, 0.03);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dash-journey-card:hover {
+  border-color: var(--ks-border-sage);
+  box-shadow: var(--shadow-sm);
+}
+
+.dash-journey-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dash-journey-header__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-journey-header__icon {
+  font-size: 18px;
+}
+
+.dash-journey-header__title h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ks-evergreen);
+  margin: 0;
+}
+
+.dash-journey-header__badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: var(--ks-mint-light);
+  color: var(--ks-sage);
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dash-journey-header__sub {
+  font-size: 12px;
+  color: var(--ks-text-muted);
+}
+
+.dash-journey-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .dash-journey-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .dash-journey-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.dash-journey-step {
+  background: var(--ks-bg-ivory);
+  padding: 10px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--ks-border-subtle);
+  border-left: 3px solid var(--ks-border);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+
+.dash-journey-step:hover {
+  background: #FFFFFF;
+  border-color: var(--ks-border-sage);
+  border-left-color: var(--ks-sage);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(18, 55, 42, 0.06);
+}
+
+.dash-journey-step:active {
+  transform: scale(0.98);
+}
+
+.dash-journey-step--completed {
+  border-left-color: var(--ks-mint);
+  background: #F9FAF8;
+}
+
+.dash-journey-step--active {
+  border-left-color: var(--ks-sage);
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(91, 154, 114, 0.12);
+}
+
+.dash-journey-step__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.dash-journey-step__num {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--ks-evergreen);
+  letter-spacing: 0.04em;
+}
+
+.dash-journey-step__status {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--ks-sage);
+}
+
+.dash-journey-step__name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ks-charcoal);
+  line-height: 1.25;
+}
+
+.dash-journey-step__hint {
+  font-size: 10.5px;
+  color: var(--ks-text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── 10. TWO COLUMN PANELS (My Active Lots + Buyer Offers) ── */
@@ -3292,17 +3604,21 @@ body.dashboard-body {
     max-width: 145px;
     padding: 0 8px;
   }
+
   .dash-search__kbd {
     display: none;
   }
+
   .dash-header__link {
     padding: 5px 6px;
     font-size: 12px;
     gap: 4px;
   }
+
   .dash-header__profile-name {
     max-width: 65px;
   }
+
   #btn-help {
     display: none;
   }
@@ -3340,57 +3656,60 @@ body.dashboard-body {
     padding: 0 12px;
     gap: 6px;
   }
+
   .dash-header__logo-text {
     display: none;
   }
+
   .dash-search {
     flex: 1;
     max-width: none;
   }
+
   #btn-language {
     display: none;
   }
 }
 
-  .dash-stats__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .dash-actions__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .dash-forecast-form {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .dash-forecast-btn-wrap {
-    grid-column: span 2;
-  }
-
-  .dash-ai-card__content {
-    grid-template-columns: 1fr;
-  }
-
-  .dash-ai-card__right {
-    flex-direction: row;
-    justify-content: center;
-    gap: 24px;
-  }
-
-  .dash-two-col {
-    grid-template-columns: 1fr;
-  }
-
-  .dash-opp-card {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .dash-opp-card__details {
-    justify-content: center;
-  }
+.dash-stats__grid {
+  grid-template-columns: repeat(2, 1fr);
 }
+
+.dash-actions__grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.dash-forecast-form {
+  grid-template-columns: 1fr 1fr;
+}
+
+.dash-forecast-btn-wrap {
+  grid-column: span 2;
+}
+
+.dash-ai-card__content {
+  grid-template-columns: 1fr;
+}
+
+.dash-ai-card__right {
+  flex-direction: row;
+  justify-content: center;
+  gap: 24px;
+}
+
+.dash-two-col {
+  grid-template-columns: 1fr;
+}
+
+.dash-opp-card {
+  flex-direction: column;
+  text-align: center;
+}
+
+.dash-opp-card__details {
+  justify-content: center;
+}
+
 
 @media (max-width: 768px) {
   .dash-forecast-form {
@@ -3636,7 +3955,6 @@ body.dashboard-body {
   }
 }
 
-============================================================*/
 
 /* ── Hero Eyebrow & Headline ── */
 .ai-hero-header {
@@ -4055,12 +4373,14 @@ body.dashboard-body {
   margin-bottom: 14px;
   display: none;
 }
+
 .dash-modal-alert--error {
   display: block;
   background: #FDF0EE;
   color: #C96D5B;
   border: 1px solid #E8A89C;
 }
+
 .dash-modal-alert--success {
   display: block;
   background: #E8F5EC;
@@ -4078,6 +4398,7 @@ body.dashboard-body {
   border-radius: 12px;
   margin-bottom: 18px;
 }
+
 .dash-profile-badge-card__avatar {
   width: 46px;
   height: 46px;
@@ -4091,10 +4412,12 @@ body.dashboard-body {
   justify-content: center;
   flex-shrink: 0;
 }
+
 .dash-profile-badge-card__meta {
   flex: 1;
   min-width: 0;
 }
+
 .dash-profile-badge-card__name {
   font-size: 15px;
   font-weight: 700;
@@ -4103,6 +4426,7 @@ body.dashboard-body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .dash-profile-badge-card__email {
   font-size: 12px;
   color: #6F7F75;
@@ -4110,11 +4434,13 @@ body.dashboard-body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .dash-profile-badge-card__tags {
   display: flex;
   gap: 6px;
   margin-top: 4px;
 }
+
 .dash-profile-tag {
   font-size: 10px;
   font-weight: 700;
@@ -4123,14 +4449,17 @@ body.dashboard-body {
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+
 .dash-profile-tag--role {
   background: #E5F0E7;
   color: #12372A;
 }
+
 .dash-profile-tag--verified {
   background: #E8F5EC;
   color: #2E7246;
 }
+
 .dash-profile-divider {
   border: 0;
   border-top: 1px solid #E4E3D8;
@@ -4214,7 +4543,10 @@ body.dashboard-body {
   color: var(--ks-mint);
 }
 
-.mpc-entry-card__text { flex: 1; min-width: 0; }
+.mpc-entry-card__text {
+  flex: 1;
+  min-width: 0;
+}
 
 .mpc-entry-card__title {
   font-size: 17px;
@@ -4284,9 +4616,20 @@ body.dashboard-body {
 }
 
 @media (max-width: 768px) {
-  .mpc-entry-card { flex-direction: column; align-items: flex-start; padding: 18px 20px; }
-  .mpc-entry-card__right { width: 100%; justify-content: space-between; }
-  .mpc-entry-card__stats { gap: 14px; }
+  .mpc-entry-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px 20px;
+  }
+
+  .mpc-entry-card__right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mpc-entry-card__stats {
+    gap: 14px;
+  }
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -4439,9 +4782,17 @@ body.dashboard-body {
 }
 
 @keyframes pulse-border {
-  0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.5); }
-  70% { box-shadow: 0 0 0 10px rgba(46, 125, 50, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.5);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(46, 125, 50, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0);
+  }
 }
 
 /* 3. 4 LARGE KISAN ACTION CARDS (3-TAP RULE) */
@@ -4484,12 +4835,15 @@ body.dashboard-body {
 .kisan-action-card--price {
   border-left: 6px solid #D6A84F;
 }
+
 .kisan-action-card--sell {
   border-left: 6px solid #2E7D32;
 }
+
 .kisan-action-card--storage {
   border-left: 6px solid #1565C0;
 }
+
 .kisan-action-card--decision {
   border-left: 6px solid #7B1FA2;
 }
@@ -4511,10 +4865,25 @@ body.dashboard-body {
   flex-shrink: 0;
 }
 
-.kisan-action-card--price .kisan-action-card__icon { background: #FEF7E6; border: 1px solid #F6D68F; }
-.kisan-action-card--sell .kisan-action-card__icon { background: #E8F5E9; border: 1px solid #C8E6C9; }
-.kisan-action-card--storage .kisan-action-card__icon { background: #E3F2FD; border: 1px solid #BBDEFB; }
-.kisan-action-card--decision .kisan-action-card__icon { background: #F3E5F5; border: 1px solid #E1BEE7; }
+.kisan-action-card--price .kisan-action-card__icon {
+  background: #FEF7E6;
+  border: 1px solid #F6D68F;
+}
+
+.kisan-action-card--sell .kisan-action-card__icon {
+  background: #E8F5E9;
+  border: 1px solid #C8E6C9;
+}
+
+.kisan-action-card--storage .kisan-action-card__icon {
+  background: #E3F2FD;
+  border: 1px solid #BBDEFB;
+}
+
+.kisan-action-card--decision .kisan-action-card__icon {
+  background: #F3E5F5;
+  border: 1px solid #E1BEE7;
+}
 
 .kisan-action-card__info {
   flex: 1;
@@ -4571,10 +4940,25 @@ body.dashboard-body {
   transition: all 0.2s ease;
 }
 
-.kisan-action-card--price .kisan-action-card__btn { background: #FEF3C7; color: #92400E; }
-.kisan-action-card--sell .kisan-action-card__btn { background: #12372A; color: #FFFFFF; }
-.kisan-action-card--storage .kisan-action-card__btn { background: #E3F2FD; color: #0D47A1; }
-.kisan-action-card--decision .kisan-action-card__btn { background: #7B1FA2; color: #FFFFFF; }
+.kisan-action-card--price .kisan-action-card__btn {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.kisan-action-card--sell .kisan-action-card__btn {
+  background: #12372A;
+  color: #FFFFFF;
+}
+
+.kisan-action-card--storage .kisan-action-card__btn {
+  background: #E3F2FD;
+  color: #0D47A1;
+}
+
+.kisan-action-card--decision .kisan-action-card__btn {
+  background: #7B1FA2;
+  color: #FFFFFF;
+}
 
 .kisan-action-card:hover .kisan-action-card__btn {
   filter: brightness(0.95);
@@ -4688,3 +5072,168 @@ body.dashboard-body {
   cursor: pointer;
 }
 
+/* ═════════════════════════════════════════════════════════════════════
+   DASHBOARD REFINEMENTS: SMOOTHNESS, MICRO-INTERACTIONS & ACCESSIBILITY
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* ── Interactive CTAs & Button Feedback ── */
+.btn-arrow {
+  display: inline-block;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.dash-stat:active {
+  transform: scale(0.985);
+}
+
+.dash-action:active {
+  transform: scale(0.97);
+}
+
+.dash-stat:hover .dash-stat__icon {
+  transform: scale(1.05);
+}
+
+.dash-stat__icon {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dash-action:hover .dash-action__icon {
+  transform: scale(1.06);
+}
+
+.dash-action__icon {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Market Insights Elevation ── */
+.dash-insight-card {
+  border-left: 3.5px solid var(--ks-pale-sage);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.24s ease;
+}
+
+.dash-insight-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(18, 55, 42, 0.07);
+  border-left-color: var(--ks-sage);
+  border-color: var(--ks-border-sage);
+}
+
+/* ── Form Inputs Focus Ring ── */
+.dash-form-input:focus,
+.dash-form-textarea:focus,
+.dash-filter-select:focus {
+  outline: none;
+  border-color: var(--ks-sage);
+  box-shadow: 0 0 0 3px rgba(91, 154, 114, 0.16);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ── Modal Smooth Transition ── */
+.dash-modal {
+  transform: translateY(12px) scale(0.985);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.dash-modal-overlay.active .dash-modal {
+  transform: translateY(0) scale(1);
+}
+
+/* ── Responsive rules for Smart Selling Opportunity ── */
+@media (max-width: 768px) {
+  .dash-opp-card {
+    padding: 18px 16px;
+  }
+
+  .dash-opp-card__main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dash-opp-card__action {
+    width: 100%;
+    align-items: stretch;
+    margin-top: 10px;
+  }
+
+  .dash-opp-card__action .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .dash-opp-metric-divider {
+    display: none;
+  }
+
+  .dash-opp-card__metrics {
+    gap: 12px;
+    padding: 10px 14px;
+    width: 100%;
+  }
+}
+
+/* ── Gentle Fade & Slide Entry Animations (Continuous & Calming) ── */
+@keyframes dashFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dash-welcome {
+  animation: dashFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.dash-stats {
+  animation: dashFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+}
+
+.dash-section--opp {
+  animation: dashFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.dash-section--journey {
+  animation: dashFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both;
+}
+
+.dash-actions-section {
+  animation: dashFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+
+#dash-market-insights {
+  animation: dashFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
+}
+
+#dash-compare-entry {
+  animation: dashFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
+}
+
+#dash-mandi-map {
+  animation: dashFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+/* ── Accessibility: Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+    scroll-behavior: auto !important;
+  }
+}

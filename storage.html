@@ -79,7 +79,8 @@
       </nav>
 
       <div class="dash-header__actions">
-        <button class="dash-header__action-btn" id="btn-help" onclick="openHelpModal()" aria-label="Help" title="Kisan Support & Help">
+        <button class="dash-header__action-btn" id="btn-help" onclick="openHelpModal()" aria-label="Help"
+          title="Kisan Support & Help">
           <i data-lucide="help-circle"></i>
         </button>
         <div class="dash-profile-wrap">
@@ -111,14 +112,17 @@
               <span class="storage-hero__badge" data-i18n="heroBadge">Distress Selling Prevention</span>
             </div>
             <p class="storage-hero__subtitle" data-i18n="heroSubtitle">
-              Find accredited warehouses and cold storages near you. Compare storage costs, verify available capacity, and get AI-powered Sell-vs-Store recommendations to maximize harvest realization.
+              Find accredited warehouses and cold storages near you. Compare storage costs, verify available capacity,
+              and get AI-powered Sell-vs-Store recommendations to maximize harvest realization.
             </p>
           </div>
           <div class="storage-hero__actions">
-            <a href="javascript:void(0)" onclick="switchStorageSubTab('calculator')" class="btn btn--primary" style="background:#C9973B; color:#1A3320; border:none; font-weight:700; min-height:48px; padding:10px 18px;">
+            <a href="javascript:void(0)" onclick="switchStorageSubTab('calculator')" class="btn btn--primary"
+              style="background:#C9973B; color:#1A3320; border:none; font-weight:700; min-height:48px; padding:10px 18px;">
               <i data-lucide="calculator"></i> <span data-i18n="btnCalc">⚡ Sell vs Store Advisor</span>
             </a>
-            <button class="btn btn--secondary" onclick="openPledgeModal('WH-MH-PUN-001')" style="color:#FFF; border-color:rgba(255,255,255,0.4); min-height:48px;">
+            <button class="btn btn--secondary" onclick="openPledgeModal('WH-MH-PUN-001')"
+              style=" border-color:rgba(255,255,255,0.4); min-height:48px;">
               <i data-lucide="landmark"></i> <span data-i18n="btnPledge">Apply for Fast Pledge Loan</span>
             </button>
           </div>
@@ -126,14 +130,19 @@
       </div>
 
       <!-- Storage 3-Big-Tabs Navigation Bar -->
-      <div class="storage-tab-nav" style="display: flex; gap: 10px; margin-bottom: 22px; border-bottom: 2px solid #E5E4DD; padding-bottom: 10px; overflow-x: auto;">
-        <button class="btn storage-subtab-btn active" id="btn-subtab-discovery" onclick="switchStorageSubTab('discovery')" style="border-radius: 14px; font-weight: 700; background: var(--ks-evergreen, #12372A); color: #FFF; border: none; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 48px; font-size: 14px;">
+      <div class="storage-tab-nav"
+        style="display: flex; gap: 10px; margin-bottom: 22px; border-bottom: 2px solid #E5E4DD; padding-bottom: 10px; overflow-x: auto;">
+        <button class="btn storage-subtab-btn active" id="btn-subtab-discovery"
+          onclick="switchStorageSubTab('discovery')"
+          style="border-radius: 14px; font-weight: 700; background: var(--ks-evergreen, #12372A); color: #FFF; border: none; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 48px; font-size: 14px;">
           <span style="font-size: 18px;">🏬</span> <span id="tab-label-discovery">Nearby Warehouses & Godowns</span>
         </button>
-        <button class="btn storage-subtab-btn" id="btn-subtab-calculator" onclick="switchStorageSubTab('calculator')" style="border-radius: 14px; font-weight: 700; background: #FFF; color: #444; border: 1.5px solid #DDD; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 48px; font-size: 14px;">
+        <button class="btn storage-subtab-btn" id="btn-subtab-calculator" onclick="switchStorageSubTab('calculator')"
+          style="border-radius: 14px; font-weight: 700; background: #FFF; color: #444; border: 1.5px solid #DDD; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 48px; font-size: 14px;">
           <span style="font-size: 18px;">⚖️</span> <span id="tab-label-calculator">Sell Now vs. Store & Hold</span>
         </button>
-        <button class="btn storage-subtab-btn" id="btn-subtab-bookings" onclick="switchStorageSubTab('bookings')" style="border-radius: 14px; font-weight: 700; background: #FFF; color: #444; border: 1.5px solid #DDD; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 48px; font-size: 14px;">
+        <button class="btn storage-subtab-btn" id="btn-subtab-bookings" onclick="switchStorageSubTab('bookings')"
+          style="border-radius: 14px; font-weight: 700; background: #FFF; color: #444; border: 1.5px solid #DDD; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 48px; font-size: 14px;">
           <span style="font-size: 18px;">📋</span> <span id="tab-label-bookings">My Storage & e-NWR Loans</span>
         </button>
       </div>
@@ -143,14 +152,19 @@
         <div class="storage-filter-card">
           <div class="storage-filter-grid">
             <div>
-              <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;">Search Facilities</label>
+              <label
+                style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;">Search
+                Facilities</label>
               <div style="position: relative;">
-                <input type="text" id="storage-search-input" class="dash-form-input" placeholder="Search warehouses, cold storages, districts..." style="padding-left: 32px;">
-                <i data-lucide="search" style="position: absolute; left: 10px; top: 11px; width: 15px; height: 15px; color: #999;"></i>
+                <input type="text" id="storage-search-input" class="dash-form-input"
+                  placeholder="Search warehouses, cold storages, districts..." style="padding-left: 32px;">
+                <i data-lucide="search"
+                  style="position: absolute; left: 10px; top: 11px; width: 15px; height: 15px; color: #999;"></i>
               </div>
             </div>
             <div>
-              <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;" data-i18n="filterType">Storage Type</label>
+              <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
+                data-i18n="filterType">Storage Type</label>
               <select id="filter-storage-type" class="dash-filter-select" style="width: 100%;">
                 <option value="all">All Storage Types</option>
                 <option value="warehouse">Warehouse</option>
@@ -159,7 +173,8 @@
               </select>
             </div>
             <div>
-              <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;" data-i18n="filterCrop">Crop Suitability</label>
+              <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
+                data-i18n="filterCrop">Crop Suitability</label>
               <select id="filter-storage-crop" class="dash-filter-select" style="width: 100%;">
                 <option value="all">All Crops</option>
                 <option value="wheat">Wheat</option>
@@ -173,16 +188,22 @@
               </select>
             </div>
             <div>
-              <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;" data-i18n="filterRadius">Distance Radius</label>
+              <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
+                data-i18n="filterRadius">Distance Radius</label>
               <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="25" style="padding: 6px 8px;">25 km</button>
-                <button class="btn btn--secondary btn--sm storage-dist-btn active" data-dist="50" style="padding: 6px 8px; background:#2E7D32; color:#FFF; border-color:#2E7D32;">50 km</button>
-                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="100" style="padding: 6px 8px;">100 km</button>
-                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="0" style="padding: 6px 8px;">All India</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="25" style="padding: 6px 8px;">25
+                  km</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn active" data-dist="50"
+                  style="padding: 6px 8px; background:#2E7D32; color:#FFF; border-color:#2E7D32;">50 km</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="100"
+                  style="padding: 6px 8px;">100 km</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="0" style="padding: 6px 8px;">All
+                  India</button>
               </div>
             </div>
             <div>
-              <button class="btn btn--secondary btn--sm" id="storage-my-loc-btn" style="height: 38px; display: flex; align-items: center; gap: 6px;">
+              <button class="btn btn--secondary btn--sm" id="storage-my-loc-btn"
+                style="height: 38px; display: flex; align-items: center; gap: 6px;">
                 <i data-lucide="crosshair"></i> <span>My Location</span>
               </button>
             </div>
@@ -210,8 +231,10 @@
             <div class="svs-title-wrap">
               <span style="font-size: 24px;">🤖</span>
               <div>
-                <h2 style="font-size: 19px; font-weight: 800; color: #1A3320; margin: 0;" data-i18n="svsTitle">Sell Now vs. Store & Hold Decision Support</h2>
-                <p style="font-size: 12.5px; color: #666; margin: 2px 0 0;" data-i18n="svsSubtitle">Evaluate if storing your harvest is financially smarter than selling immediately at current mandi prices.</p>
+                <h2 style="font-size: 19px; font-weight: 800; color: #1A3320; margin: 0;" data-i18n="svsTitle">Sell Now
+                  vs. Store & Hold Decision Support</h2>
+                <p style="font-size: 12.5px; color: #666; margin: 2px 0 0;" data-i18n="svsSubtitle">Evaluate if storing
+                  your harvest is financially smarter than selling immediately at current mandi prices.</p>
               </div>
             </div>
             <div class="svs-badge" id="res-rec-badge">
@@ -222,9 +245,11 @@
 
           <!-- Interactive Parameter Controls -->
           <div style="background: #F7F6F1; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
+            <div
+              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
               <div>
-                <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;" data-i18n="lblCrop">Crop</label>
+                <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
+                  data-i18n="lblCrop">Crop</label>
                 <select id="calc-crop-select" class="dash-filter-select" style="width:100%; background:#FFF;">
                   <option value="wheat">🌾 Wheat</option>
                   <option value="rice">🌾 Rice</option>
@@ -239,15 +264,20 @@
                 </select>
               </div>
               <div>
-                <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;" data-i18n="lblQty">Quantity (Quintals)</label>
-                <input type="number" id="calc-qty-input" class="dash-form-input" value="50" min="1" max="10000" style="background:#FFF;">
+                <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
+                  data-i18n="lblQty">Quantity (Quintals)</label>
+                <input type="number" id="calc-qty-input" class="dash-form-input" value="50" min="1" max="10000"
+                  style="background:#FFF;">
               </div>
               <div>
-                <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;" data-i18n="lblCurPrice">Current Price (₹/q)</label>
-                <input type="number" id="calc-price-input" class="dash-form-input" value="2400" min="100" style="background:#FFF;">
+                <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
+                  data-i18n="lblCurPrice">Current Price (₹/q)</label>
+                <input type="number" id="calc-price-input" class="dash-form-input" value="2400" min="100"
+                  style="background:#FFF;">
               </div>
               <div>
-                <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;" data-i18n="lblDuration">Holding Period (Days)</label>
+                <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
+                  data-i18n="lblDuration">Holding Period (Days)</label>
                 <select id="calc-days-input" class="dash-filter-select" style="width:100%; background:#FFF;">
                   <option value="15">15 Days</option>
                   <option value="30">30 Days (1 Month)</option>
@@ -269,9 +299,10 @@
             <!-- OPTION A: SELL NOW -->
             <div class="svs-option-card svs-option-card--sell">
               <div class="svs-option-tag svs-option-tag--sell" data-i18n="optSell">OPTION A — SELL NOW</div>
-              <div style="font-size: 12px; color: #666;" data-i18n="lblRealization">Expected Immediate Realization:</div>
+              <div style="font-size: 12px; color: #666;" data-i18n="lblRealization">Expected Immediate Realization:
+              </div>
               <div class="svs-realization" id="res-sell-realization">₹1,20,000</div>
-              
+
               <div class="svs-breakdown-list">
                 <div class="svs-breakdown-item">
                   <span>Current Mandi Price:</span>
@@ -290,10 +321,11 @@
 
             <!-- OPTION B: STORE & HOLD -->
             <div class="svs-option-card svs-option-card--store">
-              <div class="svs-option-tag svs-option-tag--store" data-i18n="optStore">OPTION B — STORE & HOLD (RECOMMENDED)</div>
+              <div class="svs-option-tag svs-option-tag--store" data-i18n="optStore">OPTION B — STORE & HOLD
+                (RECOMMENDED)</div>
               <div style="font-size: 12px; color: #2E7D32;" data-i18n="lblRealization">Projected Net Realization:</div>
               <div class="svs-realization svs-realization--highlight" id="res-store-realization">₹1,27,450</div>
-              
+
               <div class="svs-breakdown-list">
                 <div class="svs-breakdown-item">
                   <span data-i18n="lblStorageRent">Storage Rent (45 days):</span>
@@ -316,45 +348,57 @@
           </div>
 
           <!-- Explanation Box with Voice Readout -->
-          <div class="svs-explanation" style="margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+          <div class="svs-explanation"
+            style="margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
             <div style="display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 260px;">
               <i data-lucide="info" style="flex-shrink: 0; margin-top: 3px;"></i>
               <span id="res-explanation-text">
-                Store & Hold is currently recommended. Based on seasonal mandi arrivals and buyer procurement inquiries, storing your harvest for 45 days at an accredited facility is projected to yield higher net revenue even after deducting all storage rent, handling, and moisture loss.
+                Store & Hold is currently recommended. Based on seasonal mandi arrivals and buyer procurement inquiries,
+                storing your harvest for 45 days at an accredited facility is projected to yield higher net revenue even
+                after deducting all storage rent, handling, and moisture loss.
               </span>
             </div>
-            <button class="kisan-voice-btn" id="btn-speak-storage-verdict" onclick="speakStorageVerdict()" style="min-height: 44px; padding: 8px 16px; font-size: 13px;">
+            <button class="kisan-voice-btn" id="btn-speak-storage-verdict" onclick="speakStorageVerdict()"
+              style="min-height: 44px; padding: 8px 16px; font-size: 13px;">
               <span id="storage-voice-icon">🔊</span> <span id="storage-voice-text">Listen</span>
             </button>
           </div>
 
           <!-- ── COMPARATIVE STORAGE OPTIONS FOR SELECTED GRAIN/CROP ── -->
           <div style="padding-top: 20px; border-top: 1px solid #E5E4DD;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
               <div>
-                <h3 style="font-size: 16px; font-weight: 800; color: var(--ks-evergreen); margin: 0;" id="crop-compare-heading">
-                  🏬 Compare All Storage Options for <span id="crop-compare-crop-name" style="color:#C9973B;">Wheat</span>
+                <h3 style="font-size: 16px; font-weight: 800; color: var(--ks-evergreen); margin: 0;"
+                  id="crop-compare-heading">
+                  🏬 Compare All Storage Options for <span id="crop-compare-crop-name"
+                    style="color:#C9973B;">Wheat</span>
                 </h3>
                 <p style="font-size: 12px; color: var(--ks-text-muted); margin: 2px 0 0;">
-                  Evaluate multiple accredited facilities to choose the lowest tariff, nearest distance, or highest net profit.
+                  Evaluate multiple accredited facilities to choose the lowest tariff, nearest distance, or highest net
+                  profit.
                 </p>
               </div>
               <div style="display: flex; gap: 6px; align-items: center;">
                 <span style="font-size: 11px; color: #777; font-weight: 600;">SORT BY:</span>
-                <button class="btn btn--sm btn--secondary" onclick="sortCropOptions('profit')" id="btn-sort-profit" style="font-size: 11.5px; padding: 4px 10px; background: #E8F5E9; border-color: #C8E6C9; color: #2E7D32; font-weight: 700;">
+                <button class="btn btn--sm btn--secondary" onclick="sortCropOptions('profit')" id="btn-sort-profit"
+                  style="font-size: 11.5px; padding: 4px 10px; background: #E8F5E9; border-color: #C8E6C9; color: #2E7D32; font-weight: 700;">
                   🏆 Max Profit
                 </button>
-                <button class="btn btn--sm btn--secondary" onclick="sortCropOptions('distance')" id="btn-sort-dist" style="font-size: 11.5px; padding: 4px 10px;">
+                <button class="btn btn--sm btn--secondary" onclick="sortCropOptions('distance')" id="btn-sort-dist"
+                  style="font-size: 11.5px; padding: 4px 10px;">
                   ⚡ Nearest
                 </button>
-                <button class="btn btn--sm btn--secondary" onclick="sortCropOptions('cost')" id="btn-sort-cost" style="font-size: 11.5px; padding: 4px 10px;">
+                <button class="btn btn--sm btn--secondary" onclick="sortCropOptions('cost')" id="btn-sort-cost"
+                  style="font-size: 11.5px; padding: 4px 10px;">
                   💰 Lowest Cost
                 </button>
               </div>
             </div>
 
             <!-- Dynamic Comparison Grid -->
-            <div id="crop-options-comparison-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px;">
+            <div id="crop-options-comparison-grid"
+              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px;">
               <!-- Rendered dynamically by storage.js -->
             </div>
           </div>
@@ -364,10 +408,13 @@
       <!-- ── TAB PANEL 3: MY STORAGE BOOKINGS ── -->
       <section id="tab-panel-bookings" class="storage-tab-panel" style="display: none;">
         <div class="dash-card" style="background: #FFF; border-radius: 12px; padding: 24px; border: 1px solid #E5E4DD;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
             <div>
-              <h3 style="font-size: 18px; font-weight: 800; color: var(--ks-evergreen); margin: 0;">📋 My Storage Bookings & Warehouse Receipts</h3>
-              <p style="font-size: 12.5px; color: var(--ks-text-muted); margin: 2px 0 0;">Track your deposit status, monthly rent accruals, and e-NWR numbers.</p>
+              <h3 style="font-size: 18px; font-weight: 800; color: var(--ks-evergreen); margin: 0;">📋 My Storage
+                Bookings & Warehouse Receipts</h3>
+              <p style="font-size: 12.5px; color: var(--ks-text-muted); margin: 2px 0 0;">Track your deposit status,
+                monthly rent accruals, and e-NWR numbers.</p>
             </div>
             <button class="btn btn--primary btn--sm" onclick="switchStorageSubTab('discovery')">
               <i data-lucide="plus"></i> Request New Storage Space
@@ -382,12 +429,16 @@
       <!-- ── TAB PANEL 4: PLEDGE FINANCING (e-NWR) ── -->
       <section id="tab-panel-pledge" class="storage-tab-panel" style="display: none;">
         <div class="dash-card" style="background: #FFF; border-radius: 12px; padding: 24px; border: 1px solid #E5E4DD;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
             <div>
-              <h3 style="font-size: 18px; font-weight: 800; color: #1565C0; margin: 0;">💰 Pledge Financing & Short-Term Liquidity (e-NWR)</h3>
-              <p style="font-size: 12.5px; color: var(--ks-text-muted); margin: 2px 0 0;">Apply for short-term working capital up to 75% LTV against your stored produce instead of distress selling.</p>
+              <h3 style="font-size: 18px; font-weight: 800; color: #1565C0; margin: 0;">💰 Pledge Financing & Short-Term
+                Liquidity (e-NWR)</h3>
+              <p style="font-size: 12.5px; color: var(--ks-text-muted); margin: 2px 0 0;">Apply for short-term working
+                capital up to 75% LTV against your stored produce instead of distress selling.</p>
             </div>
-            <button class="btn btn--primary btn--sm" style="background: #1565C0; border-color: #1565C0;" onclick="openPledgeModal('WH-MH-PUN-001')">
+            <button class="btn btn--primary btn--sm" style="background: #1565C0; border-color: #1565C0;"
+              onclick="openPledgeModal('WH-MH-PUN-001')">
               <i data-lucide="plus"></i> New Pledge Loan Request
             </button>
           </div>
@@ -405,7 +456,8 @@
     <div class="storage-modal">
       <div class="storage-modal__header">
         <div>
-          <h3 style="margin: 0; font-size: 17px; color: #1A3320;" data-i18n="modalBookingTitle">Request Storage Space</h3>
+          <h3 style="margin: 0; font-size: 17px; color: #1A3320;" data-i18n="modalBookingTitle">Request Storage Space
+          </h3>
           <span id="book-facility-name" style="font-size: 12px; color: #666;">Warehouse Name</span>
         </div>
         <button class="dash-modal__close" onclick="closeBookingModal()"><i data-lucide="x"></i></button>
@@ -416,7 +468,8 @@
 
           <div class="dash-modal__field" style="margin-bottom: 12px;">
             <label style="font-size: 12px; font-weight: 700; color: #444;">Storage Tariff Rate</label>
-            <div id="book-rate-preview" style="font-size: 13px; color: #2E7D32; font-weight: 700; background: #E8F5E9; padding: 8px 12px; border-radius: 8px;">
+            <div id="book-rate-preview"
+              style="font-size: 13px; color: #2E7D32; font-weight: 700; background: #E8F5E9; padding: 8px 12px; border-radius: 8px;">
               ₹38/bag/month + ₹14/q handling
             </div>
           </div>
@@ -437,14 +490,16 @@
               </select>
             </div>
             <div class="dash-modal__field">
-              <label for="book-qty-input" style="font-size: 12px; font-weight: 700; color: #444;">Quantity (Quintals)</label>
+              <label for="book-qty-input" style="font-size: 12px; font-weight: 700; color: #444;">Quantity
+                (Quintals)</label>
               <input type="number" id="book-qty-input" class="dash-form-input" value="50" min="1" required>
             </div>
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
             <div class="dash-modal__field">
-              <label for="book-days-input" style="font-size: 12px; font-weight: 700; color: #444;">Duration (Days)</label>
+              <label for="book-days-input" style="font-size: 12px; font-weight: 700; color: #444;">Duration
+                (Days)</label>
               <select id="book-days-input" class="dash-filter-select" style="width: 100%;">
                 <option value="15">15 Days</option>
                 <option value="30" selected>30 Days (1 Month)</option>
@@ -454,18 +509,21 @@
               </select>
             </div>
             <div class="dash-modal__field">
-              <label for="book-start-date" style="font-size: 12px; font-weight: 700; color: #444;">Deposit Start Date</label>
+              <label for="book-start-date" style="font-size: 12px; font-weight: 700; color: #444;">Deposit Start
+                Date</label>
               <input type="date" id="book-start-date" class="dash-form-input" required>
             </div>
           </div>
 
           <!-- Estimated Cost Breakdown Preview -->
           <div class="storage-cost-preview">
-            <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: #555; margin-bottom: 4px;">
+            <div
+              style="display: flex; justify-content: space-between; font-size: 12.5px; color: #555; margin-bottom: 4px;">
               <span>Storage Rent:</span>
               <strong id="book-cost-rent">₹3,800</strong>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: #555; margin-bottom: 8px;">
+            <div
+              style="display: flex; justify-content: space-between; font-size: 12.5px; color: #555; margin-bottom: 8px;">
               <span>Handling & Unloading:</span>
               <strong id="book-cost-handling">₹700</strong>
             </div>
@@ -476,12 +534,15 @@
           </div>
 
           <div class="dash-modal__field" style="margin-bottom: 16px;">
-            <label for="book-notes-input" style="font-size: 12px; font-weight: 700; color: #444;">Additional Notes for Facility Manager</label>
-            <textarea id="book-notes-input" class="dash-form-textarea" rows="2" placeholder="e.g. Standard 50kg gunny bags, moisture tested 10%..."></textarea>
+            <label for="book-notes-input" style="font-size: 12px; font-weight: 700; color: #444;">Additional Notes for
+              Facility Manager</label>
+            <textarea id="book-notes-input" class="dash-form-textarea" rows="2"
+              placeholder="e.g. Standard 50kg gunny bags, moisture tested 10%..."></textarea>
           </div>
 
           <div style="display: flex; gap: 10px;">
-            <button type="button" class="btn btn--secondary" style="flex: 1;" onclick="closeBookingModal()">Cancel</button>
+            <button type="button" class="btn btn--secondary" style="flex: 1;"
+              onclick="closeBookingModal()">Cancel</button>
             <button type="submit" class="btn btn--primary" style="flex: 2;">
               <i data-lucide="check-circle"></i> <span>Submit Storage Request</span>
             </button>
@@ -496,29 +557,35 @@
     <div class="storage-modal">
       <div class="storage-modal__header">
         <div>
-          <h3 style="margin: 0; font-size: 17px; color: #1565C0;" data-i18n="modalPledgeTitle">Apply for Pledge Financing (e-NWR)</h3>
+          <h3 style="margin: 0; font-size: 17px; color: #1565C0;" data-i18n="modalPledgeTitle">Apply for Pledge
+            Financing (e-NWR)</h3>
           <span id="pledge-facility-name" style="font-size: 12px; color: #666;">Warehouse</span>
         </div>
         <button class="dash-modal__close" onclick="closePledgeModal()"><i data-lucide="x"></i></button>
       </div>
       <div class="storage-modal__body">
         <form id="pledge-financing-form" onsubmit="submitPledgeFinancing(event)">
-          <div style="background: #E3F2FD; border: 1px solid #BBDEFB; padding: 12px 16px; border-radius: 10px; font-size: 13px; color: #0D47A1; margin-bottom: 16px; line-height: 1.4;">
-            <strong>💡 Avoid Distress Selling:</strong> Deposit produce in an accredited warehouse, generate an Electronic Warehouse Receipt (e-NWR), and receive immediate short-term liquidity up to 75% of produce value.
+          <div
+            style="background: #E3F2FD; border: 1px solid #BBDEFB; padding: 12px 16px; border-radius: 10px; font-size: 13px; color: #0D47A1; margin-bottom: 16px; line-height: 1.4;">
+            <strong>💡 Avoid Distress Selling:</strong> Deposit produce in an accredited warehouse, generate an
+            Electronic Warehouse Receipt (e-NWR), and receive immediate short-term liquidity up to 75% of produce value.
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
             <div class="dash-modal__field">
-              <label for="pledge-qty-input" style="font-size: 12px; font-weight: 700; color: #444;">Stored Quantity (q)</label>
+              <label for="pledge-qty-input" style="font-size: 12px; font-weight: 700; color: #444;">Stored Quantity
+                (q)</label>
               <input type="number" id="pledge-qty-input" class="dash-form-input" value="50" min="1" required>
             </div>
             <div class="dash-modal__field">
-              <label for="pledge-price-input" style="font-size: 12px; font-weight: 700; color: #444;">Mandi Benchmark (₹/q)</label>
+              <label for="pledge-price-input" style="font-size: 12px; font-weight: 700; color: #444;">Mandi Benchmark
+                (₹/q)</label>
               <input type="number" id="pledge-price-input" class="dash-form-input" value="2500" min="100" required>
             </div>
           </div>
 
-          <div style="background: #FAF8F5; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 12.5px;">
+          <div
+            style="background: #FAF8F5; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 12.5px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
               <span>Total Produce Valuation:</span>
               <strong id="pledge-total-val">₹1,25,000</strong>
@@ -530,12 +597,14 @@
           </div>
 
           <div class="dash-modal__field" style="margin-bottom: 12px;">
-            <label for="pledge-loan-input" style="font-size: 12px; font-weight: 700; color: #444;">Requested Loan Amount (₹)</label>
+            <label for="pledge-loan-input" style="font-size: 12px; font-weight: 700; color: #444;">Requested Loan Amount
+              (₹)</label>
             <input type="number" id="pledge-loan-input" class="dash-form-input" value="75000" min="5000" required>
           </div>
 
           <div class="dash-modal__field" style="margin-bottom: 12px;">
-            <label for="pledge-lender-select" style="font-size: 12px; font-weight: 700; color: #444;">Partner Lending Institution</label>
+            <label for="pledge-lender-select" style="font-size: 12px; font-weight: 700; color: #444;">Partner Lending
+              Institution</label>
             <select id="pledge-lender-select" class="dash-filter-select" style="width: 100%;">
               <option value="NABARD Linked Agri-Credit">NABARD Linked Agri-Credit Scheme (7.0% p.a.)</option>
               <option value="SBI Agri Warehouse Loan">SBI Agri Warehouse Receipt Loan</option>
@@ -545,11 +614,13 @@
           </div>
 
           <p style="font-size: 11px; color: #888; margin-bottom: 16px; line-height: 1.4;">
-            *Disclaimer: Financing availability subject to warehouse assaying verification and partner bank credit approval.
+            *Disclaimer: Financing availability subject to warehouse assaying verification and partner bank credit
+            approval.
           </p>
 
           <div style="display: flex; gap: 10px;">
-            <button type="button" class="btn btn--secondary" style="flex: 1;" onclick="closePledgeModal()">Cancel</button>
+            <button type="button" class="btn btn--secondary" style="flex: 1;"
+              onclick="closePledgeModal()">Cancel</button>
             <button type="submit" class="btn btn--primary" style="flex: 2; background: #1565C0; border-color: #1565C0;">
               <i data-lucide="landmark"></i> <span>Submit Loan Request</span>
             </button>
@@ -572,7 +643,8 @@
           <div>
             <div style="font-weight:700; color:var(--ks-evergreen);">Kisan Call Center (Toll Free)</div>
             <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
-            <div style="font-size:11px; color:var(--ks-text-muted);">Available 6:00 AM to 10:00 PM for Warehouse & Storage Help</div>
+            <div style="font-size:11px; color:var(--ks-text-muted);">Available 6:00 AM to 10:00 PM for Warehouse &
+              Storage Help</div>
           </div>
         </div>
       </div>
@@ -584,7 +656,9 @@
     <div class="container">
       <div class="footer__inner">
         <div>
-          <div class="footer__brand"><i data-lucide="sprout" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> KrishiShetra</div>
+          <div class="footer__brand"><i data-lucide="sprout"
+              style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
+            KrishiShetra</div>
           <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
         </div>
         <div class="footer__links">
@@ -593,18 +667,25 @@
           <a href="index.html" class="footer__link">About KrishiShetra</a>
         </div>
       </div>
-      <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Storage & Distress Selling Prevention Module.</div>
+      <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Storage & Distress Selling Prevention
+        Module.</div>
     </div>
   </footer>
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="dash-bottom-nav" id="dash-bottom-nav">
-    <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i data-lucide="home"></i><span>Home</span></a>
-    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i data-lucide="bar-chart-3"></i><span>Market</span></a>
-    <a href="storage.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-storage"><i data-lucide="warehouse"></i><span>Storage</span></a>
-    <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i data-lucide="brain"></i><span>Forecast</span></a>
-    <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i data-lucide="users"></i><span>Buyers</span></a>
-    <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i data-lucide="clipboard-list"></i><span>Orders</span></a>
+    <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i
+        data-lucide="home"></i><span>Home</span></a>
+    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i
+        data-lucide="bar-chart-3"></i><span>Market</span></a>
+    <a href="storage.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-storage"><i
+        data-lucide="warehouse"></i><span>Storage</span></a>
+    <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i
+        data-lucide="brain"></i><span>Forecast</span></a>
+    <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i
+        data-lucide="users"></i><span>Buyers</span></a>
+    <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i
+        data-lucide="clipboard-list"></i><span>Orders</span></a>
   </nav>
 
   <!-- Modal Helpers -->
@@ -620,4 +701,5 @@
   <script src="js/navbar.js"></script>
   <script src="js/storage.js"></script>
 </body>
+
 </html>
