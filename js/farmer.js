@@ -456,8 +456,8 @@ const FarmerFlow = {
     }
     if (!harvestDate) {
       this.showToast('Please select a harvest date', 'error');
-      return;
-    }
+    const storageTypeVal = document.getElementById('lot-storage-type')?.value || 'farm';
+    const storageDecisionVal = document.getElementById('lot-storage-decision')?.value || 'sell_now';
 
     // Determine category & extract parametric values
     const cat = window.GradingEngine ? window.GradingEngine.getCropCategory(cropName) : 'cereals_grains';
@@ -1205,6 +1205,9 @@ const FarmerFlow = {
         district: 'Pune',
         state: 'Maharashtra',
         status: 'active',
+        storageType: 'warehouse',
+        storageFacilityName: 'MSWC Pune Warehouse',
+        sellNowOrHoldDecision: 'STORE_AND_HOLD',
         harvestDate: '2026-08-15'
       },
       {
@@ -1219,6 +1222,9 @@ const FarmerFlow = {
         district: 'Nashik',
         state: 'Maharashtra',
         status: 'active',
+        storageType: 'cold_storage',
+        storageFacilityName: 'Sahyadri Agro Cold Chain',
+        sellNowOrHoldDecision: 'STORE_AND_HOLD',
         harvestDate: '2026-08-20'
       },
       {
@@ -1233,10 +1239,14 @@ const FarmerFlow = {
         district: 'Pune',
         state: 'Maharashtra',
         status: 'draft',
+        storageType: 'farm',
         harvestDate: '2026-08-10'
       }
     ];
     if (filter === 'all') return demo;
+    if (filter === 'stored') {
+      return demo.filter(l => l.storageType === 'warehouse' || l.storageType === 'cold_storage' || l.storageRequired);
+    }
     return demo.filter(l => l.status === filter);
   },
 
@@ -1275,15 +1285,43 @@ const FarmerFlow = {
       return;
     }
 
-    const statusBadge = (status) => {
-      const map = {
-        active: { bg: '#E5F0E7', color: '#12372A', text: 'Active' },
-        draft: { bg: '#FEF3C7', color: '#92400E', text: 'Draft' },
-        sold: { bg: '#DBEAFE', color: '#1E40AF', text: 'Sold' },
-        cancelled: { bg: '#FEE2E2', color: '#991B1B', text: 'Cancelled' }
-      };
-      const s = map[status] || map.active;
-      return `<span style="padding: 3px 8px; border-radius: 6px; background: ${s.bg}; color: ${s.color}; font-size: 11px; font-weight: 700; text-transform: uppercase;">${s.text}</span>`;
+    const cropIcon = (name = '') => {
+      const n = name.toLowerCase();
+      if (n.includes('onion')) return '🧅';
+      if (n.includes('wheat')) return '🌾';
+      if (n.includes('rice')) return '🌾';
+      if (n.includes('potato')) return '🥔';
+      if (n.includes('tomato')) return '🍅';
+      if (n.includes('soybean')) return '🫘';
+      if (n.includes('maize')) return '🌽';
+      if (n.includes('chilli')) return '🌶️';
+      if (n.includes('groundnut')) return '🥜';
+      if (n.includes('cotton')) return '☁️';
+      if (n.includes('sugarcane')) return '🎋';
+      if (n.includes('mango')) return '🥭';
+      if (n.includes('banana')) return '🍌';
+      if (n.includes('grapes')) return '🍇';
+      if (n.includes('pulses')) return '🥣';
+      return '🌾';
+    };
+
+    const statusBadge = (status, storageType) => {
+      if (storageType === 'warehouse') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #E8F5E9; color: #2E7D32; font-size: 12px; font-weight: 800;">🏬 Stored in Warehouse</span>`;
+      }
+      if (storageType === 'cold_storage') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #E1F5FE; color: #0288D1; font-size: 12px; font-weight: 800;">❄️ Cold Storage</span>`;
+      }
+      if (status === 'active') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #E8F5E9; color: #12372A; font-size: 12px; font-weight: 800; border: 1px solid #C8E6C9;">🟢 Active for Sale</span>`;
+      }
+      if (status === 'draft') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #FEF3C7; color: #92400E; font-size: 12px; font-weight: 800;">📝 Draft</span>`;
+      }
+      if (status === 'sold') {
+        return `<span style="padding: 4px 10px; border-radius: 8px; background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 800;">✓ Sold</span>`;
+      }
+      return `<span style="padding: 4px 10px; border-radius: 8px; background: #F5F4ED; color: #666; font-size: 12px; font-weight: 700;">${status}</span>`;
     };
 
     container.innerHTML = lots.map(lot => {
@@ -1339,6 +1377,10 @@ const FarmerFlow = {
                 </button>
               ` : ''}
             </div>
+            <h4>${lot.cropName} <span style="font-size: 13.5px; font-weight: 500; color: #666;">(${lot.variety || 'Standard Grade'})</span></h4>
+            <p>
+              <strong>${lot.quantity} ${lot.quantityUnit || 'quintal'}</strong> • Grade: <strong>Grade ${lot.qualityGrade || 'A'}</strong> • 📍 ${lot.district || 'Pune'}, ${lot.state || 'Maharashtra'}
+            </p>
           </div>
         </div>
       `;
@@ -2020,9 +2062,35 @@ const FarmerFlow = {
 
 window.FarmerFlow = FarmerFlow;
 
+window.filterLotTab = function(filter) {
+  document.querySelectorAll('.dash-lot-tab').forEach(btn => {
+    btn.classList.remove('active');
+    btn.style.background = '#FFF';
+    btn.style.color = '#444';
+    btn.style.border = '1px solid #DDD';
+    btn.style.fontWeight = '600';
+  });
+
+  const activeBtn = document.getElementById(`tab-lot-${filter}`);
+  if (activeBtn) {
+    activeBtn.classList.add('active');
+    activeBtn.style.background = 'var(--ks-evergreen, #12372A)';
+    activeBtn.style.color = '#FFF';
+    activeBtn.style.border = 'none';
+    activeBtn.style.fontWeight = '700';
+  }
+
+  const titleElem = document.getElementById('lots-panel-title');
+  if (titleElem) {
+    if (filter === 'stored') titleElem.textContent = '🏬 Stored & Warehouse Lots (Storage Linkages)';
+    else if (filter === 'active') titleElem.textContent = '🌾 Active Farm Lots';
+    else titleElem.textContent = 'My Active Produce Lots';
+  }
+
+  FarmerFlow.loadMyLots(filter);
+};
+
 // Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => FarmerFlow.init());
-} else {
+document.addEventListener('DOMContentLoaded', () => {
   FarmerFlow.init();
-}
+});

@@ -70,23 +70,6 @@
 
     <!-- ── Right Form Column ── -->
     <main class="auth-content">
-      
-      <!-- Top Language Selector -->
-      <div class="auth-content__header-bar">
-        <div class="auth-lang-dropdown">
-          <button type="button" class="auth-lang-btn" id="lang-menu-btn" aria-haspopup="true" aria-expanded="false">
-            <i data-lucide="globe" style="width:15px;height:15px;"></i>
-            <span id="current-lang-text">English</span>
-            <span style="font-size: 10px; opacity: 0.7;">▼</span>
-          </button>
-          <div class="auth-lang-menu" id="lang-menu" role="menu">
-            <button type="button" class="auth-lang-menu__item active" data-lang="en">English</button>
-            <button type="button" class="auth-lang-menu__item" data-lang="hi">हिन्दी (Hindi)</button>
-            <button type="button" class="auth-lang-menu__item" data-lang="mr">मराठी (Marathi)</button>
-          </div>
-        </div>
-      </div>
-
       <div class="auth-card-box">
         
         <!-- Header Text -->
@@ -471,13 +454,7 @@
       const otpTimerDisplay = document.getElementById('otp-timer-display');
       const linkBackToLogin = document.getElementById('link-back-to-login');
 
-      // Language elements
-      const langMenuBtn = document.getElementById('lang-menu-btn');
-      const langMenu = document.getElementById('lang-menu');
-      const currentLangText = document.getElementById('current-lang-text');
-
       let currentRole = 'farmer';
-      let currentLang = 'en';
       let countdown = 60;
       let timerInterval = null;
       let activeOtpEmail = '';
@@ -534,209 +511,6 @@
         });
       });
 
-      // ── Translations Dictionary ──
-      const translations = {
-        en: {
-          langName: 'English',
-          headline: 'Sell smarter.<br>Discover better<br><em>markets.</em>',
-          subtitle: "Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and AI-powered mandi insights.",
-          badgeFarmers: '50,000+ Active Farmers',
-          badgeMandis: '120+ APMC Mandis',
-          badgeVerified: '100% Verified Buyers',
-          authTitleLogin: 'Welcome back',
-          authSubtitleLogin: 'Enter your credentials to access your account',
-          authTitleRegister: 'Create Account',
-          authSubtitleRegister: 'Join KrishiShetra and discover better market rates',
-          authTitleForgot: 'Reset Password',
-          authSubtitleForgot: 'Enter your registered email to receive a recovery OTP',
-          authTitleResetPass: 'Set New Password',
-          authSubtitleResetPass: 'Create a new secure password for your account',
-          authTitleOtp: 'Verify Email',
-          authSubtitleOtp: 'Enter the 6-digit OTP sent to your email inbox',
-          tabLogin: 'Log In',
-          tabRegister: 'Register',
-          labelLoginEmail: 'EMAIL ADDRESS',
-          labelLoginPassword: 'PASSWORD',
-          btnLogin: 'Log In',
-          btnRegister: 'Register & Send OTP',
-          labelRole: 'I AM A...',
-          roleFarmer: 'Farmer',
-          roleFpo: 'FPO',
-          roleBuyer: 'Buyer',
-          roleTransporter: 'Transporter',
-          labelRegisterName: 'FULL NAME',
-          labelPhone: 'MOBILE NUMBER',
-          labelRegisterPassword: 'PASSWORD',
-          labelOtp: 'ENTER 6-DIGIT EMAIL OTP',
-          otpSent: 'Verification code sent to',
-          btnChange: 'Change',
-          btnVerify: 'Verify & Continue',
-          btnResend: 'Resend Code',
-          trustSecure: 'Secure',
-          trustSimple: 'Simple',
-          trustTransparent: 'Transparent',
-          textPrivacy: 'Your data is secure and protected under AgriStack guidelines.',
-          textNoAccount: "Don't have an account?",
-          textHaveAccount: "Already have an account?"
-        },
-        hi: {
-          langName: 'हिन्दी',
-          headline: 'होशियारी से बेचें.<br>बेहतर मंडियां<br><em>खोजें।</em>',
-          subtitle: 'भारत के अग्रणी कृषि मंच से जुड़ें और सीधे सत्यापित खरीदारों एवं सटीक मंडी पूर्वानुमान का लाभ उठाएं।',
-          badgeFarmers: '५०,०००+ सक्रिय किसान',
-          badgeMandis: '१२०+ एपीएमसी मंडियां',
-          badgeVerified: '१००% सत्यापित खरीदार',
-          authTitleLogin: 'कृषि क्षेत्र में स्वागत है',
-          authSubtitleLogin: 'अपने खाते में प्रवेश करने के लिए विवरण दर्ज करें',
-          authTitleRegister: 'नया खाता बनाएं',
-          authSubtitleRegister: 'कृषि क्षेत्र से जुड़ें और बेहतर मंडी भाव पाएं',
-          authTitleForgot: 'पासवर्ड रीसेट करें',
-          authSubtitleForgot: 'ओटीपी प्राप्त करने के लिए अपना पंजीकृत ईमेल दर्ज करें',
-          authTitleResetPass: 'नया पासवर्ड बनाएं',
-          authSubtitleResetPass: 'अपने खाते के लिए एक नया सुरक्षित पासवर्ड सेट करें',
-          authTitleOtp: 'ईमेल सत्यापित करें',
-          authSubtitleOtp: 'अपने ईमेल इनबॉक्स में भेजा गया ६-अंकों का ओटीपी दर्ज करें',
-          tabLogin: 'लॉग इन',
-          tabRegister: 'पंजीकरण',
-          labelLoginEmail: 'ईमेल पता',
-          labelLoginPassword: 'पासवर्ड',
-          btnLogin: 'लॉग इन करें',
-          btnRegister: 'खाता बनाएं एवं ओटीपी भेजें',
-          labelRole: 'मेरी भूमिका...',
-          roleFarmer: 'किसान',
-          roleFpo: 'एफपीओ (FPO)',
-          roleBuyer: 'खरीदार',
-          roleTransporter: 'ट्रांसपोर्टर',
-          labelRegisterName: 'पूरा नाम',
-          labelPhone: 'मोबाइल नंबर',
-          labelRegisterPassword: 'पासवर्ड',
-          labelOtp: '६ अंकों का ओटीपी दर्ज करें',
-          otpSent: 'ओटीपी भेजा गया:',
-          btnChange: 'बदलें',
-          btnVerify: 'सत्यापित करें और आगे बढ़ें',
-          btnResend: 'पुनः ओटीपी भेजें',
-          trustSecure: 'सुरक्षित',
-          trustSimple: 'सरल',
-          trustTransparent: 'पारदर्शी',
-          textPrivacy: 'आपका डेटा सुरक्षित है और एग्रीस्टैक दिशानिर्देशों के तहत संरक्षित है।',
-          textNoAccount: 'खाता नहीं है?',
-          textHaveAccount: 'क्या आपके पास पहले से खाता है?'
-        },
-        mr: {
-          langName: 'मराठी',
-          headline: 'स्मार्ट विक्री करा.<br>उत्तम बाजारपेठ<br><em>शोधा.</em>',
-          subtitle: 'भारतातील अग्रगण्य कृषी नेटवर्कशी जोडा जे शेतकऱ्यांना थेट पडताळणी केलेल्या खरेदीदारांशी आणि AI बाजारभावांशी जोडते.',
-          badgeFarmers: '५०,०००+ सक्रिय शेतकरी',
-          badgeMandis: '१२०+ APMC बाजार',
-          badgeVerified: '१००% सत्यापित खरेदीदार',
-          authTitleLogin: 'कृषिक्षेत्रात स्वागत आहे',
-          authSubtitleLogin: 'तुमच्या खात्यात प्रवेश करण्यासाठी तपशील प्रविष्ट करा',
-          authTitleRegister: 'नवीन खाते तयार करा',
-          authSubtitleRegister: 'कृषिक्षेत्रशी जोडा आणि उत्तम बाजारभाव मिळवा',
-          authTitleForgot: 'पासवर्ड रीसेट करा',
-          authSubtitleForgot: 'पुनर्प्राप्ती OTP मिळविण्यासाठी तुमचा नोंदणीकृत ईमेल टाका',
-          authTitleResetPass: 'नवीन पासवर्ड सेट करा',
-          authSubtitleResetPass: 'तुमच्या खात्यासाठी नवीन सुरक्षित पासवर्ड तयार करा',
-          authTitleOtp: 'ईमेल पडताळणी करा',
-          authSubtitleOtp: 'तुमच्या ईमेल इनबॉक्समध्ये पाठवलेला ६-अंकी OTP टाका',
-          tabLogin: 'लॉग इन',
-          tabRegister: 'नोंदणी',
-          labelLoginEmail: 'ईमेल पत्ता',
-          labelLoginPassword: 'पासवर्ड',
-          btnLogin: 'लॉग इन करा',
-          btnRegister: 'नोंदणी करा व ओटीपी पाठवा',
-          labelRole: 'माझी भूमिका...',
-          roleFarmer: 'शेतकरी',
-          roleFpo: 'FPO',
-          roleBuyer: 'खरेदीदार',
-          roleTransporter: 'वाहतूकदार',
-          labelRegisterName: 'पूर्ण नाव',
-          labelPhone: 'मोबाईल नंबर',
-          labelRegisterPassword: 'पासवर्ड',
-          labelOtp: '६-अंकी ईमेल OTP टाका',
-          otpSent: 'OTP यावर पाठवला आहे:',
-          btnChange: 'बदला',
-          btnVerify: 'सत्यापित करा आणि पुढे जा',
-          btnResend: 'पुन्हा OTP पाठवा',
-          trustSecure: 'सुरक्षित',
-          trustSimple: 'सोपे',
-          trustTransparent: 'पारदर्शक',
-          textPrivacy: 'तुमचा डेटा सुरक्षित आहे आणि अ‍ॅग्रीस्टॅक मार्गदर्शक तत्त्वांनुसार संरक्षित आहे.',
-          textNoAccount: 'खाते नाही?',
-          textHaveAccount: 'आधीच खाते आहे का?'
-        }
-      };
-
-      function setLanguage(lang) {
-        if (!translations[lang]) return;
-        currentLang = lang;
-        const t = translations[lang];
-
-        currentLangText.textContent = t.langName;
-        document.getElementById('hero-headline').innerHTML = t.headline;
-        document.getElementById('hero-subtitle').textContent = t.subtitle;
-        document.getElementById('badge-farmers').textContent = t.badgeFarmers;
-        document.getElementById('badge-mandis').textContent = t.badgeMandis;
-        document.getElementById('badge-verified').textContent = t.badgeVerified;
-
-        tabBtnLogin.textContent = t.tabLogin;
-        tabBtnRegister.textContent = t.tabRegister;
-
-        document.getElementById('label-login-email').textContent = t.labelLoginEmail;
-        document.getElementById('label-login-password').textContent = t.labelLoginPassword;
-        document.getElementById('btn-login-text').textContent = t.btnLogin;
-        document.getElementById('text-no-account').textContent = t.textNoAccount;
-        document.getElementById('link-to-register').textContent = t.tabRegister;
-
-        document.getElementById('label-role').textContent = t.labelRole;
-        document.getElementById('role-name-farmer').textContent = t.roleFarmer;
-        document.getElementById('role-name-fpo').textContent = t.roleFpo;
-        document.getElementById('role-name-buyer').textContent = t.roleBuyer;
-        document.getElementById('role-name-transporter').textContent = t.roleTransporter;
-
-        document.getElementById('label-register-name').textContent = t.labelRegisterName;
-        document.getElementById('label-phone').textContent = t.labelPhone;
-        document.getElementById('label-register-password').textContent = t.labelRegisterPassword;
-        document.getElementById('btn-register-text').textContent = t.btnRegister;
-        document.getElementById('text-have-account').textContent = t.textHaveAccount;
-        document.getElementById('link-to-login').textContent = t.tabLogin;
-
-        document.getElementById('label-forgot-email').textContent = t.labelLoginEmail;
-        document.getElementById('label-reset-password').textContent = t.labelRegisterPassword;
-
-        document.getElementById('label-otp').textContent = t.labelOtp;
-        document.getElementById('otp-sent-text').textContent = t.otpSent;
-        document.getElementById('btn-edit-text').textContent = t.btnChange;
-        document.getElementById('btn-verify-text').textContent = t.btnVerify;
-        document.getElementById('btn-resend-otp').textContent = t.btnResend;
-
-        document.getElementById('trust-secure').textContent = t.trustSecure;
-        document.getElementById('trust-simple').textContent = t.trustSimple;
-        document.getElementById('trust-transparent').textContent = t.trustTransparent;
-        document.getElementById('text-privacy').textContent = t.textPrivacy;
-
-        document.querySelectorAll('.auth-lang-menu__item').forEach(item => {
-          item.classList.toggle('active', item.dataset.lang === lang);
-        });
-
-        if (loginForm.style.display !== 'none') {
-          document.getElementById('auth-title').textContent = t.authTitleLogin;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleLogin;
-        } else if (registerForm.style.display !== 'none') {
-          document.getElementById('auth-title').textContent = t.authTitleRegister;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleRegister;
-        } else if (forgotForm.style.display !== 'none') {
-          document.getElementById('auth-title').textContent = t.authTitleForgot;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleForgot;
-        } else if (resetPassForm.style.display !== 'none') {
-          document.getElementById('auth-title').textContent = t.authTitleResetPass;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleResetPass;
-        } else if (otpStepContainer.classList.contains('active')) {
-          document.getElementById('auth-title').textContent = t.authTitleOtp;
-          document.getElementById('auth-subtitle').textContent = t.authSubtitleOtp;
-        }
-      }
-
       // ── Tab Switchers ──
       function showLoginTab() {
         isResetFlow = false;
@@ -749,9 +523,8 @@
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
 
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleLogin;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleLogin;
+        document.getElementById('auth-title').textContent = 'Welcome back';
+        document.getElementById('auth-subtitle').textContent = 'Enter your credentials to access your account';
         hideAlert(loginAlert);
       }
 
@@ -766,9 +539,8 @@
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
 
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleRegister;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleRegister;
+        document.getElementById('auth-title').textContent = 'Create Account';
+        document.getElementById('auth-subtitle').textContent = 'Join KrishiShetra and discover better market rates';
         hideAlert(registerAlert);
       }
 
@@ -781,9 +553,8 @@
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
 
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleForgot;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleForgot;
+        document.getElementById('auth-title').textContent = 'Reset Password';
+        document.getElementById('auth-subtitle').textContent = 'Enter your registered email to receive a recovery OTP';
         hideAlert(forgotAlert);
         if (loginEmail.value.trim()) {
           forgotEmail.value = loginEmail.value.trim();
@@ -798,9 +569,8 @@
         resetPassForm.style.display = 'block';
         otpStepContainer.classList.remove('active');
 
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = t.authTitleResetPass;
-        document.getElementById('auth-subtitle').textContent = t.authSubtitleResetPass;
+        document.getElementById('auth-title').textContent = 'Set New Password';
+        document.getElementById('auth-subtitle').textContent = 'Create a new secure password for your account';
         hideAlert(resetPassAlert);
         resetNewPassword.value = '';
         resetNewPassword.focus();
@@ -817,9 +587,8 @@
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.add('active');
 
-        const t = translations[currentLang] || translations.en;
-        document.getElementById('auth-title').textContent = forReset ? t.authTitleForgot : t.authTitleOtp;
-        document.getElementById('auth-subtitle').textContent = forReset ? 'Enter the recovery OTP sent to your inbox' : t.authSubtitleOtp;
+        document.getElementById('auth-title').textContent = forReset ? 'Reset Password' : 'Verify Email';
+        document.getElementById('auth-subtitle').textContent = forReset ? 'Enter the recovery OTP sent to your inbox' : 'Enter the 6-digit OTP sent to your email inbox';
 
         hideAlert(otpAlert);
         startResendTimer();
@@ -838,25 +607,6 @@
       btnChangeEmail.addEventListener('click', () => {
         if (isResetFlow) showForgotTab();
         else showRegisterTab();
-      });
-
-      // ── Language Dropdown Toggle ──
-      langMenuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        langMenu.classList.toggle('open');
-        langMenuBtn.setAttribute('aria-expanded', langMenu.classList.contains('open'));
-      });
-
-      document.addEventListener('click', () => {
-        langMenu.classList.remove('open');
-        langMenuBtn.setAttribute('aria-expanded', 'false');
-      });
-
-      document.querySelectorAll('.auth-lang-menu__item').forEach(btn => {
-        btn.addEventListener('click', () => {
-          setLanguage(btn.dataset.lang);
-          langMenu.classList.remove('open');
-        });
       });
 
       // ── Role Selector ──

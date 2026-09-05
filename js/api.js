@@ -287,6 +287,42 @@ const api = {
       const qs = new URLSearchParams(params).toString();
       return client.get(`/activity${qs ? `?${qs}` : ''}`);
     }
+  },
+
+  // 10. Storage & Warehouse Discovery (/api/storage)
+  storage: {
+    getNearby: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return client.get(`/storage/nearby${qs ? `?${qs}` : ''}`);
+    },
+    search: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return client.get(`/storage/search${qs ? `?${qs}` : ''}`);
+    },
+    getById: (id) => client.get(`/storage/${id}`),
+    getOptionsForCrop: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return client.get(`/storage/options-for-crop${qs ? `?${qs}` : ''}`);
+    },
+    createRequest: (data) => client.post('/storage/requests', data),
+    getMyRequests: () => client.get('/storage/requests/my'),
+    getRequestById: (id) => client.get(`/storage/requests/${id}`),
+    updateRequestStatus: (id, status, notes = '') => client.patch(`/storage/requests/${id}/status`, { status, notes }),
+    // Admin
+    adminGetAll: () => client.get('/storage/admin/all'),
+    adminCreateFacility: (data) => client.post('/storage/facilities', data),
+    adminUpdateFacility: (id, data) => client.put(`/storage/facilities/${id}`, data)
+  },
+
+  // 11. AI Decision Engine (/api/decision)
+  decision: {
+    evaluateSellVsStore: (data) => client.post('/decision/sell-vs-store', data)
+  },
+
+  // 12. Pledge Financing / e-NWR (/api/storage/pledge-financing)
+  pledgeFinancing: {
+    createRequest: (data) => client.post('/storage/pledge-financing/request', data),
+    getMyRequests: () => client.get('/storage/pledge-financing/my')
   }
 };
 

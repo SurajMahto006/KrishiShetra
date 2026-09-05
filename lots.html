@@ -48,13 +48,15 @@
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="dash-search__results" id="dash-search-results"></div>
       </div>
-
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
           <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
         </a>
         <a href="lots.html" class="dash-header__link dash-header__link--active" id="nav-lots">
           <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+        </a>
+        <a href="storage.html" class="dash-header__link" id="nav-storage">
+          <i data-lucide="warehouse" class="dash-header__link-icon"></i> Storage Options
         </a>
         <a href="market.html" class="dash-header__link" id="nav-market">
           <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
@@ -74,9 +76,6 @@
         <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
-        </button>
-        <button class="dash-header__action-btn" id="btn-language" aria-label="Language" title="Change Language">
-          <i data-lucide="globe"></i>
         </button>
         <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
           <i data-lucide="help-circle"></i>
@@ -100,6 +99,7 @@
               Farm</a>
             <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> Manage
               My Lots</a>
+            <a href="storage.html" class="dash-profile-dropdown__item" id="menu-storage"><i data-lucide="warehouse"></i> Storage Options</a>
             <a href="#" class="dash-profile-dropdown__item" id="menu-alerts"><i data-lucide="bell-ring"></i> Price
               Alerts</a>
             <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan
@@ -124,6 +124,8 @@
         Dashboard</a>
       <a href="lots.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-lots"><i
           data-lucide="package"></i> My Lots</a>
+      <a href="storage.html" class="dash-mobile-nav__link" id="mnav-storage"><i data-lucide="warehouse"></i>
+        Storage Options</a>
       <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market
         Prices</a>
       <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI
@@ -145,13 +147,34 @@
       </nav>
 
       <!-- Page Header Banner -->
-      <div class="dash-section__header" style="margin-bottom: 24px;">
+      <div class="dash-section__header" style="margin-bottom: 20px;">
         <div>
           <h1 class="dash-section__title" style="font-size: 26px;"><i data-lucide="package" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i> My Produce Lots</h1>
-          <p class="dash-section__subtitle">Manage your farm produce listings, track lot status, and review buyer inquiries.</p>
+          <p class="dash-section__subtitle">Manage your farm produce listings, storage holdings, and review buyer inquiries.</p>
         </div>
-        <button class="btn btn--primary" id="btn-create-lot-page" onclick="FarmerFlow.openCreateLotModal()"><i
-            data-lucide="plus-circle"></i> + Create Produce Lot</button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="storage.html" class="btn btn--secondary" style="display:inline-flex; align-items:center; gap:6px;">
+            <i data-lucide="warehouse"></i> Storage Hub & Advisor
+          </a>
+          <button class="btn btn--primary" id="btn-create-lot-page" onclick="FarmerFlow.openCreateLotModal()"><i
+              data-lucide="plus-circle"></i> + Create Produce Lot</button>
+        </div>
+      </div>
+
+      <!-- Produce Lot Navigation Tabs -->
+      <div class="dash-lots-tabs" style="display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid #E5E4DD; padding-bottom:8px; overflow-x:auto;">
+        <button class="btn btn--sm dash-lot-tab active" id="tab-lot-all" onclick="filterLotTab('all')" style="border-radius:20px; font-weight:700; background:var(--ks-evergreen, #12372A); color:#FFF; border:none; padding:8px 16px;">
+          📦 All Produce Lots
+        </button>
+        <button class="btn btn--sm dash-lot-tab" id="tab-lot-active" onclick="filterLotTab('active')" style="border-radius:20px; font-weight:600; background:#FFF; color:#444; border:1px solid #DDD; padding:8px 16px;">
+          🌾 On Farm / Active
+        </button>
+        <button class="btn btn--sm dash-lot-tab" id="tab-lot-stored" onclick="filterLotTab('stored')" style="border-radius:20px; font-weight:600; background:#FFF; color:#444; border:1px solid #DDD; padding:8px 16px;">
+          🏬 Stored & Warehouse Lots
+        </button>
+        <a href="storage.html#storage-calculator" class="btn btn--sm" style="border-radius:20px; font-weight:700; background:#F5F4ED; color:var(--ks-evergreen, #12372A); border:1px solid #C9973B; padding:8px 16px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+          <i data-lucide="sparkles" style="width:13px;height:13px;color:#C9973B;"></i> ⚡ Sell vs. Store Decision Support
+        </a>
       </div>
 
       <!-- Active Lots & Offers 2-Column Section -->
@@ -162,8 +185,8 @@
           <div class="dash-card dash-panel" id="dash-active-lots">
             <div class="dash-panel__header">
               <div>
-                <h3 class="dash-panel__title">My Active Lots</h3>
-                <p class="dash-panel__subtitle">Manage listed crops & track status</p>
+                <h3 class="dash-panel__title" id="lots-panel-title">My Active Lots</h3>
+                <p class="dash-panel__subtitle">Manage listed crops & storage options</p>
               </div>
               <button class="btn btn--primary btn--sm" id="btn-create-lot" onclick="openCreateLotModal()"><i
                   data-lucide="plus"></i> + New Lot</button>
@@ -212,7 +235,7 @@
         <div class="footer__links">
           <a href="#" class="footer__link" onclick="openHelpModal()">Kisan Support</a>
           <a href="buyers.html" class="footer__link">For Buyers</a>
-          <a href="#" class="footer__link" onclick="openLanguageModal()">Languages</a>
+          <a href="storage.html" class="footer__link">Storage Hub</a>
           <a href="index.html" class="footer__link">About KrishiShetra</a>
         </div>
       </div>
@@ -224,14 +247,14 @@
   <nav class="dash-bottom-nav" id="dash-bottom-nav">
     <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i
         data-lucide="home"></i><span>Home</span></a>
-    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i
-        data-lucide="bar-chart-3"></i><span>Market</span></a>
     <a href="lots.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-lots"><i
         data-lucide="package"></i><span>My Lots</span></a>
+    <a href="storage.html" class="dash-bottom-nav__item" id="bnav-storage"><i
+        data-lucide="warehouse"></i><span>Storage</span></a>
+    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i
+        data-lucide="bar-chart-3"></i><span>Market</span></a>
     <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i
         data-lucide="brain"></i><span>Forecast</span></a>
-    <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i
-        data-lucide="users"></i><span>Buyers</span></a>
     <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i
         data-lucide="clipboard-list"></i><span>Orders</span></a>
   </nav>

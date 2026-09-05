@@ -17,7 +17,6 @@
     initWorkspaceSwitcher();
     initUniversalProfile();
     initNotificationBell();
-    initUniversalLanguage();
   }
 
   /**
@@ -235,21 +234,7 @@
     });
   }
 
-  /**
-   * 5. Universal Language Selector
-   */
-  function initUniversalLanguage() {
-    const langSelect = document.getElementById('langSelect');
-    if (langSelect) {
-      langSelect.addEventListener('change', (e) => {
-        const lang = e.target.value;
-        localStorage.setItem('krishi_lang', lang);
-        if (typeof window.changeLanguage === 'function') {
-          window.changeLanguage(lang);
-        }
-      });
-    }
-  }
+
 
   // Export to window
   window.AppShell = {

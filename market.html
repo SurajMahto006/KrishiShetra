@@ -75,9 +75,6 @@
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
         </button>
-        <button class="dash-header__action-btn" id="btn-language" aria-label="Language" title="Change Language">
-          <i data-lucide="globe"></i>
-        </button>
         <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
           <i data-lucide="help-circle"></i>
         </button>
@@ -394,7 +391,6 @@
         <div class="footer__links">
           <a href="#" class="footer__link" onclick="openHelpModal()">Kisan Support</a>
           <a href="buyers.html" class="footer__link">For Buyers</a>
-          <a href="#" class="footer__link" onclick="openLanguageModal()">Languages</a>
           <a href="index.html" class="footer__link">About KrishiShetra</a>
         </div>
       </div>
@@ -571,23 +567,6 @@
             <div style="font-weight:700; color:var(--ks-evergreen);">Kisan Call Center (Toll Free)</div>
             <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="dash-modal-overlay" id="language-modal-overlay">
-    <div class="dash-modal dash-modal--sm" id="language-modal">
-      <div class="dash-modal__header">
-        <h3>Select Language</h3>
-        <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
-      </div>
-      <div class="dash-modal__body-pad">
-        <div class="dash-lang-list">
-          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span>
-            <strong>Active</strong></button>
-          <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
-          <button class="dash-lang-btn" onclick="setLanguage('hi')"><span>हिन्दी (Hindi)</span></button>
         </div>
       </div>
     </div>

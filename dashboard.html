@@ -83,9 +83,6 @@
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
         </button>
-        <button class="dash-header__action-btn" id="btn-language" aria-label="Language" title="Change Language">
-          <i data-lucide="globe"></i>
-        </button>
         <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
           <i data-lucide="help-circle"></i>
         </button>
@@ -127,6 +124,7 @@
     <div class="dash-mobile-nav__links">
       <a href="dashboard.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
       <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
+      <a href="storage.html" class="dash-mobile-nav__link" id="mnav-storage"><i data-lucide="warehouse"></i> Storage Options</a>
       <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market Prices</a>
       <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI Forecast</a>
       <a href="buyers.html" class="dash-mobile-nav__link" id="mnav-buyers"><i data-lucide="users"></i> Buyers</a>
@@ -148,9 +146,9 @@
         <div class="dash-welcome__text">
           <p class="dash-welcome__greeting" id="dash-greeting">Good Morning, Rajesh 👋</p>
           <h1 class="dash-welcome__headline" id="dash-headline">Make smarter selling decisions with <em>KrishiShetra.</em></h1>
-          <p class="dash-welcome__sub">Track live mandi prices, get AI forecasts, and sell directly to verified institutional buyers.</p>
+          <p class="dash-welcome__sub" id="dash-sub">Track live mandi prices, get AI forecasts, and sell directly to verified institutional buyers.</p>
           <div class="dash-welcome__ctas">
-            <button class="btn btn--primary dash-welcome__btn" id="btn-sell-crop"><i data-lucide="plus-circle"></i> + Sell Your Crop</button>
+            <button class="btn btn--primary dash-welcome__btn" id="btn-sell-crop" onclick="FarmerFlow.openCreateLotModal()"><i data-lucide="plus-circle"></i> + Sell Your Crop</button>
             <a href="market.html" class="btn btn--secondary dash-welcome__btn" id="btn-view-prices"><i data-lucide="trending-up"></i> View Market Prices</a>
           </div>
         </div>
@@ -162,40 +160,116 @@
       </div>
     </section>
 
-    <!-- ── 1.5 SELLING JOURNEY ROADMAP ── -->
-    <section class="dash-section" style="padding-top: 16px; padding-bottom: 8px;" id="dash-selling-journey">
+    <!-- ── 1.2 DAILY KISAN AI ADVICE BANNER WITH AUDIO READ-ALOUD ── -->
+    <section class="dash-section" style="padding-top: 14px; padding-bottom: 0;" id="section-daily-tip">
       <div class="container">
-        <div class="dash-card" style="background: #FFFFFF; border: 1px solid var(--border-light, #E5E4DD); border-radius: 14px; padding: 18px 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-            <h3 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0; display: flex; align-items: center; gap: 6px;">
-              <span>🌾</span> Your Farm Selling Journey
-            </h3>
-            <span style="font-size: 12px; color: #777;">6 simple stages from harvest listing to verified bank payout</span>
+        <div class="kisan-tip-banner" id="kisan-daily-tip-banner">
+          <div class="kisan-tip-banner__left">
+            <div class="kisan-tip-banner__icon-wrap">🌾</div>
+            <div>
+              <div class="kisan-tip-banner__title-row">
+                <span class="kisan-tip-banner__badge" id="kisan-tip-badge">Daily AI Advice</span>
+                <span style="font-size: 12px; color: #D8C28A; font-weight: 700;" id="kisan-tip-date">Live AI</span>
+              </div>
+              <p class="kisan-tip-banner__text" id="kisan-tip-text">
+                Onion mandi prices are projected to rise by 8% to 12% over the next 45 days. Storing in a nearby accredited warehouse is recommended for maximum profit.
+              </p>
+            </div>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; text-align: center;">
-            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="FarmerFlow.openFarmProfileModal()" role="button" style="cursor:pointer;">
-              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 1</div>
-              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Farm Profile</div>
+          <div class="kisan-tip-banner__right">
+            <button class="kisan-voice-btn" id="btn-speak-tip" onclick="speakCurrentTip()" aria-label="Listen to advice">
+              <span id="voice-icon">🔊</span> <span id="voice-btn-text">Listen</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 1.3 4 LARGE KISAN ACTION CARDS (3-TAP RULE) ── -->
+    <section class="dash-section" style="padding-top: 0; padding-bottom: 8px;" id="section-kisan-actions">
+      <div class="container">
+        <div class="kisan-action-grid">
+          <!-- Card 1: Today's Mandi Price -->
+          <div class="kisan-action-card kisan-action-card--price" onclick="location.href='market.html'" role="button" tabindex="0">
+            <div class="kisan-action-card__top">
+              <div class="kisan-action-card__icon">💰</div>
+              <div class="kisan-action-card__info">
+                <h3 class="kisan-action-card__title" id="lbl-action-card1-title">
+                  Today's Mandi Prices <span style="font-size:12px; font-weight:700; color:#D6A84F;">Live APMC</span>
+                </h3>
+                <p class="kisan-action-card__subtitle" id="lbl-action-card1-desc">
+                  Check live mandi prices, daily commodity arrivals, and price trends across major APMCs.
+                </p>
+              </div>
             </div>
-            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="FarmerFlow.openCreateLotModal()" role="button" style="cursor:pointer;">
-              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 2</div>
-              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">List Produce</div>
+            <div class="kisan-action-card__footer">
+              <span class="kisan-action-card__stat" id="lbl-action-card1-stat">Best Price: <strong>₹2,920/q</strong></span>
+              <button class="kisan-action-card__btn">
+                <span id="btn-text-card1">View Prices</span> <i data-lucide="arrow-right"></i>
+              </button>
             </div>
-            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="location.href='lots.html'" role="button" style="cursor:pointer;">
-              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 3</div>
-              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Receive Offers</div>
+          </div>
+
+          <!-- Card 2: Sell My Crop -->
+          <div class="kisan-action-card kisan-action-card--sell" onclick="FarmerFlow.openCreateLotModal()" role="button" tabindex="0">
+            <div class="kisan-action-card__top">
+              <div class="kisan-action-card__icon">🌾</div>
+              <div class="kisan-action-card__info">
+                <h3 class="kisan-action-card__title" id="lbl-action-card2-title">
+                  List Crop for Sale <span style="font-size:12px; font-weight:700; color:#2E7D32;">+ New Lot</span>
+                </h3>
+                <p class="kisan-action-card__subtitle" id="lbl-action-card2-desc">
+                  List your harvested produce and receive direct, verified offers from corporate buyers.
+                </p>
+              </div>
             </div>
-            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="location.href='lots.html'" role="button" style="cursor:pointer;">
-              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 4</div>
-              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Negotiate</div>
+            <div class="kisan-action-card__footer">
+              <span class="kisan-action-card__stat" id="lbl-action-card2-stat">My Crops: <strong id="kisan-active-lots-count">3 Lots</strong></span>
+              <button class="kisan-action-card__btn">
+                <span id="btn-text-card2">List Crop</span> <i data-lucide="plus-circle"></i>
+              </button>
             </div>
-            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="location.href='orders.html'" role="button" style="cursor:pointer;">
-              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 5</div>
-              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Confirm Deal</div>
+          </div>
+
+          <!-- Card 3: Find Godowns & Compare -->
+          <div class="kisan-action-card kisan-action-card--storage" onclick="location.href='storage.html'" role="button" tabindex="0">
+            <div class="kisan-action-card__top">
+              <div class="kisan-action-card__icon">🏬</div>
+              <div class="kisan-action-card__info">
+                <h3 class="kisan-action-card__title" id="lbl-action-card3-title">
+                  Find & Compare Warehouses <span style="font-size:12px; font-weight:700; color:#1565C0;">Nearby</span>
+                </h3>
+                <p class="kisan-action-card__subtitle" id="lbl-action-card3-desc">
+                  Locate WDRA/MSWC accredited warehouses, compare monthly tariffs, and book space.
+                </p>
+              </div>
             </div>
-            <div style="background: #F5F4ED; padding: 10px 8px; border-radius: 8px; border-left: 3px solid var(--ks-evergreen);" onclick="location.href='orders.html'" role="button" style="cursor:pointer;">
-              <div style="font-size: 10px; font-weight: 700; color: var(--ks-evergreen);">STAGE 6</div>
-              <div style="font-size: 12.5px; font-weight: 700; color: #222; margin-top: 2px;">Fulfill Order</div>
+            <div class="kisan-action-card__footer">
+              <span class="kisan-action-card__stat" id="lbl-action-card3-stat">Nearest: <strong>8.5 km (₹38/bag)</strong></span>
+              <button class="kisan-action-card__btn">
+                <span id="btn-text-card3">Find Godowns</span> <i data-lucide="warehouse"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 4: Sell Now or Store? -->
+          <div class="kisan-action-card kisan-action-card--decision" onclick="location.href='storage.html#tab-panel-calculator'" role="button" tabindex="0">
+            <div class="kisan-action-card__top">
+              <div class="kisan-action-card__icon">🤖</div>
+              <div class="kisan-action-card__info">
+                <h3 class="kisan-action-card__title" id="lbl-action-card4-title">
+                  Sell Now vs. Store & Hold <span style="font-size:12px; font-weight:700; color:#7B1FA2;">AI Advisor</span>
+                </h3>
+                <p class="kisan-action-card__subtitle" id="lbl-action-card4-desc">
+                  Calculate if storing your harvest yields higher profit vs selling immediately at today's mandi price.
+                </p>
+              </div>
+            </div>
+            <div class="kisan-action-card__footer">
+              <span class="kisan-action-card__stat" id="lbl-action-card4-stat">Estimated Gain: <strong style="color:#2E7D32;">+₹7,450</strong></span>
+              <button class="kisan-action-card__btn">
+                <span id="btn-text-card4">View AI Advice</span> <i data-lucide="sparkles"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -415,7 +489,7 @@
           <div class="dash-stat" id="stat-active-lots" onclick="location.href='lots.html'">
             <div class="dash-stat__icon dash-stat__icon--green"><i data-lucide="package"></i></div>
             <div class="dash-stat__body">
-              <div class="dash-stat__label">Active Lots</div>
+              <div class="dash-stat__label" id="lbl-stat-active-lots">Active Lots</div>
               <div class="dash-stat__value" id="stat-lots-val" data-count="3">3</div>
               <div class="dash-stat__sub" id="stat-lots-sub">2 crops currently listed</div>
             </div>
@@ -433,7 +507,7 @@
           <div class="dash-stat" id="stat-buyer-offers" onclick="location.href='buyers.html'">
             <div class="dash-stat__icon dash-stat__icon--blue"><i data-lucide="handshake"></i></div>
             <div class="dash-stat__body">
-              <div class="dash-stat__label">Buyer Offers</div>
+              <div class="dash-stat__label" id="lbl-stat-buyer-offers">Buyer Offers</div>
               <div class="dash-stat__value" id="stat-offers-val" data-count="4">4</div>
               <div class="dash-stat__sub">₹2,17,700 total offered</div>
             </div>
@@ -644,21 +718,21 @@
               <div class="mandi-filter-group">
                 <label class="mandi-filter-label" for="mandi-crop-filter">Crop:</label>
                 <select id="mandi-crop-filter" class="dash-filter-select">
-                  <option value="rice">🌾 Rice (धान / तांदूळ)</option>
-                  <option value="wheat">🌾 Wheat (गेहूं / गहू)</option>
-                  <option value="onion">🧅 Onion (प्याज / कांदा)</option>
-                  <option value="tomato">🍅 Tomato (टमाटर / टोमॅटो)</option>
-                  <option value="maize">🌽 Maize (मक्का / मका)</option>
-                  <option value="soybean">🫘 Soybean (सोयाबीन)</option>
-                  <option value="potato">🥔 Potato (आलू / बटाटा)</option>
-                  <option value="chilli">🌶️ Chilli (मिर्च / मिरची)</option>
-                  <option value="groundnut">🥜 Groundnut (मूंगफली / भुईमूग)</option>
-                  <option value="cotton">☁️ Cotton (कपास / कापूस)</option>
-                  <option value="sugarcane">🎋 Sugarcane (गन्ना / ऊस)</option>
-                  <option value="mango">🥭 Mango (आम / आंबा)</option>
-                  <option value="banana">🍌 Banana (केला / केळी)</option>
-                  <option value="grapes">🍇 Grapes (अंगूर / द्राक्षे)</option>
-                  <option value="pulses">🥣 Pulses (दालें / कडधान्ये)</option>
+                  <option value="rice">🌾 Rice</option>
+                  <option value="wheat">🌾 Wheat</option>
+                  <option value="onion">🧅 Onion</option>
+                  <option value="tomato">🍅 Tomato</option>
+                  <option value="maize">🌽 Maize</option>
+                  <option value="soybean">🫘 Soybean</option>
+                  <option value="potato">🥔 Potato</option>
+                  <option value="chilli">🌶️ Chilli</option>
+                  <option value="groundnut">🥜 Groundnut</option>
+                  <option value="cotton">☁️ Cotton</option>
+                  <option value="sugarcane">🎋 Sugarcane</option>
+                  <option value="mango">🥭 Mango</option>
+                  <option value="banana">🍌 Banana</option>
+                  <option value="grapes">🍇 Grapes</option>
+                  <option value="pulses">🥣 Pulses</option>
                 </select>
               </div>
 
@@ -667,20 +741,20 @@
                 <label class="mandi-filter-label" for="mandi-state-filter">State:</label>
                 <select id="mandi-state-filter" class="dash-filter-select">
                   <option value="all">🇮🇳 All India</option>
-                  <option value="Maharashtra">Maharashtra (महाराष्ट्र)</option>
-                  <option value="Madhya Pradesh">Madhya Pradesh (मध्य प्रदेश)</option>
-                  <option value="Gujarat">Gujarat (गुजरात)</option>
-                  <option value="Punjab">Punjab (पंजाब)</option>
-                  <option value="Haryana">Haryana (हरियाणा)</option>
-                  <option value="Uttar Pradesh">Uttar Pradesh (उत्तर प्रदेश)</option>
-                  <option value="Rajasthan">Rajasthan (राजस्थान)</option>
-                  <option value="Karnataka">Karnataka (कर्नाटक)</option>
-                  <option value="Telangana">Telangana (तेलंगाना)</option>
-                  <option value="Andhra Pradesh">Andhra Pradesh (आंध्र प्रदेश)</option>
-                  <option value="Tamil Nadu">Tamil Nadu (तमिलनाडु)</option>
-                  <option value="Bihar">Bihar (बिहार)</option>
-                  <option value="West Bengal">West Bengal (पश्चिम बंगाल)</option>
-                  <option value="Odisha">Odisha (ओडिशा)</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Bihar">Bihar</option>
+                  <option value="West Bengal">West Bengal</option>
+                  <option value="Odisha">Odisha</option>
                 </select>
               </div>
 
@@ -878,7 +952,6 @@
         <div class="footer__links">
           <a href="#" class="footer__link" onclick="openHelpModal()">Kisan Support</a>
           <a href="buyers.html" class="footer__link">For Buyers</a>
-          <a href="#" class="footer__link" onclick="openLanguageModal()">Languages</a>
           <a href="index.html" class="footer__link">About KrishiShetra</a>
         </div>
       </div>
@@ -889,10 +962,10 @@
   <!-- MOBILE BOTTOM NAVIGATION -->
   <nav class="dash-bottom-nav" id="dash-bottom-nav">
     <a href="dashboard.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-home"><i data-lucide="home"></i><span>Home</span></a>
-    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i data-lucide="bar-chart-3"></i><span>Market</span></a>
     <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span>My Lots</span></a>
+    <a href="storage.html" class="dash-bottom-nav__item" id="bnav-storage"><i data-lucide="warehouse"></i><span>Storage</span></a>
+    <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i data-lucide="bar-chart-3"></i><span>Market</span></a>
     <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i data-lucide="brain"></i><span>Forecast</span></a>
-    <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i data-lucide="users"></i><span>Buyers</span></a>
     <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i data-lucide="clipboard-list"></i><span>Orders</span></a>
   </nav>
 
@@ -1353,23 +1426,6 @@
             <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
             <div style="font-size:11px; color:var(--ks-text-muted);">Available 6:00 AM to 10:00 PM all 7 days</div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LANGUAGE MODAL -->
-  <div class="dash-modal-overlay" id="language-modal-overlay">
-    <div class="dash-modal dash-modal--sm" id="language-modal">
-      <div class="dash-modal__header">
-        <h3>Select Language / भाषा निवडा</h3>
-        <button class="dash-modal__close" id="language-modal-close"><i data-lucide="x"></i></button>
-      </div>
-      <div class="dash-modal__body-pad">
-        <div class="dash-lang-list">
-          <button class="dash-lang-btn dash-lang-btn--active" onclick="setLanguage('en')"><span>English</span> <strong>Active</strong></button>
-          <button class="dash-lang-btn" onclick="setLanguage('mr')"><span>मराठी (Marathi)</span></button>
-          <button class="dash-lang-btn" onclick="setLanguage('hi')"><span>हिन्दी (Hindi)</span></button>
         </div>
       </div>
     </div>

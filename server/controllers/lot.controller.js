@@ -186,6 +186,13 @@ const createLot = async (req, res) => {
       aiQualityScan,
       storageType,
       storageLocation,
+      storageRequired,
+      preferredStorageType,
+      storageFacility,
+      storageDurationDays,
+      currentStorageStatus,
+      estimatedStorageCost,
+      sellNowOrHoldDecision,
       askingPrice,
       priceUnit,
       state,
@@ -276,6 +283,13 @@ const createLot = async (req, res) => {
       aiQualityScan: aiQualityScan || {},
       storageType: storageType || 'farm',
       storageLocation: storageLocation ? String(storageLocation).trim() : '',
+      storageRequired: Boolean(storageRequired),
+      preferredStorageType: preferredStorageType || storageType || 'farm',
+      storageFacility: storageFacility || null,
+      storageDurationDays: Number(storageDurationDays) || 0,
+      currentStorageStatus: currentStorageStatus || 'on_farm',
+      estimatedStorageCost: Number(estimatedStorageCost) || 0,
+      sellNowOrHoldDecision: sellNowOrHoldDecision || {},
       askingPrice: Number(askingPrice),
       priceUnit: priceUnit || 'quintal',
       state: state ? String(state).trim() : (farmerProfile.state || ''),
@@ -284,7 +298,7 @@ const createLot = async (req, res) => {
       village: village ? String(village).trim() : (farmerProfile.village || ''),
       pincode: pincode ? String(pincode).trim() : (farmerProfile.pincode || ''),
       photos: Array.isArray(photos) ? photos : [],
-      status: (status === 'active' || status === 'draft') ? status : 'draft'
+      status: (status === 'active' || status === 'draft') ? status : 'active'
     });
 
     return res.status(201).json({

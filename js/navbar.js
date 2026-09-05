@@ -33,6 +33,7 @@ function initRoleAwareNav() {
     farmer: [
       { page: 'dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
       { page: 'lots.html', id: 'nav-lots', icon: 'package', label: 'My Lots' },
+      { page: 'storage.html', id: 'nav-storage', icon: 'warehouse', label: 'Storage Options' },
       { page: 'market.html', id: 'nav-market', icon: 'store', label: 'Marketplace' },
       { page: 'ai-forecast.html', id: 'nav-forecast', icon: 'brain', label: 'AI Forecast' },
       { page: 'orders.html', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
@@ -59,6 +60,7 @@ function initRoleAwareNav() {
       { page: 'fpo-dashboard.html#dashboard', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
       { page: 'fpo-dashboard.html#farmers', id: 'nav-farmers', icon: 'users', label: 'Farmers' },
       { page: 'fpo-dashboard.html#lots', id: 'nav-lots', icon: 'package', label: 'Lots' },
+      { page: 'storage.html', id: 'nav-storage', icon: 'warehouse', label: 'Storage & Linkages' },
       { page: 'fpo-dashboard.html#market', id: 'nav-market', icon: 'store', label: 'Market' },
       { page: 'fpo-dashboard.html#buyers', id: 'nav-buyers', icon: 'briefcase', label: 'Buyers' },
       { page: 'fpo-dashboard.html#orders', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
@@ -272,13 +274,7 @@ function initHeaderModalButtons() {
     });
   }
 
-  const langBtn = document.getElementById('btn-language');
-  if (langBtn) {
-    langBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      openModalById('language-modal-overlay');
-    });
-  }
+
 
   const helpBtn = document.getElementById('btn-help');
   if (helpBtn) {
