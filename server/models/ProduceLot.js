@@ -75,6 +75,12 @@ const produceLotSchema = new mongoose.Schema(
       type: Date,
       required: [true, 'Harvest date is required']
     },
+    // Crop Category
+    cropCategory: {
+      type: String,
+      enum: ['cereals_grains', 'pulses', 'fruits_vegetables', 'oilseeds', 'spices', 'other'],
+      default: 'cereals_grains'
+    },
     // Quality Information
     qualityGrade: {
       type: String,
@@ -89,6 +95,55 @@ const produceLotSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: ''
+    },
+    // Parametric Quality Specifications (Agmark / e-NAM Standards)
+    qualityParameters: {
+      moistureContent: { type: Number, default: null }, // %
+      foreignMatter: { type: Number, default: null },   // %
+      brokenGrains: { type: Number, default: null },    // %
+      damagedGrains: { type: Number, default: null },   // %
+      grainLength: { type: Number, default: null },     // mm
+      weevilledGrains: { type: Number, default: null }, // %
+      uniformity: { type: Number, default: null },      // %
+      ripenessIndex: { type: Number, default: null },   // %
+      blemishPercentage: { type: Number, default: null }, // %
+      avgDiameter: { type: Number, default: null },     // mm
+      standard: { type: String, default: 'Agmark / e-NAM Standard' },
+      gradeCalculationRationale: { type: String, default: '' }
+    },
+    // Assaying & Lab Certification
+    assaying: {
+      isAssayed: { type: Boolean, default: false },
+      verificationStatus: {
+        type: String,
+        enum: ['uninspected', 'pending', 'verified', 'rejected'],
+        default: 'uninspected'
+      },
+      assayerName: { type: String, trim: true, default: '' },
+      assayerOrganization: { type: String, trim: true, default: '' },
+      assayerRole: { type: String, trim: true, default: '' },
+      certificateNumber: { type: String, trim: true, default: '' },
+      certifiedAt: { type: Date, default: null },
+      digitalSignature: {
+        signedBy: { type: String, default: '' },
+        signatureHash: { type: String, default: '' },
+        timestamp: { type: Date, default: null },
+        certId: { type: String, default: '' }
+      },
+      certificateDocument: {
+        fileName: { type: String, default: '' },
+        fileUrl: { type: String, default: '' },
+        fileType: { type: String, default: '' }
+      },
+      labRemarks: { type: String, trim: true, default: '' }
+    },
+    // AI Image Defect Estimation
+    aiQualityScan: {
+      scannedAt: { type: Date, default: null },
+      confidenceScore: { type: Number, default: null },
+      detectedDefects: { type: Array, default: [] },
+      sampleImage: { type: String, default: '' },
+      summary: { type: String, default: '' }
     },
     // Storage
     storageType: {

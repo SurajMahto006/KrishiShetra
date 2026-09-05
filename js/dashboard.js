@@ -39,12 +39,12 @@ const MANDIS_LIST = [
 ];
 
 const CORPORATE_BUYERS = [
-  { id: 'b1', name: 'ABC Foods Ltd', verified: true, rating: '4.9 ★', crops: ['Rice', 'Wheat'], location: 'Pune / Mumbai', minQty: '10 quintals', paymentDays: 'Instant 24h Bank Transfer' },
-  { id: 'b2', name: 'Reliance Fresh Procurement', verified: true, rating: '4.8 ★', crops: ['Rice', 'Onion', 'Tomato', 'Banana'], location: 'Pan-Maharashtra', minQty: '20 quintals', paymentDays: 'Direct APMC Escrow' },
-  { id: 'b3', name: 'ITC Agri Business Division', verified: true, rating: '4.9 ★', crops: ['Wheat', 'Soybean', 'Chilli'], location: 'Indore / Nagpur', minQty: '15 quintals', paymentDays: 'Instant NEFT' },
-  { id: 'b4', name: 'BigBasket Direct Sourcing', verified: true, rating: '4.7 ★', crops: ['Onion', 'Tomato', 'Potato', 'Grapes'], location: 'Pune Warehouse', minQty: '5 quintals', paymentDays: '48h Farm Gate' },
-  { id: 'b5', name: 'XYZ Agro Exports', verified: true, rating: '4.8 ★', crops: ['Grapes', 'Mango', 'Chilli', 'Cotton'], location: 'Nashik / Mumbai', minQty: '25 quintals', paymentDays: 'Escrow Guarantee' },
-  { id: 'b6', name: 'Green Valley Organic Mills', verified: true, rating: '4.6 ★', crops: ['Pulses', 'Rice', 'Soybean'], location: 'Nagpur APMC', minQty: '10 quintals', paymentDays: 'Direct UPI/Bank' }
+  { id: 'b1', name: 'ABC Foods Ltd', verified: true, rating: '4.9 ★', crops: ['Rice', 'Wheat', 'Tomato'], location: 'Pune / Mumbai', minQty: '10 quintals', demand: '500 kg / 25 quintals', offerPrice: '₹2,850/q', distance: '38 km', reliability: '98%', deals: '184 Completed Deals', paymentDays: 'Instant 24h Bank Transfer' },
+  { id: 'b2', name: 'Reliance Fresh Procurement', verified: true, rating: '4.8 ★', crops: ['Rice', 'Onion', 'Tomato', 'Banana'], location: 'Pan-Maharashtra', minQty: '20 quintals', demand: '1,200 kg / 60 quintals', offerPrice: '₹2,920/q', distance: '42 km', reliability: '99%', deals: '320 Completed Deals', paymentDays: 'Direct APMC Escrow' },
+  { id: 'b3', name: 'ITC Agri Business Division', verified: true, rating: '4.9 ★', crops: ['Wheat', 'Soybean', 'Chilli', 'Maize'], location: 'Indore / Nagpur', minQty: '15 quintals', demand: '800 kg / 40 quintals', offerPrice: '₹2,780/q', distance: '51 km', reliability: '99%', deals: '410 Completed Deals', paymentDays: 'Instant NEFT' },
+  { id: 'b4', name: 'BigBasket Direct Sourcing', verified: true, rating: '4.7 ★', crops: ['Onion', 'Tomato', 'Potato', 'Grapes'], location: 'Pune Warehouse', minQty: '5 quintals', demand: '350 kg / 18 quintals', offerPrice: '₹2,820/q', distance: '24 km', reliability: '97%', deals: '290 Completed Deals', paymentDays: '48h Farm Gate' },
+  { id: 'b5', name: 'XYZ Agro Exports', verified: true, rating: '4.8 ★', crops: ['Grapes', 'Mango', 'Chilli', 'Cotton'], location: 'Nashik / Mumbai', minQty: '25 quintals', demand: '2,500 kg / 100 quintals', offerPrice: '₹3,050/q', distance: '45 km', reliability: '98%', deals: '145 Completed Deals', paymentDays: 'Escrow Guarantee' },
+  { id: 'b6', name: 'Green Valley Organic Mills', verified: true, rating: '4.6 ★', crops: ['Pulses', 'Rice', 'Soybean'], location: 'Nagpur APMC', minQty: '10 quintals', demand: '400 kg / 20 quintals', offerPrice: '₹5,350/q', distance: '85 km', reliability: '96%', deals: '88 Completed Deals', paymentDays: 'Direct UPI/Bank' }
 ];
 
 // ═════════════════════════════════════════════════════════════════════
@@ -186,9 +186,10 @@ class KrishiStore {
         { id: 'alt-3', crop: 'Wheat', cropId: 'wheat', price: 2800, market: 'Mumbai APMC', active: false, via: 'SMS' }
       ],
       notifications: [
-        { id: 'n1', title: 'New Buyer Offer Received', desc: 'ABC Foods offered ₹2,950/q for 20q Rice.', time: '10 mins ago', unread: true },
-        { id: 'n2', title: 'Price Spike Alert · Pune', desc: 'Rice APMC rate surged +5.2% today.', time: '2 hours ago', unread: true },
-        { id: 'n3', title: 'Order Payment Processed', desc: '₹43,500 transferred to HDFC A/C **4821.', time: 'Yesterday', unread: false }
+        { id: 'n1', title: 'Payment Received', desc: '₹13,000 payment received. Credited to HDFC Bank A/C **4821.', time: 'Just now', unread: true },
+        { id: 'n2', title: 'Payment Due Tomorrow', desc: '₹18,000 payment is due tomorrow for Wheat fulfillment (ITC Agri).', time: '1 hour ago', unread: true },
+        { id: 'n3', title: 'New Buyer Offer Received', desc: 'ABC Foods offered ₹2,950/q for 20q Rice.', time: '2 hours ago', unread: true },
+        { id: 'n4', title: 'Price Spike Alert · Pune', desc: 'Rice APMC rate surged +5.2% today.', time: 'Today', unread: false }
       ],
       profile: {
         name: 'Rajesh Patil',
@@ -688,6 +689,95 @@ function renderOffersPanel() {
 
   if (window.lucide) lucide.createIcons();
 }
+
+// Render Verified Corporate Buyers Directory (SIH 26132)
+function renderBuyersDirectory() {
+  const container = document.getElementById('buyers-directory-list');
+  const modalContainer = document.getElementById('buyers-directory-list-modal');
+  if (!container && !modalContainer) return;
+
+  const html = `
+    <div style="margin-bottom:18px; background:var(--ks-bg-ivory); border-radius:12px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div>
+        <strong style="color:var(--ks-evergreen); font-size:14px;">🎯 Best Institutional Matches for Your Harvest</strong>
+        <p style="font-size:12px; color:var(--ks-text-muted); margin:2px 0 0 0;">Pre-verified buyers with direct APMC escrow and 24h bank settlement guarantee.</p>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <span style="font-size:11px; font-weight:700; background:#EAF6ED; color:#2D6A4F; padding:4px 8px; border-radius:4px;">✓ 100% Verified</span>
+        <span style="font-size:11px; font-weight:700; background:#E0F2FE; color:#0369A1; padding:4px 8px; border-radius:4px;">🛡️ Escrow Payouts</span>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(310px, 1fr)); gap:16px;">
+      ${CORPORATE_BUYERS.map(b => `
+        <div class="dash-card" style="background:#FFFFFF; border:1px solid var(--ks-border); border-radius:14px; padding:18px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:var(--shadow-sm);">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+              <div>
+                <h4 style="font-size:16px; font-weight:800; color:var(--ks-evergreen); margin:0 0 2px 0;">${b.name}</h4>
+                <div style="font-size:12px; color:var(--ks-text-muted); display:flex; align-items:center; gap:6px;">
+                  <span style="color:#2D6A4F; font-weight:700;">✓ Verified Buyer</span>
+                  <span>•</span>
+                  <span>📍 ${b.distance} away</span>
+                </div>
+              </div>
+              <span style="background:#FDF7EA; color:#92400E; font-size:11px; font-weight:800; padding:3px 8px; border-radius:6px; border:1px solid #EED7A1;">
+                ${b.rating}
+              </span>
+            </div>
+
+            <div style="background:var(--ks-bg-ivory); border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:12.5px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="color:#666;">Needs / Demand:</span>
+                <strong>${b.demand}</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="color:#666;">Procuring Crops:</span>
+                <span style="font-weight:600; color:var(--ks-charcoal);">${b.crops.join(', ')}</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="color:#666;">Indicative Rate:</span>
+                <strong style="color:var(--ks-evergreen); font-size:13.5px;">${b.offerPrice}</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:#666;">Payment Reliability:</span>
+                <strong style="color:#2D6A4F;">${b.reliability} (${b.deals})</strong>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:8px; border-top:1px solid #EEE; padding-top:12px;">
+            <button class="btn btn--secondary btn--sm" style="flex:1;" onclick="showToast('Connecting with ${b.name} procurement manager...')">
+              <i data-lucide="eye"></i> View Buyer
+            </button>
+            <button class="btn btn--primary btn--sm" style="flex:1;" onclick="openMakeOfferModal('${b.id}', '${b.name}')">
+              <i data-lucide="send"></i> Make Offer
+            </button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  if (container) container.innerHTML = html;
+  if (modalContainer) modalContainer.innerHTML = html;
+  if (window.lucide) lucide.createIcons();
+}
+
+function openMakeOfferModal(buyerId, buyerName) {
+  const modal = document.getElementById('negotiate-modal-overlay');
+  if (!modal) {
+    showToast(`Quote request sent to ${buyerName}! You will receive price negotiation on SMS & Portal.`);
+    return;
+  }
+  const info = document.getElementById('negotiate-buyer-info');
+  if (info) {
+    info.innerHTML = `Submitting direct produce quote to <strong>${buyerName}</strong> (Institutional Procurement)`;
+  }
+  modal.classList.add('active');
+  if (window.lucide) lucide.createIcons();
+}
+
 
 // Render Orders Grid
 function renderOrdersGrid() {
@@ -1808,6 +1898,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSearchAndFilters();
   initMarketComparison();
   initPriceTrendChart();
+  initDecisionEngine();
+  initStorageModule();
+  initTransportModule();
+  initDisputesModule();
+  renderBuyersDirectory();
 
   // 4. Initialize Forms & Modals
   initModalCloseHandlers();
@@ -1910,6 +2005,1256 @@ document.addEventListener('DOMContentLoaded', async () => {
   const mobileProf = document.getElementById('mobile-nav-profile');
   if (mobileProf) mobileProf.onclick = openProfileModal;
 
+  // Render buyer & offer sections if present
+  renderOffersPanel();
+  renderBuyersDirectory();
+
+  // Initialize SIH 26132 Farmer Experience Modules
+  initDecisionEngine();
+  initLotWizard();
+  initStorageModule();
+  initTransportModule();
+  initDisputesModule();
+
   // Initialize Lucide icons
   if (window.lucide) lucide.createIcons();
 });
+
+// ═════════════════════════════════════════════════════════════════════
+// 12. SIH 26132: FARMER DECISION ENGINE ("Where & When Should You Sell?")
+// ═════════════════════════════════════════════════════════════════════
+
+const DECISION_CROP_DATA = {
+  tomato: {
+    curPrice: '₹2,490',
+    bestMandi: 'Nashik APMC',
+    dist: '42 km · Highest Net Realization',
+    bestPrice: '₹2,920',
+    netRealization: '₹2,780/q',
+    expPrice: '₹3,050',
+    trend: '+4.2%',
+    demand: '🔥 HIGH Demand',
+    adviceTitle: 'Good Time to Sell (Next 2–3 Days)',
+    adviceDesc: 'Prices are trending upward across nearby APMCs with strong institutional buyer demand. Consider listing or dispatching within the next 48 to 72 hours for maximum net realization.'
+  },
+  rice: {
+    curPrice: '₹2,850',
+    bestMandi: 'Mumbai APMC (Vashi)',
+    dist: '140 km · High Volume Buyer Hub',
+    bestPrice: '₹3,150',
+    netRealization: '₹2,980/q',
+    expPrice: '₹3,200',
+    trend: '+5.8%',
+    demand: '🔥 HIGH Demand',
+    adviceTitle: 'Strong Buying Demand — Sell or Hold 2 Days',
+    adviceDesc: 'Institutional grain millers and FMCG brands are offering premium rates for Basmati and Sona Masoori. Current arrivals are steady with strong price defense.'
+  },
+  wheat: {
+    curPrice: '₹2,650',
+    bestMandi: 'Indore Mandi',
+    dist: '520 km · Premium Sharbati Market',
+    bestPrice: '₹2,980',
+    netRealization: '₹2,720/q',
+    expPrice: '₹3,020',
+    trend: '+3.1%',
+    demand: '⚡ MODERATE Demand',
+    adviceTitle: 'Steady Market — Good Window to List Lots',
+    adviceDesc: 'Lokwan and Sharbati varieties are commanding stable floor prices. Storing in certified warehouse is an option if holding for another 3 weeks.'
+  },
+  onion: {
+    curPrice: '₹2,850',
+    bestMandi: 'Lasalgaon APMC',
+    dist: '58 km · Asia’s Largest Onion Mandi',
+    bestPrice: '₹3,320',
+    netRealization: '₹3,180/q',
+    expPrice: '₹3,450',
+    trend: '+6.4%',
+    demand: '🔥 VERY HIGH Demand',
+    adviceTitle: 'Favorable Selling Window Active',
+    adviceDesc: 'Red Garwa onions are in high demand due to export quotas. Prices are expected to remain buoyant over the next 3 to 5 days.'
+  },
+  soybean: {
+    curPrice: '₹4,650',
+    bestMandi: 'Nagpur APMC',
+    dist: '450 km · Oil Processing Cluster',
+    bestPrice: '₹5,100',
+    netRealization: '₹4,820/q',
+    expPrice: '₹5,250',
+    trend: '+4.9%',
+    demand: '🔥 HIGH Demand',
+    adviceTitle: 'Crushing Plant Buying Active — Sell This Week',
+    adviceDesc: 'Solvent extraction plants are actively procuring Grade A lots with moisture below 10%. Excellent window to lock in advance contracts.'
+  },
+  potato: {
+    curPrice: '₹1,800',
+    bestMandi: 'Pune APMC',
+    dist: '12 km · Direct Local Mandi',
+    bestPrice: '₹2,050',
+    netRealization: '₹1,990/q',
+    expPrice: '₹2,100',
+    trend: '+1.8%',
+    demand: '⚡ MODERATE Demand',
+    adviceTitle: 'Cold Storage Recommended if Holding',
+    adviceDesc: 'Local arrivals are high. Consider utilizing Nashik Cold Storage (₹2.5/kg/day) to preserve quality and sell during the upcoming festival demand.'
+  },
+  chilli: {
+    curPrice: '₹8,500',
+    bestMandi: 'Guntur APMC',
+    dist: '720 km · National Spices Market',
+    bestPrice: '₹9,800',
+    netRealization: '₹9,100/q',
+    expPrice: '₹10,200',
+    trend: '+7.2%',
+    demand: '🔥 VERY HIGH Demand',
+    adviceTitle: 'Export Demand Surge — Premium Realization',
+    adviceDesc: 'Teja and Byadgi dried red chillies are trading at seasonal highs. Verified buyers are offering instant 24h bank settlement.'
+  },
+  cotton: {
+    curPrice: '₹6,800',
+    bestMandi: 'Rajkot APMC',
+    dist: '650 km · Textile Procurement Hub',
+    bestPrice: '₹7,450',
+    netRealization: '₹7,050/q',
+    expPrice: '₹7,600',
+    trend: '+2.4%',
+    demand: '⚡ MODERATE Demand',
+    adviceTitle: 'Gradual Uptrend — Benchmark Above MSP',
+    adviceDesc: 'Spinning mills are procuring medium staple cotton. Verify moisture before dispatch to prevent weight deductions.'
+  },
+  maize: {
+    curPrice: '₹2,300',
+    bestMandi: 'Nashik APMC',
+    dist: '180 km · Feed Mill Center',
+    bestPrice: '₹2,550',
+    netRealization: '₹2,410/q',
+    expPrice: '₹2,600',
+    trend: '+3.5%',
+    demand: '🔥 HIGH Demand',
+    adviceTitle: 'Poultry Feed Demand Active',
+    adviceDesc: 'Yellow corn with moisture below 12% is receiving rapid quotes from verified livestock feed manufacturers.'
+  },
+  pulses: {
+    curPrice: '₹5,200',
+    bestMandi: 'Latur APMC',
+    dist: '310 km · Major Pulse Trading Center',
+    bestPrice: '₹5,850',
+    netRealization: '₹5,560/q',
+    expPrice: '₹6,000',
+    trend: '+5.1%',
+    demand: '🔥 HIGH Demand',
+    adviceTitle: 'Tur and Chana Firming Up',
+    adviceDesc: 'Pulse prices are supported by institutional buffer procurement. Consider listing your lot for corporate procurement.'
+  }
+};
+
+function initDecisionEngine() {
+  const pills = document.querySelectorAll('#decision-crop-pills .farmer-crop-pill');
+  if (!pills.length) return;
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const cropKey = pill.getAttribute('data-crop');
+      updateDecisionSummary(cropKey);
+    });
+  });
+}
+
+function updateDecisionSummary(cropKey) {
+  const data = DECISION_CROP_DATA[cropKey] || DECISION_CROP_DATA.tomato;
+  
+  const curPriceEl = document.getElementById('dec-cur-price');
+  const bestMandiEl = document.getElementById('dec-best-mandi');
+  const distEl = document.getElementById('dec-mandi-dist');
+  const bestPriceEl = document.getElementById('dec-best-price');
+  const netValEl = document.getElementById('dec-net-val');
+  const expPriceEl = document.getElementById('dec-exp-price');
+  const trendEl = document.getElementById('dec-trend-badge');
+  const demandEl = document.getElementById('dec-demand-badge');
+  const adviceTitleEl = document.getElementById('dec-advice-title');
+  const adviceDescEl = document.getElementById('dec-advice-desc');
+
+  if (curPriceEl) curPriceEl.innerHTML = `${data.curPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
+  if (bestMandiEl) bestMandiEl.textContent = data.bestMandi;
+  if (distEl) distEl.textContent = data.dist;
+  if (bestPriceEl) bestPriceEl.innerHTML = `${data.bestPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
+  if (netValEl) netValEl.innerHTML = `Est. Net: <strong>${data.netRealization}</strong> after freight`;
+  if (expPriceEl) expPriceEl.innerHTML = `${data.expPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
+  if (trendEl) trendEl.textContent = `↑ ${data.trend}`;
+  if (demandEl) demandEl.textContent = data.demand;
+  if (adviceTitleEl) adviceTitleEl.textContent = data.adviceTitle;
+  if (adviceDescEl) adviceDescEl.textContent = data.adviceDesc;
+}
+
+// ═════════════════════════════════════════════════════════════════════
+// 13. SIH 26132: 8-STEP CROP LOT CREATION WIZARD
+// ═════════════════════════════════════════════════════════════════════
+
+let currentWizardStep = 1;
+const totalWizardSteps = 8;
+
+const wizardStepSubtitles = [
+  'Select the agricultural commodity to sell',
+  'Specify total available harvest quantity & variety',
+  'Select certified quality grade and sorting level',
+  'Confirm farm origin village and dispatch pincode',
+  'Set your expected base price per quintal',
+  'Specify harvest date and dispatch deadline',
+  'Add moisture level and crop specifications',
+  'Review your complete lot listing before publishing'
+];
+
+function initLotWizard() {
+  const modal = document.getElementById('create-lot-modal-overlay');
+  if (!modal) return;
+
+  // Crop Chip click selection in Step 1
+  const chips = document.querySelectorAll('.lot-crop-chips-grid .lot-crop-chip');
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      const crop = chip.getAttribute('data-crop');
+      const cropVal = document.getElementById('wiz-crop-val');
+      if (cropVal) cropVal.value = crop;
+      
+      // Update variety placeholder
+      const varietyInput = document.getElementById('wiz-variety-input');
+      if (varietyInput) {
+        varietyInput.value = chip.querySelector('.lot-crop-name')?.textContent + ' (Grade A Premium)';
+      }
+    });
+  });
+
+  // Next / Prev button handlers
+  const btnNext = document.getElementById('wiz-btn-next');
+  const btnPrev = document.getElementById('wiz-btn-prev');
+  const btnPublish = document.getElementById('wiz-btn-publish');
+  const form = document.getElementById('create-lot-form');
+
+  if (btnNext) {
+    btnNext.addEventListener('click', () => {
+      if (validateWizardStep(currentWizardStep)) {
+        if (currentWizardStep < totalWizardSteps) {
+          goToWizardStep(currentWizardStep + 1);
+        }
+      }
+    });
+  }
+
+  if (btnPrev) {
+    btnPrev.addEventListener('click', () => {
+      if (currentWizardStep > 1) {
+        goToWizardStep(currentWizardStep - 1);
+      }
+    });
+  }
+
+  // Stepper Node direct clicks
+  document.querySelectorAll('.lot-wizard-step').forEach(stepNode => {
+    stepNode.addEventListener('click', () => {
+      const targetStep = parseInt(stepNode.getAttribute('data-step'), 10);
+      if (targetStep < currentWizardStep || validateWizardStep(currentWizardStep)) {
+        goToWizardStep(targetStep);
+      }
+    });
+  });
+
+  // Form Submission
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const cropKey = document.getElementById('wiz-crop-val')?.value || 'tomato';
+      const cropName = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
+      const qty = parseFloat(document.getElementById('wiz-qty-input')?.value || 25);
+      const price = parseFloat(document.getElementById('wiz-price-input')?.value || 2850);
+      const grade = document.getElementById('wiz-grade-select')?.value || 'Grade A';
+      const location = document.getElementById('wiz-location-input')?.value || 'Nashik, Maharashtra';
+      const harvestDate = document.getElementById('wiz-harvest-date')?.value || new Date().toISOString().split('T')[0];
+      const desc = document.getElementById('wiz-desc-input')?.value || 'Fresh harvest, machine cleaned and sorted.';
+
+      const newLot = {
+        id: `lot-${Date.now()}`,
+        cropId: cropKey,
+        crop: cropName,
+        quantity: qty,
+        expectedPrice: price,
+        marketPrice: price - 150,
+        location: location,
+        harvestDate: harvestDate,
+        grade: grade,
+        description: desc,
+        image: `assets/images/crop-${cropKey}.jpg`,
+        status: 'listed',
+        createdAt: new Date().toISOString()
+      };
+
+      if (window.krishiStore) {
+        window.krishiStore.addLot(newLot);
+      }
+
+      if (btnPublish) {
+        btnPublish.disabled = true;
+        btnPublish.innerHTML = '<div class="dash-spinner" style="width:14px;height:14px;border-width:2px;margin:0 auto;"></div> Publishing...';
+      }
+
+      setTimeout(() => {
+        if (btnPublish) {
+          btnPublish.disabled = false;
+          btnPublish.innerHTML = '<i data-lucide="check-circle-2"></i> Confirm & Publish Lot';
+        }
+        closeModal(modal);
+        showToast(`🌾 Success! Your ${qty} quintal ${cropName} lot is now live for 120+ verified buyers.`);
+        renderLotsPanel('all');
+        goToWizardStep(1);
+        if (window.lucide) lucide.createIcons();
+      }, 700);
+    });
+  }
+
+  // Set default dates
+  const today = new Date().toISOString().split('T')[0];
+  const nextWeek = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+  const harvestInp = document.getElementById('wiz-harvest-date');
+  const availInp = document.getElementById('wiz-available-until');
+  if (harvestInp && !harvestInp.value) harvestInp.value = today;
+  if (availInp && !availInp.value) availInp.value = nextWeek;
+}
+
+function goToWizardStep(step) {
+  currentWizardStep = step;
+  
+  // Update step indicator
+  document.querySelectorAll('.lot-wizard-step').forEach(node => {
+    const s = parseInt(node.getAttribute('data-step'), 10);
+    node.classList.remove('active', 'completed');
+    if (s === step) node.classList.add('active');
+    else if (s < step) node.classList.add('completed');
+  });
+
+  // Update step panes
+  document.querySelectorAll('.lot-wizard-pane').forEach((pane, idx) => {
+    pane.classList.remove('active');
+    if (idx + 1 === step) pane.classList.add('active');
+  });
+
+  // Update titles
+  const stepNumEl = document.getElementById('wizard-curr-step-num');
+  const stepSubEl = document.getElementById('wizard-step-subtitle');
+  if (stepNumEl) stepNumEl.textContent = step;
+  if (stepSubEl) stepSubEl.textContent = wizardStepSubtitles[step - 1] || '';
+
+  // Update Buttons
+  const btnPrev = document.getElementById('wiz-btn-prev');
+  const btnNext = document.getElementById('wiz-btn-next');
+  const btnPublish = document.getElementById('wiz-btn-publish');
+
+  if (btnPrev) btnPrev.style.visibility = step === 1 ? 'hidden' : 'visible';
+  if (btnNext) btnNext.style.display = step === totalWizardSteps ? 'none' : 'inline-flex';
+  if (btnPublish) btnPublish.style.display = step === totalWizardSteps ? 'inline-flex' : 'none';
+
+  // Render review summary on Step 8
+  if (step === 8) {
+    renderWizardSummary();
+  }
+
+  if (window.lucide) lucide.createIcons();
+}
+
+function validateWizardStep(step) {
+  if (step === 2) {
+    const qty = document.getElementById('wiz-qty-input')?.value;
+    if (!qty || parseFloat(qty) <= 0) {
+      showToast('Please enter a valid harvest quantity.');
+      return false;
+    }
+  } else if (step === 4) {
+    const loc = document.getElementById('wiz-location-input')?.value;
+    if (!loc) {
+      showToast('Please specify your farm dispatch location.');
+      return false;
+    }
+  } else if (step === 5) {
+    const price = document.getElementById('wiz-price-input')?.value;
+    if (!price || parseFloat(price) <= 0) {
+      showToast('Please enter your expected rate in ₹/quintal.');
+      return false;
+    }
+  }
+  return true;
+}
+
+function renderWizardSummary() {
+  const summaryEl = document.getElementById('wiz-summary-preview');
+  if (!summaryEl) return;
+
+  const cropKey = document.getElementById('wiz-crop-val')?.value || 'tomato';
+  const cropName = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
+  const qty = document.getElementById('wiz-qty-input')?.value || 25;
+  const variety = document.getElementById('wiz-variety-input')?.value || 'Standard Variety';
+  const grade = document.getElementById('wiz-grade-select')?.value || 'Grade A';
+  const location = document.getElementById('wiz-location-input')?.value || 'Nashik, Maharashtra';
+  const price = document.getElementById('wiz-price-input')?.value || 2850;
+  const harvest = document.getElementById('wiz-harvest-date')?.value || 'Today';
+  const avail = document.getElementById('wiz-available-until')?.value || 'Next 7 Days';
+  const totalVal = (parseFloat(qty) * parseFloat(price)).toLocaleString('en-IN');
+
+  summaryEl.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; border-bottom:1px dashed #DDD; padding-bottom:10px;">
+      <div>
+        <h4 style="font-size:18px; font-weight:800; color:var(--ks-evergreen); margin:0 0 2px 0;">${cropName} (${variety})</h4>
+        <span style="font-size:12px; color:var(--ks-text-muted);">📍 ${location}</span>
+      </div>
+      <span style="background:var(--ks-mint-light); color:var(--ks-evergreen); font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:6px;">${grade}</span>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; font-size:13px; margin-bottom:12px;">
+      <div><span style="color:#777; font-size:11px; display:block;">Quantity:</span><strong>${qty} Quintals</strong></div>
+      <div><span style="color:#777; font-size:11px; display:block;">Expected Rate:</span><strong>₹${parseFloat(price).toLocaleString('en-IN')}/q</strong></div>
+      <div><span style="color:#777; font-size:11px; display:block;">Estimated Lot Value:</span><strong style="color:var(--ks-evergreen);">₹${totalVal}</strong></div>
+    </div>
+    <div style="font-size:12px; color:#555; background:#FFFFFF; padding:8px 12px; border-radius:6px; border:1px solid #ECEAE1;">
+      📅 <strong>Dispatch Window:</strong> ${harvest} until ${avail} · Direct farm gate pickup ready.
+    </div>
+  `;
+}
+
+// ═════════════════════════════════════════════════════════════════════
+// 14. SIH 26132: STORAGE DISCOVERY & BOOKING ("Storage Near You")
+// ═════════════════════════════════════════════════════════════════════
+
+const STORAGE_FACILITIES = [
+  {
+    name: 'Nashik Agro Cold Storage',
+    loc: '📍 8.4 km · Dindori Road, Nashik',
+    type: 'Cold Chain',
+    typeClass: 'badge-cold',
+    capacity: '12 Tonnes',
+    rate: '₹2.5/kg/day',
+    rateNum: 2.5,
+    crops: 'Tomato, Onion, Grapes, Pomegranate',
+    temp: '2°C to 8°C (Humidity Controlled)',
+    subsidy: 'Save ₹3,400 by avoiding immediate distress sale.'
+  },
+  {
+    name: 'Pune Krishi Dry Warehouse',
+    loc: '📍 14.2 km · Gultekdi Market Yard, Pune',
+    type: 'Dry Storage',
+    typeClass: 'badge-dry',
+    capacity: '45 Tonnes',
+    rate: '₹45/quintal/month',
+    rateNum: 1.5,
+    crops: 'Wheat, Rice, Soybean, Pulses, Maize',
+    temp: 'Ambient Aerated Silo',
+    subsidy: 'WDRA registered · Eligible for e-NWR pledge financing.'
+  },
+  {
+    name: 'Solapur Central Cold Chain',
+    loc: '📍 22.0 km · Mohol Highway, Solapur',
+    type: 'Controlled Temp',
+    typeClass: 'badge-cold',
+    capacity: '18 Tonnes',
+    rate: '₹2.8/kg/day',
+    rateNum: 2.8,
+    crops: 'Chilli, Onion, Tomato, Pomegranate',
+    temp: 'Multi-Chamber Dehumidified',
+    subsidy: 'Zero spoilage guarantee with IoT telematics monitoring.'
+  },
+  {
+    name: 'Baramati MahaAgro Terminal Warehouse',
+    loc: '📍 38.5 km · MIDC Agro Zone, Baramati',
+    type: 'Integrated Logistics Hub',
+    typeClass: 'badge-dry',
+    capacity: '120 Tonnes',
+    rate: '₹1.8/kg/day',
+    rateNum: 1.8,
+    crops: 'Grains, Oilseeds, Pulses, Cotton',
+    temp: 'Scientific Grain Storage Vault',
+    subsidy: 'Direct rail-siding link with institutional buyer pickup.'
+  }
+];
+
+function initStorageModule() {
+  const modal = document.getElementById('storage-modal-overlay');
+  const bookingModal = document.getElementById('storage-booking-modal-overlay');
+  const closeBtn = document.getElementById('storage-modal-close');
+  const bookCloseBtn = document.getElementById('storage-booking-modal-close');
+  const form = document.getElementById('storage-booking-form');
+
+  if (closeBtn) closeBtn.onclick = () => closeModal(modal);
+  if (bookCloseBtn) bookCloseBtn.onclick = () => closeModal(bookingModal);
+
+  // Search input filter
+  const searchInp = document.getElementById('storage-search-input');
+  if (searchInp) {
+    searchInp.addEventListener('input', (e) => {
+      renderStorageList(e.target.value.toLowerCase());
+    });
+  }
+
+  // Booking Form Submission
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const facility = document.getElementById('sb-facility-name')?.value;
+      const crop = document.getElementById('sb-crop-select')?.value;
+      const qty = document.getElementById('sb-qty-input')?.value;
+      const days = document.getElementById('sb-duration-days')?.value;
+      
+      closeModal(bookingModal);
+      showToast(`🏢 Reservation Confirmed! ${qty} Tonnes of ${crop} booked at ${facility} for ${days} days. Booking ID: KS-STR-${Math.floor(1000 + Math.random() * 9000)}`);
+    });
+  }
+}
+
+function openStorageModal() {
+  const modal = document.getElementById('storage-modal-overlay');
+  if (modal) {
+    renderStorageList('');
+    openModal(modal);
+  }
+}
+
+function renderStorageList(query = '') {
+  const grid = document.getElementById('storage-modal-grid');
+  if (!grid) return;
+
+  const filtered = STORAGE_FACILITIES.filter(s => 
+    s.name.toLowerCase().includes(query) || 
+    s.loc.toLowerCase().includes(query) || 
+    s.crops.toLowerCase().includes(query)
+  );
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">No storage facilities match your search.</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(s => `
+    <div class="storage-card">
+      <div>
+        <div class="storage-card__header">
+          <div>
+            <h4 class="storage-card__title">${s.name}</h4>
+            <span class="storage-card__loc">${s.loc}</span>
+          </div>
+          <span class="storage-type-badge">${s.type}</span>
+        </div>
+        <div class="storage-card__specs">
+          <div class="storage-spec-row"><span>Available Capacity:</span><strong>${s.capacity}</strong></div>
+          <div class="storage-spec-row"><span>Storage Cost:</span><strong>${s.rate}</strong></div>
+          <div class="storage-spec-row"><span>Environment:</span><span>${s.temp}</span></div>
+          <div class="storage-spec-row"><span>Suitable For:</span><span>${s.crops}</span></div>
+          <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
+        </div>
+        <div class="distress-savings-box">
+          <span>💡</span>
+          <span>${s.subsidy}</span>
+        </div>
+      </div>
+      <button class="btn btn--primary btn--sm" style="width:100%;" onclick="bookStorageDirect('${s.name}', '${s.type}', ${s.rateNum})">
+        <i data-lucide="bookmark-check"></i> Book Storage Space
+      </button>
+    </div>
+  `).join('');
+
+  if (window.lucide) lucide.createIcons();
+}
+
+function bookStorageDirect(facilityName, type, rate) {
+  const modal = document.getElementById('storage-booking-modal-overlay');
+  if (!modal) return;
+
+  const facInput = document.getElementById('sb-facility-name');
+  if (facInput) facInput.value = facilityName;
+
+  const summary = document.getElementById('sb-cost-summary');
+  if (summary) {
+    summary.innerHTML = `Estimated Total Cost: <strong>₹${(5 * 1000 * rate * 14 / 100).toLocaleString('en-IN')}</strong> (${rate}/kg/day)`;
+  }
+
+  openModal(modal);
+}
+
+// ═════════════════════════════════════════════════════════════════════
+// 15. SIH 26132: ARRANGE TRANSPORT ("Driver → Vehicle → ETA → Status")
+// ═════════════════════════════════════════════════════════════════════
+
+const TRANSPORTER_FLEET = [
+  {
+    driver: 'Santosh Shinde',
+    phone: '+91 98234 11223',
+    vehicle: 'Tata 407 (Mini Truck)',
+    capacity: '2.5 Tonnes (25 Quintals)',
+    costPerKm: '₹22/km',
+    estFare: '₹1,450',
+    distance: '35 km haul',
+    eta: '35 mins away',
+    status: '🟢 Available at Nashik Hub',
+    rating: '4.9 ★ (140+ Trips)'
+  },
+  {
+    driver: 'Mahesh Gaikwad',
+    phone: '+91 97654 88776',
+    vehicle: 'Eicher 1110 (Closed Container)',
+    capacity: '7.5 Tonnes (75 Quintals)',
+    costPerKm: '₹34/km',
+    estFare: '₹3,200',
+    distance: '85 km haul',
+    eta: '1 hour away',
+    status: '🟢 Available at Pune Bypass',
+    rating: '4.8 ★ (98 Trips)'
+  },
+  {
+    driver: 'Rameshwar Pawar',
+    phone: '+91 99221 44332',
+    vehicle: 'Mahindra Bolero Maxi Truck',
+    capacity: '1.5 Tonnes (15 Quintals)',
+    costPerKm: '₹16/km',
+    estFare: '₹950',
+    distance: '20 km haul',
+    eta: '20 mins away',
+    status: '🟢 Available near Farm Gate',
+    rating: '5.0 ★ (210+ Trips)'
+  }
+];
+
+function initTransportModule() {
+  const modal = document.getElementById('transport-modal-overlay');
+  const closeBtn = document.getElementById('transport-modal-close');
+  if (closeBtn) closeBtn.onclick = () => closeModal(modal);
+}
+
+function openTransportModal() {
+  const modal = document.getElementById('transport-modal-overlay');
+  const grid = document.getElementById('transport-modal-grid');
+  if (!modal || !grid) return;
+
+  grid.innerHTML = TRANSPORTER_FLEET.map(t => `
+    <div class="transport-card">
+      <div>
+        <div class="transport-card__header">
+          <div>
+            <h4 class="transport-vehicle-title">${t.vehicle}</h4>
+            <span style="font-size:12px; color:var(--ks-text-muted);">Driver: <strong>${t.driver}</strong> (${t.rating})</span>
+          </div>
+          <span class="transport-eta-pill">⚡ ${t.eta}</span>
+        </div>
+        <div style="background:var(--ks-bg-ivory); border-radius:8px; padding:10px 12px; margin:10px 0 12px 0; font-size:12.5px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Capacity:</span><strong>${t.capacity}</strong></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Freight Rate:</span><strong>${t.costPerKm}</strong></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Estimated Cost:</span><strong style="color:var(--ks-evergreen); font-size:14px;">${t.estFare}</strong></div>
+          <div style="display:flex; justify-content:space-between;"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">${t.status}</span></div>
+        </div>
+      </div>
+      <button class="btn btn--primary btn--sm" style="width:100%;" onclick="bookTransportDirect('${t.driver}', '${t.vehicle}', '${t.estFare}')">
+        <i data-lucide="truck"></i> Book Pickup Now
+      </button>
+    </div>
+  `).join('');
+
+  if (window.lucide) lucide.createIcons();
+  openModal(modal);
+}
+
+function bookTransportDirect(driver, vehicle, fare) {
+  const modal = document.getElementById('transport-modal-overlay');
+  if (modal) closeModal(modal);
+  showToast(`🚚 Pickup Booked! ${vehicle} driven by ${driver} is dispatched to your farm. Estimated fare: ${fare}. Tracking ID: KS-TRP-${Math.floor(1000 + Math.random() * 9000)}`);
+}
+
+// ═════════════════════════════════════════════════════════════════════
+// 16. SIH 26132: KISAN DISPUTE & GRIEVANCE REDRESSAL SYSTEM
+// ═════════════════════════════════════════════════════════════════════
+
+const DEFAULT_DISPUTES = [
+  {
+    id: 'DSP-2026-8812',
+    trxId: 'KS-ORD-2026-000102',
+    category: 'Payment delay past 24 hours',
+    crop: 'Rice (25q)',
+    buyer: 'ABC Foods Ltd',
+    amount: '₹71,250',
+    date: '04 Sep 2026',
+    status: 'review',
+    statusText: 'Under Review',
+    statusClass: 'dispute-status-pill--review',
+    resolution: 'Platform Escrow Officer has verified dispatch slip. Buyer notified to clear payout within 4 hours.'
+  }
+];
+
+function initDisputesModule() {
+  const modal = document.getElementById('disputes-modal-overlay');
+  const closeBtn = document.getElementById('disputes-modal-close');
+  const form = document.getElementById('dispute-form');
+
+  if (closeBtn) closeBtn.onclick = () => closeModal(modal);
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const trx = document.getElementById('disp-trx-select')?.value || 'KS-ORD-2026-000102';
+      const category = document.getElementById('disp-reason-select')?.value || 'Payment not received';
+      const desc = document.getElementById('disp-desc-input')?.value || 'Grievance submitted';
+      const newId = `DSP-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      const newDispute = {
+        id: newId,
+        trxId: trx,
+        category: category,
+        crop: 'Produce Shipment',
+        buyer: 'Institutional Procurement Partner',
+        amount: '₹28,500',
+        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        status: 'submitted',
+        statusText: 'Submitted (Ticket Active)',
+        statusClass: 'dispute-status-pill--submitted',
+        resolution: 'Your ticket has been assigned to Kisan Grievance Officer. Investigation is in progress.'
+      };
+
+      DEFAULT_DISPUTES.unshift(newDispute);
+      showToast(`🛡️ Grievance Ticket Created: ${newId}. Our Kisan Redressal Team will contact you within 6 hours.`);
+      form.reset();
+      switchDisputeTab('history');
+    });
+  }
+}
+
+function openDisputesModal() {
+  const modal = document.getElementById('disputes-modal-overlay');
+  if (!modal) return;
+  switchDisputeTab('raise');
+  renderDisputeHistory();
+  openModal(modal);
+}
+
+function switchDisputeTab(tab) {
+  const tabRaise = document.getElementById('tab-dispute-raise');
+  const tabHistory = document.getElementById('tab-dispute-history');
+  const paneRaise = document.getElementById('dispute-pane-raise');
+  const paneHistory = document.getElementById('dispute-pane-history');
+
+  if (tab === 'raise') {
+    if (tabRaise) { tabRaise.className = 'btn btn--sm btn--primary'; }
+    if (tabHistory) { tabHistory.className = 'btn btn--sm btn--secondary'; }
+    if (paneRaise) paneRaise.style.display = 'block';
+    if (paneHistory) paneHistory.style.display = 'none';
+  } else {
+    if (tabRaise) { tabRaise.className = 'btn btn--sm btn--secondary'; }
+    if (tabHistory) { tabHistory.className = 'btn btn--sm btn--primary'; }
+    if (paneRaise) paneRaise.style.display = 'none';
+    if (paneHistory) paneHistory.style.display = 'block';
+    renderDisputeHistory();
+  }
+}
+
+function renderDisputeHistory() {
+  const list = document.getElementById('dispute-history-list');
+  const badge = document.getElementById('dispute-count-badge');
+  if (!list) return;
+
+  if (badge) badge.textContent = DEFAULT_DISPUTES.length;
+
+  list.innerHTML = DEFAULT_DISPUTES.map(d => `
+    <div class="dispute-card">
+      <div style="flex:1; min-width:240px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+          <span style="font-family:monospace; font-weight:800; color:var(--ks-evergreen); font-size:13px;">${d.id}</span>
+          <span class="dispute-status-pill ${d.statusClass}">${d.statusText}</span>
+        </div>
+        <h4 style="font-size:15px; font-weight:700; color:#222; margin:0 0 2px 0;">${d.category}</h4>
+        <div style="font-size:12px; color:#666;">Transaction: <strong>${d.trxId}</strong> · ${d.date}</div>
+        <div style="background:#FAF9F5; border-left:3px solid var(--ks-evergreen); padding:8px 10px; border-radius:4px; margin-top:8px; font-size:12px; color:#444;">
+          <strong>Resolution Progress:</strong> ${d.resolution}
+        </div>
+      </div>
+      <button class="btn btn--secondary btn--sm" onclick="showToast('Helpline connecting to Dispute Officer for ticket ${d.id}...')">
+        <i data-lucide="phone-call"></i> Call Officer
+      </button>
+    </div>
+  `).join('');
+
+  if (window.lucide) lucide.createIcons();
+}
+
+// ═════════════════════════════════════════════════════════════════════
+// 17. SIH 26132: FARMER DECISION ENGINE & BEST OPTION RECOMMENDATION
+// ═════════════════════════════════════════════════════════════════════
+
+const DECISION_CROP_DATA = {
+  tomato: {
+    cropName: 'Tomato',
+    emoji: '🍅',
+    qty: '500 kg',
+    curPrice: '₹2,490',
+    bestMandi: 'Nashik APMC',
+    mandiDist: '42 km · Highest Net Realization',
+    bestPrice: '₹2,920',
+    netVal: '₹2,780/q',
+    expPrice: '₹3,050',
+    trendBadge: '↑ +4.2%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🔥 High',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'Good Time to Sell (Next 2–3 Days)',
+    adviceDesc: 'Prices are trending upward across nearby APMCs with strong institutional buyer demand. Consider listing or dispatching within the next 48 to 72 hours for maximum net realization.',
+    optTitle: '⭐ Best Option for Your Tomato (500 kg)',
+    optMandi: 'Nashik APMC · 42 km away',
+    optPrice: '₹2,920/q',
+    optExp: '₹3,050/q',
+    optDemand: '🔥 High',
+    optTransport: '₹1,800 approx.',
+    optNet: '₹13,000',
+    reasons: [
+      '<strong>Better price:</strong> ₹430/q higher than local village baseline.',
+      '<strong>High buyer demand:</strong> 4 verified institutional food processors bidding today.',
+      '<strong>Reasonable transport cost:</strong> Only ₹36/q with return-trip verified truckers.',
+      '<strong>Prices trending upward:</strong> AI forecast predicts peak price in next 48 hours.'
+    ],
+    ranks: [
+      { name: '🥇 Nashik APMC', badge: '⭐ Best for you', price: '₹2,920/q', trend: '↑ 4.2%', trendCol: '#2D6A4F', dist: '42 km', demand: 'High', demandCol: '#D6A84F', net: '₹13,000 net', gold: true },
+      { name: '🥈 Pune APMC', badge: '', price: '₹2,850/q', trend: '↑ 2.1%', trendCol: '#2D6A4F', dist: '128 km', demand: 'Medium', demandCol: '#3B82F6', net: '₹12,400 net', gold: false },
+      { name: '🥉 Mumbai APMC', badge: '', price: '₹2,760/q', trend: '↓ 0.8%', trendCol: '#DC2626', dist: '165 km', demand: 'Moderate', demandCol: '#6B7280', net: '₹11,900 net', gold: false }
+    ]
+  },
+  onion: {
+    cropName: 'Onion',
+    emoji: '🧅',
+    qty: '1,200 kg',
+    curPrice: '₹2,720',
+    bestMandi: 'Lasalgaon APMC',
+    mandiDist: '28 km · Asia’s Largest Onion Hub',
+    bestPrice: '₹3,180',
+    netVal: '₹3,060/q',
+    expPrice: '₹3,290',
+    trendBadge: '↑ +6.8%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🔥 Very High',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'Prime Selling Opportunity (Next 3–5 Days)',
+    adviceDesc: 'Lasalgaon and Pimpalgaon buyers are aggressively purchasing Grade A red onions for South India dispatch. Outstanding returns expected this week.',
+    optTitle: '⭐ Best Option for Your Onion (1,200 kg)',
+    optMandi: 'Lasalgaon APMC · 28 km away',
+    optPrice: '₹3,180/q',
+    optExp: '₹3,290/q',
+    optDemand: '🔥 Very High',
+    optTransport: '₹1,440 approx.',
+    optNet: '₹36,720',
+    reasons: [
+      '<strong>Highest Regional Rate:</strong> ₹460/q above national benchmark.',
+      '<strong>Instant Escrow Payout:</strong> Same-day direct NEFT bank settlement.',
+      '<strong>High Export Demand:</strong> GCC consignment packers buying Grade A.',
+      '<strong>Low Freight Overhead:</strong> Short 28 km transit route.'
+    ],
+    ranks: [
+      { name: '🥇 Lasalgaon APMC', badge: '⭐ Best for you', price: '₹3,180/q', trend: '↑ 6.8%', trendCol: '#2D6A4F', dist: '28 km', demand: 'Very High', demandCol: '#D6A84F', net: '₹36,720 net', gold: true },
+      { name: '🥈 Nashik APMC', badge: '', price: '₹2,990/q', trend: '↑ 3.4%', trendCol: '#2D6A4F', dist: '36 km', demand: 'High', demandCol: '#D6A84F', net: '₹34,440 net', gold: false },
+      { name: '🥉 Pimpalgaon APMC', badge: '', price: '₹2,910/q', trend: '↑ 1.8%', trendCol: '#2D6A4F', dist: '49 km', demand: 'Medium', demandCol: '#3B82F6', net: '₹33,120 net', gold: false }
+    ]
+  },
+  wheat: {
+    cropName: 'Wheat',
+    emoji: '🌾',
+    qty: '2,000 kg',
+    curPrice: '₹2,640',
+    bestMandi: 'Pune APMC',
+    mandiDist: '54 km · Flour Mill Institutional Buying',
+    bestPrice: '₹2,840',
+    netVal: '₹2,720/q',
+    expPrice: '₹2,890',
+    trendBadge: '↑ +1.9%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🟢 Steady',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'Stable Market (Fair Time to Sell)',
+    adviceDesc: 'FMCG biscuit and flour mills maintaining regular buying orders. Rates are well above MSP of ₹2,275. Recommended to sell or pledge against e-NWR if holding for festival peak.',
+    optTitle: '⭐ Best Option for Your Wheat (2,000 kg)',
+    optMandi: 'Pune APMC · 54 km away',
+    optPrice: '₹2,840/q',
+    optExp: '₹2,890/q',
+    optDemand: '🟢 Steady',
+    optTransport: '₹2,400 approx.',
+    optNet: '₹54,400',
+    reasons: [
+      '<strong>₹565/q Above MSP:</strong> Excellent premium for Sharbati/Lokwan varieties.',
+      '<strong>FMCG Procurement:</strong> Direct intake by ITC & Britannia contract hubs.',
+      '<strong>Warehouse Receipt Option:</strong> WDRA warehouse available at ₹45/q/mo.',
+      '<strong>Low Volatility:</strong> Reliable price floor over the next 10 days.'
+    ],
+    ranks: [
+      { name: '🥇 Pune APMC', badge: '⭐ Best for you', price: '₹2,840/q', trend: '↑ 1.9%', trendCol: '#2D6A4F', dist: '54 km', demand: 'Steady', demandCol: '#2D6A4F', net: '₹54,400 net', gold: true },
+      { name: '🥈 Daund APMC', badge: '', price: '₹2,780/q', trend: '↑ 0.8%', trendCol: '#2D6A4F', dist: '72 km', demand: 'Moderate', demandCol: '#3B82F6', net: '₹52,800 net', gold: false },
+      { name: '🥉 Ahmednagar APMC', badge: '', price: '₹2,710/q', trend: '→ 0.0%', trendCol: '#6B7280', dist: '88 km', demand: 'Moderate', demandCol: '#6B7280', net: '₹51,200 net', gold: false }
+    ]
+  },
+  soybean: {
+    cropName: 'Soybean',
+    emoji: '🫘',
+    qty: '1,500 kg',
+    curPrice: '₹4,750',
+    bestMandi: 'Nagpur APMC',
+    mandiDist: '68 km · Oil Extraction Plant Hub',
+    bestPrice: '₹5,180',
+    netVal: '₹5,020/q',
+    expPrice: '₹5,320',
+    trendBadge: '↑ +4.8%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🔥 High',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'Strong Bullish Trend (Sell in 4–6 Days)',
+    adviceDesc: 'Solvent extractors and global feed demand driving strong bidding for yellow soybean with >18% oil content. Prices projected to climb further.',
+    optTitle: '⭐ Best Option for Your Soybean (1,500 kg)',
+    optMandi: 'Nagpur APMC · 68 km away',
+    optPrice: '₹5,180/q',
+    optExp: '₹5,320/q',
+    optDemand: '🔥 High',
+    optTransport: '₹2,400 approx.',
+    optNet: '₹75,300',
+    reasons: [
+      '<strong>Oil Mill Direct Contracts:</strong> Solvent plants offering +₹280/q premium.',
+      '<strong>Moisture Bonus:</strong> Lots under 10% moisture receive instant A grade.',
+      '<strong>High Liquidity:</strong> 100% digital escrow settlement in 12 hours.',
+      '<strong>Rising Global Oil Prices:</strong> Crushing demand projected strong.'
+    ],
+    ranks: [
+      { name: '🥇 Nagpur APMC', badge: '⭐ Best for you', price: '₹5,180/q', trend: '↑ 4.8%', trendCol: '#2D6A4F', dist: '68 km', demand: 'High', demandCol: '#D6A84F', net: '₹75,300 net', gold: true },
+      { name: '🥈 Latur APMC', badge: '', price: '₹5,040/q', trend: '↑ 3.1%', trendCol: '#2D6A4F', dist: '110 km', demand: 'High', demandCol: '#D6A84F', net: '₹72,800 net', gold: false },
+      { name: '🥉 Akola APMC', badge: '', price: '₹4,950/q', trend: '↑ 1.5%', trendCol: '#2D6A4F', dist: '142 km', demand: 'Medium', demandCol: '#3B82F6', net: '₹70,650 net', gold: false }
+    ]
+  },
+  potato: {
+    cropName: 'Potato',
+    emoji: '🥔',
+    qty: '3,000 kg',
+    curPrice: '₹1,620',
+    bestMandi: 'Indore APMC',
+    mandiDist: '85 km · Chip Wafers Processing Hub',
+    bestPrice: '₹1,950',
+    netVal: '₹1,840/q',
+    expPrice: '₹2,020',
+    trendBadge: '↑ +3.5%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🔥 High',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'Favorable Processor Demand',
+    adviceDesc: 'Snack food processors actively procuring high solid sugar-free potatoes (Lady Rosetta / Chipsona) at premium rates.',
+    optTitle: '⭐ Best Option for Your Potato (3,000 kg)',
+    optMandi: 'Indore APMC · 85 km away',
+    optPrice: '₹1,950/q',
+    optExp: '₹2,020/q',
+    optDemand: '🔥 High',
+    optTransport: '₹3,300 approx.',
+    optNet: '₹55,200',
+    reasons: [
+      '<strong>Processor Premium:</strong> ₹330/q above ordinary table potato.',
+      '<strong>Bulk Truckload Rates:</strong> ₹1.10/q/km with KrishiShetra logistics.',
+      '<strong>Cold Storage Alternative:</strong> Local cold vaults available at ₹1.6/kg/mo.',
+      '<strong>High Acceptance Rate:</strong> 99% verified clearance on delivered weight.'
+    ],
+    ranks: [
+      { name: '🥇 Indore APMC', badge: '⭐ Best for you', price: '₹1,950/q', trend: '↑ 3.5%', trendCol: '#2D6A4F', dist: '85 km', demand: 'High', demandCol: '#D6A84F', net: '₹55,200 net', gold: true },
+      { name: '🥈 Nashik APMC', badge: '', price: '₹1,820/q', trend: '↑ 1.2%', trendCol: '#2D6A4F', dist: '62 km', demand: 'Medium', demandCol: '#3B82F6', net: '₹52,100 net', gold: false },
+      { name: '🥉 Mumbai APMC', badge: '', price: '₹1,740/q', trend: '↓ 0.5%', trendCol: '#DC2626', dist: '165 km', demand: 'Medium', demandCol: '#6B7280', net: '₹48,900 net', gold: false }
+    ]
+  },
+  rice: {
+    cropName: 'Rice',
+    emoji: '🌾',
+    qty: '2,500 kg',
+    curPrice: '₹2,850',
+    bestMandi: 'Pune APMC',
+    mandiDist: '48 km · Basmati & Kolam Hub',
+    bestPrice: '₹3,150',
+    netVal: '₹3,020/q',
+    expPrice: '₹3,240',
+    trendBadge: '↑ +3.2%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🔥 High',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'Strong Demand (Next 3–5 Days)',
+    adviceDesc: 'Urban retail demand in Pune and Mumbai is steady for aromatic rice. Exporters active for Grade A milled paddy.',
+    optTitle: '⭐ Best Option for Your Rice (2,500 kg)',
+    optMandi: 'Pune APMC · 48 km away',
+    optPrice: '₹3,150/q',
+    optExp: '₹3,240/q',
+    optDemand: '🔥 High',
+    optTransport: '₹3,250 approx.',
+    optNet: '₹75,500',
+    reasons: [
+      '<strong>Exporter Benchmark:</strong> ₹300/q premium for premium Kolam & Wada Kolam.',
+      '<strong>Instant Digital Payment:</strong> 24h escrow transfer to bank account.',
+      '<strong>Minimal Rejection:</strong> Clear grading specifications on moisture & broken grains.',
+      '<strong>Low Logistics Friction:</strong> Fast turn-around at Pune APMC unload bays.'
+    ],
+    ranks: [
+      { name: '🥇 Pune APMC', badge: '⭐ Best for you', price: '₹3,150/q', trend: '↑ 3.2%', trendCol: '#2D6A4F', dist: '48 km', demand: 'High', demandCol: '#D6A84F', net: '₹75,500 net', gold: true },
+      { name: '🥈 Daund APMC', badge: '', price: '₹2,980/q', trend: '↑ 1.4%', trendCol: '#2D6A4F', dist: '65 km', demand: 'Medium', demandCol: '#3B82F6', net: '₹71,800 net', gold: false },
+      { name: '🥉 Baramati APMC', badge: '', price: '₹2,890/q', trend: '→ 0.0%', trendCol: '#6B7280', dist: '90 km', demand: 'Moderate', demandCol: '#6B7280', net: '₹68,750 net', gold: false }
+    ]
+  },
+  cotton: {
+    cropName: 'Cotton',
+    emoji: '☁️',
+    qty: '1,000 kg',
+    curPrice: '₹6,800',
+    bestMandi: 'Jalgaon APMC',
+    mandiDist: '78 km · Textile Ginning Cluster',
+    bestPrice: '₹7,450',
+    netVal: '₹7,220/q',
+    expPrice: '₹7,600',
+    trendBadge: '↑ +5.1%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🔥 Very High',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'Prime Selling Window (High Ginning Demand)',
+    adviceDesc: 'Textile spinning mills operating at high capacity with low raw cotton inventories. Grade A long-staple cotton fetching solid premiums.',
+    optTitle: '⭐ Best Option for Your Cotton (1,000 kg)',
+    optMandi: 'Jalgaon APMC · 78 km away',
+    optPrice: '₹7,450/q',
+    optExp: '₹7,600/q',
+    optDemand: '🔥 Very High',
+    optTransport: '₹2,300 approx.',
+    optNet: '₹72,200',
+    reasons: [
+      '<strong>Ginning Mill Direct:</strong> ₹650/q premium over local village aggregators.',
+      '<strong>Quality Transparency:</strong> Digital micronaire and staple length testing on-site.',
+      '<strong>Guaranteed MSP Protection:</strong> Market price is well above government MSP.',
+      '<strong>Organized Weighment:</strong> Digital weighbridge integration with SMS slip.'
+    ],
+    ranks: [
+      { name: '🥇 Jalgaon APMC', badge: '⭐ Best for you', price: '₹7,450/q', trend: '↑ 5.1%', trendCol: '#2D6A4F', dist: '78 km', demand: 'Very High', demandCol: '#D6A84F', net: '₹72,200 net', gold: true },
+      { name: '🥈 Dhule APMC', badge: '', price: '₹7,210/q', trend: '↑ 2.8%', trendCol: '#2D6A4F', dist: '94 km', demand: 'High', demandCol: '#D6A84F', net: '₹69,800 net', gold: false },
+      { name: '🥉 Aurangabad APMC', badge: '', price: '₹7,080/q', trend: '↑ 1.1%', trendCol: '#2D6A4F', dist: '125 km', demand: 'Medium', demandCol: '#3B82F6', net: '₹68,100 net', gold: false }
+    ]
+  },
+  chilli: {
+    cropName: 'Chilli',
+    emoji: '🌶️',
+    qty: '600 kg',
+    curPrice: '₹14,500',
+    bestMandi: 'Guntur APMC',
+    mandiDist: 'Direct Buyer Hub',
+    bestPrice: '₹16,200',
+    netVal: '₹15,600/q',
+    expPrice: '₹16,800',
+    trendBadge: '↑ +6.2%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🔥 High',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'High Export & Spice Industry Demand',
+    adviceDesc: 'Spice processing companies procuring deep red Teja and Byadgi varieties. Moisture under 12% fetches top bid.',
+    optTitle: '⭐ Best Option for Your Chilli (600 kg)',
+    optMandi: 'Solapur APMC · 52 km away',
+    optPrice: '₹16,200/q',
+    optExp: '₹16,800/q',
+    optDemand: '🔥 High',
+    optTransport: '₹1,200 approx.',
+    optNet: '₹93,600',
+    reasons: [
+      '<strong>High Value Realization:</strong> ₹1,700/q above local farm-gate offers.',
+      '<strong>Cold Vault Support:</strong> Safe storage available at Solapur Cold Hub.',
+      '<strong>Direct Spice Exporters:</strong> Zero middleman commissions deducted.',
+      '<strong>Rapid Settlement:</strong> Verified buyer escrow guarantee.'
+    ],
+    ranks: [
+      { name: '🥇 Solapur APMC', badge: '⭐ Best for you', price: '₹16,200/q', trend: '↑ 6.2%', trendCol: '#2D6A4F', dist: '52 km', demand: 'High', demandCol: '#D6A84F', net: '₹93,600 net', gold: true },
+      { name: '🥈 Pune APMC', badge: '', price: '₹15,400/q', trend: '↑ 3.0%', trendCol: '#2D6A4F', dist: '120 km', demand: 'Medium', demandCol: '#3B82F6', net: '₹89,200 net', gold: false },
+      { name: '🥉 Kolhapur APMC', badge: '', price: '₹14,800/q', trend: '↑ 1.2%', trendCol: '#2D6A4F', dist: '160 km', demand: 'Medium', demandCol: '#6B7280', net: '₹85,400 net', gold: false }
+    ]
+  },
+  maize: {
+    cropName: 'Maize',
+    emoji: '🌽',
+    qty: '2,500 kg',
+    curPrice: '₹2,100',
+    bestMandi: 'Niphad APMC',
+    mandiDist: '36 km · Poultry & Starch Procurement',
+    bestPrice: '₹2,380',
+    netVal: '₹2,270/q',
+    expPrice: '₹2,440',
+    trendBadge: '↑ +3.9%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🔥 High',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'Strong Feed Industry Procurement',
+    adviceDesc: 'Poultry and starch manufacturing industries purchasing yellow feed maize in bulk. Favorable transport corridors available.',
+    optTitle: '⭐ Best Option for Your Maize (2,500 kg)',
+    optMandi: 'Niphad APMC · 36 km away',
+    optPrice: '₹2,380/q',
+    optExp: '₹2,440/q',
+    optDemand: '🔥 High',
+    optTransport: '₹2,750 approx.',
+    optNet: '₹56,750',
+    reasons: [
+      '<strong>Starch Plant Direct:</strong> ₹280/q premium over local village baseline.',
+      '<strong>Bulk Truck Availability:</strong> Return trips available at discounted freight.',
+      '<strong>Low Deduction Rates:</strong> Fair FAQ specifications on foreign matter.',
+      '<strong>Immediate Payment:</strong> Verified direct bank transfer.'
+    ],
+    ranks: [
+      { name: '🥇 Niphad APMC', badge: '⭐ Best for you', price: '₹2,380/q', trend: '↑ 3.9%', trendCol: '#2D6A4F', dist: '36 km', demand: 'High', demandCol: '#D6A84F', net: '₹56,750 net', gold: true },
+      { name: '🥈 Nashik APMC', badge: '', price: '₹2,290/q', trend: '↑ 2.0%', trendCol: '#2D6A4F', dist: '44 km', demand: 'Medium', demandCol: '#3B82F6', net: '₹54,500 net', gold: false },
+      { name: '🥉 Yeola APMC', badge: '', price: '₹2,210/q', trend: '↑ 0.5%', trendCol: '#2D6A4F', dist: '72 km', demand: 'Moderate', demandCol: '#6B7280', net: '₹52,500 net', gold: false }
+    ]
+  },
+  pulses: {
+    cropName: 'Pulses (Tur / Chana)',
+    emoji: '🥣',
+    qty: '1,200 kg',
+    curPrice: '₹6,900',
+    bestMandi: 'Latur APMC',
+    mandiDist: 'Pulse Capital of India',
+    bestPrice: '₹7,650',
+    netVal: '₹7,420/q',
+    expPrice: '₹7,850',
+    trendBadge: '↑ +5.5%',
+    trendClass: 'farmer-metric-badge--up',
+    demandText: '🔥 Very High',
+    demandClass: 'farmer-metric-badge--high',
+    adviceIcon: '🟢',
+    adviceTitle: 'High Dal Mill Procurement & Buffer Stocking',
+    adviceDesc: 'Dal millers actively replenishing stocks. Tur and Chana prices are trading significantly above minimum support price.',
+    optTitle: '⭐ Best Option for Your Pulses (1,200 kg)',
+    optMandi: 'Latur APMC · Dal Mill Cluster',
+    optPrice: '₹7,650/q',
+    optExp: '₹7,850/q',
+    optDemand: '🔥 Very High',
+    optTransport: '₹2,760 approx.',
+    optNet: '₹89,040',
+    reasons: [
+      '<strong>Dal Mill Direct Purchase:</strong> ₹750/q higher than local intermediaries.',
+      '<strong>Govt Buffer Procurement:</strong> NAFED procurement center benchmark support.',
+      '<strong>Moisture Incentive:</strong> Premium paid for dry clean grain lots.',
+      '<strong>Digital Weighbridge:</strong> 100% transparent weight and quality assessment.'
+    ],
+    ranks: [
+      { name: '🥇 Latur APMC', badge: '⭐ Best for you', price: '₹7,650/q', trend: '↑ 5.5%', trendCol: '#2D6A4F', dist: '88 km', demand: 'Very High', demandCol: '#D6A84F', net: '₹89,040 net', gold: true },
+      { name: '🥈 Solapur APMC', badge: '', price: '₹7,380/q', trend: '↑ 3.2%', trendCol: '#2D6A4F', dist: '96 km', demand: 'High', demandCol: '#D6A84F', net: '₹85,800 net', gold: false },
+      { name: '🥉 Ahmednagar APMC', badge: '', price: '₹7,150/q', trend: '↑ 1.5%', trendCol: '#2D6A4F', dist: '112 km', demand: 'Medium', demandCol: '#3B82F6', net: '₹83,040 net', gold: false }
+    ]
+  }
+};
+
+function initDecisionEngine() {
+  const pills = document.querySelectorAll('#decision-crop-pills .farmer-crop-pill');
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const cropKey = pill.getAttribute('data-crop') || 'tomato';
+      updateDecisionSummary(cropKey);
+    });
+  });
+
+  // Initial populate with default crop
+  updateDecisionSummary('tomato');
+}
+
+function updateDecisionSummary(cropKey = 'tomato') {
+  const data = DECISION_CROP_DATA[cropKey] || DECISION_CROP_DATA.tomato;
+  
+  // 1. Metric Cards
+  const curEl = document.getElementById('dec-cur-price');
+  if (curEl) curEl.innerHTML = `${data.curPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
+  
+  const mandiEl = document.getElementById('dec-best-mandi');
+  if (mandiEl) mandiEl.textContent = data.bestMandi;
+  
+  const distEl = document.getElementById('dec-mandi-dist');
+  if (distEl) distEl.textContent = data.mandiDist;
+  
+  const priceEl = document.getElementById('dec-best-price');
+  if (priceEl) priceEl.innerHTML = `${data.bestPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
+  
+  const netEl = document.getElementById('dec-net-val');
+  if (netEl) netEl.innerHTML = `Est. Net: <strong>${data.netVal}</strong> after freight`;
+  
+  const expEl = document.getElementById('dec-exp-price');
+  if (expEl) expEl.innerHTML = `${data.expPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
+  
+  const trendEl = document.getElementById('dec-trend-badge');
+  if (trendEl) {
+    trendEl.textContent = data.trendBadge;
+    trendEl.className = `farmer-metric-badge ${data.trendClass}`;
+  }
+  
+  const demandEl = document.getElementById('dec-demand-badge');
+  if (demandEl) {
+    demandEl.textContent = `${data.demandText} Demand`;
+  }
+
+  // 2. Advice Banner
+  const titleEl = document.getElementById('dec-advice-title');
+  if (titleEl) titleEl.textContent = data.adviceTitle;
+  
+  const descEl = document.getElementById('dec-advice-desc');
+  if (descEl) descEl.textContent = data.adviceDesc;
+
+  // 3. ⭐ Best Option for You Card (Section 8)
+  const optTitle = document.getElementById('best-opt-title');
+  if (optTitle) optTitle.innerHTML = `<span>⭐</span> ${data.optTitle}`;
+
+  const optMandi = document.getElementById('best-opt-mandi');
+  if (optMandi) optMandi.textContent = data.optMandi;
+
+  const optPrice = document.getElementById('best-opt-price');
+  if (optPrice) optPrice.textContent = data.optPrice;
+
+  const optExp = document.getElementById('best-opt-exp');
+  if (optExp) optExp.textContent = data.optExp;
+
+  const optDemand = document.getElementById('best-opt-demand');
+  if (optDemand) optDemand.textContent = data.optDemand;
+
+  const optTransport = document.getElementById('best-opt-transport');
+  if (optTransport) optTransport.textContent = data.optTransport;
+
+  const optNet = document.getElementById('best-opt-net');
+  if (optNet) optNet.textContent = data.optNet;
+
+  const reasonsList = document.getElementById('best-opt-reasons-list');
+  if (reasonsList && data.reasons) {
+    reasonsList.innerHTML = data.reasons.map(r => `<li>${r}</li>`).join('');
+  }
+
+  // 4. Ranked Markets 🥇 🥈 🥉 (Section 9)
+  const ranksGrid = document.getElementById('market-ranks-grid');
+  if (ranksGrid && data.ranks) {
+    ranksGrid.innerHTML = data.ranks.map(r => `
+      <div class="market-rank-card ${r.gold ? 'market-rank-card--gold' : ''}">
+        ${r.badge ? `<span class="market-rank-card__badge">${r.badge}</span>` : ''}
+        <div>
+          <h5 class="market-rank-card__title">${r.name}</h5>
+          <div class="market-rank-card__price-row">
+            <span class="market-rank-card__price">${r.price}</span>
+            <span style="font-size:12px; font-weight:700; color:${r.trendCol};">${r.trend}</span>
+          </div>
+          <div style="font-size:12px; color:#666; margin-bottom:8px;">📍 ${r.dist} away · Demand: <strong style="color:${r.demandCol};">${r.demand}</strong></div>
+          <div class="market-rank-card__net-box">
+            <span>You may receive:</span>
+            <strong style="color:#2D6A4F; font-size:15px;">${r.net}</strong>
+          </div>
+        </div>
+        <div style="display:flex; gap:6px; margin-top:8px;">
+          <button class="btn btn--secondary btn--sm" style="flex:1;" onclick="location.href='mandi-compare.html'">View</button>
+          <button class="btn btn--primary btn--sm" style="flex:1; background:var(--ks-evergreen); color:#FFF;" onclick="FarmerFlow.openCreateLotModal()">Sell Here</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (window.lucide) lucide.createIcons();
+}
+
+

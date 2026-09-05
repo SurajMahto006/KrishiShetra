@@ -51,22 +51,22 @@
 
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
-          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+          <i data-lucide="home" class="dash-header__link-icon"></i> Home
         </a>
-        <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+        <a href="dashboard.html" class="dash-header__link" id="nav-sell">
+          <i data-lucide="plus-circle" class="dash-header__link-icon"></i> Sell Crop
         </a>
-        <a href="market.html" class="dash-header__link" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
-        </a>
-        <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
+        <a href="mandi-compare.html" class="dash-header__link" id="nav-compare">
+          <i data-lucide="trending-up" class="dash-header__link-icon"></i> Best Prices
         </a>
         <a href="buyers.html" class="dash-header__link" id="nav-buyers">
           <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
         </a>
         <a href="orders.html" class="dash-header__link dash-header__link--active" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> My Sales
+        </a>
+        <a href="lots.html" class="dash-header__link" id="nav-lots">
+          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
         </a>
       </nav>
 
@@ -144,21 +144,155 @@
       </nav>
 
       <!-- Page Header Banner -->
-      <div class="dash-section__header" style="margin-bottom: 24px;">
+      <div class="dash-section__header" style="margin-bottom: 16px;">
         <div>
-          <h1 class="dash-section__title" style="font-size: 26px;">📋 Confirmed Orders & Procurement Pipeline</h1>
-          <p class="dash-section__subtitle">Track fulfillment progress, mandi dispatches, delivery progress, and payment settlements.</p>
+          <h1 class="dash-section__title" style="font-size: 26px;">📋 Orders & Payment Status</h1>
+          <p class="dash-section__subtitle">Track active orders, verify mandi dispatches, monitor escrow settlements, and download official payment vouchers.</p>
         </div>
       </div>
 
-      <!-- Active Orders Grid Panel -->
-      <section class="dash-section" id="dash-orders-panel">
-        <div class="dash-orders__grid" id="orders-grid">
-          <!-- Rendered dynamically by JS -->
+      <!-- Payment Notifications Banner -->
+      <div class="payment-notif-banner" id="payment-notifications-banner">
+        <div class="payment-notif-ticker">
+          <span style="font-size:18px;">🔔</span>
+          <span class="payment-notif-badge payment-notif-badge--received">🟢 Settlement Credited</span>
+          <strong>"₹13,000 payment received."</strong>
+          <span style="color:#C4B598;">|</span>
+          <span class="payment-notif-badge payment-notif-badge--due">🟠 Due Alert</span>
+          <strong>"₹18,000 payment is due tomorrow."</strong>
         </div>
-      </section>
+        <button class="btn btn--secondary btn--sm" onclick="switchOrdersTab('payments')" style="font-size:11.5px; padding:4px 10px;">
+          View Payments →
+        </button>
+      </div>
 
-    </div>
+      <!-- Primary Navigation Tabs: Active Orders, Completed Orders, Payments -->
+      <div class="orders-main-tabs" id="orders-main-tabs">
+        <button class="orders-tab-btn orders-tab-btn--active" id="tab-btn-active" onclick="switchOrdersTab('active')">
+          <i data-lucide="package" style="width:16px;height:16px;"></i> Active Orders
+          <span class="orders-tab-count" id="badge-count-active">2</span>
+        </button>
+        <button class="orders-tab-btn" id="tab-btn-completed" onclick="switchOrdersTab('completed')">
+          <i data-lucide="check-circle" style="width:16px;height:16px;"></i> Completed Orders
+          <span class="orders-tab-count" id="badge-count-completed">3</span>
+        </button>
+        <button class="orders-tab-btn" id="tab-btn-payments" onclick="switchOrdersTab('payments')">
+          <i data-lucide="credit-card" style="width:16px;height:16px;"></i> Payments
+          <span class="orders-tab-count" id="badge-count-payments" style="background:#D1FAE5; color:#065F46;">3</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: ACTIVE ORDERS -->
+      <div id="pane-active-orders" class="orders-tab-pane">
+        <div class="dash-orders__grid" id="orders-grid">
+          <!-- Rendered dynamically by orders.js -->
+        </div>
+      </div>
+
+      <!-- TAB 2: COMPLETED ORDERS -->
+      <div id="pane-completed-orders" class="orders-tab-pane" style="display:none;">
+        <div class="dash-orders__grid" id="completed-orders-grid">
+          <!-- Rendered dynamically by orders.js -->
+        </div>
+      </div>
+
+      <!-- TAB 3: PAYMENTS -->
+      <div id="pane-payments" class="orders-tab-pane" style="display:none;">
+        <!-- Payment Financial Summary Overview -->
+        <div class="payments-summary-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;">
+          <div class="payment-quick-card" style="border-left: 4px solid #F59E0B; padding: 14px 18px;">
+            <div>
+              <div style="font-size: 11.5px; color: #777; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Amount to Receive</div>
+              <div style="font-size: 24px; font-weight: 800; color: var(--ks-evergreen); margin: 2px 0;" id="sum-amt-to-receive">₹31,000</div>
+              <div style="font-size: 11.5px; color: #92400E; font-weight: 600;">Tomato (₹13,000) + Wheat (₹18,000)</div>
+            </div>
+          </div>
+          <div class="payment-quick-card" style="border-left: 4px solid #3B82F6; padding: 14px 18px;">
+            <div>
+              <div style="font-size: 11.5px; color: #777; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Payment Due Date</div>
+              <div style="font-size: 20px; font-weight: 800; color: var(--ks-evergreen); margin: 4px 0;">7 Sept 2026</div>
+              <div style="font-size: 11.5px; color: #1E40AF; font-weight: 600;">Expected by 7 Sept (ABC Foods)</div>
+            </div>
+          </div>
+          <div class="payment-quick-card" style="border-left: 4px solid #10B981; padding: 14px 18px;">
+            <div>
+              <div style="font-size: 11.5px; color: #777; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Total Received (Paid)</div>
+              <div style="font-size: 24px; font-weight: 800; color: #065F46; margin: 2px 0;">₹23,850</div>
+              <div style="font-size: 11.5px; color: #065F46; font-weight: 600;">Direct Bank NEFT Credited</div>
+            </div>
+          </div>
+          <div class="payment-quick-card" style="border-left: 4px solid #C9973B; padding: 14px 18px;">
+            <div>
+              <div style="font-size: 11.5px; color: #777; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Escrow Guarantee</div>
+              <div style="font-size: 16px; font-weight: 800; color: var(--ks-evergreen); margin: 4px 0;">100% Protected</div>
+              <div style="font-size: 11.5px; color: #2D6A4F; font-weight: 600;">Zero brokerage for farmers</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="payment-filters-row">
+          <div class="payment-filter-pills" id="payment-status-pills">
+            <button class="payment-filter-pill active" data-status="all" onclick="filterPaymentsByStatus('all')">
+              All Payments (<span id="pay-cnt-all">3</span>)
+            </button>
+            <button class="payment-filter-pill" data-status="pending" onclick="filterPaymentsByStatus('pending')">
+              <span>🟠</span> Payment Pending (<span id="pay-cnt-pending">1</span>)
+            </button>
+            <button class="payment-filter-pill" data-status="processing" onclick="filterPaymentsByStatus('processing')">
+              <span>🔵</span> Payment Processing (<span id="pay-cnt-processing">1</span>)
+            </button>
+            <button class="payment-filter-pill" data-status="received" onclick="filterPaymentsByStatus('received')">
+              <span>🟢</span> Payment Received (<span id="pay-cnt-received">1</span>)
+            </button>
+          </div>
+          <div style="font-size:12px; color:var(--ks-text-muted);">
+            Direct Bank Transfer via e-NAM / KrishiShetra Escrow Guarantee
+          </div>
+        </div>
+
+        <!-- Farmer Payment Cards Grid -->
+        <div class="dash-orders__grid" id="payments-cards-grid">
+          <!-- Rendered dynamically by orders.js -->
+        </div>
+
+        <!-- Payment History Section -->
+        <div class="payment-history-wrap" id="payments-history-section">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+            <div>
+              <h3 style="font-size:16px; font-weight:800; color:var(--ks-evergreen); margin:0;">
+                📜 Payment History
+              </h3>
+              <p style="font-size:12px; color:var(--ks-text-muted); margin:2px 0 0 0;">
+                Audit log of all past payments deposited to your verified farmer bank account.
+              </p>
+            </div>
+            <span style="font-size:11.5px; font-weight:700; color:#2D6A4F; background:#EAF6ED; padding:4px 10px; border-radius:6px;">
+              ✓ 100% Zero-Brokerage Guaranteed
+            </span>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="payment-history-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Buyer</th>
+                  <th>Crop</th>
+                  <th>Quantity</th>
+                  <th>Total Amount</th>
+                  <th>Settlement Date</th>
+                  <th>Status</th>
+                  <th>Voucher</th>
+                </tr>
+              </thead>
+              <tbody id="payment-history-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
   </main>
 
   <!-- FOOTER -->
@@ -275,6 +409,80 @@
     </div>
   </div>
 
+  <!-- 5. KISAN HELP & DISPUTES MODAL -->
+  <div class="dash-modal-overlay" id="disputes-modal-overlay">
+    <div class="dash-modal dash-modal--lg" id="disputes-modal" style="max-width: 720px;">
+      <div class="dash-modal__header">
+        <div>
+          <h3>🛡️ Kisan Grievance & Dispute Redressal</h3>
+          <span class="dash-crop-modal__sub">Raise and track issues regarding payments, quality, or transport</span>
+        </div>
+        <button class="dash-modal__close" id="disputes-modal-close" onclick="closeDisputesModal()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <form class="dash-modal__form" id="order-dispute-form">
+          <div class="dash-modal__field">
+            <label for="disp-order-id">Transaction / Order ID</label>
+            <input type="text" id="disp-order-id" class="dash-form-input" readonly>
+          </div>
+          <div class="dash-modal__field">
+            <label for="disp-reason">Complaint Reason</label>
+            <select id="disp-reason" class="dash-filter-select" required>
+              <option value="Payment not received">Payment not received / Delay past 24 hours</option>
+              <option value="Quantity mismatch">Quantity mismatch at delivery weighbridge</option>
+              <option value="Quality disagreement">Quality / Grading deduction disagreement</option>
+              <option value="Buyer cancelled order">Buyer cancelled after dispatch</option>
+              <option value="Transport issue">Transport delay / Truck no-show</option>
+              <option value="Damaged goods">Produce damaged during transit</option>
+              <option value="Other">Other grievance</option>
+            </select>
+          </div>
+          <div class="dash-modal__field">
+            <label for="disp-details">Describe the problem</label>
+            <textarea id="disp-details" class="dash-form-textarea" rows="3" placeholder="Provide full details to help our redressal officer investigate." required></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="send"></i> Submit Grievance Ticket</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. TRANSACTION RECEIPT MODAL -->
+  <div class="dash-modal-overlay" id="receipt-modal-overlay">
+    <div class="dash-modal" id="receipt-modal" style="max-width: 540px;">
+      <div class="dash-modal__header">
+        <div>
+          <h3>📄 Official Settlement Voucher</h3>
+          <span class="dash-crop-modal__sub">KrishiShetra Transparent Transaction Record</span>
+        </div>
+        <button class="dash-modal__close" onclick="document.getElementById('receipt-modal-overlay').classList.remove('active')"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad" id="receipt-content-body">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. TRANSACTION DETAILS MODAL -->
+  <div class="dash-modal-overlay" id="trx-details-modal-overlay">
+    <div class="dash-modal dash-modal--lg" id="trx-details-modal" style="max-width: 680px;">
+      <div class="dash-modal__header">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <h3 id="td-modal-title" style="margin:0;">Transaction Details</h3>
+            <span id="td-trx-id" style="font-family:monospace; font-size:12px; font-weight:800; background:#FAF8F2; color:var(--ks-evergreen); border:1px solid #DDD; padding:2px 8px; border-radius:4px;">KS-TRX-2026-000102</span>
+          </div>
+          <span class="dash-crop-modal__sub" id="td-modal-subtitle">KrishiShetra Transparent Settlement & Delivery Record</span>
+        </div>
+        <button class="dash-modal__close" onclick="closeTransactionDetailsModal()"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="dash-modal__body-pad" id="trx-details-body">
+        <!-- Rendered dynamically by orders.js -->
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPTS -->
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
@@ -284,4 +492,4 @@
   <script src="js/dashboard.js"></script>
 </body>
 
-</html>
+</html>

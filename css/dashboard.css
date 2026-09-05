@@ -4288,3 +4288,1686 @@ body.dashboard-body {
   .mpc-entry-card__right { width: 100%; justify-content: space-between; }
   .mpc-entry-card__stats { gap: 14px; }
 }
+
+/* ═════════════════════════════════════════════════════════════════════
+   FARMER DECISION ENGINE & UX SIMPLIFICATION (SIH 26132)
+   "Keep the technology complex, make the farmer experience simple"
+   ═════════════════════════════════════════════════════════════════════ */
+
+.farmer-decision-hub {
+  background: #FFFFFF;
+  border: 1px solid var(--ks-border, #E2E0D5);
+  border-radius: var(--radius-lg, 20px);
+  padding: 24px 28px;
+  box-shadow: 0 4px 20px rgba(18, 55, 42, 0.05);
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.farmer-decision-hub::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ks-evergreen, #12372A) 0%, var(--ks-sage, #5B9A72) 50%, var(--ks-amber, #D6A84F) 100%);
+}
+
+.farmer-decision-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.farmer-decision-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.farmer-decision-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--ks-mint-light, #EAF6ED);
+  color: var(--ks-evergreen, #12372A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.farmer-decision-title {
+  font-family: var(--font-display, 'Playfair Display', serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ks-evergreen, #12372A);
+  margin: 0;
+}
+
+.farmer-decision-subtitle {
+  font-size: 13px;
+  color: var(--ks-text-muted, #6F7F75);
+  margin: 2px 0 0 0;
+}
+
+/* Crop Quick-Switch Pills */
+.farmer-crop-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 20px;
+  scrollbar-width: thin;
+}
+
+.farmer-crop-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--ks-border, #E2E0D5);
+  background: var(--ks-bg-ivory, #F5F4ED);
+  color: var(--ks-charcoal, #17221D);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.farmer-crop-pill:hover {
+  border-color: var(--ks-sage, #5B9A72);
+  background: #FFFFFF;
+}
+
+.farmer-crop-pill.active {
+  background: var(--ks-evergreen, #12372A);
+  color: #FFFFFF;
+  border-color: var(--ks-evergreen, #12372A);
+  box-shadow: 0 2px 8px rgba(18, 55, 42, 0.2);
+}
+
+/* Decision 4-Card Summary Grid */
+.farmer-decision-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.farmer-metric-card {
+  background: var(--ks-bg-ivory, #F5F4ED);
+  border: 1px solid var(--ks-border-subtle, #ECEAE1);
+  border-radius: var(--radius-md, 14px);
+  padding: 14px 16px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.farmer-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(18, 55, 42, 0.05);
+}
+
+.farmer-metric-card--highlight {
+  background: #FDF7EA;
+  border-color: #EED7A1;
+}
+
+.farmer-metric-card--green {
+  background: #EAF6ED;
+  border-color: #C0E4C9;
+}
+
+.farmer-metric-lbl {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ks-text-muted, #6F7F75);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.farmer-metric-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+  line-height: 1.2;
+}
+
+.farmer-metric-sub {
+  font-size: 12px;
+  color: var(--ks-text-muted, #6F7F75);
+  margin-top: 4px;
+}
+
+.farmer-metric-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.farmer-metric-badge--high {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.farmer-metric-badge--up {
+  background: #EAF6ED;
+  color: #2D6A4F;
+}
+
+/* Actionable AI Selling Advice Banner */
+.farmer-advice-banner {
+  background: linear-gradient(135deg, #12372A 0%, #1A4D3B 100%);
+  border-radius: var(--radius-md, 14px);
+  padding: 18px 22px;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.farmer-advice-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 650px;
+}
+
+.farmer-advice-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.farmer-advice-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--ks-amber, #D6A84F);
+  color: #12372A;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.farmer-advice-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #F5F4ED;
+  margin: 0 0 4px 0;
+}
+
+.farmer-advice-desc {
+  font-size: 13px;
+  color: rgba(245, 244, 237, 0.85);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.farmer-decision-cta-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   STEP-BASED CROP LOT WIZARD (8 Simple Steps)
+   ═════════════════════════════════════════════════════════════════════ */
+
+.lot-wizard-stepper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 24px;
+  padding: 0 10px;
+}
+
+.lot-wizard-stepper::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 24px;
+  right: 24px;
+  height: 2px;
+  background: var(--ks-border, #E2E0D5);
+  z-index: 1;
+}
+
+.lot-wizard-step {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  cursor: pointer;
+  flex: 1;
+}
+
+.lot-wizard-step-node {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid var(--ks-border, #E2E0D5);
+  color: var(--ks-text-muted, #6F7F75);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 6px auto;
+  transition: all 0.2s ease;
+}
+
+.lot-wizard-step.active .lot-wizard-step-node {
+  background: var(--ks-evergreen, #12372A);
+  border-color: var(--ks-evergreen, #12372A);
+  color: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(18, 55, 42, 0.15);
+}
+
+.lot-wizard-step.completed .lot-wizard-step-node {
+  background: var(--ks-sage, #5B9A72);
+  border-color: var(--ks-sage, #5B9A72);
+  color: #FFFFFF;
+}
+
+.lot-wizard-step-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ks-text-muted, #6F7F75);
+}
+
+.lot-wizard-step.active .lot-wizard-step-label {
+  color: var(--ks-evergreen, #12372A);
+  font-weight: 700;
+}
+
+.lot-wizard-pane {
+  display: none;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.lot-wizard-pane.active {
+  display: block;
+}
+
+.lot-crop-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.lot-crop-chip {
+  padding: 12px 10px;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid var(--ks-border, #E2E0D5);
+  background: #FFFFFF;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lot-crop-chip:hover {
+  border-color: var(--ks-sage, #5B9A72);
+  background: var(--ks-bg-ivory, #F5F4ED);
+}
+
+.lot-crop-chip.selected {
+  border-color: var(--ks-evergreen, #12372A);
+  background: var(--ks-mint-light, #EAF6ED);
+  box-shadow: 0 2px 8px rgba(18, 55, 42, 0.1);
+}
+
+.lot-crop-chip-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.lot-crop-chip-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ks-charcoal, #17221D);
+}
+
+.lot-crop-chip-price {
+  font-size: 11px;
+  color: var(--ks-sage, #5B9A72);
+  font-weight: 600;
+}
+
+.lot-wizard-preview-card {
+  background: #FAF9F5;
+  border: 1px solid var(--ks-border, #E2E0D5);
+  border-radius: var(--radius-md, 14px);
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+
+.lot-wizard-nav-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ks-border-subtle, #ECEAE1);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   STORAGE DISCOVERY ("Storage Near You" — SIH Distress Sale Avoidance)
+   ═════════════════════════════════════════════════════════════════════ */
+
+.storage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.storage-card {
+  background: #FFFFFF;
+  border: 1px solid var(--ks-border, #E2E0D5);
+  border-radius: var(--radius-md, 14px);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm, 0 2px 6px rgba(18, 55, 42, 0.04));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.storage-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 8px 20px rgba(18, 55, 42, 0.06));
+}
+
+.storage-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.storage-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ks-evergreen, #12372A);
+  margin: 0 0 2px 0;
+}
+
+.storage-card__loc {
+  font-size: 12px;
+  color: var(--ks-text-muted, #6F7F75);
+}
+
+.storage-type-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #E0F2FE;
+  color: #0369A1;
+  text-transform: uppercase;
+}
+
+.storage-card__specs {
+  background: var(--ks-bg-ivory, #F5F4ED);
+  border-radius: var(--radius-sm, 8px);
+  padding: 10px 12px;
+  margin: 10px 0 14px 0;
+  font-size: 12.5px;
+}
+
+.storage-spec-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.storage-spec-row:last-child {
+  margin-bottom: 0;
+}
+
+.distress-savings-box {
+  background: #FDF7EA;
+  border: 1px dashed var(--ks-amber, #D6A84F);
+  border-radius: var(--radius-sm, 8px);
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #78350F;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   TRANSPORT BOOKING CARDS ("Arrange Transport")
+   ═════════════════════════════════════════════════════════════════════ */
+
+.transport-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 14px;
+}
+
+.transport-card {
+  background: #FFFFFF;
+  border: 1px solid var(--ks-border, #E2E0D5);
+  border-radius: var(--radius-md, 14px);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.transport-card:hover {
+  border-color: var(--ks-sage, #5B9A72);
+  box-shadow: var(--shadow-sm, 0 2px 6px rgba(18, 55, 42, 0.04));
+}
+
+.transport-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.transport-vehicle-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ks-evergreen, #12372A);
+  margin: 0;
+}
+
+.transport-eta-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full, 9999px);
+  background: #EAF6ED;
+  color: #2D6A4F;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   DISPUTE & GRIEVANCE REDRESSAL SYSTEM ("Help & Disputes")
+   ═════════════════════════════════════════════════════════════════════ */
+
+.dispute-card {
+  background: #FFFFFF;
+  border: 1px solid var(--ks-border, #E2E0D5);
+  border-radius: var(--radius-md, 14px);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.dispute-status-pill {
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.dispute-status-pill--submitted {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.dispute-status-pill--review {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+
+.dispute-status-pill--resolved {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   5-STAGE PAYMENT & SETTLEMENT LIFECYCLE STEPPER
+   ═════════════════════════════════════════════════════════════════════ */
+
+.payment-stepper-wrap {
+  margin: 14px 0 16px 0;
+  padding: 12px 14px;
+  background: #FAF9F5;
+  border-radius: var(--radius-sm, 8px);
+}
+
+.payment-stepper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.payment-stepper::before {
+  content: '';
+  position: absolute;
+  top: 11px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: #E5E4DD;
+  z-index: 1;
+}
+
+.payment-step-node {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  flex: 1;
+}
+
+.payment-step-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin: 0 auto 4px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  background: #FFFFFF;
+  color: #999;
+  border: 2px solid #DDD;
+}
+
+.payment-step-node.done .payment-step-circle {
+  background: var(--ks-evergreen, #12372A);
+  border-color: var(--ks-evergreen, #12372A);
+  color: #FFFFFF;
+}
+
+.payment-step-node.active .payment-step-circle {
+  background: var(--ks-amber, #D6A84F);
+  border-color: var(--ks-amber, #D6A84F);
+  color: #12372A;
+  box-shadow: 0 0 0 3px rgba(214, 168, 79, 0.25);
+}
+
+.payment-step-label {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #888;
+}
+
+.payment-step-node.done .payment-step-label,
+.payment-step-node.active .payment-step-label {
+  color: var(--ks-evergreen, #12372A);
+  font-weight: 700;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   ⭐ "BEST OPTION FOR YOU" RECOMMENDATION CARD (Section 8)
+   ═════════════════════════════════════════════════════════════════════ */
+.best-option-card {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAF8F2 100%);
+  border: 2px solid #E8B96A;
+  border-radius: var(--radius-lg, 16px);
+  padding: 22px 24px;
+  margin-top: 16px;
+  box-shadow: 0 4px 20px rgba(232, 185, 106, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.best-option-card::before {
+  content: '⭐ BEST OPTION FOR YOU';
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #E8B96A;
+  color: #12372A;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 5px 16px 5px 16px;
+  border-bottom-left-radius: 12px;
+}
+
+.best-option-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.best-option-card__title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.best-option-card__mandi {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2D6A4F;
+}
+
+.best-option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  background: #FFFFFF;
+  border: 1px solid #EAE8DC;
+  border-radius: var(--radius-md, 12px);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.best-option-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.best-option-item__lbl {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #718077;
+  margin-bottom: 4px;
+}
+
+.best-option-item__val {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+}
+
+.best-option-reasons {
+  background: #F4F8F5;
+  border-left: 3px solid #2D6A4F;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+.best-option-reasons__title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2D6A4F;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.best-option-reasons__list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: #2D3748;
+  line-height: 1.5;
+}
+
+.best-option-disclaimer {
+  font-size: 11px;
+  color: #8C8B82;
+  margin-bottom: 14px;
+  font-style: italic;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   RANKED MARKET CARDS (Section 9)
+   ═════════════════════════════════════════════════════════════════════ */
+.market-ranks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.market-rank-card {
+  background: #FFFFFF;
+  border: 1px solid var(--ks-border, #E2E0D5);
+  border-radius: var(--radius-md, 14px);
+  padding: 18px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.market-rank-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.market-rank-card--gold {
+  border: 2px solid #E8B96A;
+  background: #FCFBF7;
+}
+
+.market-rank-card__badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #E8B96A;
+  color: #12372A;
+}
+
+.market-rank-card__title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+  margin: 0 0 6px 0;
+}
+
+.market-rank-card__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.market-rank-card__price {
+  font-size: 22px;
+  font-weight: 800;
+  color: #12372A;
+}
+
+.market-rank-card__net-box {
+  background: #F5F4ED;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   PRICE TREND SIMPLE BANNER (Section 10)
+   ═════════════════════════════════════════════════════════════════════ */
+.price-trend-summary-bar {
+  background: #F5F9F6;
+  border: 1px solid #8FCB9B;
+  border-radius: var(--radius-md, 12px);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   MY PAYMENTS QUICK CARDS (Section 14)
+   ═════════════════════════════════════════════ */
+.payments-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.payment-quick-card {
+  background: #FFFFFF;
+  border: 1px solid var(--ks-border, #E2E0D5);
+  border-radius: var(--radius-md, 12px);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-quick-card--success {
+  border-left: 4px solid #2D6A4F;
+}
+
+.payment-quick-card--pending {
+  border-left: 4px solid #D6A84F;
+}
+
+.payment-quick-card__amt {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   OBJECTIVE QUALITY GRADING, ASSAYING & AI DEFECT SCANNER STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 1. Quality Card & Agmark Badges */
+.quality-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E0D5;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(18, 55, 42, 0.05);
+  margin-bottom: 20px;
+}
+
+.quality-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.quality-card__title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agmark-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.agmark-badge--grade-a {
+  background: #E5F0E7;
+  color: #12372A;
+  border: 1px solid #718E68;
+}
+
+.agmark-badge--grade-b {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #F59E0B;
+}
+
+.agmark-badge--grade-c {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #EF4444;
+}
+
+.agmark-badge--verified {
+  background: linear-gradient(135deg, #12372A 0%, #1E5C45 100%);
+  color: #E8B96A;
+  border: 1px solid #E8B96A;
+  box-shadow: 0 2px 8px rgba(18, 55, 42, 0.18);
+}
+
+/* 2. Parametric Specs Grid */
+.param-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.param-item {
+  background: #FAF9F5;
+  border: 1px solid #EBE7DF;
+  border-radius: 10px;
+  padding: 10px 12px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.param-item:hover {
+  border-color: #718E68;
+  transform: translateY(-1px);
+}
+
+.param-item__label {
+  font-size: 11px;
+  color: #6F7F75;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.param-item__val {
+  font-size: 17px;
+  font-weight: 800;
+  color: #12372A;
+}
+
+.param-item__benchmark {
+  font-size: 10px;
+  color: #8C8A80;
+  margin-top: 2px;
+}
+
+.param-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.param-status-dot--pass { background: #2D6A4F; }
+.param-status-dot--faq { background: #F59E0B; }
+.param-status-dot--fail { background: #DC2626; }
+
+/* 3. Assayer Certificate Card */
+.assay-cert-card {
+  background: linear-gradient(135deg, #FAF8F5 0%, #F4EFE6 100%);
+  border: 1px dashed #D6A84F;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 14px;
+  position: relative;
+}
+
+.assay-cert-card__stamp {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 10.5px;
+  background: #12372A;
+  color: #E8B96A;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cert-sig-hash {
+  font-family: monospace;
+  font-size: 10px;
+  color: #777;
+  word-break: break-all;
+  background: #FFFFFF;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #E5E4DD;
+  margin-top: 6px;
+}
+
+/* 4. AI Produce Scanner Modal & Viewport */
+.ai-scan-banner {
+  background: linear-gradient(135deg, #12372A 0%, #21543F 100%);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.scanner-viewport {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  background: #0B1914;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #2D6A4F;
+}
+
+.scanner-viewport__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.3s ease;
+}
+
+.scanner-viewport__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, transparent 40%, rgba(11, 25, 20, 0.7) 100%);
+  pointer-events: none;
+}
+
+.scanner-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(45, 106, 79, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 106, 79, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.scanner-laser {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #10B981;
+  box-shadow: 0 0 14px #10B981, 0 0 24px #34D399;
+  animation: laserSweep 2s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes laserSweep {
+  0% { top: 5%; }
+  100% { top: 92%; }
+}
+
+.scanner-defect-box {
+  position: absolute;
+  border: 2px solid #EF4444;
+  background: rgba(239, 68, 68, 0.22);
+  border-radius: 4px;
+  pointer-events: none;
+  animation: pulseBox 1.5s infinite;
+}
+
+.scanner-defect-box__label {
+  position: absolute;
+  top: -18px;
+  left: -2px;
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+@keyframes pulseBox {
+  0%, 100% { border-color: #EF4444; }
+  50% { border-color: #FBBF24; }
+}
+
+.defect-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.defect-chip {
+  background: #FFFFFF;
+  border: 1px solid #E2E0D5;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #12372A;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 5. Official Agmark / NABL Digital Certificate View Modal */
+.digital-cert-paper {
+  background: #FFFDF9;
+  border: 4px double #D6A84F;
+  border-radius: 12px;
+  padding: 28px;
+  color: #1A2E26;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  font-family: 'Inter', sans-serif;
+}
+
+.digital-cert-header {
+  text-align: center;
+  border-bottom: 2px solid #E8DCC4;
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+}
+
+.digital-cert-emblem {
+  font-size: 38px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.digital-cert-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: #12372A;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.digital-cert-subtitle {
+  font-size: 11.5px;
+  color: #718E68;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.digital-cert-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 12.5px;
+}
+
+.digital-cert-table th {
+  background: #F4EFE6;
+  color: #12372A;
+  font-weight: 800;
+  padding: 8px 10px;
+  text-align: left;
+  border: 1px solid #E2DAC8;
+}
+
+.digital-cert-table td {
+  padding: 8px 10px;
+  border: 1px solid #E2DAC8;
+  color: #2F3E35;
+}
+
+.digital-cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px dashed #D6A84F;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.digital-cert-seal {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px dashed #D6A84F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #FAF8F5;
+  color: #92400E;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.2;
+  box-shadow: inset 0 0 8px rgba(214, 168, 79, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FARMER ORDER & PAYMENT STATUS TRACKING SYSTEM
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Payment Notifications Banner */
+.payment-notif-banner {
+  background: linear-gradient(135deg, #FAF8F2 0%, #F5EFE1 100%);
+  border: 1px solid #E8DCC2;
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(18, 55, 42, 0.04);
+}
+
+.payment-notif-ticker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+}
+
+.payment-notif-badge {
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.payment-notif-badge--received {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.payment-notif-badge--due {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+/* Main Navigation Tabs */
+.orders-main-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #E8E6DB;
+  margin-bottom: 22px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.orders-tab-btn {
+  background: transparent;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #666666;
+  cursor: pointer;
+  border-radius: 10px 10px 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  white-space: nowrap;
+}
+
+.orders-tab-btn:hover {
+  color: var(--ks-evergreen, #12372A);
+  background: rgba(18, 55, 42, 0.03);
+}
+
+.orders-tab-btn--active {
+  color: var(--ks-evergreen, #12372A);
+  background: #FFFFFF;
+}
+
+.orders-tab-btn--active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--ks-evergreen, #12372A);
+  border-radius: 3px 3px 0 0;
+}
+
+.orders-tab-count {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 12px;
+  background: #EDEAE1;
+  color: #555;
+}
+
+.orders-tab-btn--active .orders-tab-count {
+  background: var(--ks-evergreen, #12372A);
+  color: #FFFFFF;
+}
+
+/* Payment Status Sub-Filters */
+.payment-filters-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.payment-filter-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.payment-filter-pill {
+  background: #FFFFFF;
+  border: 1px solid #DDD9CD;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.payment-filter-pill:hover {
+  border-color: var(--ks-evergreen, #12372A);
+  color: var(--ks-evergreen, #12372A);
+}
+
+.payment-filter-pill.active {
+  background: var(--ks-evergreen, #12372A);
+  color: #FFFFFF;
+  border-color: var(--ks-evergreen, #12372A);
+}
+
+/* ⭐ Farmer's Payment Card (Strict to requested design) */
+.farmer-payment-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E2D6;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 4px 16px rgba(18, 55, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.farmer-payment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(18, 55, 42, 0.08);
+}
+
+.farmer-payment-card--pending {
+  border-top: 4px solid #F59E0B;
+}
+
+.farmer-payment-card--processing {
+  border-top: 4px solid #3B82F6;
+}
+
+.farmer-payment-card--received {
+  border-top: 4px solid #10B981;
+}
+
+.farmer-payment-card__header {
+  margin-bottom: 14px;
+}
+
+.farmer-payment-card__title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.farmer-payment-card__details {
+  background: #FAF9F5;
+  border: 1px solid #ECE8DB;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.farmer-payment-card__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #333333;
+  margin-bottom: 8px;
+}
+
+.farmer-payment-card__row:last-child {
+  margin-bottom: 0;
+}
+
+.farmer-payment-card__icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.farmer-payment-card__status-box {
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.farmer-payment-card__status-box--pending {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #92400E;
+}
+
+.farmer-payment-card__status-box--processing {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  color: #1E40AF;
+}
+
+.farmer-payment-card__status-box--received {
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  color: #065F46;
+}
+
+.farmer-payment-card__status-tag {
+  font-size: 13.5px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.farmer-payment-card__status-sub {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.farmer-payment-card__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px dashed #E5E2D6;
+}
+
+/* Payment Status Indicator Pills */
+.status-pill-pending {
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-pill-processing {
+  background: #DBEAFE;
+  color: #1E40AF;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-pill-received {
+  background: #D1FAE5;
+  color: #065F46;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Payment History Table */
+.payment-history-wrap {
+  background: #FFFFFF;
+  border: 1px solid #E5E2D6;
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.payment-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.payment-history-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: #FAF8F2;
+  color: var(--ks-evergreen, #12372A);
+  font-weight: 700;
+  border-bottom: 2px solid #ECE7D8;
+}
+
+.payment-history-table td {
+  padding: 12px;
+  border-bottom: 1px solid #F0EFEA;
+  color: #333333;
+}
+
+.payment-history-table tr:last-child td {
+  border-bottom: none;
+}
+
+.payment-history-table tr:hover td {
+  background: #FAF9F5;
+}
+
+/* Transaction Details Modal Visual Stepper */
+.trx-stepper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 18px 0;
+  position: relative;
+}
+
+.trx-step {
+  text-align: center;
+  position: relative;
+}
+
+.trx-step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #EDEAE1;
+  color: #777;
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 6px auto;
+  border: 2px solid #DDD;
+}
+
+.trx-step.completed .trx-step-circle {
+  background: #10B981;
+  color: #FFFFFF;
+  border-color: #10B981;
+}
+
+.trx-step.current .trx-step-circle {
+  background: #3B82F6;
+  color: #FFFFFF;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.trx-step.pending .trx-step-circle {
+  background: #F59E0B;
+  color: #FFFFFF;
+  border-color: #F59E0B;
+}
+
+.trx-step-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #666;
+}
+
+.trx-step.completed .trx-step-label,
+.trx-step.current .trx-step-label {
+  color: var(--ks-evergreen, #12372A);
+}
+
+/* Printable Settlement Slip */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #receipt-modal, #receipt-modal * {
+    visibility: visible;
+  }
+  #receipt-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .dash-modal__close, .btn {
+    display: none !important;
+  }
+}
+
+
+

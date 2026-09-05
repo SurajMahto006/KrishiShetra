@@ -149,6 +149,7 @@ const seedDatabase = async (externalMongoose = null) => {
       createdBy: farmerUser._id,
       lotId: 'KS-2026-WHT001',
       cropName: 'Wheat',
+      cropCategory: 'cereals_grains',
       variety: 'Sharbati Gold',
       quantity: 150,
       availableQuantity: 150,
@@ -156,6 +157,44 @@ const seedDatabase = async (externalMongoose = null) => {
       harvestDate: new Date('2026-03-01'),
       qualityGrade: 'A',
       qualityNotes: 'Naturally grown, sorted and cleaned grain with uniform size.',
+      qualityParameters: {
+        moistureContent: 11.4,
+        foreignMatter: 0.6,
+        brokenGrains: 1.5,
+        damagedGrains: 0.8,
+        standard: 'Agmark / e-NAM Grain Standards (IS:14811)',
+        gradeCalculationRationale: 'All physical parameters meet Grade A Agmark export/milled benchmarks.'
+      },
+      assaying: {
+        isAssayed: true,
+        verificationStatus: 'verified',
+        assayerName: 'Dr. Vivek Deshmukh',
+        assayerOrganization: 'NABL Accredited Quality Laboratory #MH-44',
+        assayerRole: 'Senior Agricultural Assayer',
+        certificateNumber: 'AGM-2026-QC-48912',
+        certifiedAt: new Date('2026-03-02'),
+        digitalSignature: {
+          signedBy: 'Dr. Vivek Deshmukh',
+          signatureHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+          timestamp: new Date('2026-03-02T10:30:00Z'),
+          certId: 'CERT-AGM-2026-QC-48912'
+        },
+        certificateDocument: {
+          fileName: 'Agmark_Certificate_48912.pdf',
+          fileUrl: '',
+          fileType: 'application/pdf'
+        },
+        labRemarks: 'Purity 99.4%, Moisture 11.4%. Grade A Premium Sharbati FAQ certified.'
+      },
+      aiQualityScan: {
+        scannedAt: new Date('2026-03-01T14:20:00Z'),
+        confidenceScore: 97.8,
+        detectedDefects: [
+          { defectType: 'Foreign Matter', count: 1, severity: 'Negligible', percentage: 0.6 },
+          { defectType: 'Broken Grain Kernel', count: 2, severity: 'Low', percentage: 1.5 }
+        ],
+        summary: 'AI scan verified Grade A grain density and minimal kernel defects.'
+      },
       storageType: 'warehouse',
       storageLocation: 'Nashik Warehouse Bay #4',
       askingPrice: 2850,
@@ -173,6 +212,7 @@ const seedDatabase = async (externalMongoose = null) => {
       createdBy: farmerUser._id,
       lotId: 'KS-2026-ONN002',
       cropName: 'Onion',
+      cropCategory: 'fruits_vegetables',
       variety: 'Red Garwa',
       quantity: 300,
       availableQuantity: 300,
@@ -180,6 +220,30 @@ const seedDatabase = async (externalMongoose = null) => {
       harvestDate: new Date('2026-02-20'),
       qualityGrade: 'A',
       qualityNotes: 'Cured and dried red onions, suitable for long-distance transport and export.',
+      qualityParameters: {
+        uniformity: 93,
+        ripenessIndex: 91,
+        blemishPercentage: 2.1,
+        avgDiameter: 58,
+        standard: 'Agmark Horticultural Grading & Marking Rules',
+        gradeCalculationRationale: 'Produce satisfies premium Agmark freshness, color, and size uniformity specifications.'
+      },
+      assaying: {
+        isAssayed: true,
+        verificationStatus: 'verified',
+        assayerName: 'Sanjay Shinde',
+        assayerOrganization: 'MahaAgri FPO Quality Assurance Cell',
+        assayerRole: 'FPO Quality In-charge',
+        certificateNumber: 'FPO-QC-2026-8812',
+        certifiedAt: new Date('2026-02-21'),
+        digitalSignature: {
+          signedBy: 'Sanjay Shinde',
+          signatureHash: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
+          timestamp: new Date('2026-02-21T11:00:00Z'),
+          certId: 'CERT-FPO-QC-8812'
+        },
+        labRemarks: 'Double skin tight, dry cured necks, zero rot, export caliber.'
+      },
       storageType: 'farm',
       storageLocation: 'Farm Storage Shed',
       askingPrice: 1650,
@@ -197,6 +261,7 @@ const seedDatabase = async (externalMongoose = null) => {
       createdBy: farmerUser._id,
       lotId: 'KS-2026-TMT003',
       cropName: 'Tomato',
+      cropCategory: 'fruits_vegetables',
       variety: 'Vaishali Hybrid',
       quantity: 80,
       availableQuantity: 80,
@@ -204,6 +269,18 @@ const seedDatabase = async (externalMongoose = null) => {
       harvestDate: new Date('2026-03-05'),
       qualityGrade: 'B',
       qualityNotes: 'Firm red tomatoes harvested fresh, packaged in standard crates.',
+      qualityParameters: {
+        uniformity: 82,
+        ripenessIndex: 78,
+        blemishPercentage: 5.2,
+        avgDiameter: 62,
+        standard: 'Agmark Horticultural Grading & Marking Rules',
+        gradeCalculationRationale: 'Blemish percentage (5.2%) within Grade B marketing tolerance.'
+      },
+      assaying: {
+        isAssayed: false,
+        verificationStatus: 'uninspected'
+      },
       storageType: 'farm',
       storageLocation: 'Cold Storage Room',
       askingPrice: 1200,

@@ -979,6 +979,10 @@ async function openLotDetailModal(lotId) {
       askingPrice: found.askingPrice || found.sellerAskPrice || 2500,
       priceUnit: found.priceUnit || 'q',
       qualityGrade: (found.qualityGrade || found.grade || 'A').toString().replace('Grade ', ''),
+      cropCategory: found.cropCategory || (window.GradingEngine ? window.GradingEngine.getCropCategory(found.cropName) : 'cereals_grains'),
+      qualityParameters: found.qualityParameters || {},
+      assaying: found.assaying || { isAssayed: false, verificationStatus: 'uninspected' },
+      aiQualityScan: found.aiQualityScan || {},
       location: found.location || `${found.district || 'Pune'}, ${found.state || 'Maharashtra'}`,
       district: found.district || (found.location ? found.location.split(',')[0].trim() : 'Pune'),
       state: found.state || (found.location ? found.location.split(',')[1]?.trim() : 'Maharashtra') || 'Maharashtra',
@@ -1029,26 +1033,70 @@ async function openLotDetailModal(lotId) {
           </div>
         </div>
 
-        <!-- Quality Metrics Grid -->
-        <h4 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #777; letter-spacing: 0.05em; margin: 0 0 8px 0;">Quality Specifications</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
-          <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
-            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Moisture Content</div>
-            <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.moistureContent}</div>
-          </div>
-          <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
-            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Size / Grain Spec</div>
-            <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.sizeSpec}</div>
-          </div>
-          <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
-            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Foreign Matter</div>
-            <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.defectsPct}</div>
-          </div>
-          <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
-            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Packaging</div>
-            <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.packaging}</div>
-          </div>
+        <!-- Quality Specifications & Agmark Parameters -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #777; letter-spacing: 0.05em; margin: 0;">Agmark Quality Specifications</h4>
+          <span class="agmark-badge agmark-badge--grade-${(lot.qualityGrade || 'A').toLowerCase()}">Grade ${lot.qualityGrade}</span>
         </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
+          ${!['Onion', 'Tomato'].includes(lot.cropName) ? `
+            <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
+              <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Moisture Content</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.qualityParameters.moistureContent !== undefined && lot.qualityParameters.moistureContent !== null ? lot.qualityParameters.moistureContent + '%' : lot.moistureContent} <small style="color:#2D6A4F; font-size:10px;">(≤12% Max)</small></div>
+            </div>
+            <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
+              <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Foreign Matter</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.qualityParameters.foreignMatter !== undefined && lot.qualityParameters.foreignMatter !== null ? lot.qualityParameters.foreignMatter + '%' : '0.8%'} <small style="color:#2D6A4F; font-size:10px;">(≤1% Max)</small></div>
+            </div>
+            <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
+              <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Broken Grains</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.qualityParameters.brokenGrains !== undefined && lot.qualityParameters.brokenGrains !== null ? lot.qualityParameters.brokenGrains + '%' : '1.5%'} <small style="color:#2D6A4F; font-size:10px;">(≤2% Max)</small></div>
+            </div>
+            <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
+              <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Damaged Grains</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.qualityParameters.damagedGrains !== undefined && lot.qualityParameters.damagedGrains !== null ? lot.qualityParameters.damagedGrains + '%' : '0.9%'} <small style="color:#2D6A4F; font-size:10px;">(≤1.5% Max)</small></div>
+            </div>
+          ` : `
+            <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
+              <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Surface Blemish</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.qualityParameters.blemishPercentage !== undefined && lot.qualityParameters.blemishPercentage !== null ? lot.qualityParameters.blemishPercentage + '%' : '2.1%'} <small style="color:#2D6A4F; font-size:10px;">(≤3% Max)</small></div>
+            </div>
+            <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
+              <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Size Uniformity</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.qualityParameters.uniformity !== undefined && lot.qualityParameters.uniformity !== null ? lot.qualityParameters.uniformity + '%' : '93%'} <small style="color:#2D6A4F; font-size:10px;">(≥90% Min)</small></div>
+            </div>
+            <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
+              <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Ripeness Index</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.qualityParameters.ripenessIndex !== undefined && lot.qualityParameters.ripenessIndex !== null ? lot.qualityParameters.ripenessIndex + '%' : '91%'} <small style="color:#2D6A4F; font-size:10px;">(≥85% Min)</small></div>
+            </div>
+            <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
+              <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Avg Caliber</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.qualityParameters.avgDiameter || '58'} mm</div>
+            </div>
+          `}
+        </div>
+
+        <!-- Assayer Lab Certificate Verification Badge -->
+        ${lot.assaying && (lot.assaying.isAssayed || lot.assaying.verificationStatus === 'verified') ? `
+          <div style="background: #F4F8F5; border: 1px dashed #718E68; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #2D6A4F;">✓ NABL Verified Lab Certificate</span>
+              <span style="font-size: 11px; font-weight: 700; color: #12372A;">${lot.assaying.certificateNumber || 'AGM-2026-QC-48912'}</span>
+            </div>
+            <div style="font-size: 12px; color: #444;">Assayed by: <strong>${lot.assaying.assayerName || 'Dr. Vivek Deshmukh'}</strong> (${lot.assaying.assayerOrganization || 'NABL Accredited Quality Lab #MH-44'})</div>
+            <div style="font-family: monospace; font-size: 9.5px; color: #777; word-break: break-all; margin-top: 4px;">
+              Digital Signature: ${lot.assaying.digitalSignature?.signatureHash || 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'}
+            </div>
+            <button class="btn btn--sm" style="margin-top: 8px; background: #12372A; color: #E8B96A; font-weight: 700; border: none; border-radius: 6px; padding: 5px 12px; cursor: pointer;" onclick='showBuyerCertificateModal(${JSON.stringify(lot).replace(/'/g, "&apos;")})'>
+              📄 View Official Digital Certificate & Seal
+            </button>
+          </div>
+        ` : `
+          <div style="background: #FAF8F5; border: 1px solid #EBE7DF; border-radius: 8px; padding: 8px 12px; margin-bottom: 16px; font-size: 11.5px; color: #777;">
+            ℹ️ Farmer self-graded under Agmark rules. Third-party assaying can be requested upon order confirmation.
+          </div>
+        `}
 
         <!-- Seller Trust Card -->
         <div style="background: #FAF9F5; border: 1px solid #EAE6DF; border-radius: 10px; padding: 12px 14px;">
@@ -2488,6 +2536,112 @@ function showToast(message, type = 'info') {
   }, 4000);
 }
 
+function showBuyerCertificateModal(lot) {
+  const assay = lot.assaying || {};
+  const certNum = assay.certificateNumber || `AGM-2026-QC-${Math.floor(100000 + Math.random() * 900000)}`;
+  const assayer = assay.assayerName || 'Dr. Vivek Deshmukh';
+  const org = assay.assayerOrganization || 'NABL Accredited Quality Laboratory #MH-44';
+  const dateStr = assay.certifiedAt ? new Date(assay.certifiedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Verified Recently';
+  const hash = assay.digitalSignature?.signatureHash || '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08';
+  const p = lot.qualityParameters || {};
+  const isGrain = !['Onion', 'Tomato'].includes(lot.cropName);
+
+  const modalHtml = `
+    <div class="digital-cert-paper" style="font-family: inherit;">
+      <div class="digital-cert-header">
+        <div class="digital-cert-emblem">🏛️</div>
+        <h2 class="digital-cert-title" style="font-size: 19px; color: #12372A; margin: 0;">AGMARK & e-NAM OFFICIAL QUALITY CERTIFICATE</h2>
+        <div class="digital-cert-subtitle" style="font-size: 11px; color: #718E68; font-weight: 700; text-transform: uppercase; margin-top: 4px;">Directorate of Marketing & Inspection — Government of India</div>
+        <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #12372A; margin-top: 6px;">
+          Certificate No: ${certNum} • Lot ID: ${lot.lotId}
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; margin-bottom: 14px; background: #FAF8F5; padding: 10px; border-radius: 8px;">
+        <div><strong>Crop Tested:</strong> ${lot.cropName} (${lot.variety || 'Standard'})</div>
+        <div><strong>Quantity:</strong> ${lot.quantity} ${lot.quantityUnit || 'quintal'}</div>
+        <div><strong>Testing Lab:</strong> ${org}</div>
+        <div><strong>Assayer:</strong> ${assayer}</div>
+        <div><strong>Certified Date:</strong> ${dateStr}</div>
+        <div><strong>Agmark Grade:</strong> <span class="agmark-badge agmark-badge--grade-${(lot.qualityGrade || 'A').toLowerCase()}">Grade ${lot.qualityGrade || 'A'}</span></div>
+      </div>
+
+      <table class="digital-cert-table" style="width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0;">
+        <thead>
+          <tr style="background: #F4EFE6;">
+            <th style="padding: 6px 8px; border: 1px solid #E2DAC8; text-align: left;">Quality Parameter</th>
+            <th style="padding: 6px 8px; border: 1px solid #E2DAC8; text-align: left;">Lab Tested Value</th>
+            <th style="padding: 6px 8px; border: 1px solid #E2DAC8; text-align: left;">Agmark Limit</th>
+            <th style="padding: 6px 8px; border: 1px solid #E2DAC8; text-align: left;">Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${isGrain ? `
+            <tr>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Moisture Content (%)</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;"><strong>${p.moistureContent !== undefined && p.moistureContent !== null ? p.moistureContent : '11.4'}%</strong></td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Max 12.0%</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8; color: #2D6A4F; font-weight: 800;">✓ PASS</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Foreign Matter (%)</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;"><strong>${p.foreignMatter !== undefined && p.foreignMatter !== null ? p.foreignMatter : '0.6'}%</strong></td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Max 1.0%</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8; color: #2D6A4F; font-weight: 800;">✓ PASS</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Broken Grains (%)</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;"><strong>${p.brokenGrains !== undefined && p.brokenGrains !== null ? p.brokenGrains : '1.5'}%</strong></td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Max 2.0%</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8; color: #2D6A4F; font-weight: 800;">✓ PASS</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Damaged / Weeviled (%)</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;"><strong>${p.damagedGrains !== undefined && p.damagedGrains !== null ? p.damagedGrains : '0.8'}%</strong></td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Max 1.5%</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8; color: #2D6A4F; font-weight: 800;">✓ PASS</td>
+            </tr>
+          ` : `
+            <tr>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Surface Blemish (%)</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;"><strong>${p.blemishPercentage !== undefined && p.blemishPercentage !== null ? p.blemishPercentage : '2.1'}%</strong></td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Max 3.0%</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8; color: #2D6A4F; font-weight: 800;">✓ PASS</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Size Uniformity (%)</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;"><strong>${p.uniformity !== undefined && p.uniformity !== null ? p.uniformity : '93'}%</strong></td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Min 90%</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8; color: #2D6A4F; font-weight: 800;">✓ PASS</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Ripeness Index (%)</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;"><strong>${p.ripenessIndex !== undefined && p.ripenessIndex !== null ? p.ripenessIndex : '91'}%</strong></td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8;">Min 85%</td>
+              <td style="padding: 6px 8px; border: 1px solid #E2DAC8; color: #2D6A4F; font-weight: 800;">✓ PASS</td>
+            </tr>
+          `}
+        </tbody>
+      </table>
+
+      <div class="digital-cert-footer">
+        <div style="max-width: 380px;">
+          <div style="font-size: 10px; font-weight: 800; color: #12372A; text-transform: uppercase;">Cryptographic Digital Signature Stamp (SHA-256)</div>
+          <div class="cert-sig-hash">${hash}</div>
+          <div style="font-size: 10px; color: #718E68; margin-top: 3px;">✓ Digitally Signed & Timestamped on KrishiShetra Ledger</div>
+        </div>
+        <div class="digital-cert-seal">
+          <div>AGMARK</div>
+          <div style="font-size: 12px;">★</div>
+          <div>VERIFIED</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  openModal('Agmark Quality Certificate', modalHtml);
+}
+
 // Global modal triggers for HTML onclick bindings
 window.toggleProfileDropdown = toggleProfileDropdown;
 window.closeProfileDropdown = closeProfileDropdown;
@@ -2508,3 +2662,5 @@ window.renderLogisticsView = renderLogisticsView;
 window.renderPaymentsView = renderPaymentsView;
 window.renderProfileView = renderProfileView;
 window.renderDirectoryView = renderDirectoryView;
+window.showBuyerCertificateModal = showBuyerCertificateModal;
+

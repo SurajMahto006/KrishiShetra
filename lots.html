@@ -277,9 +277,8 @@
             <label for="lot-grade-select">Quality / Grade</label>
             <select id="lot-grade-select" class="dash-filter-select">
               <option value="Grade A">Grade A (Premium)</option>
-              <option value="Grade B">Grade B (Standard)</option>
-              <option value="Export Quality">Export Quality</option>
-              <option value="Organic Certified">Organic Certified</option>
+              <option value="Grade B">Grade B (Standard FAQ)</option>
+              <option value="Grade C">Grade C (Under-grade)</option>
             </select>
           </div>
           <div class="dash-modal__field">
@@ -287,6 +286,115 @@
             <input type="date" id="lot-harvest-input" class="dash-form-input" required>
           </div>
         </div>
+
+        <!-- OBJECTIVE QUALITY & ASSAYING SPECIFICATION CARD BUILDER -->
+        <div style="background: #FAF8F5; border: 1px solid #E2E0D5; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <div style="font-size: 13.5px; font-weight: 800; color: var(--ks-evergreen); display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="shield-check" style="width: 18px; height: 18px; color: var(--ks-sage);"></i>
+                Agmark / e-NAM Parametric Quality Specifications
+              </div>
+              <div style="font-size: 11px; color: #777;">Physical & chemical parameters standardize trade grade</div>
+            </div>
+            <button type="button" class="btn btn--secondary" id="btn-open-ai-scanner" style="padding: 6px 12px; font-size: 12px; font-weight: 700; background: #12372A; color: #E8B96A; border: none; display: flex; align-items: center; gap: 6px; border-radius: 8px; cursor: pointer;">
+              <i data-lucide="scan" style="width: 14px; height: 14px;"></i> AI Defect Scan
+            </button>
+          </div>
+
+          <!-- Grains / Cereals Parameters -->
+          <div id="grain-params-form-group">
+            <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #718E68; margin-bottom: 8px;">Cereal & Grain Parameters (Wheat / Paddy / Pulses)</div>
+            <div class="dash-form-row">
+              <div class="dash-modal__field">
+                <label for="lot-moisture-input">Moisture Content (%) <small style="color:#777;">(Grade A: ≤12%)</small></label>
+                <input type="number" step="0.1" id="lot-moisture-input" class="dash-form-input quality-param-input" placeholder="e.g. 11.4" min="0" max="30">
+              </div>
+              <div class="dash-modal__field">
+                <label for="lot-foreign-input">Foreign Matter (%) <small style="color:#777;">(Grade A: ≤1%)</small></label>
+                <input type="number" step="0.1" id="lot-foreign-input" class="dash-form-input quality-param-input" placeholder="e.g. 0.7" min="0" max="15">
+              </div>
+            </div>
+            <div class="dash-form-row">
+              <div class="dash-modal__field">
+                <label for="lot-broken-input">Broken Grains (%) <small style="color:#777;">(Grade A: ≤2%)</small></label>
+                <input type="number" step="0.1" id="lot-broken-input" class="dash-form-input quality-param-input" placeholder="e.g. 1.5" min="0" max="25">
+              </div>
+              <div class="dash-modal__field">
+                <label for="lot-damaged-input">Damaged Grains (%) <small style="color:#777;">(Grade A: ≤1.5%)</small></label>
+                <input type="number" step="0.1" id="lot-damaged-input" class="dash-form-input quality-param-input" placeholder="e.g. 0.8" min="0" max="20">
+              </div>
+            </div>
+          </div>
+
+          <!-- Fruits & Vegetables Parameters -->
+          <div id="horti-params-form-group" style="display: none;">
+            <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #718E68; margin-bottom: 8px;">Horticulture Parameters (Onion / Tomato / Fruits)</div>
+            <div class="dash-form-row">
+              <div class="dash-modal__field">
+                <label for="lot-blemish-input">Surface Blemish (%) <small style="color:#777;">(Grade A: ≤3%)</small></label>
+                <input type="number" step="0.1" id="lot-blemish-input" class="dash-form-input quality-param-input" placeholder="e.g. 2.0" min="0" max="30">
+              </div>
+              <div class="dash-modal__field">
+                <label for="lot-uniformity-input">Size Uniformity (%) <small style="color:#777;">(Grade A: ≥90%)</small></label>
+                <input type="number" step="1" id="lot-uniformity-input" class="dash-form-input quality-param-input" placeholder="e.g. 92" min="10" max="100">
+              </div>
+            </div>
+            <div class="dash-form-row">
+              <div class="dash-modal__field">
+                <label for="lot-ripeness-input">Ripeness Index (%) <small style="color:#777;">(Grade A: ≥85%)</small></label>
+                <input type="number" step="1" id="lot-ripeness-input" class="dash-form-input quality-param-input" placeholder="e.g. 88" min="10" max="100">
+              </div>
+              <div class="dash-modal__field">
+                <label for="lot-size-input">Avg Diameter (mm)</label>
+                <input type="number" step="1" id="lot-size-input" class="dash-form-input quality-param-input" placeholder="e.g. 58" min="10" max="200">
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Agmark Scorecard Result -->
+          <div id="agmark-live-scorecard" style="margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5E4DD; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <div style="font-size: 10.5px; color: #777; font-weight: 700; text-transform: uppercase;">Derived Agmark Benchmark Grade</div>
+              <div id="agmark-derived-grade-label" style="font-size: 13.5px; font-weight: 800; color: #12372A;">Grade A (Agmark Premium FAQ)</div>
+            </div>
+            <span id="agmark-grade-badge-preview" class="agmark-badge agmark-badge--grade-a">AGMARK GRADE A</span>
+          </div>
+        </div>
+
+        <!-- LAB CERTIFICATE & ASSAYER UPLOAD ACCORDION -->
+        <details style="background: #FAF9F5; border: 1px dashed #D6A84F; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;">
+          <summary style="font-size: 13px; font-weight: 700; color: #12372A; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="file-check" style="width: 16px; height: 16px; color: #D6A84F;"></i>
+            Third-Party Assayer / Lab Test Certificate (Optional)
+          </summary>
+          <div style="margin-top: 12px;">
+            <div class="dash-form-row">
+              <div class="dash-modal__field">
+                <label for="lot-assayer-name">Assayer Name</label>
+                <input type="text" id="lot-assayer-name" class="dash-form-input" placeholder="e.g. Dr. Vivek Deshmukh">
+              </div>
+              <div class="dash-modal__field">
+                <label for="lot-assayer-org">Lab / Organization</label>
+                <input type="text" id="lot-assayer-org" class="dash-form-input" placeholder="e.g. NABL Central Agmark Lab #44">
+              </div>
+            </div>
+            <div class="dash-form-row">
+              <div class="dash-modal__field">
+                <label for="lot-cert-number">Certificate Number</label>
+                <input type="text" id="lot-cert-number" class="dash-form-input" placeholder="e.g. AGM-2026-QC-48912">
+              </div>
+              <div class="dash-modal__field">
+                <label for="lot-cert-file">Upload Lab Certificate (PDF)</label>
+                <input type="file" id="lot-cert-file" class="dash-form-input" accept=".pdf,.png,.jpg,.jpeg">
+              </div>
+            </div>
+            <div class="dash-modal__field">
+              <label for="lot-lab-remarks">Lab Remarks / Digital Signature Note</label>
+              <input type="text" id="lot-lab-remarks" class="dash-form-input" placeholder="e.g. Purity 99.4%, Moisture 11.4%. Verified with digital key.">
+            </div>
+          </div>
+        </details>
         <div class="dash-modal__field">
           <label for="lot-location-input">Farm Location / Mandi</label>
           <input type="text" id="lot-location-input" class="dash-form-input" value="Pune, Maharashtra"
@@ -503,11 +611,119 @@
     </div>
   </div>
 
+  <!-- AI PRODUCE DEFECT SCANNER MODAL -->
+  <div class="dash-modal-overlay" id="ai-scanner-modal-overlay">
+    <div class="dash-modal" id="ai-scanner-modal" style="max-width: 620px;">
+      <div class="dash-modal__header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #12372A; color: #E8B96A; display: flex; align-items: center; justify-content: center;">
+            <i data-lucide="cpu" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 17px; color: var(--ks-evergreen);">AI Produce Defect Scanner</h3>
+            <div style="font-size: 11.5px; color: #777;">Computer Vision defect estimation for grains & horticulture</div>
+          </div>
+        </div>
+        <button class="dash-modal__close" id="ai-scanner-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad">
+        <!-- Sample Presets / Image Selector -->
+        <div style="margin-bottom: 14px;">
+          <div style="font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; margin-bottom: 6px;">Select Crop Test Sample or Upload Photo:</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn btn--secondary ai-sample-btn" data-crop="Wheat" data-sample="premium" style="font-size: 11.5px; padding: 5px 10px;">🌾 Wheat (Grade A Premium)</button>
+            <button type="button" class="btn btn--secondary ai-sample-btn" data-crop="Wheat" data-sample="defective" style="font-size: 11.5px; padding: 5px 10px;">⚠️ Wheat (Defective/Broken)</button>
+            <button type="button" class="btn btn--secondary ai-sample-btn" data-crop="Onion" data-sample="premium" style="font-size: 11.5px; padding: 5px 10px;">🧅 Onion (Export Grade A)</button>
+            <button type="button" class="btn btn--secondary ai-sample-btn" data-crop="Tomato" data-sample="defective" style="font-size: 11.5px; padding: 5px 10px;">🍅 Tomato (Blemished)</button>
+          </div>
+        </div>
+
+        <!-- Scanner Viewport with Laser and Defect Overlay -->
+        <div class="scanner-viewport" id="scanner-viewport">
+          <img id="scanner-preview-img" class="scanner-viewport__img" src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop&q=80" alt="Produce Sample">
+          <div class="scanner-viewport__overlay"></div>
+          <div class="scanner-grid"></div>
+          <div class="scanner-laser" id="scanner-laser" style="display: none;"></div>
+          <!-- Bounding Boxes Container -->
+          <div id="scanner-boxes-container"></div>
+        </div>
+
+        <!-- Action Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 10px;">
+          <button type="button" class="btn btn--primary" id="btn-run-ai-scan" style="background: #12372A; color: #E8B96A; font-weight: 800; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <i data-lucide="zap" style="width: 16px; height: 16px;"></i> Run Neural Defect Scan
+          </button>
+          <div id="scan-status-indicator" style="font-size: 12px; font-weight: 700; color: #718E68;">Ready to scan</div>
+        </div>
+
+        <!-- Scan Results & Detected Defect Chips -->
+        <div id="scan-results-box" style="margin-top: 16px; display: none; background: #FAF8F5; border: 1px solid #E2E0D5; border-radius: 10px; padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="font-size: 12px; font-weight: 800; color: #12372A; text-transform: uppercase;">Defect Analysis Summary</div>
+            <div id="scan-confidence-badge" style="font-size: 11px; background: #E5F0E7; color: #12372A; font-weight: 800; padding: 2px 8px; border-radius: 4px;">97.8% Confidence</div>
+          </div>
+          <div id="scan-defect-chips" class="defect-chip-list"></div>
+          <div id="scan-params-breakdown" style="margin-top: 10px; font-size: 12.5px; color: #333; line-height: 1.5;"></div>
+
+          <button type="button" class="btn btn--primary" id="btn-apply-ai-params" style="width: 100%; margin-top: 14px; justify-content: center; display: flex; align-items: center; gap: 8px;">
+            <i data-lucide="check-circle-2"></i> Apply AI Parameters to Lot Listing
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIGITAL LAB CERTIFICATE VIEW MODAL -->
+  <div class="dash-modal-overlay" id="lab-cert-modal-overlay">
+    <div class="dash-modal" id="lab-cert-modal" style="max-width: 650px;">
+      <div class="dash-modal__header">
+        <h3 style="margin: 0; font-size: 17px; color: var(--ks-evergreen);"><i data-lucide="award" style="color: #D6A84F; margin-right: 6px;"></i> Agmark / NABL Assaying Certificate</h3>
+        <button class="dash-modal__close" id="lab-cert-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="dash-modal__body-pad" id="lab-cert-modal-content">
+        <!-- Rendered dynamically by FarmerFlow.showCertificateModal -->
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECT ASSAY & CERTIFICATION MODAL (For FPOs, Assayers, Farmers) -->
+  <div class="dash-modal-overlay" id="assay-lot-modal-overlay">
+    <div class="dash-modal" id="assay-lot-modal" style="max-width: 600px;">
+      <div class="dash-modal__header">
+        <h3 style="margin: 0; font-size: 17px; color: var(--ks-evergreen);"><i data-lucide="stamp" style="color: #12372A; margin-right: 6px;"></i> Verify & Certify Produce Lot</h3>
+        <button class="dash-modal__close" id="assay-lot-modal-close"><i data-lucide="x"></i></button>
+      </div>
+      <form class="dash-modal__form" id="assay-lot-form">
+        <input type="hidden" id="assay-target-lot-id">
+        <div class="dash-modal__field">
+          <label for="assay-cert-num-input">Certificate Number</label>
+          <input type="text" id="assay-cert-num-input" class="dash-form-input" required>
+        </div>
+        <div class="dash-form-row">
+          <div class="dash-modal__field">
+            <label for="assay-lab-name-input">Accredited Laboratory</label>
+            <input type="text" id="assay-lab-name-input" class="dash-form-input" value="NABL / Agmark Central Quality Lab" required>
+          </div>
+          <div class="dash-modal__field">
+            <label for="assay-signer-name-input">Assayer Name</label>
+            <input type="text" id="assay-signer-name-input" class="dash-form-input" required>
+          </div>
+        </div>
+        <div class="dash-modal__field">
+          <label for="assay-remarks-input">Physical / Chemical Remarks</label>
+          <input type="text" id="assay-remarks-input" class="dash-form-input" value="Certified conformant with Agmark Grade specifications. Digital signature verified.">
+        </div>
+        <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-submit-assay"><i data-lucide="shield-check"></i> Sign & Certify Lot</button>
+      </form>
+    </div>
+  </div>
+
   <!-- SCRIPTS -->
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
+  <script src="js/grading-engine.js"></script>
   <script src="js/farmer.js"></script>
   <script src="js/dashboard.js"></script>
 </body>

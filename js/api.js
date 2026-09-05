@@ -194,7 +194,9 @@ const api = {
     },
     getById: (lotId) => client.get(`/lots/${lotId}`),
     update: (lotId, lotData) => client.put(`/lots/${lotId}`, lotData),
-    cancel: (lotId) => client.delete(`/lots/${lotId}`)
+    cancel: (lotId) => client.delete(`/lots/${lotId}`),
+    assay: (lotId, assayData) => client.post(`/lots/${lotId}/assay`, assayData),
+    aiEstimate: (scanData) => client.post('/lots/ai-estimate', scanData)
   },
 
   // 4. Public Marketplace (/api/market)
