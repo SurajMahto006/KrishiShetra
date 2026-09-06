@@ -33,6 +33,10 @@ function resolveApiBaseUrl() {
       if (host === 'localhost' || host === '127.0.0.1') {
         return DEV_API_URL;
       }
+      // If served directly from the backend server (Render / hosted web service)
+      if (window.location.origin && (host.endsWith('.onrender.com') || host.includes('onrender.com'))) {
+        return `${window.location.origin}/api`;
+      }
     }
     // 4. Default for production / hosted deployments (Render static site, Vercel, etc.)
     return PROD_API_URL;

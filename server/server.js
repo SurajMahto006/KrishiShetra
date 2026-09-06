@@ -52,6 +52,10 @@ if (process.env.FRONTEND_URL) {
   allowedOrigins.push(...envOrigins);
 }
 
+if (process.env.RENDER_EXTERNAL_URL) {
+  allowedOrigins.push(process.env.RENDER_EXTERNAL_URL.trim().replace(/\/+$/, ''));
+}
+
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (mobile apps, server-to-server, curl)
@@ -59,7 +63,8 @@ const corsOptions = {
 
     const isAllowed = allowedOrigins.includes(origin) ||
       /^http:\/\/localhost(:\d+)?$/.test(origin) ||
-      /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin);
+      /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||
+      /^https?:\/\/[^/]+\.onrender\.com$/.test(origin);
 
     if (isAllowed) {
       callback(null, true);
@@ -106,13 +111,18 @@ app.get('/api', (req, res) => {
 // 404 Catch-all for any undefined /api routes
 app.all('/api/*', apiNotFoundHandler);
 
-const rootDir = path.join(__dirname, '..');
+const frontendDir = path.join(__dirname, '..', 'frontend');
 
-// Serve root static files (HTML, CSS, JS, Assets)
-app.use(express.static(rootDir));
+// Serve the entire frontend directory as static files (HTML, CSS, JS, Assets, etc.)
+app.use(express.static(frontendDir, { extensions: ['html'] }));
+
+// Explicitly serve frontend/index.html for GET /
+app.get('/', (req, res) => {
+  res.sendFile(path.join(frontendDir, 'index.html'));
+});
 
 // Support /KrishiShetra and /krishishetra path aliases so requests with folder prefix work seamlessly
-app.use(['/KrishiShetra', '/krishishetra'], express.static(rootDir));
+app.use(['/KrishiShetra', '/krishishetra'], express.static(frontendDir, { extensions: ['html'] }));
 
 // Centralized error handling middleware for all routes (must be 4 parameters)
 app.use(apiErrorHandler);
