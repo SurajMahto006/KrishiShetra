@@ -191,20 +191,20 @@
               <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
                 data-i18n="filterRadius">Distance Radius</label>
               <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="25" style="padding: 6px 8px;">25
-                  km</button>
-                <button class="btn btn--secondary btn--sm storage-dist-btn active" data-dist="50"
-                  style="padding: 6px 8px; background:#2E7D32; color:#FFF; border-color:#2E7D32;">50 km</button>
-                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="100"
-                  style="padding: 6px 8px;">100 km</button>
-                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="0" style="padding: 6px 8px;">All
-                  India</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="25" style="padding: 6px 8px;">25 km</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="50" style="padding: 6px 8px;">50 km</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="100" style="padding: 6px 8px;">100 km</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn active" data-dist="0" style="padding: 6px 8px; background:#2E7D32; color:#FFF; border-color:#2E7D32;">All India</button>
               </div>
             </div>
-            <div>
+            <div style="display: flex; gap: 8px; align-items: flex-end;">
               <button class="btn btn--secondary btn--sm" id="storage-my-loc-btn"
                 style="height: 38px; display: flex; align-items: center; gap: 6px;">
                 <i data-lucide="crosshair"></i> <span>My Location</span>
+              </button>
+              <button class="btn btn--secondary btn--sm" id="storage-reset-btn" onclick="resetStorageFilters()"
+                style="height: 38px; display: flex; align-items: center; gap: 6px;" title="Reset all filters">
+                <i data-lucide="rotate-ccw"></i> <span>Reset Filters</span>
               </button>
             </div>
           </div>
@@ -218,8 +218,20 @@
           </div>
 
           <!-- RIGHT: FACILITY CARDS LIST -->
-          <div class="storage-list-panel" id="storage-list-panel">
-            <!-- Dynamic facility cards rendered by storage.js -->
+          <div class="storage-list-column" style="display: flex; flex-direction: column; gap: 10px;">
+            <div id="storage-status-banner" style="display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; border: 1px solid var(--ks-storage-border, #E8E6DF); padding: 10px 14px; border-radius: 12px; font-size: 12.5px;">
+              <div id="storage-status-content" style="display: flex; align-items: center; gap: 8px;">
+                <span class="status-indicator-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #2E7D32; display: inline-block;"></span>
+                <span id="storage-status-text" style="color: #2E7D32; font-weight: 700;">Live storage data</span>
+                <span id="storage-status-time" style="color: #666; font-size: 11.5px;">· Updated today</span>
+              </div>
+              <button class="btn btn--secondary btn--sm" id="btn-retry-storage" onclick="retryStorageFetch()" style="padding: 4px 10px; font-size: 11px; height: 28px; display: inline-flex; align-items: center; gap: 4px;">
+                <i data-lucide="refresh-cw" style="width: 12px; height: 12px;"></i> <span id="storage-retry-btn-label">Refresh</span>
+              </button>
+            </div>
+            <div class="storage-list-panel" id="storage-list-panel">
+              <!-- Dynamic facility cards rendered by storage.js -->
+            </div>
           </div>
         </div>
       </section>
@@ -697,6 +709,9 @@
   <!-- SCRIPTS -->
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
+  <script src="data/fallback-data.js"></script>
+  <script src="js/marketDataCache.js"></script>
+  <script src="js/data-service.js"></script>
   <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/storage.js"></script>

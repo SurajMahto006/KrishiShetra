@@ -728,14 +728,17 @@ async function handleStatusUpdate(id, newStatus) {
   try {
     const res = await window.api.disputes.updateStatus(id, newStatus, `Advanced to ${newStatus} by mediator`);
     if (res && res.success) {
+      if (window.KrishiLogger) window.KrishiLogger.info('DISPUTES', `Dispute ${id} advanced to ${newStatus}`);
       showToastNotification(`Status updated to ${newStatus}`);
       await loadDisputes(id);
     } else {
-      alert(res.message || 'Failed to update status');
+      const msg = res?.error?.message || res?.message || 'Failed to update status';
+      if (window.KrishiLogger) window.KrishiLogger.warn('DISPUTES', `Status update failed: ${msg}`);
+      showToastNotification(msg, 'error');
     }
   } catch (err) {
-    console.error('Status update error:', err);
-    alert('Server error while updating status');
+    if (window.KrishiLogger) window.KrishiLogger.error('DISPUTES', 'Status update error', { error: err.message || err });
+    showToastNotification('Unable to update dispute status. Please try again.', 'error');
   }
 }
 
@@ -749,7 +752,7 @@ async function handleResolveDispute(event, id) {
   const comment = document.getElementById('resolve-comment')?.value || '';
 
   if (!resolutionType) {
-    alert('Please select a resolution type');
+    showToastNotification('Please select a resolution type', 'warning');
     return;
   }
 
@@ -762,14 +765,17 @@ async function handleResolveDispute(event, id) {
 
     const res = await window.api.disputes.resolve(id, payload);
     if (res && res.success) {
+      if (window.KrishiLogger) window.KrishiLogger.info('DISPUTES', `Dispute ${id} resolved as ${resolutionType}`);
       showToastNotification('Dispute successfully concluded!');
       await loadDisputes(id);
     } else {
-      alert(res.message || 'Failed to conclude dispute');
+      const msg = res?.error?.message || res?.message || 'Failed to conclude dispute';
+      if (window.KrishiLogger) window.KrishiLogger.warn('DISPUTES', `Dispute resolve failed: ${msg}`);
+      showToastNotification(msg, 'error');
     }
   } catch (err) {
-    console.error('Dispute resolution error:', err);
-    alert('Server error while resolving dispute');
+    if (window.KrishiLogger) window.KrishiLogger.error('DISPUTES', 'Dispute resolution error', { error: err.message || err });
+    showToastNotification('Unable to resolve dispute. Please check your connection.', 'error');
   }
 }
 
@@ -870,15 +876,15 @@ async function handleDisputeSubmit(event) {
   const submitBtn = document.getElementById('submit-dispute-btn');
 
   if (!orderId) {
-    alert('Please select an order');
+    showToastNotification('Please select an order to dispute', 'warning');
     return;
   }
   if (!reason) {
-    alert('Please choose a reason');
+    showToastNotification('Please choose a reason for the grievance', 'warning');
     return;
   }
   if (!description || !description.trim()) {
-    alert('Please provide a description of the problem');
+    showToastNotification('Please provide a description of the problem', 'warning');
     return;
   }
 
@@ -903,17 +909,20 @@ async function handleDisputeSubmit(event) {
     const res = await window.api.disputes.create(payload);
 
     if (res && res.success && res.dispute) {
-      showToastNotification('✓ Dispute submitted. Payment protection is active.');
+      if (window.KrishiLogger) window.KrishiLogger.info('DISPUTES', `Dispute created: ${res.dispute.disputeId}`);
+      showToastNotification('✓ Dispute submitted. Payment protection is active.', 'success');
       closeRaiseDisputeModal();
       document.getElementById('raise-dispute-form').reset();
       state.evidenceFiles = [];
       await loadDisputes(res.dispute.disputeId);
     } else {
-      alert(res.message || 'Failed to create dispute');
+      const msg = res?.error?.message || res?.message || 'Failed to create dispute';
+      if (window.KrishiLogger) window.KrishiLogger.warn('DISPUTES', `Dispute creation failed: ${msg}`);
+      showToastNotification(msg, 'error');
     }
   } catch (err) {
-    console.error('Error submitting dispute:', err);
-    alert(err.message || 'Server error while creating dispute');
+    if (window.KrishiLogger) window.KrishiLogger.error('DISPUTES', 'Error submitting dispute', { error: err.message || err });
+    showToastNotification(err.message || 'Server error while creating dispute. Please try again.', 'error');
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -924,11 +933,21 @@ async function handleDisputeSubmit(event) {
 }
 
 /**
- * Simple toast notification banner
+ * Toast notification banner integrating with global toast system
  */
-function showToastNotification(message) {
+function showToastNotification(message, type = 'info') {
+  if (typeof window.showToast === 'function') {
+    window.showToast(message, type);
+    return;
+  }
+
   const existing = document.getElementById('ks-toast-dispute');
   if (existing) existing.remove();
+
+  const isErr = type === 'error';
+  const isWarn = type === 'warning';
+  const bg = isErr ? '#991B1B' : (isWarn ? '#92400E' : 'var(--ks-evergreen, #12372A)');
+  const icon = isErr ? '⚠️' : (isWarn ? '🔔' : '🛡️');
 
   const toast = document.createElement('div');
   toast.id = 'ks-toast-dispute';
@@ -936,24 +955,24 @@ function showToastNotification(message) {
     position: fixed;
     bottom: 24px;
     right: 24px;
-    background: var(--ks-evergreen, #12372A);
+    background: ${bg};
     color: #FFFFFF;
     padding: 12px 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
     font-size: 13.5px;
     font-weight: 600;
     z-index: 9999;
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: opacity 0.3s ease;
   `;
-  toast.innerHTML = `<span>🛡️</span> <span>${message}</span>`;
+  toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
   document.body.appendChild(toast);
 
   setTimeout(() => {
     toast.style.opacity = '0';
-    toast.style.transition = 'opacity 0.4s ease';
-    setTimeout(() => toast.remove(), 400);
+    setTimeout(() => toast.remove(), 350);
   }, 4000);
 }

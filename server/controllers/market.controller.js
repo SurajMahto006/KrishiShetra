@@ -282,10 +282,14 @@ const getMandiPrices = async (req, res) => {
     const result = await getGovernmentMandiPrices(req.query);
     return res.status(200).json(result);
   } catch (error) {
+    console.error('[Market Controller] Error getting mandi prices:', error.message || error);
     return res.status(500).json({
       success: false,
-      source: 'Government of India - data.gov.in',
-      message: 'Government mandi prices are temporarily unavailable. Please try again.',
+      source: 'government',
+      verified: false,
+      status: 'UNAVAILABLE',
+      statusLabel: 'Verified market data unavailable',
+      message: 'Server error while retrieving verified government mandi data',
       data: []
     });
   }

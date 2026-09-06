@@ -314,6 +314,8 @@ const INITIAL_FACILITIES = [
   }
 ];
 
+const { storageCacheManager, VERIFIED_STORAGE_SEED } = require('../utils/storageCache');
+
 /**
  * Auto-seed initial facilities if collection is empty
  */
@@ -322,8 +324,9 @@ async function seedInitialFacilities() {
   try {
     const count = await StorageFacility.countDocuments();
     if (count === 0) {
-      await StorageFacility.insertMany(INITIAL_FACILITIES);
-      console.log(`✓ Seeded ${INITIAL_FACILITIES.length} Storage & Cold Chain Facilities into database.`);
+      const { facilities } = storageCacheManager.getAllVerified();
+      await StorageFacility.insertMany(facilities);
+      console.log(`✓ Seeded ${facilities.length} Storage & Cold Chain Facilities into database.`);
     }
   } catch (err) {
     console.warn('StorageFacility seed notice:', err.message);
@@ -355,24 +358,38 @@ const getNearbyStorage = async (req, res) => {
     const maxRadius = parseFloat(radius) || 0;
 
     let facilities = [];
+    let dataSource = 'live';
+    let fetchedAt = new Date().toISOString();
 
     if (mongoose.connection.readyState === 1) {
-      const filter = { operatingStatus: { $ne: 'closed' } };
-      if (type && type !== 'all') filter.type = type;
-      if (state && state !== 'all') filter['address.state'] = new RegExp(state.trim(), 'i');
-      if (district && district !== 'all') filter['address.district'] = new RegExp(district.trim(), 'i');
-      if (crop && crop !== 'all') filter.supportedCrops = crop.trim().toLowerCase();
-      if (verifiedOnly === 'true' || verifiedOnly === true) filter.verificationStatus = 'verified';
+      try {
+        const filter = { operatingStatus: { $ne: 'closed' } };
+        if (type && type !== 'all') filter.type = type;
+        if (state && state !== 'all') filter['address.state'] = new RegExp(state.trim(), 'i');
+        if (district && district !== 'all') filter['address.district'] = new RegExp(district.trim(), 'i');
+        if (crop && crop !== 'all') filter.supportedCrops = crop.trim().toLowerCase();
+        if (verifiedOnly === 'true' || verifiedOnly === true) filter.verificationStatus = 'verified';
 
-      facilities = await StorageFacility.find(filter).lean();
+        facilities = await StorageFacility.find(filter).lean();
+        if (facilities && facilities.length > 0) {
+          dataSource = 'live';
+          fetchedAt = new Date().toISOString();
+        }
+      } catch (dbErr) {
+        console.warn('Database query fallback to cache:', dbErr.message);
+      }
     }
 
     if (!facilities || facilities.length === 0) {
-      facilities = INITIAL_FACILITIES.filter(f => {
+      const cached = storageCacheManager.getAllVerified();
+      dataSource = 'cache';
+      fetchedAt = cached.lastUpdated || new Date().toISOString();
+
+      facilities = (cached.facilities || VERIFIED_STORAGE_SEED).filter(f => {
         if (type && type !== 'all' && f.type !== type) return false;
-        if (crop && crop !== 'all' && !f.supportedCrops.includes(crop.toLowerCase())) return false;
-        if (state && state !== 'all' && !f.address.state.toLowerCase().includes(state.toLowerCase())) return false;
-        if (district && district !== 'all' && !f.address.district.toLowerCase().includes(district.toLowerCase())) return false;
+        if (crop && crop !== 'all' && !f.supportedCrops?.map(c => c.toLowerCase()).includes(crop.toLowerCase())) return false;
+        if (state && state !== 'all' && !f.address?.state?.toLowerCase().includes(state.toLowerCase())) return false;
+        if (district && district !== 'all' && !f.address?.district?.toLowerCase().includes(district.toLowerCase())) return false;
         if ((verifiedOnly === 'true' || verifiedOnly === true) && f.verificationStatus !== 'verified') return false;
         return true;
       });
@@ -388,10 +405,14 @@ const getNearbyStorage = async (req, res) => {
       return {
         ...f,
         id: f._id || f.facilityCode,
+        facilityCode: f.facilityCode || f.id || f._id,
         distanceKm: Number(distanceKm.toFixed(1)),
         distance: Number(distanceKm.toFixed(1)),
         capacityUtilizationPct,
-        isAvailable
+        isAvailable,
+        source: f.source || 'WDRA / State Warehousing Corp',
+        verified: f.verified !== false,
+        fetchedAt: f.fetchedAt || fetchedAt
       };
     });
 
@@ -411,14 +432,24 @@ const getNearbyStorage = async (req, res) => {
       success: true,
       count: paginated.length,
       total,
+      source: dataSource,
+      fetchedAt: fetchedAt,
+      isStale: dataSource !== 'live',
       userLocation: { lat: userLat, lng: userLng },
       facilities: paginated
     });
   } catch (error) {
     console.error('getNearbyStorage error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to retrieve storage facilities'
+    // Even if something throws, fallback to verified cache
+    const cached = storageCacheManager.getAllVerified();
+    return res.status(200).json({
+      success: true,
+      count: cached.facilities.length,
+      total: cached.facilities.length,
+      source: 'cache',
+      fetchedAt: cached.lastUpdated,
+      isStale: true,
+      facilities: cached.facilities
     });
   }
 };
@@ -500,23 +531,37 @@ const getStorageOptionsForCrop = async (req, res) => {
     const lang = req.query.lang || req.query.language || 'en';
 
     let facilities = [];
+    let dataSource = 'live';
+    let fetchedAt = new Date().toISOString();
+
     if (mongoose.connection.readyState === 1) {
-      facilities = await StorageFacility.find({
-        operatingStatus: { $ne: 'closed' },
-        supportedCrops: crop
-      }).lean();
+      try {
+        facilities = await StorageFacility.find({
+          operatingStatus: { $ne: 'closed' },
+          supportedCrops: crop
+        }).lean();
+        if (facilities && facilities.length > 0) {
+          dataSource = 'live';
+        }
+      } catch (dbErr) {
+        console.warn('Database query fallback to storageCache:', dbErr.message);
+      }
     }
 
     if (!facilities || facilities.length === 0) {
-      facilities = INITIAL_FACILITIES.filter(f =>
+      const cached = storageCacheManager.getAllVerified();
+      dataSource = 'cache';
+      fetchedAt = cached.lastUpdated || new Date().toISOString();
+      facilities = (cached.facilities || VERIFIED_STORAGE_SEED).filter(f =>
         f.operatingStatus !== 'closed' &&
-        f.supportedCrops.includes(crop)
+        f.supportedCrops?.map(c => c.toLowerCase()).includes(crop)
       );
     }
 
     // Fallback if no exact crop match, include grain warehouses
     if (facilities.length === 0) {
-      facilities = INITIAL_FACILITIES.filter(f => f.type === 'warehouse' || f.type === 'silo');
+      const cached = storageCacheManager.getAllVerified();
+      facilities = (cached.facilities || VERIFIED_STORAGE_SEED).filter(f => f.type === 'warehouse' || f.type === 'silo');
     }
 
     // Evaluate Sell-vs-Store financial metrics for EACH facility
@@ -606,6 +651,9 @@ const getStorageOptionsForCrop = async (req, res) => {
       currentPrice,
       holdingDays,
       count: filtered.length,
+      source: dataSource,
+      fetchedAt,
+      isStale: dataSource !== 'live',
       bestRecommendation: filtered[0]?.recommendation || 'STORE_AND_HOLD',
       options: filtered
     });
@@ -638,9 +686,10 @@ const getStorageById = async (req, res) => {
     }
 
     if (!facility) {
-      const fallback = INITIAL_FACILITIES.find(f => f.facilityCode === id || f._id === id);
+      const { facilities } = storageCacheManager.getAllVerified();
+      const fallback = (facilities || VERIFIED_STORAGE_SEED).find(f => f.facilityCode === id || f._id === id || f.id === id);
       if (fallback) {
-        facility = { ...fallback, id: fallback.facilityCode };
+        facility = { ...fallback, id: fallback.facilityCode || fallback.id || fallback._id };
       }
     }
 
@@ -689,7 +738,8 @@ const calculateSellVsStore = async (req, res) => {
         }
       }
       if (!facility) {
-        facility = INITIAL_FACILITIES.find(f => f.facilityCode === storageFacilityId || f._id === storageFacilityId);
+        const { facilities } = storageCacheManager.getAllVerified();
+        facility = (facilities || VERIFIED_STORAGE_SEED).find(f => f.facilityCode === storageFacilityId || f._id === storageFacilityId || f.id === storageFacilityId);
       }
     }
 

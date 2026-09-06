@@ -1,4 +1,4 @@
-﻿/**
+/**
  * KRISHISHETRA - INDIA MANDI MAP (GPS System)
  * Leaflet + OpenStreetMap tiles (zero API key required)
  * 45+ APMC mandis with real GPS coordinates (lat/lng)
@@ -577,17 +577,25 @@ function initMandiMap() {
   document.head.appendChild(style);
 })();
 
-// Lazy-load when section enters viewport
+// Auto-load on DOM ready and when section enters viewport
 (function() {
   var section = document.getElementById('dash-mandi-map');
-  if (!section) { if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initMandiMap); else initMandiMap(); return; }
-  if (!('IntersectionObserver' in window)) { initMandiMap(); return; }
-  var obs = new IntersectionObserver(function(entries) {
-    if (entries[0].isIntersecting) { initMandiMap(); obs.disconnect(); }
-  }, { rootMargin: '300px' });
-  obs.observe(section);
-  // Also trigger if already in view
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ obs.observe(section); });
+  if (!section) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMandiMap);
+    else initMandiMap();
+    return;
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMandiMap);
+  } else {
+    initMandiMap();
+  }
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) { initMandiMap(); obs.disconnect(); }
+    }, { rootMargin: '300px' });
+    obs.observe(section);
+  }
 })();
 
 

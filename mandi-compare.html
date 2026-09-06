@@ -428,34 +428,6 @@
         </div>
       </section>
 
-      <!-- ── F & G) DUAL VISUALIZATION HUB (BAR & SCATTER MATRIX) ── -->
-      <section class="mpc-section" id="mpc-visual-section">
-        <div class="mpc-chart-card">
-          <div class="mpc-chart-header">
-            <div>
-              <h2 class="mpc-section-title"><i data-lucide="bar-chart-3"></i> Visual Profitability Analysis</h2>
-              <p class="mpc-section-subtitle">Evaluate net returns and distance trade-offs visually</p>
-            </div>
-            <div class="mpc-chart-tabs">
-              <button class="mpc-chart-tab-btn active" data-chart="net">
-                <i data-lucide="trending-up"></i> Net Realization
-              </button>
-              <button class="mpc-chart-tab-btn" data-chart="price">
-                <i data-lucide="coins"></i> Mandi Price
-              </button>
-              <button class="mpc-chart-tab-btn" data-chart="transport">
-                <i data-lucide="truck"></i> Freight Cost
-              </button>
-              <button class="mpc-chart-tab-btn" data-chart="scatter">
-                <i data-lucide="crosshair"></i> Distance vs Profit Matrix
-              </button>
-            </div>
-          </div>
-          <div class="mpc-chart-wrapper">
-            <canvas id="mpc-chart"></canvas>
-          </div>
-        </div>
-      </section>
 
       <!-- ── H) WEATHER & MARKET CONDITIONS ── -->
       <section class="mpc-section" id="mpc-weather-section">
@@ -521,6 +493,8 @@
     })();
   </script>
   <script src="js/api.js"></script>
+  <script src="data/fallback-data.js"></script>
+  <script src="js/data-service.js"></script>
   <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/mandi-compare.js"></script>

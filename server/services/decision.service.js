@@ -87,26 +87,73 @@ function evaluateSellVsStore({
   const projectedGrossGain = Math.round(priceDiffPerQtl * qty);
 
   // 3. Storage Cost (Standard: 1 quintal ~ 2 standard 50kg bags or direct quintal rate)
-  let monthlyRatePerQuintal = 40; // Default ₹40/quintal/month
-  let handlingRatePerQuintal = 15; // Default ₹15/quintal
+  let monthlyRatePerQuintal = null;
+  let handlingRatePerQuintal = 15;
   let facilityName = 'Nearby Accredited Warehouse';
   let facilityType = 'warehouse';
-  let isAccredited = true;
+  let hasValidTariff = false;
 
   if (storageFacility) {
     facilityName = storageFacility.name || facilityName;
     facilityType = storageFacility.type || facilityType;
     handlingRatePerQuintal = storageFacility.handlingCharge !== undefined ? storageFacility.handlingCharge : 15;
 
-    if (storageFacility.storageRateUnit === 'per_bag_month') {
-      monthlyRatePerQuintal = storageFacility.storageRate * 2; // 2 bags = 1 quintal
-    } else if (storageFacility.storageRateUnit === 'per_quintal_month') {
-      monthlyRatePerQuintal = storageFacility.storageRate;
-    } else if (storageFacility.storageRateUnit === 'per_ton_month') {
-      monthlyRatePerQuintal = storageFacility.storageRate / 10;
-    } else if (storageFacility.storageRateUnit === 'per_day_quintal') {
-      monthlyRatePerQuintal = storageFacility.storageRate * 30;
+    if (storageFacility.storageRate !== undefined && storageFacility.storageRate !== null && !isNaN(storageFacility.storageRate) && storageFacility.storageRate > 0) {
+      hasValidTariff = true;
+      if (storageFacility.storageRateUnit === 'per_bag_month') {
+        monthlyRatePerQuintal = storageFacility.storageRate * 2; // 2 bags = 1 quintal
+      } else if (storageFacility.storageRateUnit === 'per_quintal_month') {
+        monthlyRatePerQuintal = storageFacility.storageRate;
+      } else if (storageFacility.storageRateUnit === 'per_ton_month') {
+        monthlyRatePerQuintal = storageFacility.storageRate / 10;
+      } else if (storageFacility.storageRateUnit === 'per_day_quintal') {
+        monthlyRatePerQuintal = storageFacility.storageRate * 30;
+      } else {
+        monthlyRatePerQuintal = storageFacility.storageRate;
+      }
     }
+  }
+
+  // If storage tariff is missing / unavailable, do NOT invent random numbers
+  if (!hasValidTariff || monthlyRatePerQuintal === null) {
+    return {
+      cropName,
+      quantity: qty,
+      quantityUnit: 'quintal',
+      holdingDays: days,
+      currentPrice: curPrice,
+      projectedPrice,
+      priceDiffPerQtl,
+      confidence: bench.confidence,
+      trend: bench.trend,
+      storageCostUnavailable: true,
+      sellNow: {
+        expectedRealization: currentRealization,
+        pricePerUnit: curPrice,
+        unit: 'quintal'
+      },
+      storeAndHold: {
+        projectedGrossRealization: Math.round(projectedPrice * qty),
+        projectedGrossGain,
+        storageRent: null,
+        handlingCost: null,
+        totalStorageDirectCost: null,
+        totalHoldingCost: null,
+        projectedNetRealization: null,
+        projectedNetGain: null,
+        facilityName,
+        facilityType
+      },
+      recommendation: 'SELL NOW',
+      isHoldPreferred: false,
+      explanation: 'Storage cost unavailable — comparison cannot be calculated reliably.',
+      explanations: {
+        en: 'Storage cost unavailable — comparison cannot be calculated reliably.',
+        hi: 'भंडारण शुल्क अनुपलब्ध है — विश्वसनीय तुलना की गणना नहीं की जा सकती।',
+        mr: 'गोदाम भाडे उपलब्ध नाही — तुलना विश्वासाने मोजली जाऊ शकत नाही.'
+      },
+      disclaimer: 'Accredited warehouse tariff data is required before recommending holding harvest.'
+    };
   }
 
   const storageRent = Math.round(monthlyRatePerQuintal * (days / 30) * qty);

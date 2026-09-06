@@ -348,6 +348,8 @@
         <i data-lucide="search" class="dash-search__icon"></i>
         <input type="text" id="dash-search-input" class="dash-search__input"
           placeholder="Search dispute ID, orders, crops..." autocomplete="off" aria-label="Dispute search">
+        <kbd class="dash-search__kbd">Ctrl K</kbd>
+        <div class="dash-search__results" id="dash-search-results"></div>
       </div>
 
       <nav class="dash-header__nav" id="dash-nav">
@@ -355,13 +357,41 @@
       </nav>
 
       <div class="dash-header__actions">
-        <div class="dash-header__user" id="header-user-profile">
-          <div class="dash-header__avatar" id="header-avatar">KS</div>
-          <div class="dash-header__user-info">
-            <span class="dash-header__user-name" id="header-user-name">User</span>
+        <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+          <i data-lucide="bell"></i>
+          <span class="dash-header__badge" id="notifications-badge">0</span>
+        </button>
+        <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
+          <i data-lucide="help-circle"></i>
+        </button>
+        <div class="dash-profile-wrap" id="dash-profile-wrap">
+          <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
+            <div class="dash-header__avatar" id="header-avatar">KS</div>
+            <span class="dash-header__profile-name" id="header-user-name">User</span>
+            <i data-lucide="chevron-down" class="dash-header__profile-chevron"></i>
+          </button>
+          <div class="dash-profile-dropdown" id="dash-profile-dropdown">
+            <div class="dash-profile-dropdown__header">
+              <div class="dash-header__avatar dash-header__avatar--lg" id="dropdown-avatar">KS</div>
+              <div>
+                <div class="dash-profile-dropdown__name" id="dropdown-user-name">User</div>
+                <div class="dash-profile-dropdown__phone" id="dropdown-user-phone">user@krishishetra.in</div>
+              </div>
+            </div>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="dashboard.html" class="dash-profile-dropdown__item" id="menu-profile"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> Manage My Lots</a>
+            <a href="orders.html" class="dash-profile-dropdown__item" id="menu-orders"><i data-lucide="clipboard-list"></i> Orders & Payments</a>
+            <a href="disputes.html" class="dash-profile-dropdown__item" id="menu-disputes"><i data-lucide="shield-alert"></i> Disputes & Grievance</a>
+            <div class="dash-profile-dropdown__sep"></div>
+            <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i data-lucide="log-out"></i> Logout</a>
           </div>
         </div>
       </div>
+
+      <button class="dash-header__toggle" id="dash-nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
 

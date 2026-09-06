@@ -259,10 +259,19 @@
             </select>
           </div>
         </div>
-        <div class="dash-compare-best" id="compare-best-badge">
-          <i data-lucide="award"></i>
-          <span>Best Market Today: <strong id="best-market-name">Mumbai APMC</strong> offering <strong
-              id="best-market-price">₹2,920/q</strong></span>
+        <div class="dash-compare-best" id="compare-best-badge" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i data-lucide="award"></i>
+            <span>Best Market Today: <strong id="best-market-name">Mumbai APMC</strong> offering <strong
+                id="best-market-price">₹2,920/q</strong></span>
+          </div>
+          <div id="compare-status-badge-wrap" style="display: inline-flex; align-items: center; gap: 6px;">
+            <span class="ks-data-badge ks-data-badge--live" id="compare-status-badge" style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; background:#F0FDF4; color:#15803D; border:1px solid #BBF7D0;">
+              <span id="compare-status-dot" style="width:6px; height:6px; border-radius:50%; background:#22C55E; flex-shrink:0;"></span>
+              <span id="compare-status-badge-text">LIVE DATA</span>
+            </span>
+            <span id="compare-status-time" style="font-size: 11.5px; color: var(--ks-text-muted, #6F7F75); font-weight: 500;">· Checking...</span>
+          </div>
         </div>
         <div class="dash-compare-table-wrap">
           <table class="dash-compare-table" id="compare-table">
@@ -704,6 +713,9 @@
   <!-- SCRIPTS -->
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
+  <script src="data/fallback-data.js"></script>
+  <script src="js/marketDataCache.js"></script>
+  <script src="js/data-service.js"></script>
   <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/grading-engine.js"></script>

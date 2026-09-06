@@ -1,3 +1,6 @@
+const path = require('path');
+// Ensure environment variables are loaded regardless of execution working directory
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -21,6 +24,7 @@ const decisionRoutes = require('./routes/decision.routes');
 const disputeRoutes = require('./routes/dispute.routes');
 const connectDB = require('./config/db');
 const { seedInitialFacilities } = require('./controllers/storage.controller');
+const { apiNotFoundHandler, apiErrorHandler } = require('./middleware/error.middleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -92,9 +96,15 @@ app.use('/api/decision', decisionRoutes);
 app.use('/api/disputes', disputeRoutes);
 app.use('/api/test', testRoutes);
 
+// Fallback for API health if accessed directly
+app.get('/api', (req, res) => {
+  res.json({
+    message: 'Welcome to KrishiShetra API'
+  });
+});
 
-
-const path = require('path');
+// 404 Catch-all for any undefined /api routes
+app.all('/api/*', apiNotFoundHandler);
 
 const rootDir = path.join(__dirname, '..');
 
@@ -104,12 +114,8 @@ app.use(express.static(rootDir));
 // Support /KrishiShetra and /krishishetra path aliases so requests with folder prefix work seamlessly
 app.use(['/KrishiShetra', '/krishishetra'], express.static(rootDir));
 
-// Fallback for API health if accessed directly
-app.get('/api', (req, res) => {
-  res.json({
-    message: 'Welcome to KrishiShetra API'
-  });
-});
+// Centralized error handling middleware for all routes (must be 4 parameters)
+app.use(apiErrorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

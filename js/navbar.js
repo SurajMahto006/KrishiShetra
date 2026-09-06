@@ -119,8 +119,8 @@ function initRoleAwareNav() {
  * 2. Auto-detect active page and highlight navigation links
  */
 function initActiveRouteHighlight() {
-  const currentPath = window.location.pathname.toLowerCase();
-  const currentHash = window.location.hash.toLowerCase();
+  const currentPath = (window.location.pathname || '').toLowerCase();
+  const currentHash = (window.location.hash || '').toLowerCase();
 
   document.querySelectorAll('.dash-header__link, .dash-mobile-nav__link').forEach(link => {
     const href = (link.getAttribute('href') || '').toLowerCase();
@@ -311,6 +311,16 @@ function openModalById(id) {
     modal.classList.add('active');
   }
 }
+
+// Global helper access for shared navigation and footer modals
+window.openModal = window.openModal || openModalById;
+window.closeModal = window.closeModal || function(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.remove('active');
+};
+window.openHelpModal = window.openHelpModal || function() {
+  openModalById('help-modal-overlay');
+};
 
 /**
  * 7. Live Unread Notifications Badge

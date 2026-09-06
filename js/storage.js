@@ -15,7 +15,7 @@ const StorageState = {
   userLat: 18.4901, // Default to Pune APMC
   userLng: 73.8650,
   userLocationName: 'Pune, Maharashtra',
-  radiusKm: 50,
+  radiusKm: 0, // Default to All India so farmers across Maharashtra and India see verified facilities immediately
   selectedCrop: 'all',
   selectedType: 'all',
   selectedState: 'all',
@@ -23,8 +23,135 @@ const StorageState = {
   facilities: [],
   selectedFacility: null,
   map: null,
-  markersLayer: null
+  markersLayer: null,
+  currentSource: 'live',
+  lastUpdated: null,
+  isStale: false
 };
+
+// Local storage cache key
+const STORAGE_CACHE_KEY = 'krishishetra_verified_storage_cache';
+
+/**
+ * Read cached storage facilities from localStorage (persistent across reloads and offline)
+ */
+function getLocalCachedFacilities() {
+  try {
+    const raw = localStorage.getItem(STORAGE_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && Array.isArray(parsed.facilities) && parsed.facilities.length > 0) {
+      return parsed;
+    }
+  } catch (e) {
+    console.warn('Error reading local storage cache:', e);
+  }
+  return null;
+}
+
+/**
+ * Save verified facilities to persistent localStorage
+ */
+function setLocalCachedFacilities(facilities, fetchedAt, source = 'cache') {
+  try {
+    if (!Array.isArray(facilities) || facilities.length === 0) return;
+    const payload = {
+      facilities,
+      fetchedAt: fetchedAt || new Date().toISOString(),
+      source,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(STORAGE_CACHE_KEY, JSON.stringify(payload));
+  } catch (e) {
+    console.warn('Error saving local storage cache:', e);
+  }
+}
+
+/**
+ * Haversine formula client-side for verified coordinates
+ */
+function computeHaversineDistance(lat1, lon1, lat2, lon2) {
+  if (lat1 == null || lon1 == null || lat2 == null || lon2 == null) return null;
+  const numLat1 = Number(lat1);
+  const numLon1 = Number(lon1);
+  const numLat2 = Number(lat2);
+  const numLon2 = Number(lon2);
+  if (isNaN(numLat1) || isNaN(numLon1) || isNaN(numLat2) || isNaN(numLon2)) return null;
+
+  const R = 6371; // Earth's radius in km
+  const dLat = (numLat2 - numLat1) * (Math.PI / 180);
+  const dLon = (numLon2 - numLon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(numLat1 * (Math.PI / 180)) *
+      Math.cos(numLat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Number((R * c).toFixed(1));
+}
+
+/**
+ * Format timestamp nicely
+ */
+function formatStatusTime(isoString) {
+  if (!isoString) return 'recently';
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return isoString;
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  } catch (_) {
+    return isoString;
+  }
+}
+
+/**
+ * Update the Live / Cache Status Bar
+ */
+function updateStorageStatusBar(source, fetchedAt) {
+  const dot = document.querySelector('.status-indicator-dot');
+  const textEl = document.getElementById('storage-status-text');
+  const timeEl = document.getElementById('storage-status-time');
+  const banner = document.getElementById('storage-status-banner');
+
+  const formattedDate = formatStatusTime(fetchedAt);
+
+  if (source === 'live') {
+    if (dot) dot.style.background = '#2E7D32';
+    if (textEl) {
+      textEl.style.color = '#2E7D32';
+      textEl.textContent = 'Live storage data';
+    }
+    if (timeEl) timeEl.textContent = `· Updated ${formattedDate}`;
+    if (banner) {
+      banner.style.background = '#F0FDF4';
+      banner.style.borderColor = '#BBF7D0';
+    }
+  } else if (source === 'cache' || source === 'cached' || source === 'saved') {
+    if (dot) dot.style.background = '#EAB308';
+    if (textEl) {
+      textEl.style.color = '#A16207';
+      textEl.textContent = 'Saved storage data';
+    }
+    if (timeEl) timeEl.textContent = `· Last saved: ${formattedDate}`;
+    if (banner) {
+      banner.style.background = '#FEFCE8';
+      banner.style.borderColor = '#FEF08A';
+    }
+  } else {
+    // source === 'development' or verified local dataset
+    if (dot) dot.style.background = '#3B82F6';
+    if (textEl) {
+      textEl.style.color = '#1D4ED8';
+      textEl.textContent = 'Local verified dataset';
+    }
+    if (timeEl) timeEl.textContent = '· Regional storage facilities';
+    if (banner) {
+      banner.style.background = '#EFF6FF';
+      banner.style.borderColor = '#BFDBFE';
+    }
+  }
+}
 
 /**
  * Initialize Storage Discovery Map
@@ -64,10 +191,22 @@ function renderMapMarkers(facilities) {
   if (!StorageState.map || !StorageState.markersLayer) return;
   StorageState.markersLayer.clearLayers();
 
+  if (!facilities || facilities.length === 0) return;
+
+  const validBounds = [];
+
   facilities.forEach(f => {
-    const isCold = f.type === 'cold_storage';
-    const markerColor = isCold ? '#0288D1' : '#2E7D32';
-    const iconEmoji = isCold ? '❄️' : '🏬';
+    const lat = f.latitude !== undefined ? f.latitude : f.lat;
+    const lng = f.longitude !== undefined ? f.longitude : f.lng;
+    if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) return;
+
+    validBounds.push([lat, lng]);
+
+    const isCold = (f.storageType || f.type) === 'cold_storage';
+    const isSilo = (f.storageType || f.type) === 'silo';
+    const typeLabel = isCold ? 'Cold Storage' : (isSilo ? 'Grain Silo' : 'Warehouse');
+    const markerColor = isCold ? '#0288D1' : (isSilo ? '#C9973B' : '#2E7D32');
+    const iconEmoji = isCold ? '❄️' : (isSilo ? '🌾' : '🏬');
 
     const customIcon = L.divIcon({
       className: 'storage-facility-marker',
@@ -77,20 +216,34 @@ function renderMapMarkers(facilities) {
       iconAnchor: [30, 15]
     });
 
-    const marker = L.marker([f.latitude, f.longitude], { icon: customIcon });
+    const marker = L.marker([lat, lng], { icon: customIcon });
+
+    const locationText = f.district
+      ? `${f.district}, ${f.state || ''}`
+      : (typeof f.address === 'object' && f.address?.district
+        ? `${f.address.district}, ${f.address.state || ''}`
+        : (f.city ? `${f.city}, ${f.state || ''}` : `${f.address || ''}`));
+
+    const distText = f.distanceKm != null ? `${f.distanceKm} km away` : '';
+    const capTotal = (f.capacity || f.totalCapacity);
+    const capText = capTotal ? `${capTotal} ${f.capacityUnit || 'MT'}` : '—';
+    const availText = (f.availableCapacity != null) ? `${f.availableCapacity} ${f.capacityUnit || 'MT'}` : '—';
+    const tariffRate = (f.tariff !== undefined && f.tariff !== null) ? f.tariff : f.storageRate;
+    const tariffText = (tariffRate != null && tariffRate > 0) ? `₹${tariffRate}/bag/month` : 'Contact for tariff';
 
     const popupHtml = `
-      <div style="font-family:Inter,sans-serif; min-width:210px;">
-        <div style="font-weight:700; font-size:13.5px; color:#1A3320; margin-bottom:4px;">${f.name}</div>
-        <div style="font-size:11.5px; color:#666; margin-bottom:6px;">📍 ${f.address.district}, ${f.address.state} (${f.distanceKm || 0} km away)</div>
-        <div style="background:#F5F5F0; padding:6px 8px; border-radius:6px; font-size:12px; margin-bottom:8px;">
-          <div><strong>Available:</strong> ${f.availableCapacity} ${f.capacityUnit}</div>
-          <div><strong>Rate:</strong> ₹${f.storageRate}/${f.storageRateUnit.replace(/_/g, ' ')}</div>
-          <div><strong>Accreditation:</strong> ${f.accreditationType || 'Verified'}</div>
+      <div style="font-family:Inter,sans-serif; min-width:215px; line-height:1.45;">
+        <div style="font-weight:800; font-size:13.5px; color:#1A3320; margin-bottom:3px;">${f.name}</div>
+        <div style="font-size:11.5px; color:#666; margin-bottom:8px;">📍 ${locationText} ${distText ? `· ${distText}` : ''}</div>
+        <div style="background:#F5F5F0; padding:8px 10px; border-radius:6px; font-size:12px; margin-bottom:8px; display:flex; flex-direction:column; gap:3px;">
+          <div><span style="color:#555;">Storage Type:</span> <strong>${typeLabel}</strong></div>
+          <div><span style="color:#555;">Capacity:</span> <strong>${capText}</strong></div>
+          <div><span style="color:#555;">Availability:</span> <strong style="color:#2E7D32;">${availText}</strong></div>
+          <div><span style="color:#555;">Tariff:</span> <strong>${tariffText}</strong></div>
         </div>
         <div style="display:flex; gap:6px;">
-          <button class="btn btn--primary btn--sm" style="flex:1; padding:4px 8px; font-size:11px;" onclick="openBookingModal('${f.facilityCode || f.id}')">Book Space</button>
-          <a class="btn btn--secondary btn--sm" style="padding:4px 8px; font-size:11px; text-decoration:none;" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${f.latitude},${f.longitude}">Navigate</a>
+          <button class="btn btn--primary btn--sm" style="flex:1; padding:5px 8px; font-size:11px;" onclick="openBookingModal('${f.facilityCode || f.id}')">Book Space</button>
+          <a class="btn btn--secondary btn--sm" style="padding:5px 8px; font-size:11px; text-decoration:none;" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}">Navigate</a>
         </div>
       </div>
     `;
@@ -98,6 +251,13 @@ function renderMapMarkers(facilities) {
     marker.bindPopup(popupHtml);
     StorageState.markersLayer.addLayer(marker);
   });
+
+  if (validBounds.length > 0 && StorageState.map) {
+    validBounds.push([StorageState.userLat, StorageState.userLng]);
+    try {
+      StorageState.map.fitBounds(validBounds, { padding: [30, 30], maxZoom: 12 });
+    } catch (_) {}
+  }
 }
 
 /**
@@ -109,13 +269,19 @@ function renderFacilityCards(facilities) {
 
   if (!facilities || facilities.length === 0) {
     container.innerHTML = `
-      <div style="text-align:center; padding:40px 20px; color:#777;">
+      <div style="text-align:center; padding:40px 20px; color:#777; background:#FFFFFF; border:1px solid var(--ks-storage-border, #E8E6DF); border-radius:12px;">
         <div style="font-size:36px; margin-bottom:10px;">🏬</div>
-        <h4 style="color:#222; margin-bottom:6px;">No storage facilities found</h4>
-        <p style="font-size:13px;">Try expanding the radius or changing the crop / storage type filter.</p>
-        <button class="btn btn--secondary btn--sm" onclick="resetFilters()">Reset Filters</button>
+        <h4 style="color:#222; margin-bottom:6px; font-size:16px;">Storage facility data is not currently available.</h4>
+        <p style="font-size:13px; color:#666; max-width:420px; margin:0 auto 16px auto;">
+          We couldn't retrieve verified storage facilities for this specific selection right now. Try expanding your search radius or changing filters.
+        </p>
+        <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+          <button class="btn btn--secondary btn--sm" onclick="resetFilters()">Reset Filters</button>
+          <button class="btn btn--primary btn--sm" onclick="retryStorageFetch()"><i data-lucide="refresh-cw"></i> Retry</button>
+        </div>
       </div>
     `;
+    if (window.lucide) window.lucide.createIcons();
     return;
   }
 
@@ -126,14 +292,58 @@ function renderFacilityCards(facilities) {
 
     const cropsPills = (f.supportedCrops || []).slice(0, 4).map(c => `<span style="background:#F0EFEB; color:#444; font-size:10.5px; padding:2px 6px; border-radius:4px; text-transform:capitalize;">${c}</span>`).join(' ');
 
+    // Normalized coordinates & distance calculation
+    const lat = f.latitude !== undefined ? f.latitude : f.lat;
+    const lng = f.longitude !== undefined ? f.longitude : f.lng;
+    let distKm = f.distanceKm !== undefined ? f.distanceKm : computeHaversineDistance(StorageState.userLat, StorageState.userLng, lat, lng);
+    const distDisplay = distKm != null ? `${distKm} km away` : 'Distance unavailable';
+
+    // Tariff display
+    const rateDisplay = (f.storageRate !== undefined && f.storageRate !== null && f.storageRate > 0)
+      ? `₹${f.storageRate}`
+      : 'Tariff not available';
+    const rateUnitDisplay = (f.storageRate !== undefined && f.storageRate !== null && f.storageRate > 0)
+      ? `/${(f.storageRateUnit || 'bag_month').replace(/_/g, ' ')}`
+      : '';
+
+    // Handling charge display
+    const handlingDisplay = (f.handlingCharge !== undefined && f.handlingCharge !== null)
+      ? `₹${f.handlingCharge}`
+      : '—';
+
+    // Capacity display
+    const capDisplay = (f.availableCapacity !== undefined && f.availableCapacity !== null)
+      ? `${f.availableCapacity} ${f.capacityUnit || 'MT'}`
+      : 'Capacity unavailable';
+
+    const capText = (f.availableCapacity !== undefined && f.totalCapacity !== undefined)
+      ? `Capacity (${f.availableCapacity} / ${f.totalCapacity} ${f.capacityUnit || 'MT'} free)`
+      : 'Capacity information unavailable';
+
+    // Data status badge component
+    const statusPill = (window.DataService && typeof window.DataService.renderDataBadge === 'function')
+      ? window.DataService.renderDataBadge(f.source)
+      : (f.source === 'live'
+        ? '<span style="font-size:10px; font-weight:700; color:#2E7D32; background:#E8F5E9; padding:2px 6px; border-radius:4px;">LIVE</span>'
+        : '<span style="font-size:10px; font-weight:700; color:#1D4ED8; background:#EFF6FF; padding:2px 6px; border-radius:4px;">DEVELOPMENT DATA</span>');
+
+    const cardLocText = f.district
+      ? `${f.district}, ${f.state || ''}`
+      : (typeof f.address === 'object' && f.address?.district
+        ? `${f.address.district}, ${f.address.state || ''}`
+        : (f.city ? `${f.city}, ${f.state || ''}` : `${f.address || ''}`));
+
     return `
       <div class="facility-card" id="facility-card-${f.facilityCode || f.id}">
         <div class="facility-card__header">
           <div>
-            <h3 class="facility-card__name">${f.name}</h3>
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+              <h3 class="facility-card__name" style="margin:0;">${f.name}</h3>
+              ${statusPill}
+            </div>
             <div class="facility-card__location">
               <i data-lucide="map-pin" style="width:13px;height:13px;"></i>
-              <span>${f.address.district}, ${f.address.state} · <strong>${f.distanceKm || 0} km away</strong></span>
+              <span>${cardLocText} · <strong>${distDisplay}</strong></span>
             </div>
           </div>
           <span class="facility-card__type-badge ${typeClass}">${typeLabel}</span>
@@ -146,8 +356,8 @@ function renderFacilityCards(facilities) {
         </div>
 
         <div style="font-size:11.5px; color:#555; display:flex; justify-content:space-between; margin-bottom:2px;">
-          <span>Capacity (${f.availableCapacity} / ${f.totalCapacity} ${f.capacityUnit} free)</span>
-          <span style="font-weight:700;">${f.capacityUtilizationPct || 50}% Utilized</span>
+          <span>${capText}</span>
+          <span style="font-weight:700;">${f.capacityUtilizationPct != null ? `${f.capacityUtilizationPct}% Utilized` : ''}</span>
         </div>
         <div class="facility-card__capacity-bar">
           <div class="facility-card__capacity-fill" style="width:${Math.min(100, f.capacityUtilizationPct || 50)}%;"></div>
@@ -155,15 +365,15 @@ function renderFacilityCards(facilities) {
 
         <div class="facility-card__metrics">
           <div>
-            <div class="facility-card__metric-val">₹${f.storageRate}</div>
-            <div class="facility-card__metric-lbl">/${f.storageRateUnit.replace(/_/g, ' ')}</div>
+            <div class="facility-card__metric-val">${rateDisplay}</div>
+            <div class="facility-card__metric-lbl">${rateUnitDisplay}</div>
           </div>
           <div>
-            <div class="facility-card__metric-val">₹${f.handlingCharge || 15}</div>
+            <div class="facility-card__metric-val">${handlingDisplay}</div>
             <div class="facility-card__metric-lbl">/q Handling</div>
           </div>
           <div>
-            <div class="facility-card__metric-val">${f.availableCapacity} ${f.capacityUnit}</div>
+            <div class="facility-card__metric-val">${capDisplay}</div>
             <div class="facility-card__metric-lbl">Free Space</div>
           </div>
         </div>
@@ -180,7 +390,7 @@ function renderFacilityCards(facilities) {
           <button class="btn btn--secondary" onclick="openPledgeModal('${f.facilityCode || f.id}')" title="Pledge Financing" style="min-height: 48px; font-weight: 700; flex: 1.3; min-width: 120px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; font-size: 12.5px;">
             <i data-lucide="landmark"></i> <span>Pledge Loan</span>
           </button>
-          <a class="btn btn--secondary" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${f.latitude},${f.longitude}" style="min-height: 48px; width: 48px; display: inline-flex; align-items: center; justify-content: center;" title="Directions">
+          <a class="btn btn--secondary" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" style="min-height: 48px; width: 48px; display: inline-flex; align-items: center; justify-content: center;" title="Directions">
             <i data-lucide="navigation"></i>
           </a>
         </div>
@@ -192,12 +402,12 @@ function renderFacilityCards(facilities) {
 }
 
 /**
- * Fetch and Refresh Storage Facilities
+ * Fetch and Refresh Storage Facilities using Central DataService (Live -> Cache -> Development)
  */
-async function loadStorageFacilities() {
+async function loadStorageFacilities(isRetry = false) {
   const listContainer = document.getElementById('storage-list-panel');
-  if (listContainer) {
-    listContainer.innerHTML = '<div style="text-align:center; padding:30px;"><div class="dash-spinner"></div><p style="font-size:13px; color:#777; margin-top:8px;">Finding nearby storage facilities...</p></div>';
+  if (listContainer && (!StorageState.rawFacilities || StorageState.rawFacilities.length === 0)) {
+    listContainer.innerHTML = '<div style="text-align:center; padding:30px;"><div class="dash-spinner"></div><p style="font-size:13px; color:#777; margin-top:8px;">Finding verified storage facilities...</p></div>';
   }
 
   const params = {
@@ -205,32 +415,82 @@ async function loadStorageFacilities() {
     lng: StorageState.userLng,
     radius: StorageState.radiusKm,
     crop: StorageState.selectedCrop,
-    type: StorageState.selectedType,
-    state: StorageState.selectedState,
-    verifiedOnly: StorageState.verifiedOnly
+    type: StorageState.selectedType
   };
 
   try {
-    let res = null;
-    if (window.api && window.api.storage) {
-      res = await window.api.storage.getNearby(params);
-    } else {
-      const qs = new URLSearchParams(params).toString();
-      const response = await fetch(`/api/storage/nearby?${qs}`);
-      res = await response.json();
+    let result = null;
+    if (window.DataService && typeof window.DataService.getStorageData === 'function') {
+      result = await window.DataService.getStorageData(params);
     }
 
-    if (res && res.success) {
-      StorageState.facilities = res.facilities || [];
-      renderFacilityCards(StorageState.facilities);
-      renderMapMarkers(StorageState.facilities);
-    } else {
-      throw new Error(res ? res.message : 'Failed');
+    if (!result || !Array.isArray(result.data) || result.data.length === 0) {
+      const fallback = (window.FALLBACK_DATA && window.FALLBACK_DATA.storageFacilities) || [];
+      result = { data: fallback, source: 'development', savedAt: null };
     }
+
+    StorageState.rawFacilities = result.data || [];
+    StorageState.currentSource = result.source || 'development';
+    StorageState.lastUpdated = result.savedAt || new Date().toISOString();
+
+    applyStorageFilters();
   } catch (err) {
-    console.warn('Fallback loading storage facilities:', err);
-    // Render static fallback list
-    renderFacilityCards([]);
+    if (window.KrishiLogger) {
+      window.KrishiLogger.warn('STORAGE', 'Storage fetch exception, applying fallback', { error: err.message || err });
+    } else {
+      console.warn('[Storage] Fallback to development storage facilities:', err.message || err);
+    }
+    const fallback = (window.FALLBACK_DATA && window.FALLBACK_DATA.storageFacilities) || [];
+    StorageState.rawFacilities = fallback;
+    StorageState.currentSource = 'development';
+    StorageState.lastUpdated = null;
+    applyStorageFilters();
+  }
+}
+
+/**
+ * Filter facilities based on active search, type, crop, and radius filters
+ */
+function applyStorageFilters() {
+  const searchInput = document.getElementById('storage-search-input');
+  const query = searchInput ? searchInput.value : '';
+
+  let filtered = [];
+  if (window.DataService && typeof window.DataService.filterStorageData === 'function') {
+    filtered = window.DataService.filterStorageData(StorageState.rawFacilities, {
+      search: query,
+      type: StorageState.selectedType,
+      crop: StorageState.selectedCrop,
+      radius: StorageState.radiusKm,
+      userLat: StorageState.userLat,
+      userLng: StorageState.userLng
+    });
+  } else {
+    filtered = StorageState.rawFacilities || [];
+  }
+
+  StorageState.facilities = filtered;
+  updateStorageStatusBar(StorageState.currentSource, StorageState.lastUpdated);
+  renderFacilityCards(filtered);
+  renderMapMarkers(filtered);
+}
+
+/**
+ * Handle Retry Button Click
+ */
+async function retryStorageFetch() {
+  const btn = document.getElementById('btn-retry-storage');
+  const label = document.getElementById('storage-retry-btn-label');
+
+  if (btn) btn.disabled = true;
+  if (label) label.textContent = 'Updating...';
+
+  try {
+    await loadStorageFacilities(true);
+  } finally {
+    if (btn) btn.disabled = false;
+    if (label) label.textContent = 'Refresh';
+    if (window.lucide) window.lucide.createIcons();
   }
 }
 
@@ -721,49 +981,52 @@ function initFilterListeners() {
   const cropSelect = document.getElementById('filter-storage-crop');
   const searchInput = document.getElementById('storage-search-input');
   const radiusBtns = document.querySelectorAll('.storage-dist-btn');
+  const resetBtn = document.getElementById('storage-reset-btn');
 
   if (typeSelect) {
     typeSelect.addEventListener('change', e => {
       StorageState.selectedType = e.target.value;
-      loadStorageFacilities();
+      applyStorageFilters();
     });
   }
 
   if (cropSelect) {
     cropSelect.addEventListener('change', e => {
       StorageState.selectedCrop = e.target.value;
-      loadStorageFacilities();
+      applyStorageFilters();
     });
   }
 
   if (searchInput) {
     let timeout = null;
-    searchInput.addEventListener('input', e => {
+    searchInput.addEventListener('input', () => {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
-        const query = e.target.value.toLowerCase().trim();
-        if (!query) {
-          renderFacilityCards(StorageState.facilities);
-          return;
-        }
-        const filtered = StorageState.facilities.filter(f =>
-          f.name.toLowerCase().includes(query) ||
-          f.address.district.toLowerCase().includes(query) ||
-          f.address.state.toLowerCase().includes(query)
-        );
-        renderFacilityCards(filtered);
-      }, 250);
+        applyStorageFilters();
+      }, 200);
     });
   }
 
   radiusBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      radiusBtns.forEach(b => b.classList.remove('active'));
+      radiusBtns.forEach(b => {
+        b.classList.remove('active');
+        b.style.background = '';
+        b.style.color = '';
+        b.style.borderColor = '';
+      });
       btn.classList.add('active');
+      btn.style.background = '#2E7D32';
+      btn.style.color = '#FFF';
+      btn.style.borderColor = '#2E7D32';
       StorageState.radiusKm = parseInt(btn.dataset.dist, 10) || 0;
-      loadStorageFacilities();
+      applyStorageFilters();
     });
   });
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', resetStorageFilters);
+  }
 
   // Sell vs Store Calculator triggers
   ['calc-crop-select', 'calc-qty-input', 'calc-price-input', 'calc-days-input'].forEach(id => {
@@ -786,12 +1049,39 @@ function initFilterListeners() {
   });
 }
 
-function resetFilters() {
+function resetStorageFilters() {
   StorageState.selectedType = 'all';
   StorageState.selectedCrop = 'all';
   StorageState.radiusKm = 0;
-  loadStorageFacilities();
+
+  const typeSelect = document.getElementById('filter-storage-type');
+  if (typeSelect) typeSelect.value = 'all';
+
+  const cropSelect = document.getElementById('filter-storage-crop');
+  if (cropSelect) cropSelect.value = 'all';
+
+  const searchInput = document.getElementById('storage-search-input');
+  if (searchInput) searchInput.value = '';
+
+  const radiusBtns = document.querySelectorAll('.storage-dist-btn');
+  radiusBtns.forEach(btn => {
+    if (btn.dataset.dist === '0') {
+      btn.classList.add('active');
+      btn.style.background = '#2E7D32';
+      btn.style.color = '#FFF';
+      btn.style.borderColor = '#2E7D32';
+    } else {
+      btn.classList.remove('active');
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }
+  });
+
+  applyStorageFilters();
 }
+window.resetStorageFilters = resetStorageFilters;
+window.resetFilters = resetStorageFilters;
 
 /**
  * Toast Helper
@@ -1062,9 +1352,53 @@ window.switchStorageSubTab = switchStorageSubTab;
 window.sortCropOptions = sortCropOptions;
 window.selectFacilityForCalculation = selectFacilityForCalculation;
 window.loadCropStorageOptions = loadCropStorageOptions;
+window.retryStorageFetch = retryStorageFetch;
+window.getStorageFacilities = () => ({
+  data: StorageState.facilities,
+  source: StorageState.currentSource,
+  fetchedAt: StorageState.lastUpdated,
+  isStale: StorageState.isStale
+});
 
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
+  // Parse incoming URL query params (e.g. ?crop=rice&radius=50)
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cropParam = urlParams.get('crop');
+    const radiusParam = urlParams.get('radius');
+    const typeParam = urlParams.get('type');
+    const latParam = urlParams.get('lat');
+    const lngParam = urlParams.get('lng');
+
+    if (cropParam) {
+      StorageState.selectedCrop = cropParam.toLowerCase();
+      const cropSelect = document.getElementById('filter-storage-crop');
+      if (cropSelect) cropSelect.value = cropParam.toLowerCase();
+    }
+    if (radiusParam !== null && radiusParam !== undefined) {
+      StorageState.radiusKm = parseInt(radiusParam, 10) || 0;
+      document.querySelectorAll('.storage-dist-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.dist, 10) === StorageState.radiusKm);
+      });
+    }
+    if (typeParam) {
+      StorageState.selectedType = typeParam.toLowerCase();
+      const typeSelect = document.getElementById('filter-storage-type');
+      if (typeSelect) typeSelect.value = typeParam.toLowerCase();
+    }
+    if (latParam && lngParam) {
+      const parsedLat = parseFloat(latParam);
+      const parsedLng = parseFloat(lngParam);
+      if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
+        StorageState.userLat = parsedLat;
+        StorageState.userLng = parsedLng;
+      }
+    }
+  } catch (paramErr) {
+    console.warn('Error reading URL parameters:', paramErr);
+  }
+
   initStorageMap();
   setupGeolocation();
   initFilterListeners();
