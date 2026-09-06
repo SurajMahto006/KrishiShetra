@@ -44,7 +44,7 @@
           <i data-lucide="truck" style="width:14px;height:14px;color:#E8B96A;"></i> Transporter Hub
         </a>
 
-        <button class="admin-icon-btn" title="Notifications" onclick="showToast('3 new notifications')">
+        <button class="admin-icon-btn" title="Notifications" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.notificationsToast', {count:3}) : '3 new notifications'))">
           <i data-lucide="bell" style="width:18px;height:18px;"></i>
           <span class="notif-dot"></span>
         </button>
@@ -74,8 +74,8 @@
     <!-- Welcome Hero -->
     <div class="welcome-hero">
       <div class="welcome-hero-content">
-        <h1 class="welcome-hero-greeting">Good Evening, <em>Admin</em> 👋</h1>
-        <p class="welcome-hero-subtitle">Here's what's happening on the KrishiShetra platform today. You have 18 items requiring your attention.</p>
+        <h1 class="welcome-hero-greeting"><span data-i18n="common.goodEvening">Good Evening,</span> <em>Admin</em> 👋</h1>
+        <p class="welcome-hero-subtitle" data-i18n="admin.platformOverviewSubtitle">Here's what's happening on the KrishiShetra platform today.</p>
       </div>
       <div class="welcome-hero-quick-stats">
         <div class="welcome-quick-stat">
@@ -151,10 +151,10 @@
       <div class="glass-card">
         <div class="glass-card-header">
           <div>
-            <h2 class="glass-card-title">Registration Trends</h2>
-            <p class="glass-card-subtitle">Monthly user & farmer registrations</p>
+            <h2 class="glass-card-title" data-i18n="admin.registrationTrends">Registration Trends</h2>
+            <p class="glass-card-subtitle" data-i18n="admin.monthlyUserFarmerReg">Monthly user & farmer registrations</p>
           </div>
-          <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting chart data...')">
+          <button class="btn btn-secondary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.exportingChartData') : 'Exporting chart data...'))">
             <i data-lucide="download" style="width:14px;height:14px;"></i>
             Export
           </button>
@@ -168,8 +168,8 @@
       <div class="glass-card">
         <div class="glass-card-header">
           <div>
-            <h2 class="glass-card-title">User Distribution</h2>
-            <p class="glass-card-subtitle">Platform role breakdown</p>
+            <h2 class="glass-card-title" data-i18n="admin.userDistribution">User Distribution</h2>
+            <p class="glass-card-subtitle" data-i18n="admin.platformRoleBreakdown">Platform role breakdown</p>
           </div>
         </div>
         <div class="chart-container">
@@ -181,10 +181,10 @@
       <div class="glass-card">
         <div class="glass-card-header">
           <div>
-            <h2 class="glass-card-title">Recent Activity</h2>
-            <p class="glass-card-subtitle">Latest platform events</p>
+            <h2 class="glass-card-title" data-i18n="admin.recentActivity">Recent Activity</h2>
+            <p class="glass-card-subtitle" data-i18n="admin.latestPlatformEvents">Latest platform events</p>
           </div>
-          <button class="btn btn-secondary btn-sm" onclick="showToast('Loading full activity log...')">
+          <button class="btn btn-secondary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.loadingFullActivityLog') : 'Loading full activity log...'))">
             View All
           </button>
         </div>
@@ -246,8 +246,8 @@
       <div class="glass-card">
         <div class="glass-card-header">
           <div>
-            <h2 class="glass-card-title">Quick Actions</h2>
-            <p class="glass-card-subtitle">Common admin tasks</p>
+            <h2 class="glass-card-title" data-i18n="admin.quickActions">Quick Actions</h2>
+            <p class="glass-card-subtitle" data-i18n="admin.commonAdminTasks">Common admin tasks</p>
           </div>
         </div>
         <div class="quick-actions-grid mb-3">
@@ -255,19 +255,19 @@
             <div class="quick-action-icon green-bg">
               <i data-lucide="user-plus" style="width:20px;height:20px;"></i>
             </div>
-            <span class="quick-action-label">Add Farmer</span>
+            <span class="quick-action-label" data-i18n="admin.addFarmer">Add Farmer</span>
           </a>
           <a href="users.html" class="quick-action-btn">
             <div class="quick-action-icon amber-bg">
               <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
             </div>
-            <span class="quick-action-label">Verify KYC</span>
+            <span class="quick-action-label" data-i18n="admin.verifyKyc">Verify KYC</span>
           </a>
-          <a href="#" class="quick-action-btn" onclick="showToast('Generating reports...')">
+          <a href="#" class="quick-action-btn" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.generatingReports') : 'Generating reports...'))">
             <div class="quick-action-icon blue-bg">
               <i data-lucide="file-bar-chart" style="width:20px;height:20px;"></i>
             </div>
-            <span class="quick-action-label">Export Report</span>
+            <span class="quick-action-label" data-i18n="admin.exportReport">Export Report</span>
           </a>
         </div>
 
@@ -295,10 +295,10 @@
     <div class="glass-card" style="margin-bottom:2rem;">
       <div class="glass-card-header">
         <div>
-          <h2 class="glass-card-title">Platform Health</h2>
-          <p class="glass-card-subtitle">Key performance indicators</p>
+          <h2 class="glass-card-title" data-i18n="admin.platformHealth">Platform Health</h2>
+          <p class="glass-card-subtitle" data-i18n="admin.kpis">Key performance indicators</p>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="showToast('Refreshing data...')">
+        <button class="btn btn-secondary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.refreshingData') : 'Refreshing data...'))">
           <i data-lucide="refresh-cw" style="width:14px;height:14px;"></i>
           Refresh
         </button>
@@ -366,141 +366,184 @@
       menu.classList.toggle('open');
     }
 
-    // ── Chart.js: Registration Trends ──
-    const regCtx = document.getElementById('registrationChart').getContext('2d');
-    new Chart(regCtx, {
-      type: 'line',
-      data: {
-        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-        datasets: [
-          {
-            label: 'Farmers',
-            data: [120, 185, 240, 310, 380, 456],
-            borderColor: '#5B9A72',
-            backgroundColor: 'rgba(91, 154, 114, 0.1)',
-            borderWidth: 2.5,
-            tension: 0.4,
-            fill: true,
-            pointBackgroundColor: '#5B9A72',
-            pointBorderColor: '#FFFFFF',
-            pointBorderWidth: 2,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-          },
-          {
-            label: 'Users',
-            data: [200, 310, 420, 580, 720, 856],
-            borderColor: '#D6A84F',
-            backgroundColor: 'rgba(214, 168, 79, 0.08)',
-            borderWidth: 2.5,
-            tension: 0.4,
-            fill: true,
-            pointBackgroundColor: '#D6A84F',
-            pointBorderColor: '#FFFFFF',
-            pointBorderWidth: 2,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            position: 'top',
-            align: 'end',
-            labels: {
-              color: '#7A8880',
-              font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
-              boxWidth: 12, boxHeight: 12, borderRadius: 3, padding: 16,
-              usePointStyle: true, pointStyle: 'circle',
-            }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(26, 58, 40, 0.95)',
-            titleColor: '#FFFFFF',
-            bodyColor: 'rgba(255,255,255,0.75)',
-            borderColor: 'rgba(255,255,255,0.15)',
-            borderWidth: 1,
-            cornerRadius: 10,
-            padding: 12,
-            titleFont: { family: "'Plus Jakarta Sans'", weight: '600' },
-            bodyFont: { family: "'Plus Jakarta Sans'" },
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
-            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
-          },
-          y: {
-            grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
-            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } },
-            beginAtZero: true
-          }
-        }
-      }
-    });
+    // ── Admin Dashboard Charts ──
+    let regChartInstance = null;
+    let distChartInstance = null;
 
-    // ── Chart.js: User Distribution (Doughnut) ──
-    const distCtx = document.getElementById('distributionChart').getContext('2d');
-    new Chart(distCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Farmers', 'FPOs', 'Buyers', 'Admins'],
-        datasets: [{
-          data: [856, 42, 340, 10],
-          backgroundColor: [
-            '#5B9A72',
-            '#D6A84F',
-            '#6BA3F7',
-            '#C96D5B'
-          ],
-          borderColor: 'rgba(255,255,255,0.9)',
-          borderWidth: 3,
-          hoverOffset: 8,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '68%',
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              color: '#7A8880',
-              font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
-              boxWidth: 12, boxHeight: 12, padding: 20,
-              usePointStyle: true, pointStyle: 'circle',
-            }
+    function initAdminDashboardCharts() {
+      const t = (key, def, opts) => (window.i18next ? window.i18next.t(key, opts || def) : def);
+
+      // Registration Trends (Line Chart)
+      const regCanvas = document.getElementById('registrationChart');
+      if (regCanvas) {
+        const regCtx = regCanvas.getContext('2d');
+        if (regChartInstance) {
+          regChartInstance.destroy();
+          regChartInstance = null;
+        }
+        regChartInstance = new Chart(regCtx, {
+          type: 'line',
+          data: {
+            labels: [
+              t('common.monthMar', 'Mar'),
+              t('common.monthApr', 'Apr'),
+              t('common.monthMay', 'May'),
+              t('common.monthJun', 'Jun'),
+              t('common.monthJul', 'Jul'),
+              t('common.monthAug', 'Aug')
+            ],
+            datasets: [
+              {
+                label: t('admin.farmersLabel', 'Farmers'),
+                data: [120, 185, 240, 310, 380, 456],
+                borderColor: '#5B9A72',
+                backgroundColor: 'rgba(91, 154, 114, 0.1)',
+                borderWidth: 2.5,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#5B9A72',
+                pointBorderColor: '#FFFFFF',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+              },
+              {
+                label: t('admin.usersLabel', 'Users'),
+                data: [200, 310, 420, 580, 720, 856],
+                borderColor: '#D6A84F',
+                backgroundColor: 'rgba(214, 168, 79, 0.08)',
+                borderWidth: 2.5,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#D6A84F',
+                pointBorderColor: '#FFFFFF',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+              }
+            ]
           },
-          tooltip: {
-            backgroundColor: 'rgba(26, 58, 40, 0.95)',
-            titleColor: '#FFFFFF',
-            bodyColor: 'rgba(255,255,255,0.75)',
-            borderColor: 'rgba(255,255,255,0.15)',
-            borderWidth: 1,
-            cornerRadius: 10,
-            padding: 12,
-            titleFont: { family: "'Plus Jakarta Sans'", weight: '600' },
-            bodyFont: { family: "'Plus Jakarta Sans'" },
-            callbacks: {
-              label: function(context) {
-                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                const pct = ((context.parsed / total) * 100).toFixed(1);
-                return ` ${context.label}: ${context.parsed.toLocaleString()} (${pct}%)`;
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: {
+                position: 'top',
+                align: 'end',
+                labels: {
+                  color: '#7A8880',
+                  font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+                  boxWidth: 12, boxHeight: 12, borderRadius: 3, padding: 16,
+                  usePointStyle: true, pointStyle: 'circle',
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(26, 58, 40, 0.95)',
+                titleColor: '#FFFFFF',
+                bodyColor: 'rgba(255,255,255,0.75)',
+                borderColor: 'rgba(255,255,255,0.15)',
+                borderWidth: 1,
+                cornerRadius: 10,
+                padding: 12,
+                titleFont: { family: "'Plus Jakarta Sans'", weight: '600' },
+                bodyFont: { family: "'Plus Jakarta Sans'" },
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+                ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+              },
+              y: {
+                grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+                ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } },
+                beginAtZero: true
               }
             }
           }
-        }
+        });
       }
+
+      // User Distribution (Doughnut)
+      const distCanvas = document.getElementById('distributionChart');
+      if (distCanvas) {
+        const distCtx = distCanvas.getContext('2d');
+        if (distChartInstance) {
+          distChartInstance.destroy();
+          distChartInstance = null;
+        }
+        distChartInstance = new Chart(distCtx, {
+          type: 'doughnut',
+          data: {
+            labels: [
+              t('admin.farmersLabel', 'Farmers'),
+              t('admin.fposLabel', 'FPOs'),
+              t('admin.buyersLabel', 'Buyers'),
+              t('admin.adminsLabel', 'Admins')
+            ],
+            datasets: [{
+              data: [856, 42, 340, 10],
+              backgroundColor: [
+                '#5B9A72',
+                '#D6A84F',
+                '#6BA3F7',
+                '#C96D5B'
+              ],
+              borderColor: 'rgba(255,255,255,0.9)',
+              borderWidth: 3,
+              hoverOffset: 8,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '68%',
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#7A8880',
+                  font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+                  boxWidth: 12, boxHeight: 12, padding: 20,
+                  usePointStyle: true, pointStyle: 'circle',
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(26, 58, 40, 0.95)',
+                titleColor: '#FFFFFF',
+                bodyColor: 'rgba(255,255,255,0.75)',
+                borderColor: 'rgba(255,255,255,0.15)',
+                borderWidth: 1,
+                cornerRadius: 10,
+                padding: 12,
+                titleFont: { family: "'Plus Jakarta Sans'", weight: '600' },
+                bodyFont: { family: "'Plus Jakarta Sans'" },
+                callbacks: {
+                  label: function(context) {
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct = ((context.parsed / total) * 100).toFixed(1);
+                    return ` ${context.label}: ${context.parsed.toLocaleString()} (${pct}%)`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Initialize Charts on Load & Language Change
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminDashboardCharts();
+    });
+    window.addEventListener('languageChanged', () => {
+      initAdminDashboardCharts();
     });
 
     // ── Initialize Lucide Icons ──
     lucide.createIcons();
   </script>
+  <script src="../js/i18n.js"></script>
 </body>
 </html>

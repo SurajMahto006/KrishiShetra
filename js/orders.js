@@ -2,7 +2,10 @@
  * KRISHISHETRA — ORDERS & FULFILLMENT CONTROLLER (Step 13)
  * Full order lifecycle management with visual progress steppers,
  * role-specific operations, cancellation, and status updates.
+ * Multilingual support across English, Hindi, Marathi.
  */
+
+const t = (key, fallback) => (window.i18next ? window.i18next.t(key, fallback) : (fallback || key));
 
 document.addEventListener('DOMContentLoaded', () => {
   if (window.Auth && !window.Auth.requireAuth()) {
@@ -10,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   loadOrders();
+
+  window.addEventListener('languageChanged', () => {
+    loadOrders();
+  });
 });
 
 async function loadOrders() {
@@ -19,7 +26,7 @@ async function loadOrders() {
   grid.innerHTML = `
     <div style="padding: 48px; text-align: center; color: var(--ks-text-muted); grid-column: 1 / -1;">
       <div class="spinner" style="margin: 0 auto 12px auto; width: 28px; height: 28px; border: 3px solid #E5E4DD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-      Loading orders from database...
+      ${t('common.loading', 'Loading orders from database...')}
     </div>
   `;
 
@@ -37,10 +44,19 @@ async function loadOrders() {
       grid.innerHTML = res.orders.map(ord => {
         const s = getOrderStatusBadge(ord.status);
         const dateStr = ord.createdAt ? new Date(ord.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-        const counterparty = role === 'farmer' ? `Buyer: <strong>${ord.buyerName || 'Verified Buyer'}</strong>` : `Farmer: <strong>${ord.farmerName || 'Verified Farm'}</strong>`;
+        const counterparty = role === 'farmer' 
+          ? `${t('orders.buyer', 'Buyer:')} <strong>${ord.buyerName || t('common.verified', 'Verified Buyer')}</strong>` 
+          : `${t('orders.farmer', 'Farmer:')} <strong>${ord.farmerName || t('common.verified', 'Verified Farm')}</strong>`;
 
         const steps = ['pending', 'confirmed', 'processing', 'ready_for_pickup', 'in_transit', 'delivered'];
-        const stepLabels = ['Pending', 'Confirmed', 'Processing', 'Pickup Ready', 'In Transit', 'Delivered'];
+        const stepLabels = [
+          t('orders.pending', 'Pending'),
+          t('orders.confirmed', 'Confirmed'),
+          t('orders.processing', 'Processing'),
+          t('orders.pickupReady', 'Pickup Ready'),
+          t('orders.inTransit', 'In Transit'),
+          t('orders.delivered', 'Delivered')
+        ];
         const currentStepIndex = steps.indexOf(ord.status);
 
         return `
@@ -81,7 +97,7 @@ async function loadOrders() {
                 </div>
               ` : `
                 <div style="background: #FEE2E2; color: #991B1B; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px;">
-                  ⚠️ This order was cancelled and inventory has been returned to the produce lot.
+                  ⚠️ ${t('orders.cancelledAlert', 'This order was cancelled and inventory has been returned to the produce lot.')}
                 </div>
               `}
 
@@ -89,23 +105,23 @@ async function loadOrders() {
               <div style="background: #F5F4ED; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; font-size: 13px;">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px;">
                   <div>
-                    <span style="color: #666;">Quantity Ordered:</span>
+                    <span style="color: #666;">${t('orders.quantityOrdered', 'Quantity Ordered:')}</span>
                     <strong style="color: #222; display: block;">${ord.quantity} ${ord.quantityUnit || 'quintal'}</strong>
                   </div>
                   <div>
-                    <span style="color: #666;">Agreed Rate:</span>
+                    <span style="color: #666;">${t('orders.agreedRate', 'Agreed Rate:')}</span>
                     <strong style="color: #222; display: block;">₹${ord.agreedPrice?.toLocaleString('en-IN')}/${ord.priceUnit || 'q'}</strong>
                   </div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; border-top: 1px dashed #DDD; padding-top: 8px; margin-top: 8px;">
-                  <strong style="color: var(--ks-evergreen); font-size: 14px;">Total Order Amount:</strong>
+                  <strong style="color: var(--ks-evergreen); font-size: 14px;">${t('orders.totalOrderValue', 'Total Order Value:')}</strong>
                   <strong style="color: var(--ks-evergreen); font-size: 16px;">₹${ord.totalAmount?.toLocaleString('en-IN')}</strong>
                 </div>
 
                 ${ord.deliveryAddress?.addressLine1 ? `
                   <div style="border-top: 1px dashed #DDD; padding-top: 8px; margin-top: 8px; font-size: 12px; color: #555;">
-                    <strong>Delivery:</strong> ${ord.deliveryAddress.name || ''} (${ord.deliveryAddress.phone || ''}) · ${ord.deliveryAddress.addressLine1}, ${ord.deliveryAddress.village || ''}, ${ord.deliveryAddress.state || ''} - ${ord.deliveryAddress.pincode || ''}
+                    <strong>${t('orders.deliveryLocation', 'Delivery Location:')}</strong> ${ord.deliveryAddress.name || ''} (${ord.deliveryAddress.phone || ''}) · ${ord.deliveryAddress.addressLine1}, ${ord.deliveryAddress.village || ''}, ${ord.deliveryAddress.state || ''} - ${ord.deliveryAddress.pincode || ''}
                   </div>
                 ` : ''}
               </div>
@@ -116,12 +132,12 @@ async function loadOrders() {
               <div style="display: flex; gap: 10px; justify-content: flex-end; align-items: center; border-top: 1px solid #EEE; padding-top: 14px;">
                 ${role === 'farmer' && ord.status !== 'delivered' && ord.status !== 'cancelled' ? `
                   <button class="btn btn--sm btn--primary" onclick="openUpdateStatusModal('${ord.orderId}', '${ord.status}')">
-                    Advance Fulfillment Status →
+                    ${t('orders.markDispatched', 'Advance Fulfillment Status →')}
                   </button>
                 ` : ''}
                 ${role === 'buyer' && (ord.status === 'pending' || ord.status === 'confirmed') ? `
                   <button class="btn btn--sm" style="background: rgba(220, 38, 38, 0.08); color: #dc2626; border: none; padding: 8px 14px; border-radius: 6px; font-size: 12px; cursor: pointer;" onclick="cancelOrderAction('${ord.orderId}')">
-                    Cancel Order
+                    ${t('orders.cancelOrder', 'Cancel Order')}
                   </button>
                 ` : ''}
               </div>
@@ -133,12 +149,12 @@ async function loadOrders() {
       grid.innerHTML = `
         <div style="padding: 56px 24px; text-align: center; color: #888; grid-column: 1 / -1; background: #FAF9F5; border-radius: 14px; border: 1px dashed #DDD;">
           <div style="font-size: 42px; margin-bottom: 12px;">📋</div>
-          <h3 style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">No Orders Yet</h3>
+          <h3 style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">${t('orders.noOrdersFound', 'No Orders Yet')}</h3>
           <p style="font-size: 13.5px; color: #666; margin: 0 0 20px 0; max-width: 480px; margin-left: auto; margin-right: auto;">
-            ${role === 'farmer' ? 'When buyers accept your negotiation quotes and confirm purchase contracts, your fulfillment jobs will appear here.' : 'When farmers accept your produce inquiries, confirmed orders will appear here for logistics tracking.'}
+            ${role === 'farmer' ? t('farmer.noOffersReceived', 'When buyers accept your negotiation quotes and confirm purchase contracts, your fulfillment jobs will appear here.') : t('orders.noOrdersFound', 'When farmers accept your produce inquiries, confirmed orders will appear here for logistics tracking.')}
           </p>
           <a href="${role === 'farmer' ? 'dashboard.html' : 'market.html'}" class="btn btn--primary" style="text-decoration: none;">
-            ${role === 'farmer' ? 'Back to Dashboard' : 'Browse Marketplace'}
+            ${role === 'farmer' ? t('navigation.dashboard', 'Back to Dashboard') : t('navigation.marketplace', 'Browse Marketplace')}
           </a>
         </div>
       `;
@@ -148,14 +164,14 @@ async function loadOrders() {
     grid.innerHTML = `
       <div style="padding: 48px 24px; text-align: center; color: var(--ks-text-muted); grid-column: 1 / -1; background: #FAF9F5; border-radius: 14px; border: 1px dashed #DDD;">
         <div style="font-size: 38px; margin-bottom: 12px;">⚠️</div>
-        <h3 style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">Unable to connect to order service</h3>
+        <h3 style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">${t('errors.serverError', 'Unable to connect to order service')}</h3>
         <p style="font-size: 13.5px; color: #666; margin: 0 0 20px 0; max-width: 440px; margin-left: auto; margin-right: auto;">
-          We could not load your active orders right now. Please check your connection and try again.
+          ${t('errors.networkError', 'We could not load your active orders right now. Please check your connection and try again.')}
         </p>
         <div style="display: flex; gap: 10px; justify-content: center;">
-          <button class="btn btn--primary" onclick="loadOrders()">Try Again</button>
+          <button class="btn btn--primary" onclick="loadOrders()">${t('common.tryAgain', 'Try Again')}</button>
           <a href="${role === 'farmer' ? 'dashboard.html' : 'market.html'}" class="btn btn--secondary" style="text-decoration: none;">
-            ${role === 'farmer' ? 'Dashboard' : 'Marketplace'}
+            ${role === 'farmer' ? t('navigation.dashboard', 'Dashboard') : t('navigation.marketplace', 'Marketplace')}
           </a>
         </div>
       </div>
@@ -164,18 +180,18 @@ async function loadOrders() {
 }
 
 async function cancelOrderAction(orderId) {
-  if (!confirm(`Are you sure you want to cancel order ${orderId}? This will immediately release the reserved lot stock.`)) return;
+  if (!confirm(t('orders.confirmCancel', `Are you sure you want to cancel order ${orderId}? This will immediately release the reserved lot stock.`))) return;
 
   try {
     const res = await window.api.orders.cancel(orderId);
     if (res.success) {
-      alert(`Order ${orderId} has been cancelled successfully.`);
+      alert(t('orders.cancelSuccess', `Order ${orderId} has been cancelled successfully.`));
       loadOrders();
     } else {
-      alert(res.message || 'Unable to cancel order.');
+      alert(res.message || t('errors.generic', 'Unable to cancel order.'));
     }
   } catch (err) {
-    alert('Server error while cancelling order.');
+    alert(t('errors.serverError', 'Server error while cancelling order.'));
   }
 }
 
@@ -190,11 +206,11 @@ function openUpdateStatusModal(orderId, currentStatus) {
 
   const allowed = nextStatuses[currentStatus] || [];
   if (allowed.length === 0) {
-    alert('No further status transitions available for this order.');
+    alert(t('orders.noFurtherTransitions', 'No further status transitions available for this order.'));
     return;
   }
 
-  const selected = prompt(`Select next status for order ${orderId}:\nAllowed options: ${allowed.join(', ')}`, allowed[0]);
+  const selected = prompt(`${t('orders.selectNextStatus', 'Select next status for order')} ${orderId}:\nAllowed options: ${allowed.join(', ')}`, allowed[0]);
   if (!selected || !allowed.includes(selected.toLowerCase())) return;
 
   window.api.orders.updateStatus(orderId, selected.toLowerCase()).then(res => {
@@ -202,20 +218,20 @@ function openUpdateStatusModal(orderId, currentStatus) {
       alert(`Order ${orderId} status updated to ${selected.toUpperCase()} ✓`);
       loadOrders();
     } else {
-      alert(res.message || 'Failed to update order status.');
+      alert(res.message || t('errors.generic', 'Failed to update order status.'));
     }
-  }).catch(() => alert('Network error.'));
+  }).catch(() => alert(t('errors.networkError', 'Network error.')));
 }
 
 function getOrderStatusBadge(status) {
   const map = {
-    pending: { bg: '#FEF3C7', color: '#92400E', text: 'Pending' },
-    confirmed: { bg: '#E5F0E7', color: '#12372A', text: 'Confirmed' },
-    processing: { bg: '#E0E7FF', color: '#3730A3', text: 'Processing' },
-    ready_for_pickup: { bg: '#FDE68A', color: '#78350F', text: 'Ready For Pickup' },
-    in_transit: { bg: '#CFFAFE', color: '#155E75', text: 'In Transit' },
-    delivered: { bg: '#D1FAE5', color: '#065F46', text: 'Delivered' },
-    cancelled: { bg: '#FEE2E2', color: '#991B1B', text: 'Cancelled' }
+    pending: { bg: '#FEF3C7', color: '#92400E', text: t('orders.pending', 'Pending') },
+    confirmed: { bg: '#E5F0E7', color: '#12372A', text: t('orders.confirmed', 'Confirmed') },
+    processing: { bg: '#E0E7FF', color: '#3730A3', text: t('orders.processing', 'Processing') },
+    ready_for_pickup: { bg: '#FDE68A', color: '#78350F', text: t('orders.pickupReady', 'Ready For Pickup') },
+    in_transit: { bg: '#CFFAFE', color: '#155E75', text: t('orders.inTransit', 'In Transit') },
+    delivered: { bg: '#D1FAE5', color: '#065F46', text: t('orders.delivered', 'Delivered') },
+    cancelled: { bg: '#FEE2E2', color: '#991B1B', text: t('orders.cancelled', 'Cancelled') }
   };
   return map[status] || map.pending;
 }

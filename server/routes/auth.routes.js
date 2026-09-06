@@ -11,6 +11,7 @@ const {
   resetPassword,
   resendResetOtp,
   updateProfile,
+  updateLanguagePreference,
   changePassword
 } = require('../controllers/auth.controller');
 const { protect } = require('../middleware/auth.middleware');
@@ -30,6 +31,8 @@ router.post('/resend-reset-otp', resendResetOtp);
 // Protected profile & account routes
 router.get('/me', protect, getMe);
 router.put('/profile', protect, updateProfile);
+router.put('/language', protect, updateLanguagePreference);
+router.put('/preferred-language', protect, updateLanguagePreference);
 router.put('/change-password', protect, changePassword);
 
 module.exports = router;

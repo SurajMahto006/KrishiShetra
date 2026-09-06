@@ -203,17 +203,28 @@
   <script src="js/transporter-data.js"></script>
   <script src="js/transporter.js"></script>
   <script>
+    let earningsChartInstance = null;
+    let expenseDonutChartInstance = null;
+
     function initEarningsCharts() {
+      const t = (window.i18next && typeof window.i18next.t === 'function')
+        ? window.i18next.t.bind(window.i18next)
+        : ((k, fb) => (typeof fb === 'string' ? fb : k));
+
       // Bar & Line Combo Chart for monthly earnings
       const ctx = document.getElementById('earningsChart')?.getContext('2d');
       if (ctx) {
-        new Chart(ctx, {
+        if (earningsChartInstance) {
+          earningsChartInstance.destroy();
+          earningsChartInstance = null;
+        }
+        earningsChartInstance = new Chart(ctx, {
           type: 'bar',
           data: {
             labels: TransporterData.earnings.monthlyBreakdown.map(m => m.month),
             datasets: [
               {
-                label: 'Gross Freight (₹)',
+                label: t('transporter.grossFreight', 'Gross Freight (₹)'),
                 data: TransporterData.earnings.monthlyBreakdown.map(m => m.gross),
                 backgroundColor: 'rgba(200, 150, 62, 0.4)',
                 borderColor: '#C8963E',
@@ -221,7 +232,7 @@
                 borderRadius: 6
               },
               {
-                label: 'Net Margin (₹)',
+                label: t('transporter.netMargin', 'Net Margin (₹)'),
                 data: TransporterData.earnings.monthlyBreakdown.map(m => m.net),
                 backgroundColor: '#1E3D2F',
                 borderRadius: 6
@@ -249,10 +260,20 @@
       // Donut Chart for expenses
       const donutCtx = document.getElementById('expenseDonutChart')?.getContext('2d');
       if (donutCtx) {
-        new Chart(donutCtx, {
+        if (expenseDonutChartInstance) {
+          expenseDonutChartInstance.destroy();
+          expenseDonutChartInstance = null;
+        }
+        expenseDonutChartInstance = new Chart(donutCtx, {
           type: 'doughnut',
           data: {
-            labels: ['Net Profit', 'Diesel Fuel', 'Driver Bata', 'FASTag Tolls', 'Platform Fee'],
+            labels: [
+              t('transporter.netProfit', 'Net Profit'),
+              t('transporter.dieselFuel', 'Diesel Fuel'),
+              t('transporter.driverBata', 'Driver Bata'),
+              t('transporter.fastagTolls', 'FASTag Tolls'),
+              t('transporter.platformFee', 'Platform Fee')
+            ],
             datasets: [{
               data: [226000, 164000, 48000, 34800, 9600],
               backgroundColor: ['#2D6A4F', '#C8963E', '#4A7FA5', '#7B5EA7', '#B8B2A0'],
@@ -271,6 +292,10 @@
         });
       }
     }
+
+    window.addEventListener('languageChanged', () => {
+      initEarningsCharts();
+    });
 
     function renderInvoicesTable() {
       const tbody = document.getElementById('invoicesTableBody');

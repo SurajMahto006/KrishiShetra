@@ -44,7 +44,7 @@
       <div class="dash-search" id="dash-search">
         <i data-lucide="search" class="dash-search__icon"></i>
         <input type="text" id="dash-search-input" class="dash-search__input"
-          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
+          placeholder="Search crops, markets, buyers..." data-i18n-placeholder="common.search" autocomplete="off" aria-label="Global search">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="dash-search__results" id="dash-search-results"></div>
       </div>
@@ -136,7 +136,7 @@
 
       <!-- Breadcrumb -->
       <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
-        <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
+        <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;" data-i18n="navigation.dashboard">Dashboard</a> /
         <strong>Orders & Fulfillment</strong>
       </nav>
 
@@ -172,7 +172,7 @@
           <a href="index.html" class="footer__link">About KrishiShetra</a>
         </div>
       </div>
-      <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
+      <div class="footer__copyright" data-i18n="common.footerCopyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
     </div>
   </footer>
 
@@ -256,6 +256,7 @@
   </div>
 
   <!-- SCRIPTS -->
+  <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>

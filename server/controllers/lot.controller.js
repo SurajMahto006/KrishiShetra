@@ -154,6 +154,7 @@ const createLot = async (req, res) => {
     if (!farmerProfile) {
       return res.status(400).json({
         success: false,
+        code: 'FARMER_PROFILE_REQUIRED',
         message: 'Farmer profile required before creating produce lots. Please complete your profile at /api/farmer/profile first.'
       });
     }
@@ -163,6 +164,7 @@ const createLot = async (req, res) => {
     if (validationErrors.length > 0) {
       return res.status(400).json({
         success: false,
+        code: 'VALIDATION_FAILED',
         message: validationErrors.join(' ')
       });
     }
@@ -240,12 +242,14 @@ const createLot = async (req, res) => {
       const messages = Object.values(error.errors).map(err => err.message);
       return res.status(400).json({
         success: false,
+        code: 'VALIDATION_FAILED',
         message: messages.join(' ')
       });
     }
 
     return res.status(500).json({
       success: false,
+      code: 'LOT_CREATION_FAILED',
       message: 'Server error while creating produce lot'
     });
   }
@@ -280,6 +284,7 @@ const getMyLots = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
+      code: 'INTERNAL_SERVER_ERROR',
       message: 'Server error while retrieving produce lots'
     });
   }
@@ -297,6 +302,7 @@ const getSingleLot = async (req, res) => {
     if (!lot) {
       return res.status(404).json({
         success: false,
+        code: 'INVALID_CROP_LOT',
         message: 'Produce lot not found or access denied.'
       });
     }
@@ -308,6 +314,7 @@ const getSingleLot = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
+      code: 'INTERNAL_SERVER_ERROR',
       message: 'Server error while retrieving produce lot'
     });
   }
@@ -325,6 +332,7 @@ const updateLot = async (req, res) => {
     if (!lot) {
       return res.status(404).json({
         success: false,
+        code: 'INVALID_CROP_LOT',
         message: 'Produce lot not found or access denied.'
       });
     }
@@ -333,6 +341,7 @@ const updateLot = async (req, res) => {
     if (lot.status === 'sold') {
       return res.status(400).json({
         success: false,
+        code: 'LOT_ALREADY_SOLD',
         message: 'Cannot modify a lot that has already been sold.'
       });
     }
@@ -342,6 +351,7 @@ const updateLot = async (req, res) => {
     if (validationErrors.length > 0) {
       return res.status(400).json({
         success: false,
+        code: 'VALIDATION_FAILED',
         message: validationErrors.join(' ')
       });
     }
@@ -399,12 +409,14 @@ const updateLot = async (req, res) => {
       const messages = Object.values(error.errors).map(err => err.message);
       return res.status(400).json({
         success: false,
+        code: 'VALIDATION_FAILED',
         message: messages.join(' ')
       });
     }
 
     return res.status(500).json({
       success: false,
+      code: 'INTERNAL_SERVER_ERROR',
       message: 'Server error while updating produce lot'
     });
   }
@@ -422,6 +434,7 @@ const deleteLot = async (req, res) => {
     if (!lot) {
       return res.status(404).json({
         success: false,
+        code: 'INVALID_CROP_LOT',
         message: 'Produce lot not found or access denied.'
       });
     }
@@ -429,6 +442,7 @@ const deleteLot = async (req, res) => {
     if (lot.status === 'sold') {
       return res.status(400).json({
         success: false,
+        code: 'LOT_ALREADY_SOLD',
         message: 'Cannot cancel or delete a lot that has already been sold.'
       });
     }
@@ -445,6 +459,7 @@ const deleteLot = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
+      code: 'INTERNAL_SERVER_ERROR',
       message: 'Server error while cancelling produce lot'
     });
   }
@@ -459,7 +474,7 @@ const getLotStorageOptions = async (req, res) => {
   try {
     const lot = await findLotForUser(req.params.lotId, req.user._id);
     if (!lot) {
-      return res.status(404).json({ success: false, message: 'Produce lot not found' });
+      return res.status(404).json({ success: false, code: 'INVALID_CROP_LOT', message: 'Produce lot not found' });
     }
 
     const { getNearbyStorage } = require('./storage.controller');
@@ -468,7 +483,7 @@ const getLotStorageOptions = async (req, res) => {
     req.query.state = lot.state || 'Maharashtra';
     return getNearbyStorage(req, res);
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Failed to retrieve storage options for lot' });
+    return res.status(500).json({ success: false, code: 'INTERNAL_SERVER_ERROR', message: 'Failed to retrieve storage options for lot' });
   }
 };
 
@@ -481,16 +496,18 @@ const getLotSellingDecision = async (req, res) => {
   try {
     const lot = await findLotForUser(req.params.lotId, req.user._id);
     if (!lot) {
-      return res.status(404).json({ success: false, message: 'Produce lot not found' });
+      return res.status(404).json({ success: false, code: 'INVALID_CROP_LOT', message: 'Produce lot not found' });
     }
 
+    const lang = req.query.language || req.query.lang || req.headers['accept-language'] || 'en';
     const { evaluateSellVsStore } = require('../services/decision.service');
     const decision = evaluateSellVsStore({
       cropName: lot.cropName,
       quantity: lot.quantity,
       currentPrice: lot.askingPrice,
       holdingDays: lot.storageDurationDays || 45,
-      distanceKm: 12
+      distanceKm: 12,
+      language: lang
     });
 
     return res.status(200).json({
@@ -498,10 +515,14 @@ const getLotSellingDecision = async (req, res) => {
       lotId: lot.lotId,
       cropName: lot.cropName,
       quantity: lot.quantity,
+      recommendation: decision.recommendation,
+      netBenefit: decision.netBenefit,
+      reason: decision.reason,
+      language: decision.language,
       decision
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Failed to calculate selling decision for lot' });
+    return res.status(500).json({ success: false, code: 'INTERNAL_SERVER_ERROR', message: 'Failed to calculate selling decision for lot' });
   }
 };
 

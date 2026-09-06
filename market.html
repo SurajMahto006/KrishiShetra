@@ -44,29 +44,29 @@
       <div class="dash-search" id="dash-search">
         <i data-lucide="search" class="dash-search__icon"></i>
         <input type="text" id="dash-search-input" class="dash-search__input"
-          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
+          placeholder="Search crops, markets, buyers..." data-i18n-placeholder="common.search" autocomplete="off" aria-label="Global search">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="dash-search__results" id="dash-search-results"></div>
       </div>
 
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
-          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> <span data-i18n="navigation.dashboard">Dashboard</span>
         </a>
         <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
         </a>
         <a href="market.html" class="dash-header__link dash-header__link--active" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
+          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="navigation.marketplace">Market</span>
         </a>
         <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
+          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span>
         </a>
         <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
+          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyers">Buyers</span>
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span>
         </a>
       </nav>
 
@@ -138,17 +138,17 @@
       <div class="container">
         <!-- Breadcrumb -->
         <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
-          <a href="index.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Home</a> /
-          <a href="dashboard.html" id="breadcrumb-dash-link" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
-          <strong>Marketplace</strong>
+          <a href="index.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;" data-i18n="common.home">Home</a> /
+          <a href="dashboard.html" id="breadcrumb-dash-link" style="color: var(--ks-gold, #C9973B); text-decoration: none;" data-i18n="navigation.dashboard">Dashboard</a> /
+          <strong data-i18n="navigation.marketplace">Marketplace</strong>
         </nav>
 
         <div class="dash-section__header">
           <div>
-            <h2 class="dash-section__title">Market Overview</h2>
-            <p class="dash-section__subtitle">Live prices from verified nearby mandis</p>
+            <h2 class="dash-section__title" data-i18n="marketplace.title">Market Overview</h2>
+            <p class="dash-section__subtitle" data-i18n="marketplace.subtitle">Live prices from nearby APMC markets</p>
           </div>
-          <button class="dash-section__action" id="btn-refresh-market"><i data-lucide="refresh-cw"></i> Refresh Prices</button>
+          <button class="dash-section__action" id="btn-refresh-market"><i data-lucide="refresh-cw"></i> <span data-i18n="market.refreshPrices">Refresh Prices</span></button>
         </div>
 
         <!-- Filter Bar -->
@@ -156,29 +156,29 @@
           <div class="dash-filter-bar__search">
             <i data-lucide="search"></i>
             <input type="text" id="market-search-input" placeholder="Search crop or mandi (e.g. Rice, Pune, Tomato)..."
-              aria-label="Search crops">
+              data-i18n-placeholder="marketplace.searchPlaceholder" aria-label="Search crops">
           </div>
           <div class="dash-filter-bar__filters">
             <select id="filter-crop" class="dash-filter-select" aria-label="Filter by crop">
-              <option value="all">All Crops (15)</option>
-              <option value="rice">Rice</option>
-              <option value="wheat">Wheat</option>
-              <option value="maize">Maize</option>
-              <option value="soybean">Soybean</option>
-              <option value="pulses">Pulses</option>
-              <option value="onion">Onion</option>
-              <option value="tomato">Tomato</option>
-              <option value="potato">Potato</option>
-              <option value="chilli">Chilli</option>
-              <option value="groundnut">Groundnut</option>
-              <option value="cotton">Cotton</option>
-              <option value="sugarcane">Sugarcane</option>
-              <option value="mango">Mango</option>
-              <option value="banana">Banana</option>
-              <option value="grapes">Grapes</option>
+              <option value="all" data-i18n="marketplace.allCrops">All Crops</option>
+              <option value="rice" data-i18n="crops.rice">Rice</option>
+              <option value="wheat" data-i18n="crops.wheat">Wheat</option>
+              <option value="maize" data-i18n="crops.maize">Maize</option>
+              <option value="soybean" data-i18n="crops.soybean">Soybean</option>
+              <option value="pulses" data-i18n="crops.pulses">Pulses</option>
+              <option value="onion" data-i18n="crops.onion">Onion</option>
+              <option value="tomato" data-i18n="crops.tomato">Tomato</option>
+              <option value="potato" data-i18n="crops.potato">Potato</option>
+              <option value="chilli" data-i18n="crops.chilli">Chilli</option>
+              <option value="groundnut" data-i18n="crops.groundnut">Groundnut</option>
+              <option value="cotton" data-i18n="crops.cotton">Cotton</option>
+              <option value="sugarcane" data-i18n="crops.sugarcane">Sugarcane</option>
+              <option value="mango" data-i18n="crops.mango">Mango</option>
+              <option value="banana" data-i18n="crops.banana">Banana</option>
+              <option value="grapes" data-i18n="crops.grapes">Grapes</option>
             </select>
             <select id="filter-location" class="dash-filter-select" aria-label="Filter by location">
-              <option value="all">All Mandis</option>
+              <option value="all" data-i18n="marketplace.allMandis">All Mandis</option>
               <option value="Pune">Pune APMC</option>
               <option value="Nashik">Nashik APMC</option>
               <option value="Mumbai">Mumbai APMC</option>
@@ -189,10 +189,10 @@
               <option value="Rajkot">Rajkot APMC</option>
             </select>
             <select id="filter-demand" class="dash-filter-select" aria-label="Filter by demand">
-              <option value="all">All Demand Levels</option>
-              <option value="high">High Demand Only</option>
-              <option value="medium">Medium Demand</option>
-              <option value="low">Low Demand</option>
+              <option value="all" data-i18n="marketplace.allDemandLevels">All Demand Levels</option>
+              <option value="high" data-i18n="demand.high">HIGH DEMAND</option>
+              <option value="medium" data-i18n="demand.medium">MEDIUM</option>
+              <option value="low" data-i18n="demand.low">LOW DEMAND</option>
             </select>
           </div>
         </div>
@@ -201,8 +201,8 @@
         <div class="dash-market__grid" id="market-grid"></div>
         <div class="dash-market__empty" id="market-empty" style="display:none;">
           <i data-lucide="search-x"></i>
-          <p>No crops found matching your search criteria.</p>
-          <button class="btn btn--secondary" id="btn-clear-search">Clear Filters</button>
+          <p data-i18n="marketplace.noCropsMatch">No crops match your search</p>
+          <button class="btn btn--secondary" id="btn-clear-search" data-i18n="market.clearFilters">Clear Filters</button>
         </div>
       </div>
     </section>
@@ -212,10 +212,10 @@
       <div class="container">
         <div class="dash-section__header">
           <div>
-            <h2 class="dash-section__title">What Farmers Are Selling</h2>
-            <p class="dash-section__subtitle">Top traded commodities listed across regional mandis</p>
+            <h2 class="dash-section__title" data-i18n="market.whatFarmersAreSelling">What Farmers Are Selling</h2>
+            <p class="dash-section__subtitle" data-i18n="market.whatFarmersAreSellingSub">Top traded commodities listed across regional mandis</p>
           </div>
-          <a href="lots.html" class="dash-section__action">View My Listings <i data-lucide="arrow-right"></i></a>
+          <a href="lots.html" class="dash-section__action"><span data-i18n="market.viewMyListings">View My Listings</span> <i data-lucide="arrow-right"></i></a>
         </div>
         <div class="dash-farmer-scroll" id="farmer-listings-scroll"></div>
       </div>
@@ -226,26 +226,26 @@
       <div class="container">
         <div class="dash-section__header">
           <div>
-            <h2 class="dash-section__title">Compare Mandi Prices</h2>
-            <p class="dash-section__subtitle">Find the best market for your crop across states</p>
+            <h2 class="dash-section__title" data-i18n="market.compareMandiPrices">Compare Mandi Prices</h2>
+            <p class="dash-section__subtitle" data-i18n="market.compareMandiPricesSub">Find the best market for your crop across states</p>
           </div>
         </div>
         <div class="dash-compare-controls" id="compare-controls">
           <div class="dash-compare-control">
-            <label for="compare-crop">Selected Crop</label>
+            <label for="compare-crop" data-i18n="market.selectedCrop">Selected Crop</label>
             <select id="compare-crop" class="dash-filter-select">
-              <option value="rice">Rice</option>
-              <option value="wheat">Wheat</option>
-              <option value="onion">Onion</option>
-              <option value="tomato">Tomato</option>
-              <option value="soybean">Soybean</option>
-              <option value="maize">Maize</option>
-              <option value="chilli">Chilli</option>
-              <option value="pulses">Pulses</option>
+              <option value="rice" data-i18n="crops.rice">Rice</option>
+              <option value="wheat" data-i18n="crops.wheat">Wheat</option>
+              <option value="onion" data-i18n="crops.onion">Onion</option>
+              <option value="tomato" data-i18n="crops.tomato">Tomato</option>
+              <option value="soybean" data-i18n="crops.soybean">Soybean</option>
+              <option value="maize" data-i18n="crops.maize">Maize</option>
+              <option value="chilli" data-i18n="crops.chilli">Chilli</option>
+              <option value="pulses" data-i18n="crops.pulses">Pulses</option>
             </select>
           </div>
           <div class="dash-compare-control">
-            <label for="compare-location">State / Region</label>
+            <label for="compare-location" data-i18n="market.stateRegion">State / Region</label>
             <select id="compare-location" class="dash-filter-select">
               <option value="maharashtra">Maharashtra</option>
               <option value="mp">Madhya Pradesh</option>
@@ -263,11 +263,11 @@
           <table class="dash-compare-table" id="compare-table">
             <thead>
               <tr>
-                <th>Market Mandi</th>
-                <th>Price (₹/q)</th>
-                <th>Weekly Trend</th>
-                <th>Demand Level</th>
-                <th>Action</th>
+                <th data-i18n="market.marketMandi">Market Mandi</th>
+                <th data-i18n="market.pricePerQ">Price (₹/q)</th>
+                <th data-i18n="market.weeklyTrend">Weekly Trend</th>
+                <th data-i18n="market.demandLevel">Demand Level</th>
+                <th data-i18n="market.action">Action</th>
               </tr>
             </thead>
             <tbody id="compare-table-body"></tbody>
@@ -284,7 +284,7 @@
           <div class="dash-chart-card__header">
             <div>
               <h3 class="dash-chart-card__title" id="chart-title">Rice Price Trend</h3>
-              <p class="dash-chart-card__subtitle">Historical daily modal price analysis</p>
+              <p class="dash-chart-card__subtitle" data-i18n="market.historicalModalPrice">Historical daily modal price analysis</p>
             </div>
             <div class="dash-chart-card__controls">
               <select id="chart-crop-select" class="dash-filter-select dash-filter-select--sm"
@@ -305,13 +305,13 @@
             </div>
           </div>
           <div class="dash-chart-stats" id="chart-stats">
-            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Current</span><span
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label" data-i18n="market.current">Current</span><span
                 class="dash-chart-stats__val" id="chart-stat-current">₹2,850</span></div>
-            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Highest</span><span
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label" data-i18n="market.highest">Highest</span><span
                 class="dash-chart-stats__val dash-chart-stats__val--up" id="chart-stat-high">₹2,900</span></div>
-            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Lowest</span><span
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label" data-i18n="market.lowest">Lowest</span><span
                 class="dash-chart-stats__val dash-chart-stats__val--down" id="chart-stat-low">₹2,620</span></div>
-            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Average</span><span
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label" data-i18n="market.average">Average</span><span
                 class="dash-chart-stats__val" id="chart-stat-avg">₹2,792</span></div>
           </div>
           <div class="dash-chart-card__canvas">
@@ -346,8 +346,8 @@
       <div class="container">
         <div class="dash-section__header">
           <div>
-            <h2 class="dash-section__title">Market Insights</h2>
-            <p class="dash-section__subtitle">Actionable intelligence for better selling decisions</p>
+            <h2 class="dash-section__title" data-i18n="market.marketInsights">Market Insights</h2>
+            <p class="dash-section__subtitle" data-i18n="market.actionableIntelligence">Actionable intelligence for better selling decisions</p>
           </div>
         </div>
         <div class="dash-insights__grid" id="insights-grid">
@@ -394,7 +394,7 @@
           <a href="index.html" class="footer__link">About KrishiShetra</a>
         </div>
       </div>
-      <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
+      <div class="footer__copyright" data-i18n="common.footerCopyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
     </div>
   </footer>
 
@@ -436,7 +436,7 @@
           </div>
           <div class="dash-crop-modal__hero-info">
             <div class="dash-crop-modal__price-block">
-              <span class="dash-crop-modal__price-label">Current Mandi Price</span>
+              <span class="dash-crop-modal__price-label" data-i18n="market.currentMandiPrice">Current Mandi Price</span>
               <div class="dash-crop-modal__price-val" id="crop-modal-price">₹2,850/q</div>
               <span class="dash-crop-modal__price-change" id="crop-modal-change">↑ 5.2% from last week</span>
             </div>
@@ -452,19 +452,19 @@
         <div class="dash-crop-modal__ai-box">
           <div class="dash-crop-modal__ai-header">
             <i data-lucide="brain"></i>
-            <span>AI Selling Forecast</span>
+            <span data-i18n="market.aiSellingForecast">AI Selling Forecast</span>
           </div>
           <p id="crop-modal-ai-text">"High buyer arrival expected in next 3 days. Recommended selling price ₹2,950/q."
           </p>
         </div>
 
         <div class="dash-crop-modal__section">
-          <h4>Nearby Mandi Price Comparison</h4>
+          <h4 data-i18n="market.nearbyMandiComparison">Nearby Mandi Price Comparison</h4>
           <div class="dash-crop-modal__mandis" id="crop-modal-mandis"></div>
         </div>
 
         <div class="dash-crop-modal__section">
-          <h4>Top Verified Corporate Buyers</h4>
+          <h4 data-i18n="market.topVerifiedBuyers">Top Verified Corporate Buyers</h4>
           <div class="dash-crop-modal__buyers" id="crop-modal-buyers"></div>
         </div>
 
@@ -482,12 +482,12 @@
   <div class="dash-modal-overlay" id="alert-modal-overlay">
     <div class="dash-modal" id="alert-modal">
       <div class="dash-modal__header">
-        <h3>Create Price Alert</h3>
+        <h3 data-i18n="market.createPriceAlert">Create Price Alert</h3>
         <button class="dash-modal__close" id="alert-modal-close"><i data-lucide="x"></i></button>
       </div>
       <form class="dash-modal__form" id="alert-form">
         <div class="dash-modal__field">
-          <label for="alert-crop-input">Crop</label>
+          <label for="alert-crop-input" data-i18n="cropLotModal.cropCategory">Crop</label>
           <select id="alert-crop-input" class="dash-filter-select" required>
             <option value="rice">Rice</option>
             <option value="wheat">Wheat</option>
@@ -499,11 +499,11 @@
           </select>
         </div>
         <div class="dash-modal__field">
-          <label for="alert-price-input">Target Price (₹/quintal)</label>
+          <label for="alert-price-input" data-i18n="market.targetPrice">Target Price (₹/quintal)</label>
           <input type="number" id="alert-price-input" class="dash-form-input" placeholder="e.g. 3000" required>
         </div>
         <div class="dash-modal__field">
-          <label for="alert-market-input">Market Mandi</label>
+          <label for="alert-market-input" data-i18n="market.marketMandi">Market Mandi</label>
           <select id="alert-market-input" class="dash-filter-select">
             <option value="Pune APMC">Pune APMC</option>
             <option value="Mumbai APMC">Mumbai APMC</option>
@@ -511,11 +511,11 @@
           </select>
         </div>
         <div class="dash-modal__field">
-          <label>Notify Via</label>
+          <label data-i18n="market.notifyVia">Notify Via</label>
           <div class="dash-modal__checkboxes">
-            <label class="dash-checkbox"><input type="checkbox" id="alert-ch-app" checked> In-App</label>
-            <label class="dash-checkbox"><input type="checkbox" id="alert-ch-sms" checked> SMS</label>
-            <label class="dash-checkbox"><input type="checkbox" id="alert-ch-wa"> WhatsApp</label>
+            <label class="dash-checkbox"><input type="checkbox" id="alert-ch-app" checked> <span data-i18n="market.inApp">In-App</span></label>
+            <label class="dash-checkbox"><input type="checkbox" id="alert-ch-sms" checked> <span data-i18n="market.sms">SMS</span></label>
+            <label class="dash-checkbox"><input type="checkbox" id="alert-ch-wa"> <span data-i18n="market.whatsapp">WhatsApp</span></label>
           </div>
         </div>
         <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="bell-ring"></i> Set Price
@@ -573,6 +573,7 @@
   </div>
 
   <!-- SCRIPTS -->
+  <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>

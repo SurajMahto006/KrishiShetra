@@ -1,3 +1,4 @@
+const t = (key, fallback) => (window.i18next ? window.i18next.t(key, fallback) : (fallback || key));
 /**
  * KRISHISHETRA — FARMER JOURNEY CONTROLLER (Step 12B)
  * Complete implementation for:
@@ -798,7 +799,7 @@ const FarmerFlow = {
 
         <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
           <div style="text-align: right;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Asking Price</div>
+            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">${t('cropLotModal.expectedPricePerUnit', 'Asking Price')}</div>
             <div class="kisan-lot-card__price-tag">
               ₹${lot.askingPrice?.toLocaleString('en-IN')} <span style="font-size: 12px; font-weight: 500; color: #555;">/ ${lot.priceUnit || 'quintal'}</span>
             </div>
@@ -814,10 +815,10 @@ const FarmerFlow = {
               </button>
             ` : ''}
             <button class="btn btn--primary kisan-lot-card__btn" onclick="FarmerFlow.viewLotOffers('${lot.lotId}')" style="background: #12372A; border-color: #12372A; min-height: 48px; padding: 10px 18px; font-weight: 800;">
-              <i data-lucide="handshake"></i> <span>Sell & View Offers</span>
+              <i data-lucide="handshake"></i> <span>${t('farmer.receivedOffersTitle', 'Sell & View Offers')}</span>
             </button>
             <a href="storage.html?crop=${encodeURIComponent(lot.cropName)}&qty=${lot.quantity}&price=${lot.askingPrice}" class="btn btn--secondary kisan-lot-card__btn" style="min-height: 48px; padding: 10px 18px; font-weight: 700; border-color: #D8C28A; color: #12372A;">
-              <i data-lucide="warehouse"></i> <span>Storage Options</span>
+              <i data-lucide="warehouse"></i> <span>${t('storage.storageDiscovery', 'Storage Options')}</span>
             </a>
             <button class="btn btn--secondary" onclick="FarmerFlow.viewLotDetails('${lot.lotId}')" title="View Details" style="min-height: 48px; padding: 10px 14px;">
               <i data-lucide="eye"></i>
@@ -1422,4 +1423,16 @@ window.filterLotTab = function(filter) {
 // Auto-initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   FarmerFlow.init();
+});
+
+// Reactive translation refresh on language switch
+window.addEventListener('languageChanged', () => {
+  if (window.FarmerFlow) {
+    if (document.getElementById('lots-panel-body') || document.getElementById('farmer-lots-grid')) {
+      window.FarmerFlow.loadMyLots(window.FarmerFlow.currentFilter || 'all');
+    }
+    if (document.getElementById('offers-panel-body') || document.getElementById('farmer-offers-container')) {
+      window.FarmerFlow.loadReceivedInquiries();
+    }
+  }
 });

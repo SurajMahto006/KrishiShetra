@@ -368,7 +368,7 @@ function viewTripDetail(tripId) {
 function verifyPodOtp(tripId) {
   const otp = document.getElementById('podOtpInput')?.value;
   if (!otp || otp.length < 4) {
-    alert('Please enter valid 4-digit OTP provided by the destination mandi receiver.');
+    alert(typeof i18next !== 'undefined' ? i18next.t('transporter.enterValidOtp') : 'Please enter valid 4-digit OTP provided by destination mandi receiver.');
     return;
   }
   closeModal('tripDetailModal');
@@ -439,7 +439,7 @@ function simulateDocUpload(inputId, statusTargetId) {
     setTimeout(() => {
       statusEl.innerHTML = `<span style="color:var(--status-success-text);font-size:12px;font-weight:700;"><i data-lucide="check-circle" style="width:14px;height:14px;display:inline;"></i> Verified ✓ (Govt VAHAN / Sarathi Match)</span>`;
       if (window.lucide) lucide.createIcons();
-      showToast('Document verified with Ministry of Road Transport & Highways database!', 'success');
+      showToast(typeof i18next !== 'undefined' ? i18next.t('transporter.docVerifiedMorth') : 'Document verified with Ministry of Road Transport & Highways database!', 'success');
     }, 1200);
   }
 }

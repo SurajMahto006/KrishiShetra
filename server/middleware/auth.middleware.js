@@ -15,6 +15,7 @@ const protect = async (req, res, next) => {
       if (!token) {
         return res.status(401).json({
           success: false,
+          code: 'UNAUTHORIZED',
           message: 'Not authorized, token missing'
         });
       }
@@ -30,6 +31,7 @@ const protect = async (req, res, next) => {
       if (!user) {
         return res.status(401).json({
           success: false,
+          code: 'UNAUTHORIZED',
           message: 'Not authorized, user not found'
         });
       }
@@ -39,12 +41,14 @@ const protect = async (req, res, next) => {
     } catch (error) {
       return res.status(401).json({
         success: false,
+        code: 'UNAUTHORIZED',
         message: 'Not authorized, invalid or expired token'
       });
     }
   } else {
     return res.status(401).json({
       success: false,
+      code: 'UNAUTHORIZED',
       message: 'Not authorized, no token provided'
     });
   }
@@ -55,6 +59,7 @@ const authorize = (...roles) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
+        code: 'UNAUTHORIZED',
         message: 'Not authorized, user not authenticated'
       });
     }
@@ -62,6 +67,7 @@ const authorize = (...roles) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
+        code: 'FORBIDDEN',
         message: `Forbidden: Access restricted to [${roles.join(', ')}] role only.`
       });
     }

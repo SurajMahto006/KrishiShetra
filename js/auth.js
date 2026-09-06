@@ -12,6 +12,8 @@ const Auth = {
   EMAIL_KEY: 'krishi_user_email',
   LOGGED_IN_KEY: 'krishi_is_logged_in',
   DEV_SESSION_KEY: 'krishishetra_dev_session',
+  USER_LANG_KEY: 'krishi_lang',
+  LANG_UPDATED_AT_KEY: 'krishi_lang_updated_at',
 
   /**
    * Check if running in a local development environment
@@ -64,7 +66,7 @@ const Auth = {
   },
 
   /**
-   * Save user details and synchronize convenience keys
+   * Save user details, synchronize convenience keys, and resolve language preference
    */
   setUser(user) {
     if (!user) return;
@@ -79,6 +81,81 @@ const Auth = {
       localStorage.setItem(this.EMAIL_KEY, user.email);
     }
     localStorage.setItem(this.LOGGED_IN_KEY, 'true');
+
+    // ── Language Preference Sync & Conflict Resolution ──
+    const allowedLangs = ['en', 'hi', 'mr'];
+    const serverLang = (user.preferredLanguage || 'en').toLowerCase().trim();
+    const serverUpdatedAt = user.languageUpdatedAt ? new Date(user.languageUpdatedAt).getTime() : 0;
+
+    let localLang = '';
+    let localUpdatedAt = 0;
+    try {
+      localLang = (localStorage.getItem(this.USER_LANG_KEY) || '').toLowerCase().trim();
+      localUpdatedAt = parseInt(localStorage.getItem(this.LANG_UPDATED_AT_KEY) || '0', 10);
+    } catch (e) {}
+
+    let effectiveLang = 'en';
+
+    // Conflict Rule: latest explicit user selection wins
+    if (localLang && allowedLangs.includes(localLang) && localUpdatedAt > serverUpdatedAt) {
+      // Local explicit selection is newer
+      effectiveLang = localLang;
+      user.preferredLanguage = localLang;
+      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+      // Asynchronously sync newer local selection to backend
+      this.syncLanguagePreference(localLang);
+    } else if (serverLang && allowedLangs.includes(serverLang)) {
+      // Server preference wins (or local had no explicit override)
+      effectiveLang = serverLang;
+      try {
+        localStorage.setItem(this.USER_LANG_KEY, serverLang);
+        localStorage.setItem('i18nextLng', serverLang);
+        localStorage.setItem(this.LANG_UPDATED_AT_KEY, (serverUpdatedAt || Date.now()).toString());
+      } catch (e) {}
+    }
+
+    // Apply language immediately across i18n engine
+    if (typeof window !== 'undefined' && window.i18next && typeof window.i18next.changeLanguage === 'function') {
+      window.i18next.changeLanguage(effectiveLang, null, { isServerSync: true });
+    }
+  },
+
+  /**
+   * Sync language preference to server
+   */
+  async syncLanguagePreference(lang) {
+    const allowedLangs = ['en', 'hi', 'mr'];
+    const targetLang = (lang || '').toLowerCase().trim();
+    if (!allowedLangs.includes(targetLang)) return;
+
+    // Update cached user object in localStorage
+    try {
+      const u = this.getUser();
+      if (u) {
+        u.preferredLanguage = targetLang;
+        u.languageUpdatedAt = new Date().toISOString();
+        localStorage.setItem(this.USER_KEY, JSON.stringify(u));
+      }
+    } catch (e) {}
+
+    // If online with token, send PUT /api/auth/language
+    const token = this.getToken();
+    if (token) {
+      try {
+        const isLocal = typeof window !== 'undefined' && window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+        const apiBase = (window.API_BASE_URL || (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api')).replace(/\/+$/, '');
+        await fetch(`${apiBase}/auth/language`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ preferredLanguage: targetLang })
+        });
+      } catch (err) {
+        console.warn('[Auth] syncLanguagePreference network error:', err);
+      }
+    }
   },
 
   /**
@@ -92,6 +169,8 @@ const Auth = {
       role: r,
       name: `Development ${r.charAt(0).toUpperCase() + r.slice(1)}`,
       email: `dev.${r}@krishishetra.local`,
+      preferredLanguage: localStorage.getItem(this.USER_LANG_KEY) || 'en',
+      languageUpdatedAt: new Date().toISOString(),
       isDev: true
     };
     localStorage.removeItem(this.TOKEN_KEY);
@@ -150,6 +229,7 @@ const Auth = {
     localStorage.removeItem(this.NAME_KEY);
     localStorage.removeItem(this.EMAIL_KEY);
     localStorage.removeItem(this.LOGGED_IN_KEY);
+    localStorage.removeItem(this.LANG_UPDATED_AT_KEY);
   },
 
   /**
@@ -183,6 +263,10 @@ const Auth = {
       case 'fpo':
         window.location.href = `${prefix}fpo-dashboard.html`;
         break;
+      case 'storage_owner':
+      case 'storage':
+        window.location.href = `${prefix}admin/storage.html`;
+        break;
       case 'admin':
         window.location.href = `${prefix}admin/dashboard.html`;
         break;
@@ -215,6 +299,9 @@ const Auth = {
         return `${prefix}transporter/dashboard.html`;
       case 'fpo':
         return `${prefix}fpo-dashboard.html`;
+      case 'storage_owner':
+      case 'storage':
+        return `${prefix}admin/storage.html`;
       case 'admin':
         return `${prefix}admin/dashboard.html`;
       case 'farmer':

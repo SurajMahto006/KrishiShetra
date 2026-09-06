@@ -92,7 +92,7 @@
       const password = document.getElementById('adminPassword').value;
 
       if (email && password) {
-        showToast('Login successful! Redirecting to dashboard...', 'success');
+        showToast((typeof i18next !== 'undefined' ? i18next.t('admin.loginSuccessRedirecting') : 'Login successful! Redirecting to dashboard...'), 'success');
         setTimeout(() => {
           window.location.href = 'dashboard.html';
         }, 1200);
@@ -120,5 +120,6 @@
 
     lucide.createIcons();
   </script>
+  <script src="../js/i18n.js"></script>
 </body>
 </html>

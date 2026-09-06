@@ -3,13 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KrishiShetra — Admin Storage Management</title>
-  <meta name="description" content="KrishiShetra Admin — Manage storage facilities, warehouse capacities, tariff rates, and farmer booking requests.">
+  <title>KrishiShetra — Admin & Storage Facility Hub</title>
+  <meta name="description" content="KrishiShetra Storage Hub — Manage accredited storage facilities, warehouse capacities, tariffs, and farmer space requests.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .storage-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 55, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .storage-modal-overlay.active {
+      display: flex;
+    }
+    .storage-modal-content {
+      background: #FFFFFF;
+      border-radius: 16px;
+      max-width: 760px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 26px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #D5D3CB;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .form-control:focus {
+      border-color: #2E7D32;
+    }
+    .feature-checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .feature-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #444;
+      background: #F8F7F2;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .status-pill {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .status-pill--operational { background: #E8F5E9; color: #2E7D32; }
+    .status-pill--full { background: #FFEBEE; color: #C62828; }
+    .status-pill--maintenance { background: #FFF3E0; color: #E65100; }
+    .status-pill--closed { background: #ECEFF1; color: #455A64; }
+  </style>
 </head>
 <body>
 
@@ -19,30 +109,33 @@
       <a href="index.html" class="admin-brand">
         <span class="brand-icon">🌾</span>
         <span class="brand-text">KrishiShetra</span>
-        <span class="brand-badge">Admin</span>
+        <span class="brand-badge" data-i18n="storage.storageOwnerBadge">STORAGE OWNER</span>
       </a>
 
       <nav>
         <ul class="admin-nav-menu" id="adminNavMenu">
-          <li><a href="dashboard.html" class="admin-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
-          <li><a href="users.html" class="admin-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Users</a></li>
-          <li><a href="farmers.html" class="admin-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Farmers</a></li>
-          <li><a href="storage.html" class="admin-nav-link active"><i data-lucide="warehouse" style="width:16px;height:16px;"></i> Storage Hub</a></li>
-          <li><a href="reports.html" class="admin-nav-link"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Reports</a></li>
-          <li><a href="settings.html" class="admin-nav-link"><i data-lucide="settings" style="width:16px;height:16px;"></i> Settings</a></li>
+          <li><a href="dashboard.html" class="admin-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> <span data-i18n="navigation.dashboard">Dashboard</span></a></li>
+          <li><a href="users.html" class="admin-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> <span data-i18n="navigation.users">Users</span></a></li>
+          <li><a href="farmers.html" class="admin-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> <span data-i18n="navigation.farmers">Farmers</span></a></li>
+          <li><a href="storage.html" class="admin-nav-link active"><i data-lucide="warehouse" style="width:16px;height:16px;"></i> <span data-i18n="navigation.storage">Storage Hub</span></a></li>
+          <li><a href="reports.html" class="admin-nav-link"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> <span data-i18n="navigation.reports">Reports</span></a></li>
+          <li><a href="settings.html" class="admin-nav-link"><i data-lucide="settings" style="width:16px;height:16px;"></i> <span data-i18n="navigation.settings">Settings</span></a></li>
         </ul>
       </nav>
 
       <div class="admin-header-actions">
+        <!-- Language Switcher Target Container -->
+        <div id="ks-lang-selector-target" style="display:inline-block;"></div>
+
         <a href="../storage.html" class="portal-switch-btn" target="_blank" style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:9999px;color:#F5F2EB;font-size:12.5px;font-weight:600;text-decoration:none;">
-          <i data-lucide="external-link" style="width:14px;height:14px;color:#E8B96A;"></i> Farmer Storage View
+          <i data-lucide="external-link" style="width:14px;height:14px;color:#E8B96A;"></i> <span data-i18n="storage.farmerStorageView">Farmer Storage View</span>
         </a>
 
         <div class="admin-header-user">
-          <div class="admin-header-avatar">AD</div>
+          <div class="admin-header-avatar">SO</div>
           <div class="admin-header-user-info">
-            <span class="admin-header-user-name">Admin User</span>
-            <span class="admin-header-user-role">Super Admin</span>
+            <span class="admin-header-user-name" data-i18n="storage.adminUser">Storage Operator</span>
+            <span class="admin-header-user-role" data-i18n="storage.storageOwner">Storage Owner</span>
           </div>
         </div>
       </div>
@@ -55,12 +148,12 @@
     <!-- Page Header -->
     <div class="admin-page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
       <div>
-        <h1 class="admin-page-title">Warehouse &amp; Storage Infrastructure</h1>
-        <p class="admin-page-subtitle">Monitor accredited warehouse capacities, cold chain facilities, tariffs, and farmer space requests</p>
+        <h1 class="admin-page-title" data-i18n="storage.storageDashboardTitle">Warehouse &amp; Storage Infrastructure</h1>
+        <p class="admin-page-subtitle" data-i18n="storage.storageDashboardSubtitle">Monitor accredited warehouse capacities, cold chain facilities, tariffs, and farmer space requests</p>
       </div>
-      <div>
+      <div style="display:flex; gap:10px;">
         <button class="btn btn--primary" onclick="openAddFacilityModal()" style="background:#2E7D32; border-color:#2E7D32; padding:10px 18px; font-weight:700; display:flex; align-items:center; gap:6px; cursor:pointer; color:#FFF; border-radius:8px;">
-          <i data-lucide="plus-circle" style="width:16px;height:16px;"></i> + Add Storage Facility
+          <i data-lucide="plus-circle" style="width:16px;height:16px;"></i> <span data-i18n="storage.addFacilityBtn">+ Add Storage Facility</span>
         </button>
       </div>
     </div>
@@ -73,7 +166,7 @@
         </div>
         <div class="stat-info">
           <div class="stat-value" id="metric-total-facilities">9</div>
-          <div class="stat-label">Accredited Facilities</div>
+          <div class="stat-label" data-i18n="storage.accreditedFacilities">Accredited Facilities</div>
         </div>
       </div>
 
@@ -83,7 +176,7 @@
         </div>
         <div class="stat-info">
           <div class="stat-value" id="metric-total-capacity">57,800 MT</div>
-          <div class="stat-label">Total Storage Capacity</div>
+          <div class="stat-label" data-i18n="storage.totalStorageCapacity">Total Storage Capacity</div>
         </div>
       </div>
 
@@ -93,7 +186,7 @@
         </div>
         <div class="stat-info">
           <div class="stat-value" id="metric-utilization">61.5%</div>
-          <div class="stat-label">Average Utilization</div>
+          <div class="stat-label" data-i18n="storage.averageUtilization">Average Utilization</div>
         </div>
       </div>
 
@@ -103,81 +196,74 @@
         </div>
         <div class="stat-info">
           <div class="stat-value" id="metric-requests">14</div>
-          <div class="stat-label">Active Space Bookings</div>
+          <div class="stat-label" data-i18n="storage.activeSpaceBookings">Active Space Bookings</div>
         </div>
       </div>
     </div>
 
-    <!-- Facilities Table -->
+    <!-- Facilities Management Table Card -->
     <div class="admin-card" style="background:#FFFFFF; border:1px solid #E8E6DF; border-radius:14px; padding:22px; margin-bottom:30px; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
-        <h3 style="font-size:16px; font-weight:700; color:#1A3320; margin:0;">Active Storage &amp; Cold Chain Facilities</h3>
-        <span style="font-size:12.5px; color:#777;">Live Real-Time Capacity Tracking</span>
+        <div>
+          <h3 style="font-size:16px; font-weight:700; color:#1A3320; margin:0;" data-i18n="storage.activeStorageFacilities">Active Storage &amp; Cold Chain Facilities</h3>
+          <span style="font-size:12.5px; color:#777;" data-i18n="storage.liveCapacityTracking">Live Real-Time Capacity Tracking</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <select id="admin-filter-type" class="form-control" style="width:auto; padding:6px 10px; font-size:12px;" onchange="filterAdminFacilities()">
+            <option value="all" data-i18n="storage.allStorageTypes">All Storage Types</option>
+            <option value="warehouse" data-i18n="storage.warehouse">Warehouse</option>
+            <option value="cold_storage" data-i18n="storage.coldStorage">Cold Storage</option>
+            <option value="silo" data-i18n="storage.silo">Grain Silo</option>
+          </select>
+        </div>
       </div>
 
       <div style="overflow-x:auto;">
         <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
           <thead>
             <tr style="background:#FAF8F3; border-bottom:2px solid #EAE6DF; color:#555;">
-              <th style="padding:10px 14px;">Facility Name</th>
-              <th style="padding:10px 14px;">Type</th>
-              <th style="padding:10px 14px;">Location</th>
-              <th style="padding:10px 14px;">Capacity (Free / Total)</th>
-              <th style="padding:10px 14px;">Tariff Rate</th>
-              <th style="padding:10px 14px;">Accreditation</th>
-              <th style="padding:10px 14px;">Status</th>
-              <th style="padding:10px 14px; text-align:right;">Actions</th>
+              <th style="padding:10px 14px;" data-i18n="storage.tableName">Facility Name</th>
+              <th style="padding:10px 14px;" data-i18n="storage.tableType">Type</th>
+              <th style="padding:10px 14px;" data-i18n="storage.tableLocation">Location</th>
+              <th style="padding:10px 14px;" data-i18n="storage.tableCapacity">Capacity (Free / Total)</th>
+              <th style="padding:10px 14px;" data-i18n="storage.tableTariff">Tariff Rate</th>
+              <th style="padding:10px 14px;" data-i18n="storage.tableAccreditation">Accreditation</th>
+              <th style="padding:10px 14px;" data-i18n="storage.tableStatus">Status</th>
+              <th style="padding:10px 14px; text-align:right;" data-i18n="storage.tableActions">Actions</th>
             </tr>
           </thead>
           <tbody id="admin-facility-tbody">
-            <tr style="border-bottom:1px solid #F0EEE9;">
-              <td style="padding:12px 14px; font-weight:700;">MSWC Warehouse — Pune Hub</td>
-              <td style="padding:12px 14px;"><span style="background:#E8F5E9; color:#2E7D32; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">WAREHOUSE</span></td>
-              <td style="padding:12px 14px; color:#666;">Pune, Maharashtra</td>
-              <td style="padding:12px 14px;"><strong>1,850</strong> / 5,000 MT</td>
-              <td style="padding:12px 14px;">₹38/bag/month</td>
-              <td style="padding:12px 14px; color:#2E7D32; font-weight:600;">MSWC State Corp</td>
-              <td style="padding:12px 14px;"><span style="color:#2E7D32; font-weight:700;">🟢 Operational</span></td>
-              <td style="padding:12px 14px; text-align:right;">
-                <button class="btn btn--secondary btn--sm" onclick="alert('Facility configuration loaded')">Edit</button>
-              </td>
+            <!-- Dynamic facilities rendered by renderAdminFacilities() -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Incoming Farmer Space Requests (Request Management) -->
+    <div class="admin-card" style="background:#FFFFFF; border:1px solid #E8E6DF; border-radius:14px; padding:22px; margin-bottom:30px; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+        <div>
+          <h3 style="font-size:16px; font-weight:700; color:#1A3320; margin:0;" data-i18n="storage.incomingRequests">Incoming Farmer Space Requests</h3>
+          <span style="font-size:12.5px; color:#777;" data-i18n="storage.requestDetails">Review and approve storage booking requests</span>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+          <thead>
+            <tr style="background:#FAF8F3; border-bottom:2px solid #EAE6DF; color:#555;">
+              <th style="padding:10px 14px;">Req ID</th>
+              <th style="padding:10px 14px;" data-i18n="storage.farmerName">Farmer / Depositor</th>
+              <th style="padding:10px 14px;" data-i18n="storage.facilityName">Facility</th>
+              <th style="padding:10px 14px;" data-i18n="storage.cropCommodity">Crop &amp; Quantity</th>
+              <th style="padding:10px 14px;" data-i18n="storage.durationDays">Duration</th>
+              <th style="padding:10px 14px;" data-i18n="storage.totalEstimatedCost">Est. Cost</th>
+              <th style="padding:10px 14px;" data-i18n="storage.tableStatus">Status</th>
+              <th style="padding:10px 14px; text-align:right;" data-i18n="storage.tableActions">Actions</th>
             </tr>
-            <tr style="border-bottom:1px solid #F0EEE9;">
-              <td style="padding:12px 14px; font-weight:700;">Sahyadri Agro Cold Chain &amp; Packhouse</td>
-              <td style="padding:12px 14px;"><span style="background:#E1F5FE; color:#0288D1; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">COLD STORAGE</span></td>
-              <td style="padding:12px 14px; color:#666;">Nashik, Maharashtra</td>
-              <td style="padding:12px 14px;"><strong>920</strong> / 3,500 MT</td>
-              <td style="padding:12px 14px;">₹65/bag/month</td>
-              <td style="padding:12px 14px; color:#0288D1; font-weight:600;">APMC Licensed</td>
-              <td style="padding:12px 14px;"><span style="color:#2E7D32; font-weight:700;">🟢 Operational</span></td>
-              <td style="padding:12px 14px; text-align:right;">
-                <button class="btn btn--secondary btn--sm" onclick="alert('Facility configuration loaded')">Edit</button>
-              </td>
-            </tr>
-            <tr style="border-bottom:1px solid #F0EEE9;">
-              <td style="padding:12px 14px; font-weight:700;">Vidarbha Agri Silos</td>
-              <td style="padding:12px 14px;"><span style="background:#FFF3E0; color:#E65100; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">SILO</span></td>
-              <td style="padding:12px 14px; color:#666;">Nagpur, Maharashtra</td>
-              <td style="padding:12px 14px;"><strong>3,400</strong> / 8,000 MT</td>
-              <td style="padding:12px 14px;">₹42/bag/month</td>
-              <td style="padding:12px 14px; color:#E65100; font-weight:600;">CWC Hub</td>
-              <td style="padding:12px 14px;"><span style="color:#2E7D32; font-weight:700;">🟢 Operational</span></td>
-              <td style="padding:12px 14px; text-align:right;">
-                <button class="btn btn--secondary btn--sm" onclick="alert('Facility configuration loaded')">Edit</button>
-              </td>
-            </tr>
-            <tr style="border-bottom:1px solid #F0EEE9;">
-              <td style="padding:12px 14px; font-weight:700;">PSWC Khanna Grain Hub</td>
-              <td style="padding:12px 14px;"><span style="background:#E8F5E9; color:#2E7D32; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">WAREHOUSE</span></td>
-              <td style="padding:12px 14px; color:#666;">Ludhiana, Punjab</td>
-              <td style="padding:12px 14px;"><strong>4,500</strong> / 12,000 MT</td>
-              <td style="padding:12px 14px;">₹32/bag/month</td>
-              <td style="padding:12px 14px; color:#2E7D32; font-weight:600;">CWC Central Hub</td>
-              <td style="padding:12px 14px;"><span style="color:#2E7D32; font-weight:700;">🟢 Operational</span></td>
-              <td style="padding:12px 14px; text-align:right;">
-                <button class="btn btn--secondary btn--sm" onclick="alert('Facility configuration loaded')">Edit</button>
-              </td>
-            </tr>
+          </thead>
+          <tbody id="admin-requests-tbody">
+            <!-- Dynamic requests rendered by renderAdminRequests() -->
           </tbody>
         </table>
       </div>
@@ -185,11 +271,357 @@
 
   </main>
 
+  <!-- ADD / EDIT FACILITY MODAL -->
+  <div class="storage-modal-overlay" id="add-facility-modal-overlay">
+    <div class="storage-modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #EAE6DF; padding-bottom:12px;">
+        <h3 style="margin:0; font-size:18px; color:#1A3320;" id="modal-facility-title" data-i18n="storage.addStorageFacilityModalTitle">Add New Storage Facility</h3>
+        <button onclick="closeFacilityModal()" style="background:none; border:none; font-size:20px; cursor:pointer; color:#777;">&times;</button>
+      </div>
+
+      <form id="facility-form" onsubmit="handleFacilityFormSubmit(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="form-fac-name" data-i18n="storage.facilityName">Storage Facility Name</label>
+            <input type="text" id="form-fac-name" class="form-control" required placeholder="e.g. Sahyadri Agri Cold Chain" data-i18n-placeholder="storage.facilityNamePlaceholder">
+          </div>
+          <div class="form-group">
+            <label for="form-fac-owner" data-i18n="storage.ownerName">Owner / Manager Name</label>
+            <input type="text" id="form-fac-owner" class="form-control" required placeholder="e.g. Suresh Kulkarni" data-i18n-placeholder="storage.ownerNamePlaceholder">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="form-fac-type" data-i18n="storage.facilityType">Facility Type</label>
+            <select id="form-fac-type" class="form-control" required>
+              <option value="warehouse" data-i18n="storage.warehouse">Dry Warehouse / Godown</option>
+              <option value="cold_storage" data-i18n="storage.coldStorage">Cold Storage / Cold Chain</option>
+              <option value="silo" data-i18n="storage.silo">Scientific Grain Silo</option>
+              <option value="dry_storage" data-i18n="storage.dryStorage">Covered Dry Storage</option>
+              <option value="hermetic_storage" data-i18n="storage.hermeticStorage">Hermetic Airtight Storage</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="form-fac-accreditation" data-i18n="storage.accreditationType">Accreditation &amp; License</label>
+            <select id="form-fac-accreditation" class="form-control">
+              <option value="State Warehousing Corp (MSWC)" data-i18n="storage.mswcAccredited">State Warehousing Corp (MSWC)</option>
+              <option value="WDRA Registered & e-NWR" data-i18n="storage.wdraAccredited">WDRA Registered &amp; e-NWR</option>
+              <option value="Central Warehousing Corp (CWC)" data-i18n="storage.cwcAccredited">Central Warehousing Corp (CWC)</option>
+              <option value="FSSAI Certified Cold Chain" data-i18n="storage.fssaiCertified">FSSAI Certified Cold Chain</option>
+              <option value="APMC Licensed Facility" data-i18n="storage.apmcLicensed">APMC Licensed Facility</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="form-fac-district" data-i18n="storage.district">District</label>
+            <input type="text" id="form-fac-district" class="form-control" required placeholder="e.g. Pune / Nashik">
+          </div>
+          <div class="form-group">
+            <label for="form-fac-state" data-i18n="storage.state">State</label>
+            <input type="text" id="form-fac-state" class="form-control" required value="Maharashtra">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="form-fac-total-cap" data-i18n="storage.totalCapacity">Total Capacity (MT)</label>
+            <input type="number" id="form-fac-total-cap" class="form-control" required min="10" value="5000">
+          </div>
+          <div class="form-group">
+            <label for="form-fac-avail-cap" data-i18n="storage.availableCapacity">Available Capacity (MT)</label>
+            <input type="number" id="form-fac-avail-cap" class="form-control" required min="0" value="2000">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="form-fac-rate" data-i18n="storage.storageRate">Storage Rate (₹ / bag / mo)</label>
+            <input type="number" id="form-fac-rate" class="form-control" required min="1" value="40">
+          </div>
+          <div class="form-group">
+            <label for="form-fac-handling" data-i18n="storage.handlingRatePerQuintal">Handling Charge (₹/q)</label>
+            <input type="number" id="form-fac-handling" class="form-control" required min="0" value="15">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="storage.facilityFeatures">Facility Features &amp; Equipment</label>
+          <div class="feature-checkbox-grid">
+            <label class="feature-checkbox-label">
+              <input type="checkbox" name="features" value="Temperature Controlled" checked> <span data-i18n="storage.temperatureControlled">Temperature Controlled</span>
+            </label>
+            <label class="feature-checkbox-label">
+              <input type="checkbox" name="features" value="24/7 CCTV & Security" checked> <span data-i18n="storage.cctvSecurity">24/7 CCTV &amp; Security</span>
+            </label>
+            <label class="feature-checkbox-label">
+              <input type="checkbox" name="features" value="Pest Management" checked> <span data-i18n="storage.pestManagement">Pest Management</span>
+            </label>
+            <label class="feature-checkbox-label">
+              <input type="checkbox" name="features" value="Weighbridge Onsite" checked> <span data-i18n="storage.weighbridgeOnsite">Weighbridge Onsite</span>
+            </label>
+            <label class="feature-checkbox-label">
+              <input type="checkbox" name="features" value="Assaying Lab" checked> <span data-i18n="storage.assayingLab">Assaying Lab</span>
+            </label>
+            <label class="feature-checkbox-label">
+              <input type="checkbox" name="features" value="e-NWR Ready" checked> <span data-i18n="storage.eNwrReady">e-NWR Ready</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; border-top:1px solid #EAE6DF; padding-top:14px;">
+          <button type="button" class="btn btn--secondary" onclick="closeFacilityModal()" data-i18n="common.cancel">Cancel</button>
+          <button type="submit" class="btn btn--primary" style="background:#2E7D32; border-color:#2E7D32; color:#FFF;" data-i18n="storage.submitFacility">Register Storage Facility</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/i18n.js"></script>
   <script>
-    if (window.lucide) window.lucide.createIcons();
-    function openAddFacilityModal() {
-      alert('Add Facility Modal: You can add new warehouse/cold storage coordinates, total capacity, tariff rates, and accreditation certificates.');
+    // Storage Hub Facilities Data Store
+    let adminFacilities = [
+      {
+        id: 'FAC-001',
+        name: 'MSWC Warehouse — Pune Hub',
+        type: 'warehouse',
+        district: 'Pune',
+        state: 'Maharashtra',
+        freeCap: 1850,
+        totalCap: 5000,
+        unit: 'MT',
+        rate: 38,
+        rateUnit: 'per_bag_month',
+        accreditation: 'MSWC State Corp',
+        status: 'operational',
+        verificationStatus: 'verified'
+      },
+      {
+        id: 'FAC-002',
+        name: 'Sahyadri Agro Cold Chain & Packhouse',
+        type: 'cold_storage',
+        district: 'Nashik',
+        state: 'Maharashtra',
+        freeCap: 920,
+        totalCap: 3500,
+        unit: 'MT',
+        rate: 65,
+        rateUnit: 'per_bag_month',
+        accreditation: 'APMC Licensed',
+        status: 'operational',
+        verificationStatus: 'verified'
+      },
+      {
+        id: 'FAC-003',
+        name: 'Vidarbha Agri Silos',
+        type: 'silo',
+        district: 'Nagpur',
+        state: 'Maharashtra',
+        freeCap: 3400,
+        totalCap: 8000,
+        unit: 'MT',
+        rate: 42,
+        rateUnit: 'per_bag_month',
+        accreditation: 'CWC Hub',
+        status: 'operational',
+        verificationStatus: 'verified'
+      },
+      {
+        id: 'FAC-004',
+        name: 'Navi Mumbai Agro Logistics Hub',
+        type: 'cold_storage',
+        district: 'Navi Mumbai',
+        state: 'Maharashtra',
+        freeCap: 2100,
+        totalCap: 6000,
+        unit: 'MT',
+        rate: 72,
+        rateUnit: 'per_bag_month',
+        accreditation: 'FSSAI Certified',
+        status: 'operational',
+        verificationStatus: 'verified'
+      }
+    ];
+
+    let adminRequests = [
+      {
+        id: 'REQ-WH-701',
+        farmerName: 'Rajesh Patil',
+        facilityName: 'MSWC Warehouse — Pune Hub',
+        crop: 'Wheat',
+        quantity: 50,
+        duration: 45,
+        cost: 3800,
+        status: 'requested'
+      },
+      {
+        id: 'REQ-WH-702',
+        farmerName: 'Balasaheb Shinde',
+        facilityName: 'Sahyadri Agro Cold Chain',
+        crop: 'Onion',
+        quantity: 120,
+        duration: 60,
+        cost: 9200,
+        status: 'requested'
+      },
+      {
+        id: 'REQ-WH-703',
+        farmerName: 'Anil Deshmukh',
+        facilityName: 'Vidarbha Agri Silos',
+        crop: 'Soybean',
+        quantity: 80,
+        duration: 30,
+        cost: 4500,
+        status: 'active'
+      }
+    ];
+
+    function t(key, fallback) {
+      return (window.i18next && typeof window.i18next.t === 'function') ? window.i18next.t(key, fallback) : (fallback || key);
     }
+
+    function renderAdminFacilities() {
+      const tbody = document.getElementById('admin-facility-tbody');
+      if (!tbody) return;
+
+      const typeFilter = document.getElementById('admin-filter-type')?.value || 'all';
+      const list = adminFacilities.filter(f => typeFilter === 'all' || f.type === typeFilter);
+
+      tbody.innerHTML = list.map(f => {
+        const typeClass = f.type === 'cold_storage' ? 'background:#E1F5FE; color:#0288D1;' : f.type === 'silo' ? 'background:#FFF3E0; color:#E65100;' : 'background:#E8F5E9; color:#2E7D32;';
+        const typeName = f.type === 'cold_storage' ? t('storage.coldStorage', 'Cold Storage') : f.type === 'silo' ? t('storage.silo', 'Silo') : t('storage.warehouse', 'Warehouse');
+
+        return `
+          <tr style="border-bottom:1px solid #F0EEE9;">
+            <td style="padding:12px 14px; font-weight:700; color:#1A3320;">${f.name}</td>
+            <td style="padding:12px 14px;"><span style="${typeClass} padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">${typeName}</span></td>
+            <td style="padding:12px 14px; color:#666;">${f.district}, ${f.state}</td>
+            <td style="padding:12px 14px;"><strong>${f.freeCap.toLocaleString('en-IN')}</strong> / ${f.totalCap.toLocaleString('en-IN')} ${f.unit}</td>
+            <td style="padding:12px 14px;">₹${f.rate}/${t('storage.perBagMonth', 'per bag/month')}</td>
+            <td style="padding:12px 14px; color:#2E7D32; font-weight:600;">${f.accreditation}</td>
+            <td style="padding:12px 14px;">
+              <span class="status-pill status-pill--${f.status}">🟢 ${t('storage.operational', 'Operational')}</span>
+            </td>
+            <td style="padding:12px 14px; text-align:right;">
+              <button class="btn btn--secondary btn--sm" onclick="editFacility('${f.id}')">${t('common.edit', 'Edit')}</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderAdminRequests() {
+      const tbody = document.getElementById('admin-requests-tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = adminRequests.map(r => {
+        const isPending = r.status === 'requested';
+        const statusBadge = isPending 
+          ? `<span style="background:#FEF3C7; color:#92400E; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">${t('storage.pendingConfirmation', 'Requested')}</span>`
+          : `<span style="background:#E8F5E9; color:#2E7D32; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700;">${t('storage.active', 'Active')}</span>`;
+
+        return `
+          <tr style="border-bottom:1px solid #F0EEE9;">
+            <td style="padding:12px 14px; font-family:monospace; font-weight:700; color:#555;">${r.id}</td>
+            <td style="padding:12px 14px; font-weight:700; color:#1A3320;">${r.farmerName}</td>
+            <td style="padding:12px 14px; color:#666;">${r.facilityName}</td>
+            <td style="padding:12px 14px;"><strong>${r.crop}</strong> (${r.quantity} q)</td>
+            <td style="padding:12px 14px;">${r.duration} ${t('storage.daysLabel', 'Days')}</td>
+            <td style="padding:12px 14px; font-weight:700; color:#2E7D32;">₹${r.cost.toLocaleString('en-IN')}</td>
+            <td style="padding:12px 14px;">${statusBadge}</td>
+            <td style="padding:12px 14px; text-align:right;">
+              ${isPending ? `
+                <button class="btn btn--primary btn--sm" style="background:#2E7D32; border-color:#2E7D32; padding:4px 8px; font-size:11.5px;" onclick="acceptRequest('${r.id}')">${t('storage.accept', 'Accept')}</button>
+                <button class="btn btn--secondary btn--sm" style="color:#C62828; padding:4px 8px; font-size:11.5px;" onclick="rejectRequest('${r.id}')">${t('storage.reject', 'Reject')}</button>
+              ` : `
+                <span style="font-size:12px; color:#2E7D32; font-weight:700;">✓ ${t('storage.verified', 'Active')}</span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function acceptRequest(reqId) {
+      const req = adminRequests.find(r => r.id === reqId);
+      if (req) {
+        req.status = 'active';
+        renderAdminRequests();
+        alert(t('success.requestAccepted', 'Storage request accepted! Warehouse receipt generated.'));
+      }
+    }
+
+    function rejectRequest(reqId) {
+      const idx = adminRequests.findIndex(r => r.id === reqId);
+      if (idx !== -1) {
+        adminRequests.splice(idx, 1);
+        renderAdminRequests();
+        alert(t('success.requestRejected', 'Storage request has been rejected.'));
+      }
+    }
+
+    function openAddFacilityModal() {
+      document.getElementById('add-facility-modal-overlay')?.classList.add('active');
+    }
+
+    function closeFacilityModal() {
+      document.getElementById('add-facility-modal-overlay')?.classList.remove('active');
+    }
+
+    function editFacility(id) {
+      const f = adminFacilities.find(fac => fac.id === id);
+      if (f) {
+        alert(t('storage.editStorageFacilityModalTitle', 'Editing facility: ') + f.name);
+      }
+    }
+
+    function handleFacilityFormSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('form-fac-name').value;
+      const district = document.getElementById('form-fac-district').value;
+      const totalCap = parseInt(document.getElementById('form-fac-total-cap').value, 10) || 5000;
+      const availCap = parseInt(document.getElementById('form-fac-avail-cap').value, 10) || 2000;
+      const rate = parseInt(document.getElementById('form-fac-rate').value, 10) || 40;
+      const type = document.getElementById('form-fac-type').value;
+      const accreditation = document.getElementById('form-fac-accreditation').value;
+
+      adminFacilities.unshift({
+        id: 'FAC-00' + (adminFacilities.length + 1),
+        name,
+        type,
+        district,
+        state: 'Maharashtra',
+        freeCap: availCap,
+        totalCap,
+        unit: 'MT',
+        rate,
+        rateUnit: 'per_bag_month',
+        accreditation,
+        status: 'operational',
+        verificationStatus: 'verified'
+      });
+
+      renderAdminFacilities();
+      closeFacilityModal();
+      alert(t('success.facilityCreated', 'Storage facility registered successfully!'));
+    }
+
+    function filterAdminFacilities() {
+      renderAdminFacilities();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) window.lucide.createIcons();
+      renderAdminFacilities();
+      renderAdminRequests();
+
+      window.addEventListener('languageChanged', () => {
+        renderAdminFacilities();
+        renderAdminRequests();
+      });
+    });
   </script>
 </body>
 </html>

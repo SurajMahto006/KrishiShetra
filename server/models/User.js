@@ -37,6 +37,18 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: ''
     },
+    preferredLanguage: {
+      type: String,
+      enum: {
+        values: ['en', 'hi', 'mr'],
+        message: '{VALUE} is not a valid preferred language'
+      },
+      default: 'en'
+    },
+    languageUpdatedAt: {
+      type: Date,
+      default: Date.now
+    },
     emailVerified: {
       type: Boolean,
       default: false

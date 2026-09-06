@@ -54,15 +54,15 @@
         <div class="auth-hero__badges">
           <div class="auth-hero__badge-item">
             <span class="auth-hero__badge-dot"></span>
-            <span id="badge-farmers">50,000+ Active Farmers</span>
+            <span id="badge-farmers" data-i18n="auth.activeFarmers">50,000+ Active Farmers</span>
           </div>
           <div class="auth-hero__badge-item">
             <span class="auth-hero__badge-dot"></span>
-            <span id="badge-mandis">120+ APMC Mandis</span>
+            <span id="badge-mandis" data-i18n="auth.apmcMandis">120+ APMC Mandis</span>
           </div>
           <div class="auth-hero__badge-item">
             <span class="auth-hero__badge-dot"></span>
-            <span id="badge-verified">100% Verified Buyers</span>
+            <span id="badge-verified" data-i18n="auth.verifiedBuyers">100% Verified Buyers</span>
           </div>
         </div>
       </div>
@@ -74,14 +74,14 @@
         
         <!-- Header Text -->
         <header class="auth-header">
-          <h2 class="auth-header__title" id="auth-title">Welcome back</h2>
-          <p class="auth-header__subtitle" id="auth-subtitle">Enter your credentials to access your account</p>
+          <h2 class="auth-header__title" id="auth-title" data-i18n="auth.welcomeBack">Welcome Back</h2>
+          <p class="auth-header__subtitle" id="auth-subtitle" data-i18n="auth.loginSubtitle">Enter your credentials to access your account</p>
         </header>
 
         <!-- Mode Toggle Tabs (Login / Register) -->
         <div class="auth-tabs" id="auth-tabs-container">
-          <button type="button" class="auth-tab-btn active" id="tab-btn-login">Log In</button>
-          <button type="button" class="auth-tab-btn" id="tab-btn-register">Register</button>
+          <button type="button" class="auth-tab-btn active" id="tab-btn-login" data-i18n="auth.logIn">Log In</button>
+          <button type="button" class="auth-tab-btn" id="tab-btn-register" data-i18n="auth.createAccount">Register</button>
         </div>
 
         <!-- ── TAB 1: LOGIN FORM ── -->
@@ -90,13 +90,13 @@
 
           <!-- Email Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="login-email" id="label-login-email">EMAIL ADDRESS</label>
+            <label class="auth-input-label" for="login-email" id="label-login-email" data-i18n="auth.emailAddress">EMAIL ADDRESS</label>
             <div class="auth-text-box">
               <input 
                 type="email" 
                 id="login-email" 
                 class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
+                placeholder="farmer@example.com" data-i18n-placeholder="auth.emailPlaceholder" 
                 autocomplete="email" 
                 required
               >
@@ -106,15 +106,15 @@
           <!-- Password Input -->
           <div class="auth-input-group">
             <div class="auth-input-label-row">
-              <label class="auth-input-label" for="login-password" id="label-login-password">PASSWORD</label>
-              <button type="button" class="auth-forgot-link" id="link-to-forgot">Forgot Password?</button>
+              <label class="auth-input-label" for="login-password" id="label-login-password" data-i18n="auth.password">PASSWORD</label>
+              <button type="button" class="auth-forgot-link" id="link-to-forgot" data-i18n="auth.forgotPassword">Forgot Password?</button>
             </div>
             <div class="auth-text-box">
               <input 
                 type="password" 
                 id="login-password" 
                 class="auth-text-box__input" 
-                placeholder="Enter your password" 
+                placeholder="Enter your password" data-i18n-placeholder="auth.passwordPlaceholder" 
                 autocomplete="current-password" 
                 required
               >
@@ -126,13 +126,13 @@
 
           <!-- Login Action Button -->
           <button type="submit" class="auth-btn-primary" id="btn-login">
-            <span id="btn-login-text">Log In</span>
+            <span id="btn-login-text" data-i18n="auth.logIn">Log In</span>
             <span class="auth-btn-arrow">→</span>
           </button>
 
           <p class="auth-switch-prompt">
-            <span id="text-no-account">Don't have an account?</span> 
-            <button type="button" class="auth-switch-link" id="link-to-register">Create an account</button>
+            <span id="text-no-account" data-i18n="auth.dontHaveAccount">Don't have an account?</span> 
+            <button type="button" class="auth-switch-link" id="link-to-register" data-i18n="auth.createAccount">Create an account</button>
           </p>
         </form>
 
@@ -142,30 +142,30 @@
 
           <!-- Role Selector -->
           <div class="auth-roles-group">
-            <label class="auth-roles-label" id="label-role">I AM A...</label>
+            <label class="auth-roles-label" id="label-role" data-i18n="auth.iAmA">I AM A...</label>
             <div class="auth-roles" role="radiogroup" aria-labelledby="label-role">
               
               <div class="auth-role-card active" data-role="farmer" tabindex="0" role="radio" aria-checked="true">
                 <span class="auth-role-card__icon"><i data-lucide="tractor"></i></span>
-                <span class="auth-role-card__name" id="role-name-farmer">Farmer</span>
+                <span class="auth-role-card__name" id="role-name-farmer" data-i18n="auth.farmer">Farmer</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
               <div class="auth-role-card" data-role="fpo" tabindex="0" role="radio" aria-checked="false">
                 <span class="auth-role-card__icon"><i data-lucide="users"></i></span>
-                <span class="auth-role-card__name" id="role-name-fpo">FPO</span>
+                <span class="auth-role-card__name" id="role-name-fpo" data-i18n="auth.fpo">FPO</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
               <div class="auth-role-card" data-role="buyer" tabindex="0" role="radio" aria-checked="false">
                 <span class="auth-role-card__icon"><i data-lucide="store"></i></span>
-                <span class="auth-role-card__name" id="role-name-buyer">Buyer</span>
+                <span class="auth-role-card__name" id="role-name-buyer" data-i18n="auth.buyer">Buyer</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
               <div class="auth-role-card" data-role="transporter" tabindex="0" role="radio" aria-checked="false">
                 <span class="auth-role-card__icon"><i data-lucide="truck"></i></span>
-                <span class="auth-role-card__name" id="role-name-transporter">Transporter</span>
+                <span class="auth-role-card__name" id="role-name-transporter" data-i18n="auth.transporter">Transporter</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
@@ -174,13 +174,13 @@
 
           <!-- Full Name Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="register-name" id="label-register-name">FULL NAME</label>
+            <label class="auth-input-label" for="register-name" id="label-register-name" data-i18n="auth.fullName">FULL NAME</label>
             <div class="auth-text-box">
               <input 
                 type="text" 
                 id="register-name" 
                 class="auth-text-box__input" 
-                placeholder="e.g. Rajesh Patil" 
+                placeholder="e.g. Rajesh Patil" data-i18n-placeholder="auth.fullNamePlaceholder" 
                 autocomplete="name" 
                 required
               >
@@ -189,13 +189,13 @@
 
           <!-- Email Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="register-email" id="label-register-email">EMAIL ADDRESS</label>
+            <label class="auth-input-label" for="register-email" id="label-register-email" data-i18n="auth.emailAddress">EMAIL ADDRESS</label>
             <div class="auth-text-box">
               <input 
                 type="email" 
                 id="register-email" 
                 class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
+                placeholder="farmer@example.com" data-i18n-placeholder="auth.emailPlaceholder" 
                 autocomplete="email" 
                 required
               >
@@ -204,7 +204,7 @@
 
           <!-- Mobile Number Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="register-phone" id="label-phone">MOBILE NUMBER</label>
+            <label class="auth-input-label" for="register-phone" id="label-phone" data-i18n="auth.mobileNumber">MOBILE NUMBER</label>
             <div class="auth-phone-box">
               <div class="auth-phone-box__prefix">
                 <span>🇮🇳</span>
@@ -214,7 +214,7 @@
                 type="tel" 
                 id="register-phone" 
                 class="auth-phone-box__input" 
-                placeholder="10-digit number" 
+                placeholder="10-digit number" data-i18n-placeholder="auth.mobilePlaceholder" 
                 maxlength="10" 
                 inputmode="numeric" 
                 pattern="[0-9]{10}"
@@ -225,13 +225,13 @@
 
           <!-- Password Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="register-password" id="label-register-password">PASSWORD</label>
+            <label class="auth-input-label" for="register-password" id="label-register-password" data-i18n="auth.password">PASSWORD</label>
             <div class="auth-text-box">
               <input 
                 type="password" 
                 id="register-password" 
                 class="auth-text-box__input" 
-                placeholder="Minimum 6 characters" 
+                placeholder="Minimum 6 characters" data-i18n-placeholder="auth.newPasswordPlaceholder" 
                 autocomplete="new-password" 
                 required
               >
@@ -243,13 +243,13 @@
 
           <!-- Register Action Button -->
           <button type="submit" class="auth-btn-primary" id="btn-register">
-            <span id="btn-register-text">Register & Send OTP</span>
+            <span id="btn-register-text" data-i18n="auth.registerTitle">Register & Send OTP</span>
             <span class="auth-btn-arrow">→</span>
           </button>
 
           <p class="auth-switch-prompt">
-            <span id="text-have-account">Already have an account?</span> 
-            <button type="button" class="auth-switch-link" id="link-to-login">Log In</button>
+            <span id="text-have-account" data-i18n="auth.alreadyHaveAccount">Already have an account?</span> 
+            <button type="button" class="auth-switch-link" id="link-to-login" data-i18n="auth.logIn">Log In</button>
           </p>
         </form>
 
@@ -258,13 +258,13 @@
           <div id="forgot-alert" class="auth-alert"></div>
 
           <div class="auth-input-group">
-            <label class="auth-input-label" for="forgot-email" id="label-forgot-email">EMAIL ADDRESS</label>
+            <label class="auth-input-label" for="forgot-email" id="label-forgot-email" data-i18n="auth.emailAddress">EMAIL ADDRESS</label>
             <div class="auth-text-box">
               <input 
                 type="email" 
                 id="forgot-email" 
                 class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
+                placeholder="farmer@example.com" data-i18n-placeholder="auth.emailPlaceholder" 
                 autocomplete="email" 
                 required
               >
@@ -272,12 +272,12 @@
           </div>
 
           <button type="submit" class="auth-btn-primary" id="btn-forgot-submit">
-            <span id="btn-forgot-text">Send Reset OTP</span>
+            <span id="btn-forgot-text" data-i18n="auth.sendResetOtp">Send Reset OTP</span>
             <span class="auth-btn-arrow">→</span>
           </button>
 
           <p class="auth-switch-prompt">
-            <button type="button" class="auth-switch-link" id="link-forgot-to-login">← Back to Log In</button>
+            <button type="button" class="auth-switch-link" id="link-forgot-to-login" data-i18n="common.back">← Back to Log In</button>
           </p>
         </form>
 
@@ -286,13 +286,13 @@
           <div id="reset-pass-alert" class="auth-alert"></div>
 
           <div class="auth-input-group">
-            <label class="auth-input-label" for="reset-new-password" id="label-reset-password">NEW PASSWORD</label>
+            <label class="auth-input-label" for="reset-new-password" id="label-reset-password" data-i18n="auth.newPassword">NEW PASSWORD</label>
             <div class="auth-text-box">
               <input 
                 type="password" 
                 id="reset-new-password" 
                 class="auth-text-box__input" 
-                placeholder="Minimum 6 characters" 
+                placeholder="Minimum 6 characters" data-i18n-placeholder="auth.newPasswordPlaceholder" 
                 autocomplete="new-password" 
                 minlength="6"
                 required
@@ -304,12 +304,12 @@
           </div>
 
           <button type="submit" class="auth-btn-primary" id="btn-reset-pass-submit">
-            <span id="btn-reset-text">Reset Password</span>
+            <span id="btn-reset-text" data-i18n="auth.resetPassword">Reset Password</span>
             <span class="auth-btn-arrow">→</span>
           </button>
 
           <p class="auth-switch-prompt">
-            <button type="button" class="auth-switch-link" id="link-reset-to-login">← Back to Log In</button>
+            <button type="button" class="auth-switch-link" id="link-reset-to-login" data-i18n="common.back">← Back to Log In</button>
           </p>
         </form>
 
@@ -318,13 +318,13 @@
           <div id="otp-alert" class="auth-alert"></div>
 
           <div style="margin-bottom: 20px;">
-            <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT EMAIL OTP</label>
+            <label class="auth-input-label" id="label-otp" data-i18n="auth.enterOtp">ENTER 6-DIGIT EMAIL OTP</label>
             <div style="font-size: 14px; color: #6F7F75; margin-bottom: 12px;">
-              <span id="otp-sent-text">Verification code sent to</span>
+              <span id="otp-sent-text" data-i18n="auth.otpSentTo">Verification code sent to</span>
               <strong id="display-user-email" style="color: #12372A; margin: 0 4px; word-break: break-all;">user@example.com</strong>
               <button type="button" class="auth-otp-change-num" id="btn-change-email">
                 <i data-lucide="edit-3" style="width:12px;height:12px;vertical-align:middle;"></i> 
-                <span id="btn-edit-text">Change</span>
+                <span id="btn-edit-text" data-i18n="common.edit">Change</span>
               </button>
             </div>
 
@@ -341,48 +341,48 @@
 
           <!-- OTP Timer and Resend -->
           <div class="auth-otp-meta">
-            <span class="auth-otp-timer" id="otp-timer-display">Resend OTP in <strong id="timer-count">60</strong>s</span>
-            <button type="button" class="auth-otp-resend-btn" id="btn-resend-otp" disabled>Resend Code</button>
+            <span class="auth-otp-timer" id="otp-timer-display"><span data-i18n="auth.resendOtpIn">Resend OTP in</span> <strong id="timer-count">60</strong>s</span>
+            <button type="button" class="auth-otp-resend-btn" id="btn-resend-otp" data-i18n="auth.resendCode" disabled>Resend Code</button>
           </div>
 
           <!-- Verify Button -->
           <button type="button" class="auth-btn-primary" id="btn-verify-otp">
-            <span id="btn-verify-text">Verify & Continue</span>
+            <span id="btn-verify-text" data-i18n="auth.verifyAndContinue">Verify & Continue</span>
             <span class="auth-btn-arrow">→</span>
           </button>
 
           <p class="auth-switch-prompt" style="margin-top: 18px;">
-            <button type="button" class="auth-switch-link" id="link-back-to-login">← Back to Log In</button>
+            <button type="button" class="auth-switch-link" id="link-back-to-login" data-i18n="common.back">← Back to Log In</button>
           </p>
         </div>
 
         <!-- Local Development Role Testing (Only active on localhost) -->
         <div id="local-dev-testing" class="auth-dev-testing" style="display: none;">
           <div class="auth-dev-testing__header">
-            <span>Developer Testing</span>
-            <span class="auth-dev-testing__badge">Local Dev Only</span>
+            <span data-i18n="auth.devTesting">Developer Testing</span>
+            <span class="auth-dev-testing__badge" data-i18n="auth.localDevOnly">Local Dev Only</span>
           </div>
           <div class="auth-dev-testing__grid">
-            <button type="button" class="dev-role-btn" data-dev-role="farmer">Farmer</button>
-            <button type="button" class="dev-role-btn" data-dev-role="fpo">FPO</button>
-            <button type="button" class="dev-role-btn" data-dev-role="buyer">Buyer</button>
-            <button type="button" class="dev-role-btn" data-dev-role="transporter">Transporter</button>
-            <button type="button" class="dev-role-btn" data-dev-role="admin">Admin</button>
+            <button type="button" class="dev-role-btn" data-dev-role="farmer" data-i18n="auth.farmer">Farmer</button>
+            <button type="button" class="dev-role-btn" data-dev-role="fpo" data-i18n="auth.fpo">FPO</button>
+            <button type="button" class="dev-role-btn" data-dev-role="buyer" data-i18n="auth.buyer">Buyer</button>
+            <button type="button" class="dev-role-btn" data-dev-role="transporter" data-i18n="auth.transporter">Transporter</button>
+            <button type="button" class="dev-role-btn" data-dev-role="admin" data-i18n="auth.admin">Admin</button>
           </div>
         </div>
 
         <!-- Trust & Security Footer -->
         <div class="auth-trust-divider"></div>
         <div class="auth-trust-items">
-          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
+          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure" data-i18n="auth.secure">Secure</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
+          <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple" data-i18n="auth.simple">Simple</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
+          <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent" data-i18n="auth.transparent">Transparent</span></span>
         </div>
         <p class="auth-secure-subtext">
           <i data-lucide="lock" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i>
-          <span id="text-privacy">Your data is secure and protected under AgriStack guidelines.</span>
+          <span id="text-privacy" data-i18n="auth.privacyNotice">Your data is secure and protected under AgriStack guidelines.</span>
         </p>
 
       </div>
@@ -391,6 +391,7 @@
   </div>
 
   <!-- Central Auth & API Configuration -->
+  <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
 
@@ -399,10 +400,8 @@
        ════════════════════════════════════════ -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      if (window.lucide) lucide.createIcons();
-
-      const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      const API_BASE = (window.API_BASE_URL || (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api')).replace(/\/+$/, '');
+      // Helper for localized string retrieval
+      const t = (k, f) => (window.i18next && typeof window.i18next.t === 'function') ? window.i18next.t(k, f) : (f || k);
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');
@@ -413,6 +412,10 @@
       const forgotForm = document.getElementById('auth-forgot-form');
       const resetPassForm = document.getElementById('auth-reset-pass-form');
       const otpStepContainer = document.getElementById('otp-step-container');
+
+      // Header elements
+      const authTitle = document.getElementById('auth-title');
+      const authSubtitle = document.getElementById('auth-subtitle');
 
       // Login elements
       const loginEmail = document.getElementById('login-email');
@@ -460,6 +463,7 @@
       let activeOtpEmail = '';
       let isResetFlow = false;
       let activeResetToken = '';
+      let currentView = 'login'; // 'login' | 'register' | 'forgot' | 'reset' | 'otp'
 
       // ── UI Alert Helpers ──
       function showAlert(element, message, type = 'error') {
@@ -511,8 +515,9 @@
         });
       });
 
-      // ── Tab Switchers ──
+      // ── Tab & View Switchers with Reactive i18n ──
       function showLoginTab() {
+        currentView = 'login';
         isResetFlow = false;
         tabsContainer.style.display = 'flex';
         tabBtnLogin.classList.add('active');
@@ -523,12 +528,15 @@
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
 
-        document.getElementById('auth-title').textContent = 'Welcome back';
-        document.getElementById('auth-subtitle').textContent = 'Enter your credentials to access your account';
+        authTitle.setAttribute('data-i18n', 'auth.welcomeBack');
+        authTitle.textContent = t('auth.welcomeBack', 'Welcome Back');
+        authSubtitle.setAttribute('data-i18n', 'auth.loginSubtitle');
+        authSubtitle.textContent = t('auth.loginSubtitle', 'Enter your credentials to access your account');
         hideAlert(loginAlert);
       }
 
       function showRegisterTab() {
+        currentView = 'register';
         isResetFlow = false;
         tabsContainer.style.display = 'flex';
         tabBtnRegister.classList.add('active');
@@ -539,12 +547,15 @@
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
 
-        document.getElementById('auth-title').textContent = 'Create Account';
-        document.getElementById('auth-subtitle').textContent = 'Join KrishiShetra and discover better market rates';
+        authTitle.setAttribute('data-i18n', 'auth.registerTitle');
+        authTitle.textContent = t('auth.registerTitle', 'Create KrishiShetra Account');
+        authSubtitle.setAttribute('data-i18n', 'auth.registerSubtitle');
+        authSubtitle.textContent = t('auth.registerSubtitle', "Join India's trusted digital agriculture trade network");
         hideAlert(registerAlert);
       }
 
       function showForgotTab() {
+        currentView = 'forgot';
         isResetFlow = true;
         tabsContainer.style.display = 'none';
         loginForm.style.display = 'none';
@@ -553,15 +564,18 @@
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.remove('active');
 
-        document.getElementById('auth-title').textContent = 'Reset Password';
-        document.getElementById('auth-subtitle').textContent = 'Enter your registered email to receive a recovery OTP';
+        authTitle.setAttribute('data-i18n', 'auth.forgotPassword');
+        authTitle.textContent = t('auth.forgotPassword', 'Forgot Password?');
+        authSubtitle.setAttribute('data-i18n', 'auth.sendResetOtp');
+        authSubtitle.textContent = t('auth.sendResetOtp', 'Send Reset OTP to your registered email');
         hideAlert(forgotAlert);
-        if (loginEmail.value.trim()) {
+        if (loginEmail && loginEmail.value.trim()) {
           forgotEmail.value = loginEmail.value.trim();
         }
       }
 
       function showResetPassStep() {
+        currentView = 'reset';
         tabsContainer.style.display = 'none';
         loginForm.style.display = 'none';
         registerForm.style.display = 'none';
@@ -569,14 +583,17 @@
         resetPassForm.style.display = 'block';
         otpStepContainer.classList.remove('active');
 
-        document.getElementById('auth-title').textContent = 'Set New Password';
-        document.getElementById('auth-subtitle').textContent = 'Create a new secure password for your account';
+        authTitle.setAttribute('data-i18n', 'auth.resetPassword');
+        authTitle.textContent = t('auth.resetPassword', 'Reset Password');
+        authSubtitle.setAttribute('data-i18n', 'auth.newPassword');
+        authSubtitle.textContent = t('auth.newPassword', 'Create a new secure password for your account');
         hideAlert(resetPassAlert);
         resetNewPassword.value = '';
         resetNewPassword.focus();
       }
 
       function showOtpStep(email, forReset = false) {
+        currentView = 'otp';
         isResetFlow = forReset;
         activeOtpEmail = email;
         displayUserEmail.textContent = email;
@@ -587,14 +604,32 @@
         resetPassForm.style.display = 'none';
         otpStepContainer.classList.add('active');
 
-        document.getElementById('auth-title').textContent = forReset ? 'Reset Password' : 'Verify Email';
-        document.getElementById('auth-subtitle').textContent = forReset ? 'Enter the recovery OTP sent to your inbox' : 'Enter the 6-digit OTP sent to your email inbox';
+        authTitle.setAttribute('data-i18n', 'auth.enterOtp');
+        authTitle.textContent = t('auth.enterOtp', 'Enter 6-Digit Verification OTP');
+        authSubtitle.setAttribute('data-i18n', 'auth.otpSentTo');
+        authSubtitle.textContent = t('auth.otpSentTo', 'Verification code sent to email inbox');
 
         hideAlert(otpAlert);
         startResendTimer();
         otpBoxes.forEach(b => b.value = '');
-        otpBoxes[0].focus();
+        if (otpBoxes[0]) otpBoxes[0].focus();
       }
+
+      function updateActiveViewTranslations() {
+        if (currentView === 'login') showLoginTab();
+        else if (currentView === 'register') showRegisterTab();
+        else if (currentView === 'forgot') showForgotTab();
+        else if (currentView === 'reset') showResetPassStep();
+        else if (currentView === 'otp') showOtpStep(activeOtpEmail, isResetFlow);
+      }
+
+      // ── Language Change Listener ──
+      window.addEventListener('languageChanged', () => {
+        if (window.i18next && typeof window.i18next.translatePage === 'function') {
+          window.i18next.translatePage();
+        }
+        updateActiveViewTranslations();
+      });
 
       tabBtnLogin.addEventListener('click', showLoginTab);
       tabBtnRegister.addEventListener('click', showRegisterTab);
@@ -690,6 +725,9 @@
         return otpBoxes.map(b => b.value).join('');
       }
 
+      const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      const API_BASE = (window.API_BASE_URL || (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api')).replace(/\/+$/, '');
+
       // ── 1. LOGIN API HANDLER ──
       loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -699,12 +737,12 @@
         const password = loginPassword.value;
 
         if (!email || !password) {
-          showAlert(loginAlert, 'Please enter both email and password.');
+          showAlert(loginAlert, t('validation.requiredField', 'Please fill in all required fields.'));
           return;
         }
 
         btnLogin.disabled = true;
-        btnLogin.innerHTML = 'Signing in… <span class="auth-btn-arrow">⏳</span>';
+        btnLogin.innerHTML = `${t('common.loading', 'Signing in…')} <span class="auth-btn-arrow">⏳</span>`;
 
         try {
           const res = await fetch(`${API_BASE}/auth/login`, {
@@ -724,7 +762,7 @@
             window.Auth.setToken(data.token);
             window.Auth.setUser(data.user);
 
-            btnLogin.innerHTML = 'Login Successful! ✓';
+            btnLogin.innerHTML = `${t('auth.loginSuccess', 'Login Successful!')} ✓`;
             btnLogin.style.background = '#5B9A72';
 
             setTimeout(() => {
@@ -743,22 +781,22 @@
             }, 600);
           } else {
             btnLogin.disabled = false;
-            btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(loginAlert, data.message || 'Invalid email or password');
+            btnLogin.innerHTML = `<span id="btn-login-text">${t('auth.logIn', 'Log In')}</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(loginAlert, data.message || t('errors.unauthorized', 'Invalid email or password.'));
 
             if (data.message && data.message.includes('verify your email')) {
               activeOtpEmail = email;
               setTimeout(() => {
                 showOtpStep(email, false);
-                showAlert(otpAlert, 'Please enter your verification OTP to activate your account.');
+                showAlert(otpAlert, t('auth.registrationSuccess', 'Please enter your verification OTP to activate your account.'));
               }, 1200);
             }
           }
         } catch (err) {
           console.error('[Login Network Error]:', err);
           btnLogin.disabled = false;
-          btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
+          btnLogin.innerHTML = `<span id="btn-login-text">${t('auth.logIn', 'Log In')}</span> <span class="auth-btn-arrow">→</span>`;
+          showAlert(loginAlert, t('errors.networkError', 'Unable to connect to KrishiShetra server. Check your network.'));
         }
       });
 
@@ -773,17 +811,17 @@
         const password = registerPassword.value;
 
         if (!name || !email || !password) {
-          showAlert(registerAlert, 'Please fill in all required fields.');
+          showAlert(registerAlert, t('validation.requiredField', 'Please fill in all required fields.'));
           return;
         }
 
         if (password.length < 6) {
-          showAlert(registerAlert, 'Password must be at least 6 characters long.');
+          showAlert(registerAlert, t('validation.passwordMinLength', 'Password must be at least 6 characters long.'));
           return;
         }
 
         btnRegister.disabled = true;
-        btnRegister.innerHTML = 'Sending OTP… <span class="auth-btn-arrow">⏳</span>';
+        btnRegister.innerHTML = `${t('common.loading', 'Sending OTP…')} <span class="auth-btn-arrow">⏳</span>`;
 
         try {
           const res = await fetch(`${API_BASE}/auth/register`, {
@@ -807,21 +845,21 @@
 
           if (res.ok && data.success) {
             btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            btnRegister.innerHTML = `<span id="btn-register-text">${t('auth.registerTitle', 'Register & Send OTP')}</span> <span class="auth-btn-arrow">→</span>`;
             
             showOtpStep(email, false);
-            showAlert(otpAlert, data.message || 'Registration successful. Check your email for the OTP.', 'success');
+            showAlert(otpAlert, data.message || t('auth.registrationSuccess', 'Registration successful. Check your email for OTP.'), 'success');
           } else if (data.message && (data.message.includes('verification email could not be sent') || data.message.includes('Resend OTP'))) {
             btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            btnRegister.innerHTML = `<span id="btn-register-text">${t('auth.registerTitle', 'Register & Send OTP')}</span> <span class="auth-btn-arrow">→</span>`;
             
             showStructuredAlert(registerAlert, {
-              title: 'Verification email not sent',
-              message: "Your account was created, but we couldn't send the verification email. You can request a new OTP.",
-              actionText: 'Resend OTP ↻',
+              title: t('errors.actionFailed', 'Verification email not sent'),
+              message: t('auth.registrationSuccess', "Account created, but verification email could not be sent. You can request a new OTP."),
+              actionText: `${t('auth.resendCode', 'Resend OTP')} ↻`,
               actionCallback: async () => {
                 showOtpStep(email, false);
-                showAlert(otpAlert, 'Requesting a new verification code…');
+                showAlert(otpAlert, t('common.loading', 'Requesting a new verification code…'));
                 try {
                   const resendRes = await fetch(`${API_BASE}/auth/resend-verification`, {
                     method: 'POST',
@@ -830,26 +868,26 @@
                   });
                   const resendData = await resendRes.json();
                   if (resendRes.ok && resendData.success) {
-                    showAlert(otpAlert, resendData.message || 'A new verification OTP has been sent.', 'success');
+                    showAlert(otpAlert, resendData.message || t('auth.registrationSuccess', 'A new verification OTP has been sent.'), 'success');
                   } else {
-                    showAlert(otpAlert, resendData.message || 'Could not send OTP. Please try again in a few seconds.');
+                    showAlert(otpAlert, resendData.message || t('errors.serverError', 'Could not send OTP. Please try again.'));
                   }
                 } catch (rErr) {
-                  showAlert(otpAlert, 'Unable to connect to server to resend OTP.');
+                  showAlert(otpAlert, t('errors.networkError', 'Unable to connect to server to resend OTP.'));
                 }
               },
               type: 'warning'
             });
           } else {
             btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(registerAlert, data.message || 'Registration failed. Please try again.');
+            btnRegister.innerHTML = `<span id="btn-register-text">${t('auth.registerTitle', 'Register & Send OTP')}</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(registerAlert, data.message || t('errors.actionFailed', 'Registration failed. Please try again.'));
           }
         } catch (err) {
           console.error('[Register Network Error]:', err);
           btnRegister.disabled = false;
-          btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(registerAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
+          btnRegister.innerHTML = `<span id="btn-register-text">${t('auth.registerTitle', 'Register & Send OTP')}</span> <span class="auth-btn-arrow">→</span>`;
+          showAlert(registerAlert, t('errors.networkError', 'Unable to connect to KrishiShetra server. Check your network.'));
         }
       });
 
@@ -860,12 +898,12 @@
 
         const email = forgotEmail.value.trim();
         if (!email) {
-          showAlert(forgotAlert, 'Please enter your email address.');
+          showAlert(forgotAlert, t('validation.invalidEmail', 'Please enter your email address.'));
           return;
         }
 
         btnForgotSubmit.disabled = true;
-        btnForgotSubmit.innerHTML = 'Sending Recovery OTP… <span class="auth-btn-arrow">⏳</span>';
+        btnForgotSubmit.innerHTML = `${t('common.loading', 'Sending Recovery OTP…')} <span class="auth-btn-arrow">⏳</span>`;
 
         try {
           const res = await fetch(`${API_BASE}/auth/forgot-password`, {
@@ -882,19 +920,19 @@
           }
 
           btnForgotSubmit.disabled = false;
-          btnForgotSubmit.innerHTML = '<span id="btn-forgot-text">Send Reset OTP</span> <span class="auth-btn-arrow">→</span>';
+          btnForgotSubmit.innerHTML = `<span id="btn-forgot-text">${t('auth.sendResetOtp', 'Send Reset OTP')}</span> <span class="auth-btn-arrow">→</span>`;
 
           if (res.ok && data.success) {
             showOtpStep(email, true);
-            showAlert(otpAlert, data.message || 'If an account exists, a reset OTP has been sent to your inbox.', 'success');
+            showAlert(otpAlert, data.message || t('auth.registrationSuccess', 'If an account exists, a reset OTP has been sent to your inbox.'), 'success');
           } else {
-            showAlert(forgotAlert, data.message || 'Failed to process password reset.');
+            showAlert(forgotAlert, data.message || t('errors.actionFailed', 'Failed to process password reset.'));
           }
         } catch (err) {
           console.error('[Forgot Password Network Error]:', err);
           btnForgotSubmit.disabled = false;
-          btnForgotSubmit.innerHTML = '<span id="btn-forgot-text">Send Reset OTP</span> <span class="auth-btn-arrow">→</span>';
-          showAlert(forgotAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
+          btnForgotSubmit.innerHTML = `<span id="btn-forgot-text">${t('auth.sendResetOtp', 'Send Reset OTP')}</span> <span class="auth-btn-arrow">→</span>`;
+          showAlert(forgotAlert, t('errors.networkError', 'Unable to connect to KrishiShetra server. Check your network.'));
         }
       });
 
@@ -904,12 +942,12 @@
         const otp = getEnteredOtp();
 
         if (otp.length < 6) {
-          showAlert(otpAlert, 'Please enter all 6 digits.');
+          showAlert(otpAlert, t('validation.invalidOtp', 'Please enter all 6 digits.'));
           return;
         }
 
         btnVerifyOtp.disabled = true;
-        btnVerifyOtp.innerHTML = 'Verifying… <span class="auth-btn-arrow">⏳</span>';
+        btnVerifyOtp.innerHTML = `${t('common.loading', 'Verifying…')} <span class="auth-btn-arrow">⏳</span>`;
 
         const endpoint = isResetFlow ? '/auth/verify-reset-otp' : '/auth/verify-email';
 
@@ -931,7 +969,7 @@
           }
 
           if (res.ok && data.success) {
-            btnVerifyOtp.innerHTML = 'Verified! ✓';
+            btnVerifyOtp.innerHTML = `${t('common.completed', 'Verified!')} ✓`;
             btnVerifyOtp.style.background = '#5B9A72';
 
             if (isResetFlow) {
@@ -939,32 +977,32 @@
               setTimeout(() => {
                 btnVerifyOtp.disabled = false;
                 btnVerifyOtp.style.background = '';
-                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${t('auth.verifyAndContinue', 'Verify & Continue')}</span> <span class="auth-btn-arrow">→</span>`;
                 showResetPassStep();
               }, 800);
             } else {
-              showAlert(otpAlert, 'Email verified successfully! Redirecting to login…', 'success');
+              showAlert(otpAlert, t('auth.otpVerified', 'Email verified successfully! Redirecting to login…'), 'success');
 
               setTimeout(() => {
                 btnVerifyOtp.disabled = false;
                 btnVerifyOtp.style.background = '';
-                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${t('auth.verifyAndContinue', 'Verify & Continue')}</span> <span class="auth-btn-arrow">→</span>`;
                 
                 showLoginTab();
                 loginEmail.value = activeOtpEmail;
-                showAlert(loginAlert, 'Email verified successfully. Please log in with your password.', 'success');
+                showAlert(loginAlert, t('auth.otpVerified', 'Email verified successfully. Please log in with your password.'), 'success');
               }, 1200);
             }
           } else {
             btnVerifyOtp.disabled = false;
-            btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(otpAlert, data.message || 'Invalid or expired OTP.');
+            btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${t('auth.verifyAndContinue', 'Verify & Continue')}</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(otpAlert, data.message || t('validation.invalidOtp', 'Invalid or expired OTP.'));
           }
         } catch (err) {
           console.error('[Verify OTP Network Error]:', err);
           btnVerifyOtp.disabled = false;
-          btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
+          btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${t('auth.verifyAndContinue', 'Verify & Continue')}</span> <span class="auth-btn-arrow">→</span>`;
+          showAlert(otpAlert, t('errors.networkError', 'Unable to connect to KrishiShetra server. Check your network.'));
         }
       });
 
@@ -975,12 +1013,12 @@
 
         const newPassword = resetNewPassword.value;
         if (!newPassword || newPassword.length < 6) {
-          showAlert(resetPassAlert, 'Password must be at least 6 characters long.');
+          showAlert(resetPassAlert, t('validation.passwordMinLength', 'Password must be at least 6 characters long.'));
           return;
         }
 
         btnResetPassSubmit.disabled = true;
-        btnResetPassSubmit.innerHTML = 'Resetting Password… <span class="auth-btn-arrow">⏳</span>';
+        btnResetPassSubmit.innerHTML = `${t('common.loading', 'Resetting Password…')} <span class="auth-btn-arrow">⏳</span>`;
 
         try {
           const res = await fetch(`${API_BASE}/auth/reset-password`, {
@@ -995,29 +1033,29 @@
           const data = await res.json();
 
           if (res.ok && data.success) {
-            btnResetPassSubmit.innerHTML = 'Password Reset! ✓';
+            btnResetPassSubmit.innerHTML = `${t('common.completed', 'Password Reset!')} ✓`;
             btnResetPassSubmit.style.background = '#5B9A72';
 
-            showAlert(resetPassAlert, 'Password reset successfully! Redirecting to login…', 'success');
+            showAlert(resetPassAlert, t('auth.passwordResetSuccess', 'Password reset successfully! Redirecting to login…'), 'success');
 
             setTimeout(() => {
               btnResetPassSubmit.disabled = false;
               btnResetPassSubmit.style.background = '';
-              btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
+              btnResetPassSubmit.innerHTML = `<span id="btn-reset-text">${t('auth.resetPassword', 'Reset Password')}</span> <span class="auth-btn-arrow">→</span>`;
               
               showLoginTab();
               loginEmail.value = activeOtpEmail;
-              showAlert(loginAlert, 'Password reset successfully. Please log in with your new password.', 'success');
+              showAlert(loginAlert, t('auth.passwordResetSuccess', 'Password reset successfully. Please log in with your new password.'), 'success');
             }, 1200);
           } else {
             btnResetPassSubmit.disabled = false;
-            btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
-            showAlert(resetPassAlert, data.message || 'Failed to reset password.');
+            btnResetPassSubmit.innerHTML = `<span id="btn-reset-text">${t('auth.resetPassword', 'Reset Password')}</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(resetPassAlert, data.message || t('errors.actionFailed', 'Failed to reset password.'));
           }
         } catch (err) {
           btnResetPassSubmit.disabled = false;
-          btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
-          showAlert(resetPassAlert, 'Network error. Please check your backend connection.');
+          btnResetPassSubmit.innerHTML = `<span id="btn-reset-text">${t('auth.resetPassword', 'Reset Password')}</span> <span class="auth-btn-arrow">→</span>`;
+          showAlert(resetPassAlert, t('errors.networkError', 'Network error. Please check your backend connection.'));
         }
       });
 
@@ -1025,7 +1063,7 @@
       btnResendOtp.addEventListener('click', async () => {
         hideAlert(otpAlert);
         btnResendOtp.disabled = true;
-        btnResendOtp.textContent = 'Sending…';
+        btnResendOtp.textContent = t('common.loading', 'Sending…');
 
         const endpoint = isResetFlow ? '/auth/resend-reset-otp' : '/auth/resend-verification';
 
@@ -1044,19 +1082,19 @@
           }
 
           if (res.ok && data.success) {
-            btnResendOtp.textContent = translations[currentLang].btnResend;
-            showAlert(otpAlert, data.message || 'A new verification OTP has been sent.', 'success');
+            btnResendOtp.textContent = t('auth.resendCode', 'Resend Code');
+            showAlert(otpAlert, data.message || t('auth.registrationSuccess', 'A new verification OTP has been sent.'), 'success');
             startResendTimer();
           } else {
             btnResendOtp.disabled = false;
-            btnResendOtp.textContent = translations[currentLang].btnResend;
-            showAlert(otpAlert, data.message || 'Failed to resend OTP.');
+            btnResendOtp.textContent = t('auth.resendCode', 'Resend Code');
+            showAlert(otpAlert, data.message || t('errors.actionFailed', 'Failed to resend OTP.'));
           }
         } catch (err) {
           console.error('[Resend OTP Network Error]:', err);
           btnResendOtp.disabled = false;
-          btnResendOtp.textContent = translations[currentLang].btnResend;
-          showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
+          btnResendOtp.textContent = t('auth.resendCode', 'Resend Code');
+          showAlert(otpAlert, t('errors.networkError', 'Unable to connect to KrishiShetra server. Check your network.'));
         }
       });
 
@@ -1115,6 +1153,7 @@
         }
       }
 
+      if (window.lucide) lucide.createIcons();
     });
   </script>
 </body>

@@ -36,7 +36,7 @@
       </nav>
 
       <div class="admin-header-actions">
-        <button class="admin-icon-btn" title="Notifications" onclick="showToast('3 new notifications')">
+        <button class="admin-icon-btn" title="Notifications" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.notificationsToast', {count:3}) : '3 new notifications'))">
           <i data-lucide="bell" style="width:18px;height:18px;"></i>
           <span class="notif-dot"></span>
         </button>
@@ -70,11 +70,11 @@
         <p class="admin-page-subtitle">Manage farmer registrations, KYC, and crop listings</p>
       </div>
       <div class="admin-page-actions">
-        <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting farmer data...')">
+        <button class="btn btn-secondary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.exportingData', 'Exporting farmer data...') : 'Exporting farmer data...'))">
           <i data-lucide="download" style="width:14px;height:14px;"></i>
           Export
         </button>
-        <button class="btn btn-primary btn-sm" onclick="showToast('Add farmer modal would open here')">
+        <button class="btn btn-primary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.addFarmer') : 'Add Farmer'))">
           <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
           Add Farmer
         </button>
@@ -136,7 +136,7 @@
           <h2 class="glass-card-title">KYC Verification Overview</h2>
           <p class="glass-card-subtitle">Overall progress of farmer verification</p>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="showToast('Opening KYC review queue...')">
+        <button class="btn btn-primary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.openingKycQueue') : 'Opening KYC review queue...'))">
           <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
           Review Pending KYC
         </button>
@@ -481,125 +481,170 @@
 
     lucide.createIcons();
 
-    // ── Crop Distribution Doughnut ──
-    const cropCtx = document.getElementById('cropDistChart').getContext('2d');
-    new Chart(cropCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Onion', 'Wheat', 'Tomato', 'Rice', 'Sugarcane', 'Other'],
-        datasets: [{
-          data: [312, 248, 154, 86, 34, 22],
-          backgroundColor: ['#5B9A72','#D6A84F','#C96D5B','#6BA3F7','#8FCB9B','rgba(255,255,255,0.15)'],
-          borderColor: 'rgba(255,255,255,0.9)',
-          borderWidth: 3,
-          hoverOffset: 8,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '65%',
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              color: '#7A8880',
-              font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
-              boxWidth: 12, boxHeight: 12, padding: 16,
-              usePointStyle: true, pointStyle: 'circle',
-            }
+    // ── Admin Farmers Charts ──
+    let cropDistChartInstance = null;
+    let farmerTrendChartInstance = null;
+
+    function initAdminFarmersCharts() {
+      const t = (key, def, opts) => (window.i18next ? window.i18next.t(key, opts || def) : def);
+
+      // Crop Distribution Doughnut
+      const cropCanvas = document.getElementById('cropDistChart');
+      if (cropCanvas) {
+        const cropCtx = cropCanvas.getContext('2d');
+        if (cropDistChartInstance) {
+          cropDistChartInstance.destroy();
+          cropDistChartInstance = null;
+        }
+        cropDistChartInstance = new Chart(cropCtx, {
+          type: 'doughnut',
+          data: {
+            labels: [
+              t('cropLot.onion', 'Onion'),
+              t('cropLot.wheat', 'Wheat'),
+              t('cropLot.tomato', 'Tomato'),
+              t('cropLot.rice', 'Rice'),
+              t('cropLot.sugarcane', 'Sugarcane'),
+              t('cropLot.other', 'Other')
+            ],
+            datasets: [{
+              data: [312, 248, 154, 86, 34, 22],
+              backgroundColor: ['#5B9A72','#D6A84F','#C96D5B','#6BA3F7','#8FCB9B','rgba(255,255,255,0.15)'],
+              borderColor: 'rgba(255,255,255,0.9)',
+              borderWidth: 3,
+              hoverOffset: 8,
+            }]
           },
-          tooltip: {
-            backgroundColor: 'rgba(26, 58, 40, 0.95)',
-            titleColor: '#FFFFFF',
-            bodyColor: 'rgba(255,255,255,0.75)',
-            borderColor: 'rgba(255,255,255,0.15)',
-            borderWidth: 1,
-            cornerRadius: 10,
-            padding: 12,
-            callbacks: {
-              label(ctx) {
-                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                const pct = ((ctx.parsed / total) * 100).toFixed(1);
-                return ` ${ctx.label}: ${ctx.parsed} farmers (${pct}%)`;
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#7A8880',
+                  font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+                  boxWidth: 12, boxHeight: 12, padding: 16,
+                  usePointStyle: true, pointStyle: 'circle',
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(26, 58, 40, 0.95)',
+                titleColor: '#FFFFFF',
+                bodyColor: 'rgba(255,255,255,0.75)',
+                borderColor: 'rgba(255,255,255,0.15)',
+                borderWidth: 1,
+                cornerRadius: 10,
+                padding: 12,
+                callbacks: {
+                  label(ctx) {
+                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct = ((ctx.parsed / total) * 100).toFixed(1);
+                    return ` ${ctx.label}: ${ctx.parsed} (${pct}%)`;
+                  }
+                }
               }
             }
           }
-        }
+        });
       }
-    });
 
-    // ── Farmer Registration Trend ──
-    const trendCtx = document.getElementById('farmerTrendChart').getContext('2d');
-    new Chart(trendCtx, {
-      type: 'line',
-      data: {
-        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-        datasets: [{
-          label: 'New Farmers',
-          data: [62, 84, 110, 128, 148, 156],
-          borderColor: '#5B9A72',
-          backgroundColor: 'rgba(91,154,114,0.1)',
-          borderWidth: 2.5,
-          tension: 0.4,
-          fill: true,
-          pointBackgroundColor: '#5B9A72',
-          pointBorderColor: '#FFFFFF',
-          pointBorderWidth: 2,
-          pointRadius: 4,
-          pointHoverRadius: 7,
-        }, {
-          label: 'KYC Verified',
-          data: [54, 74, 96, 112, 136, 148],
-          borderColor: '#D6A84F',
-          backgroundColor: 'rgba(214,168,79,0.07)',
-          borderWidth: 2.5,
-          tension: 0.4,
-          fill: true,
-          pointBackgroundColor: '#D6A84F',
-          pointBorderColor: '#FFFFFF',
-          pointBorderWidth: 2,
-          pointRadius: 4,
-          pointHoverRadius: 7,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            position: 'top', align: 'end',
-            labels: {
-              color: '#7A8880',
-              font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
-              boxWidth: 12, boxHeight: 12, padding: 16,
-              usePointStyle: true, pointStyle: 'circle',
-            }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(26, 58, 40, 0.95)',
-            titleColor: '#FFFFFF',
-            bodyColor: 'rgba(255,255,255,0.75)',
-            borderColor: 'rgba(255,255,255,0.15)',
-            borderWidth: 1,
-            cornerRadius: 10,
-            padding: 12,
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
-            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
-          },
-          y: {
-            grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
-            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } },
-            beginAtZero: true
-          }
+      // Farmer Registration Trend
+      const trendCanvas = document.getElementById('farmerTrendChart');
+      if (trendCanvas) {
+        const trendCtx = trendCanvas.getContext('2d');
+        if (farmerTrendChartInstance) {
+          farmerTrendChartInstance.destroy();
+          farmerTrendChartInstance = null;
         }
+        farmerTrendChartInstance = new Chart(trendCtx, {
+          type: 'line',
+          data: {
+            labels: [
+              t('common.monthMar', 'Mar'),
+              t('common.monthApr', 'Apr'),
+              t('common.monthMay', 'May'),
+              t('common.monthJun', 'Jun'),
+              t('common.monthJul', 'Jul'),
+              t('common.monthAug', 'Aug')
+            ],
+            datasets: [{
+              label: t('admin.newFarmers', 'New Farmers'),
+              data: [62, 84, 110, 128, 148, 156],
+              borderColor: '#5B9A72',
+              backgroundColor: 'rgba(91,154,114,0.1)',
+              borderWidth: 2.5,
+              tension: 0.4,
+              fill: true,
+              pointBackgroundColor: '#5B9A72',
+              pointBorderColor: '#FFFFFF',
+              pointBorderWidth: 2,
+              pointRadius: 4,
+              pointHoverRadius: 7,
+            }, {
+              label: t('admin.kycVerified', 'KYC Verified'),
+              data: [54, 74, 96, 112, 136, 148],
+              borderColor: '#D6A84F',
+              backgroundColor: 'rgba(214,168,79,0.07)',
+              borderWidth: 2.5,
+              tension: 0.4,
+              fill: true,
+              pointBackgroundColor: '#D6A84F',
+              pointBorderColor: '#FFFFFF',
+              pointBorderWidth: 2,
+              pointRadius: 4,
+              pointHoverRadius: 7,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: {
+                position: 'top', align: 'end',
+                labels: {
+                  color: '#7A8880',
+                  font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+                  boxWidth: 12, boxHeight: 12, padding: 16,
+                  usePointStyle: true, pointStyle: 'circle',
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(26, 58, 40, 0.95)',
+                titleColor: '#FFFFFF',
+                bodyColor: 'rgba(255,255,255,0.75)',
+                borderColor: 'rgba(255,255,255,0.15)',
+                borderWidth: 1,
+                cornerRadius: 10,
+                padding: 12,
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+                ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+              },
+              y: {
+                grid: { color: 'rgba(0,0,0,0.06)', drawBorder: false },
+                ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } },
+                beginAtZero: true
+              }
+            }
+          }
+        });
       }
+    }
+
+    // Initialize on Load & Language Change
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminFarmersCharts();
+    });
+    window.addEventListener('languageChanged', () => {
+      initAdminFarmersCharts();
     });
   </script>
+  <script src="../js/i18n.js"></script>
 </body>
 </html>

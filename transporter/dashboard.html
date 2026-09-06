@@ -37,14 +37,14 @@
       <!-- Desktop Nav -->
       <nav>
         <ul class="trans-nav-menu" id="transNavMenu">
-          <li><a href="dashboard.html" class="trans-nav-link active"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
-          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search" style="width:16px;height:16px;"></i> Available Loads</a></li>
-          <li><a href="active-trips.html" class="trans-nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> Active Trips</a></li>
-          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Fleet</a></li>
-          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
-          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
-          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
-          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a></li>
+          <li><a href="dashboard.html" class="trans-nav-link active"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> <span data-i18n="navigation.dashboard">Dashboard</span></a></li>
+          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search" style="width:16px;height:16px;"></i> <span data-i18n="navigation.availableLoads">Available Loads</span></a></li>
+          <li><a href="active-trips.html" class="trans-nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> <span data-i18n="navigation.activeTrips">Active Trips</span></a></li>
+          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> <span data-i18n="navigation.fleet">Fleet</span></a></li>
+          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> <span data-i18n="navigation.drivers">Drivers</span></a></li>
+          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> <span data-i18n="navigation.earnings">Earnings</span></a></li>
+          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> <span data-i18n="common.profile">Profile</span></a></li>
+          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> <span data-i18n="common.logout">Logout</span></a></li>
         </ul>
       </nav>
 
@@ -56,7 +56,7 @@
         </a>
 
         <!-- Notification Bell -->
-        <button class="trans-btn-icon" title="Notifications" onclick="showToast('3 new high-value loads posted in Nashik corridor!')">
+        <button class="trans-btn-icon" title="Notifications" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('transporter.newHighValueLoads') : 'New high-value loads posted in your corridor!'))">
           <i data-lucide="bell" style="width:18px;height:18px;"></i>
           <span class="trans-notif-dot"></span>
         </button>
@@ -82,7 +82,7 @@
             </div>
             <div class="trans-dropdown-sep"></div>
             <a href="profile.html" class="trans-dropdown-item" role="menuitem">
-              <i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile & Fleet Info
+              <i data-lucide="user-check" style="width:16px;height:16px;"></i> <span data-i18n="common.profile">Profile</span> & Fleet Info
             </a>
             <a href="onboarding.html" class="trans-dropdown-item" role="menuitem">
               <i data-lucide="shield-check" style="width:16px;height:16px;"></i> Compliance & Permits
@@ -350,7 +350,7 @@
                   <div style="font-size:18px;font-weight:800;color:var(--text-heading);">₹14,850</div>
                 </div>
               </div>
-              <button class="btn btn-secondary btn-sm" onclick="showToast('FASTag Auto-Recharge enabled via HDFC Corporate.')">Auto-Topup: ON</button>
+              <button class="btn btn-secondary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('transporter.fastagAutoTopupOn') : 'FASTag Auto-Recharge enabled via HDFC Corporate.'))">Auto-Topup: ON</button>
             </div>
             <div style="font-size:12px;color:var(--text-secondary);border-top:1px dashed var(--border-subtle);padding-top:10px;">
               Last Toll Paid: <strong>₹215 at Igatpuri Plaza</strong> (Truck MH 15 EG 4820) at 19:42 PM.
@@ -518,6 +518,7 @@
   </footer>
 
   <!-- Scripts -->
+  <script src="../js/i18n.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/page-guard.js"></script>

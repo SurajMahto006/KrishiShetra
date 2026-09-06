@@ -36,7 +36,7 @@
       </nav>
 
       <div class="admin-header-actions">
-        <button class="admin-icon-btn" title="Notifications" onclick="showToast('3 new notifications')">
+        <button class="admin-icon-btn" title="Notifications" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.notificationsToast', {count:3}) : '3 new notifications'))">
           <i data-lucide="bell" style="width:18px;height:18px;"></i>
           <span class="notif-dot"></span>
         </button>
@@ -66,14 +66,14 @@
         <p class="admin-page-subtitle">Platform performance, GMV trends, crop data and regional insights</p>
       </div>
       <div class="admin-page-actions">
-        <select class="settings-select" id="dateRange" onchange="showToast('Updating report range...')">
+        <select class="settings-select" id="dateRange" onchange="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.updatingReportRange') : 'Updating report range...'))">
           <option>Last 7 days</option>
           <option selected>Last 30 days</option>
           <option>Last 3 months</option>
           <option>Last 6 months</option>
           <option>This Year</option>
         </select>
-        <button class="btn btn-primary btn-sm" onclick="showToast('Generating full report PDF...')">
+        <button class="btn btn-primary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.generatingFullReportPdf') : 'Generating full report PDF...'))">
           <i data-lucide="download" style="width:14px;height:14px;"></i>
           Export Report
         </button>
@@ -118,7 +118,7 @@
             <h2 class="glass-card-title">GMV Trend</h2>
             <p class="glass-card-subtitle">Gross Merchandise Value — monthly (₹ Lakhs)</p>
           </div>
-          <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting GMV data...')">
+          <button class="btn btn-secondary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.exportingGmvData') : 'Exporting GMV data...'))">
             <i data-lucide="download" style="width:14px;height:14px;"></i> Export
           </button>
         </div>
@@ -244,7 +244,7 @@
           <h2 class="glass-card-title">Price Realisation vs APMC Mandi</h2>
           <p class="glass-card-subtitle">Comparing KrishiShetra prices against open market — last 30 days</p>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="showToast('Exporting price data...')">
+        <button class="btn btn-secondary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.exportingPriceData') : 'Exporting price data...'))">
           <i data-lucide="download" style="width:14px;height:14px;"></i> Export
         </button>
       </div>
@@ -313,7 +313,7 @@
           <h2 class="glass-card-title">Platform Health KPIs</h2>
           <p class="glass-card-subtitle">Key metrics tracking platform efficiency and farmer outcomes</p>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="showToast('Refreshing metrics...')">
+        <button class="btn btn-secondary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.refreshingMetrics') : 'Refreshing metrics...'))">
           <i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Refresh
         </button>
       </div>
@@ -422,125 +422,181 @@
       }
     };
 
-    // GMV Chart
-    new Chart(document.getElementById('gmvChart').getContext('2d'), {
-      type: 'bar',
-      data: {
-        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-        datasets: [{
-          label: 'GMV (₹ Lakhs)',
-          data: [142, 218, 285, 312, 356, 384],
-          backgroundColor: 'rgba(91, 154, 114, 0.5)',
-          borderColor: '#5B9A72',
-          borderWidth: 2,
-          borderRadius: 8,
-          borderSkipped: false,
-        }, {
-          label: 'Target (₹ Lakhs)',
-          data: [160, 200, 270, 300, 340, 380],
-          type: 'line',
-          borderColor: '#D6A84F',
-          backgroundColor: 'transparent',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          tension: 0.4,
-          pointRadius: 3,
-          pointBackgroundColor: '#D6A84F',
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        ...chartDefaults
-      }
-    });
+    // ── Admin Reports Charts ──
+    let gmvChartInstance = null;
+    let txnChartInstance = null;
+    let regionalChartInstance = null;
 
-    // Transaction Volume Chart
-    new Chart(document.getElementById('txnChart').getContext('2d'), {
-      type: 'line',
-      data: {
-        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-        datasets: [{
-          label: 'Transactions',
-          data: [320, 485, 620, 780, 940, 1247],
-          borderColor: '#6BC48F',
-          backgroundColor: 'rgba(107, 196, 143, 0.12)',
-          borderWidth: 2.5,
-          tension: 0.4,
-          fill: true,
-          pointBackgroundColor: '#6BC48F',
-          pointBorderColor: '#FFFFFF',
-          pointBorderWidth: 2,
-          pointRadius: 4,
-          pointHoverRadius: 7,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        ...chartDefaults
-      }
-    });
+    function initAdminReportsCharts() {
+      const t = (key, def, opts) => (window.i18next ? window.i18next.t(key, opts || def) : def);
 
-    // Regional Chart (Horizontal Bar)
-    new Chart(document.getElementById('regionalChart').getContext('2d'), {
-      type: 'bar',
-      data: {
-        labels: ['Niphad', 'Dindori', 'Pimpalgaon', 'Lasalgaon', 'Sinnar', 'Igatpuri', 'Malegaon'],
-        datasets: [{
-          label: 'GMV (₹ Lakhs)',
-          data: [84, 72, 62, 56, 48, 36, 26],
-          backgroundColor: [
-            'rgba(91, 154, 114, 0.7)',
-            'rgba(91, 154, 114, 0.6)',
-            'rgba(91, 154, 114, 0.55)',
-            'rgba(214, 168, 79, 0.6)',
-            'rgba(214, 168, 79, 0.5)',
-            'rgba(107, 163, 247, 0.55)',
-            'rgba(107, 163, 247, 0.45)',
-          ],
-          borderColor: [
-            '#5B9A72','#5B9A72','#5B9A72',
-            '#D6A84F','#D6A84F',
-            '#6BA3F7','#6BA3F7',
-          ],
-          borderWidth: 1.5,
-          borderRadius: 6,
-          borderSkipped: false,
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: 'rgba(26, 58, 40, 0.95)',
-            titleColor: '#FFFFFF',
-            bodyColor: 'rgba(255,255,255,0.75)',
-            borderColor: 'rgba(255,255,255,0.15)',
-            borderWidth: 1,
-            cornerRadius: 10,
-            padding: 12,
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: 'rgba(0,0,0,0.06)' },
-            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
-          },
-          y: {
-            grid: { display: false },
-            ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
-          }
+      // GMV Chart
+      const gmvCanvas = document.getElementById('gmvChart');
+      if (gmvCanvas) {
+        const gmvCtx = gmvCanvas.getContext('2d');
+        if (gmvChartInstance) {
+          gmvChartInstance.destroy();
+          gmvChartInstance = null;
         }
+        gmvChartInstance = new Chart(gmvCtx, {
+          type: 'bar',
+          data: {
+            labels: [
+              t('common.monthMar', 'Mar'),
+              t('common.monthApr', 'Apr'),
+              t('common.monthMay', 'May'),
+              t('common.monthJun', 'Jun'),
+              t('common.monthJul', 'Jul'),
+              t('common.monthAug', 'Aug')
+            ],
+            datasets: [{
+              label: t('admin.gmvLakhs', 'GMV (₹ Lakhs)'),
+              data: [142, 218, 285, 312, 356, 384],
+              backgroundColor: 'rgba(91, 154, 114, 0.5)',
+              borderColor: '#5B9A72',
+              borderWidth: 2,
+              borderRadius: 8,
+              borderSkipped: false,
+            }, {
+              label: t('admin.targetLakhs', 'Target (₹ Lakhs)'),
+              data: [160, 200, 270, 300, 340, 380],
+              type: 'line',
+              borderColor: '#D6A84F',
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              tension: 0.4,
+              pointRadius: 3,
+              pointBackgroundColor: '#D6A84F',
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            ...chartDefaults
+          }
+        });
       }
+
+      // Transaction Volume Chart
+      const txnCanvas = document.getElementById('txnChart');
+      if (txnCanvas) {
+        const txnCtx = txnCanvas.getContext('2d');
+        if (txnChartInstance) {
+          txnChartInstance.destroy();
+          txnChartInstance = null;
+        }
+        txnChartInstance = new Chart(txnCtx, {
+          type: 'line',
+          data: {
+            labels: [
+              t('common.monthMar', 'Mar'),
+              t('common.monthApr', 'Apr'),
+              t('common.monthMay', 'May'),
+              t('common.monthJun', 'Jun'),
+              t('common.monthJul', 'Jul'),
+              t('common.monthAug', 'Aug')
+            ],
+            datasets: [{
+              label: t('admin.transactionsLabel', 'Transactions'),
+              data: [320, 485, 620, 780, 940, 1247],
+              borderColor: '#6BC48F',
+              backgroundColor: 'rgba(107, 196, 143, 0.12)',
+              borderWidth: 2.5,
+              tension: 0.4,
+              fill: true,
+              pointBackgroundColor: '#6BC48F',
+              pointBorderColor: '#FFFFFF',
+              pointBorderWidth: 2,
+              pointRadius: 4,
+              pointHoverRadius: 7,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            ...chartDefaults
+          }
+        });
+      }
+
+      // Regional Chart (Horizontal Bar)
+      const regCanvas = document.getElementById('regionalChart');
+      if (regCanvas) {
+        const regCtx = regCanvas.getContext('2d');
+        if (regionalChartInstance) {
+          regionalChartInstance.destroy();
+          regionalChartInstance = null;
+        }
+        regionalChartInstance = new Chart(regCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Niphad', 'Dindori', 'Pimpalgaon', 'Lasalgaon', 'Sinnar', 'Igatpuri', 'Malegaon'],
+            datasets: [{
+              label: t('admin.gmvLakhs', 'GMV (₹ Lakhs)'),
+              data: [84, 72, 62, 56, 48, 36, 26],
+              backgroundColor: [
+                'rgba(91, 154, 114, 0.7)',
+                'rgba(91, 154, 114, 0.6)',
+                'rgba(91, 154, 114, 0.55)',
+                'rgba(214, 168, 79, 0.6)',
+                'rgba(214, 168, 79, 0.5)',
+                'rgba(107, 163, 247, 0.55)',
+                'rgba(107, 163, 247, 0.45)',
+              ],
+              borderColor: [
+                '#5B9A72','#5B9A72','#5B9A72',
+                '#D6A84F','#D6A84F',
+                '#6BA3F7','#6BA3F7',
+              ],
+              borderWidth: 1.5,
+              borderRadius: 6,
+              borderSkipped: false,
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(26, 58, 40, 0.95)',
+                titleColor: '#FFFFFF',
+                bodyColor: 'rgba(255,255,255,0.75)',
+                borderColor: 'rgba(255,255,255,0.15)',
+                borderWidth: 1,
+                cornerRadius: 10,
+                padding: 12,
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: 'rgba(0,0,0,0.06)' },
+                ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+              },
+              y: {
+                grid: { display: false },
+                ticks: { color: '#7A8880', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Initialize on Load & Language Change
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminReportsCharts();
+    });
+    window.addEventListener('languageChanged', () => {
+      initAdminReportsCharts();
     });
 
     lucide.createIcons();
   </script>
+  <script src="../js/i18n.js"></script>
 </body>
 </html>

@@ -26,16 +26,16 @@
 
       <nav>
         <ul class="admin-nav-menu" id="adminNavMenu">
-          <li><a href="dashboard.html" class="admin-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
-          <li><a href="users.html" class="admin-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Users</a></li>
-          <li><a href="farmers.html" class="admin-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Farmers</a></li>
-          <li><a href="reports.html" class="admin-nav-link"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Reports</a></li>
-          <li><a href="settings.html" class="admin-nav-link active"><i data-lucide="settings" style="width:16px;height:16px;"></i> Settings</a></li>
+          <li><a href="dashboard.html" class="admin-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> <span data-i18n="navigation.dashboard">Dashboard</span></a></li>
+          <li><a href="users.html" class="admin-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> <span data-i18n="navigation.users">Users</span></a></li>
+          <li><a href="farmers.html" class="admin-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> <span data-i18n="navigation.farmers">Farmers</span></a></li>
+          <li><a href="reports.html" class="admin-nav-link"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> <span data-i18n="navigation.reports">Reports</span></a></li>
+          <li><a href="settings.html" class="admin-nav-link active"><i data-lucide="settings" style="width:16px;height:16px;"></i> <span data-i18n="navigation.settings">Settings</span></a></li>
         </ul>
       </nav>
 
       <div class="admin-header-actions">
-        <button class="admin-icon-btn" title="Notifications" onclick="showToast('3 new notifications')">
+        <button class="admin-icon-btn" title="Notifications" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.notificationsToast', {count:3}) : '3 new notifications'))">
           <i data-lucide="bell" style="width:18px;height:18px;"></i>
           <span class="notif-dot"></span>
         </button>
@@ -326,11 +326,11 @@
         </div>
 
         <div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap;">
-          <button class="btn btn-secondary btn-sm" onclick="showToast('Downloading audit log...')">
+          <button class="btn btn-secondary btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.downloadingAuditLog') : 'Downloading audit log...'))">
             <i data-lucide="download" style="width:14px;height:14px;"></i>
             Export Audit Log
           </button>
-          <button class="btn btn-danger btn-sm" onclick="showToast('Are you sure? This cannot be undone.', 'error')">
+          <button class="btn btn-danger btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('common.confirmAction') : 'Are you sure? This cannot be undone.'), 'error')">
             <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
             Clear Session Data
           </button>
@@ -435,21 +435,21 @@
         <div style="padding:1.25rem;background:var(--status-error-bg);border:1px solid var(--status-error-border);border-radius:var(--radius-md);">
           <div style="font-size:0.88rem;font-weight:700;color:var(--status-error-text);margin-bottom:0.25rem;">Reset All Farmer Statuses</div>
           <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1rem;">Clears all KYC verified flags. Cannot be undone.</div>
-          <button class="btn btn-danger btn-sm" onclick="showToast('This action requires Super Admin confirmation.', 'error')">
+          <button class="btn btn-danger btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.superAdminConfirmToast') : 'This action requires Super Admin confirmation.'), 'error')">
             <i data-lucide="refresh-cw" style="width:13px;height:13px;"></i> Reset
           </button>
         </div>
         <div style="padding:1.25rem;background:var(--status-error-bg);border:1px solid var(--status-error-border);border-radius:var(--radius-md);">
           <div style="font-size:0.88rem;font-weight:700;color:var(--status-error-text);margin-bottom:0.25rem;">Purge Inactive Users</div>
           <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1rem;">Permanently delete users inactive for 180+ days.</div>
-          <button class="btn btn-danger btn-sm" onclick="showToast('This action requires Super Admin confirmation.', 'error')">
+          <button class="btn btn-danger btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.superAdminConfirmToast') : 'This action requires Super Admin confirmation.'), 'error')">
             <i data-lucide="user-x" style="width:13px;height:13px;"></i> Purge
           </button>
         </div>
         <div style="padding:1.25rem;background:var(--status-error-bg);border:1px solid var(--status-error-border);border-radius:var(--radius-md);">
           <div style="font-size:0.88rem;font-weight:700;color:var(--status-error-text);margin-bottom:0.25rem;">Wipe All Test Data</div>
           <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1rem;">Remove all demo lots, bids, and sample accounts.</div>
-          <button class="btn btn-danger btn-sm" onclick="showToast('This action requires Super Admin confirmation.', 'error')">
+          <button class="btn btn-danger btn-sm" onclick="showToast((typeof i18next !== 'undefined' ? i18next.t('admin.superAdminConfirmToast') : 'This action requires Super Admin confirmation.'), 'error')">
             <i data-lucide="trash-2" style="width:13px;height:13px;"></i> Wipe
           </button>
         </div>
@@ -480,10 +480,11 @@
     }
 
     function saveSettings() {
-      showToast('Settings saved successfully!', 'success');
+      showToast((typeof i18next !== 'undefined' ? i18next.t('admin.settingsSavedSuccess') : 'Settings saved successfully!'), 'success');
     }
 
     lucide.createIcons();
   </script>
+  <script src="../js/i18n.js"></script>
 </body>
 </html>

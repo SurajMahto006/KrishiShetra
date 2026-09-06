@@ -42,6 +42,32 @@ if (typeof window !== 'undefined') {
   window.API_BASE_URL = API_BASE_URL;
 }
 
+/**
+ * Maps stable backend error codes to i18n translated error messages
+ */
+function translateApiErrorMessage(code, fallbackMessage) {
+  if (!code && !fallbackMessage) return 'An error occurred';
+  if (typeof window !== 'undefined') {
+    if (window.i18n && typeof window.i18n.t === 'function' && code) {
+      const translated = window.i18n.t(`errors.${code}`);
+      if (translated && translated !== `errors.${code}`) {
+        return translated;
+      }
+    }
+    if (typeof window.t === 'function' && code) {
+      const translated = window.t(`errors.${code}`, fallbackMessage);
+      if (translated && translated !== `errors.${code}`) {
+        return translated;
+      }
+    }
+  }
+  return fallbackMessage || code || 'Action could not be completed';
+}
+
+if (typeof window !== 'undefined') {
+  window.translateApiErrorMessage = translateApiErrorMessage;
+}
+
 class ApiClient {
   constructor(baseUrl = window.API_BASE_URL || API_BASE_URL) {
     this.baseUrl = baseUrl.replace(/\/+$/, '');
@@ -96,10 +122,13 @@ class ApiClient {
           }
         }
 
+        const authErrorCode = 'UNAUTHORIZED';
+        const authMsg = translateApiErrorMessage(authErrorCode, 'Your session has expired. Please log in again.');
         return {
           success: false,
           status: 401,
-          message: 'Your session has expired. Please log in again.'
+          code: authErrorCode,
+          message: authMsg
         };
       }
 
@@ -113,10 +142,21 @@ class ApiClient {
       }
 
       if (!response.ok) {
+        const errorCode = data && data.code ? data.code : (
+          response.status === 401 ? 'UNAUTHORIZED' :
+          response.status === 403 ? 'FORBIDDEN' :
+          response.status === 404 ? 'NOT_FOUND' :
+          response.status === 409 ? 'ACTION_FAILED' :
+          response.status >= 500 ? 'INTERNAL_SERVER_ERROR' : 'ACTION_FAILED'
+        );
+        const translatedMsg = translateApiErrorMessage(errorCode, data && data.message ? data.message : `Request failed with status ${response.status}`);
+
         return {
           success: false,
           status: response.status,
-          message: data.message || `Request failed with status ${response.status}`,
+          code: errorCode,
+          message: translatedMsg,
+          rawMessage: data && data.message ? data.message : undefined,
           data: data
         };
       }
@@ -128,10 +168,13 @@ class ApiClient {
       };
     } catch (err) {
       console.error(`[API Network Error] ${options.method || 'GET'} ${endpoint}:`, err);
+      const netErrorCode = 'NETWORK_ERROR';
+      const netMsg = translateApiErrorMessage(netErrorCode, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
       return {
         success: false,
         status: 0,
-        message: 'Unable to connect to KrishiShetra server. Please check your network connection or try again.',
+        code: netErrorCode,
+        message: netMsg,
         error: err.message
       };
     }

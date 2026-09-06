@@ -996,6 +996,10 @@ MandiCompare.prototype.renderChart = function() {
   var canvas = document.getElementById('mpc-chart');
   if (!canvas || typeof Chart === 'undefined') return;
 
+  var t = (window.i18next && typeof window.i18next.t === 'function')
+    ? window.i18next.t.bind(window.i18next)
+    : function(k, fb, p) { return (typeof fb === 'string' ? fb : k); };
+
   var list = self.getProcessedList();
   if (!list.length) {
     if (self.chart) { self.chart.destroy(); self.chart = null; }
@@ -1029,7 +1033,7 @@ MandiCompare.prototype.renderChart = function() {
       type: 'scatter',
       data: {
         datasets: [{
-          label: 'Mandi Decision Point',
+          label: t('market.mandiDecisionPoint', 'Mandi Decision Point'),
           data: scatterData,
           backgroundColor: '#0D4435',
           borderColor: '#5B9A72',
@@ -1063,10 +1067,10 @@ MandiCompare.prototype.renderChart = function() {
               label: function(ctx) {
                 var p = ctx.raw;
                 return [
-                  'Distance: ' + p.x + ' km',
-                  'Mandi Price: ' + mpcFmtINR(p.price) + '/q',
-                  'Freight Cost: ' + mpcFmtINR(p.transport) + '/q',
-                  'Net Realization: ' + mpcFmtINR(p.y) + '/q (Total: ' + mpcFmtINR(p.netTotal) + ')'
+                  t('market.distanceLabel', { distance: p.x }),
+                  t('market.mandiPriceLabel', { price: mpcFmtINR(p.price) }),
+                  t('market.freightCostLabel', { cost: mpcFmtINR(p.transport) }),
+                  t('market.netRealizationLabel', { net: mpcFmtINR(p.y) }) + ' (' + t('common.total', 'Total') + ': ' + mpcFmtINR(p.netTotal) + ')'
                 ];
               }
             }
@@ -1076,7 +1080,7 @@ MandiCompare.prototype.renderChart = function() {
           x: {
             title: {
               display: true,
-              text: 'Distance from Origin (km)',
+              text: t('market.xAxisDistance', 'Distance from Origin (km)'),
               color: '#66706B',
               font: { size: 12, family: "'Inter', sans-serif", weight: 600 }
             },
@@ -1086,7 +1090,7 @@ MandiCompare.prototype.renderChart = function() {
           y: {
             title: {
               display: true,
-              text: 'Net Realization (₹/quintal after freight)',
+              text: t('market.yAxisNetProfit', 'Net Realization (₹/quintal after freight)'),
               color: '#66706B',
               font: { size: 12, family: "'Inter', sans-serif", weight: 600 }
             },
@@ -1108,15 +1112,15 @@ MandiCompare.prototype.renderChart = function() {
 
   if (self.chartMode === 'net') {
     dataValues = chartItems.map(function(m) { return m._netPerQ; });
-    datasetLabel = 'Net Realization (₹/q)';
+    datasetLabel = t('market.netRealizationLabelShort', 'Net Realization (₹/q)');
     barColors = chartItems.map(function(m, i) { return i === 0 ? '#0D4435' : 'rgba(91, 154, 114, 0.85)'; });
   } else if (self.chartMode === 'price') {
     dataValues = chartItems.map(function(m) { return m._adjPrice; });
-    datasetLabel = cropMeta.name + ' Price (₹/q)';
+    datasetLabel = cropMeta.name + ' ' + t('market.pricePerQuintal', 'Price (₹/q)');
     barColors = chartItems.map(function(m, i) { return i === 0 ? '#D97706' : 'rgba(217, 119, 6, 0.75)'; });
   } else { // transport
     dataValues = chartItems.map(function(m) { return m._transportTotal; });
-    datasetLabel = 'Total Freight Cost (₹) for ' + self.qty + 'q';
+    datasetLabel = t('market.freightCostForQty', { qty: self.qty });
     barColors = chartItems.map(function(m, i) { return 'rgba(201, 109, 91, 0.85)'; });
   }
 
@@ -1275,3 +1279,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (window.lucide) lucide.createIcons();
 });
+
+window.addEventListener('languageChanged', function() {
+  if (mpcEngine) {
+    mpcEngine.render();
+  }
+});
+

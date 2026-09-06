@@ -453,16 +453,32 @@ function showToast(message) {
 
 // Chart.js Visualizations Setup — Light Premium Theme
 function initCharts() {
+  const t = (window.i18next && typeof window.i18next.t === 'function')
+    ? window.i18next.t.bind(window.i18next)
+    : ((k, fb) => (typeof fb === 'string' ? fb : k));
+
   // Chart 1: Market Price Trends (7 Days)
   const ctxMarket = document.getElementById('marketPriceChart')?.getContext('2d');
   if (ctxMarket) {
+    if (marketChartInstance) {
+      marketChartInstance.destroy();
+      marketChartInstance = null;
+    }
     marketChartInstance = new Chart(ctxMarket, {
       type: 'line',
       data: {
-        labels: ['Mon (24 Aug)', 'Tue (25 Aug)', 'Wed (26 Aug)', 'Thu (27 Aug)', 'Fri (28 Aug)', 'Sat (29 Aug)', 'Today (30 Aug)'],
+        labels: [
+          t('fpo.dayMonLabel', 'Mon (24 Aug)'),
+          t('fpo.dayTueLabel', 'Tue (25 Aug)'),
+          t('fpo.dayWedLabel', 'Wed (26 Aug)'),
+          t('fpo.dayThuLabel', 'Thu (27 Aug)'),
+          t('fpo.dayFriLabel', 'Fri (28 Aug)'),
+          t('fpo.daySatLabel', 'Sat (29 Aug)'),
+          t('fpo.dayTodayLabel', 'Today (30 Aug)')
+        ],
         datasets: [
           {
-            label: 'KrishiShetra FPO Realization (₹/q)',
+            label: t('fpo.fpoRealization', 'KrishiShetra FPO Realization (₹/q)'),
             data: [2650, 2670, 2710, 2730, 2780, 2800, 2820],
             borderColor: '#5B9A72',
             backgroundColor: 'rgba(91, 154, 114, 0.1)',
@@ -474,7 +490,7 @@ function initCharts() {
             pointBorderColor: '#FFFFFF'
           },
           {
-            label: 'Nashik APMC Mandi Rate (₹/q)',
+            label: t('fpo.mandiBenchmarkRate', 'Nashik APMC Mandi Rate (₹/q)'),
             data: [2580, 2600, 2610, 2615, 2630, 2625, 2620],
             borderColor: '#D6A84F',
             borderDash: [5, 5],
@@ -525,13 +541,24 @@ function initCharts() {
   // Chart 2: Monthly Aggregation Volume & Revenue (Smooth Line Chart)
   const ctxVolume = document.getElementById('monthlyVolumeChart')?.getContext('2d');
   if (ctxVolume) {
+    if (monthlyVolumeChartInstance) {
+      monthlyVolumeChartInstance.destroy();
+      monthlyVolumeChartInstance = null;
+    }
     monthlyVolumeChartInstance = new Chart(ctxVolume, {
       type: 'line',
       data: {
-        labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep (Est)'],
+        labels: [
+          t('common.monthApr', 'Apr'),
+          t('common.monthMay', 'May'),
+          t('common.monthJun', 'Jun'),
+          t('common.monthJul', 'Jul'),
+          t('common.monthAug', 'Aug'),
+          t('common.monthSepEst', 'Sep (Est)')
+        ],
         datasets: [
           {
-            label: 'Aggregated (Tons)',
+            label: t('fpo.aggregatedTons', 'Aggregated (Tons)'),
             data: [15, 22, 28, 35, 42, 50],
             borderColor: '#5B9A72',
             backgroundColor: 'rgba(91, 154, 114, 0.12)',
@@ -544,7 +571,7 @@ function initCharts() {
             yAxisID: 'y'
           },
           {
-            label: 'Revenue (₹ Lakh)',
+            label: t('fpo.revenueLakh', 'Revenue (₹ Lakh)'),
             data: [3.8, 5.6, 7.2, 9.1, 11.4, 13.5],
             borderColor: '#D6A84F',
             backgroundColor: 'transparent',
@@ -599,10 +626,20 @@ function initCharts() {
   // Chart 3: Commodity Share Breakdown
   const ctxShare = document.getElementById('cropShareChart')?.getContext('2d');
   if (ctxShare) {
+    if (cropShareChartInstance) {
+      cropShareChartInstance.destroy();
+      cropShareChartInstance = null;
+    }
     cropShareChartInstance = new Chart(ctxShare, {
       type: 'doughnut',
       data: {
-        labels: ['Wheat (Sharbati)', 'Nashik Red Onion', 'Hybrid Tomato', 'Basmati Rice', 'Others'],
+        labels: [
+          t('cropLot.wheatSharbati', 'Wheat (Sharbati)'),
+          t('cropLot.nashikRedOnion', 'Nashik Red Onion'),
+          t('cropLot.hybridTomato', 'Hybrid Tomato'),
+          t('cropLot.basmatiRice', 'Basmati Rice'),
+          t('common.others', 'Others')
+        ],
         datasets: [
           {
             data: [42, 32, 18, 10, 6],
@@ -711,5 +748,9 @@ window.handleFpoLogout = handleFpoLogout;
 
 // Document Ready Initialization
 document.addEventListener('DOMContentLoaded', () => {
+  initCharts();
+});
+
+window.addEventListener('languageChanged', () => {
   initCharts();
 });

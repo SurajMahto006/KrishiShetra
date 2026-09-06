@@ -40,42 +40,40 @@
         <span class="dash-header__logo-text">KrishiShetra</span>
         <span class="dash-header__role-badge">FARMER</span>
       </a>
-
       <div class="dash-search" id="dash-search">
         <i data-lucide="search" class="dash-search__icon"></i>
         <input type="text" id="dash-search-input" class="dash-search__input"
-          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
+          placeholder="Search crops, markets, buyers..." data-i18n-placeholder="common.search" autocomplete="off" aria-label="Global search">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
-        <div class="dash-search__results" id="dash-search-results"></div>
       </div>
 
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
-          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> <span data-i18n="navigation.dashboard">Dashboard</span>
         </a>
         <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
         </a>
         <a href="market.html" class="dash-header__link" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
+          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="navigation.market">Market</span>
         </a>
         <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
+          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span>
         </a>
         <a href="buyers.html" class="dash-header__link dash-header__link--active" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
+          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyers">Buyers</span>
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span>
         </a>
       </nav>
 
       <div class="dash-header__actions">
-        <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+        <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications" data-i18n-title="notifications.notificationsTitle">
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
         </button>
-        <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
+        <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help" data-i18n-title="common.help">
           <i data-lucide="help-circle"></i>
         </button>
         <div class="dash-profile-wrap" id="dash-profile-wrap">
@@ -93,17 +91,13 @@
               </div>
             </div>
             <div class="dash-profile-dropdown__sep"></div>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-profile"><i data-lucide="user"></i> My Profile &
-              Farm</a>
-            <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> Manage
-              My Lots</a>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-alerts"><i data-lucide="bell-ring"></i> Price
-              Alerts</a>
-            <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> Kisan
-              Helpline</a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-profile"><i data-lucide="user"></i> <span data-i18n="farmer.farmerProfile">My Profile & Farm</span></a>
+            <a href="lots.html" class="dash-profile-dropdown__item" id="menu-lots"><i data-lucide="package"></i> <span data-i18n="farmer.manageMyLots">Manage My Lots</span></a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-alerts"><i data-lucide="bell-ring"></i> <span data-i18n="farmer.priceAlerts">Price Alerts</span></a>
+            <a href="#" class="dash-profile-dropdown__item" id="menu-help"><i data-lucide="phone-call"></i> <span data-i18n="farmer.kisanHelpline">Kisan Helpline</span></a>
             <div class="dash-profile-dropdown__sep"></div>
             <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
-                data-lucide="log-out"></i> Logout</a>
+                data-lucide="log-out"></i> <span data-i18n="common.logout">Logout</span></a>
           </div>
         </div>
       </div>
@@ -118,16 +112,14 @@
   <div class="dash-mobile-nav" id="dash-mobile-nav">
     <div class="dash-mobile-nav__links">
       <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i>
-        Dashboard</a>
-      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
-      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market
-        Prices</a>
-      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI
-        Forecast</a>
+        <span data-i18n="navigation.dashboard">Dashboard</span></a>
+      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> <span data-i18n="navigation.myLots">My Lots</span></a>
+      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> <span data-i18n="navigation.market">Market Prices</span></a>
+      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span></a>
       <a href="buyers.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-buyers"><i
-          data-lucide="users"></i> Buyers</a>
+          data-lucide="users"></i> <span data-i18n="navigation.buyers">Buyers</span></a>
       <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i>
-        Orders</a>
+        <span data-i18n="navigation.orders">Orders</span></a>
     </div>
   </div>
 
@@ -138,21 +130,19 @@
       <!-- Page Header Banner -->
       <div class="dash-section__header" style="margin-bottom: 24px;">
         <div>
-          <h1 class="dash-section__title" style="font-size: 28px;">🤝 Verified Corporate & Institutional Buyers</h1>
-          <p class="dash-section__subtitle">Direct procurement partners offering verified credentials, fair pricing, and
-            24h bank transfers.</p>
+          <h1 class="dash-section__title" style="font-size: 28px;" data-i18n="farmer.verifiedBuyersTitle">🤝 Verified Corporate & Institutional Buyers</h1>
+          <p class="dash-section__subtitle" data-i18n="farmer.verifiedBuyersDesc">Direct procurement partners offering verified credentials, fair pricing, and 24h bank transfers.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="buyer.html#/buyer/dashboard" class="btn btn--primary" style="background:var(--ks-evergreen); color:#FFFFFF;"><i data-lucide="shield-check"></i> Open KrishiShetra Buyer Portal</a>
-          <a href="lots.html" class="btn btn--secondary"><i data-lucide="plus-circle"></i> List Lot for Buyers</a>
+          <a href="buyer.html#/buyer/dashboard" class="btn btn--primary" style="background:var(--ks-evergreen); color:#FFFFFF;"><i data-lucide="shield-check"></i> <span data-i18n="buyer.buyerPortal">Open KrishiShetra Buyer Portal</span></a>
+          <a href="lots.html" class="btn btn--secondary"><i data-lucide="plus-circle"></i> <span data-i18n="cropLot.createLot">List Lot for Buyers</span></a>
         </div>
       </div>
 
       <!-- Verified Corporate Buyers Grid -->
       <section class="dash-section" id="dash-buyers-directory">
         <div class="dash-card" style="padding: 24px; margin-bottom: 30px;">
-          <h3 style="font-size: 20px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 16px;">Active
-            Procurement Partners</h3>
+          <h3 style="font-size: 20px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 16px;" data-i18n="farmer.activeProcurementPartners">Active Procurement Partners</h3>
           <div id="buyers-directory-list">
             <!-- Rendered dynamically by JS -->
           </div>
@@ -164,8 +154,8 @@
         <div class="dash-card dash-panel">
           <div class="dash-panel__header">
             <div>
-              <h3 class="dash-panel__title">Incoming Bids & Direct Offers</h3>
-              <p class="dash-panel__subtitle">Quotes received for your active crop listings</p>
+              <h3 class="dash-panel__title" data-i18n="farmer.incomingOffersTitle">Incoming Bids & Direct Offers</h3>
+              <p class="dash-panel__subtitle" data-i18n="farmer.incomingOffersDesc">Quotes received for your active crop listings</p>
             </div>
           </div>
           <div class="dash-panel__body" id="offers-panel-body">
@@ -183,32 +173,31 @@
       <div class="footer__inner">
         <div>
           <div class="footer__brand"><i data-lucide="sprout" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> KrishiShetra</div>
-          <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
+          <div class="footer__tagline" data-i18n="common.heroTagline">Know the Price. Choose the Market. Sell Better.</div>
         </div>
         <div class="footer__links">
-          <a href="#" class="footer__link" onclick="openHelpModal()">Kisan Support</a>
-          <a href="buyers.html" class="footer__link">For Buyers</a>
-          <a href="index.html" class="footer__link">About KrishiShetra</a>
+          <a href="#" class="footer__link" onclick="openHelpModal()" data-i18n="common.kisanSupport">Kisan Support</a>
+          <a href="buyers.html" class="footer__link" data-i18n="navigation.buyers">For Buyers</a>
+          <a href="index.html" class="footer__link" data-i18n="common.about">About KrishiShetra</a>
         </div>
       </div>
-      <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
+      <div class="footer__copyright" data-i18n="common.footerCopyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
     </div>
   </footer>
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="dash-bottom-nav" id="dash-bottom-nav">
     <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i
-        data-lucide="home"></i><span>Home</span></a>
+        data-lucide="home"></i><span data-i18n="navigation.home">Home</span></a>
     <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i
-        data-lucide="bar-chart-3"></i><span>Market</span></a>
-    <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span>My
-        Lots</span></a>
+        data-lucide="bar-chart-3"></i><span data-i18n="navigation.market">Market</span></a>
+    <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span data-i18n="navigation.myLots">My Lots</span></a>
     <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i
-        data-lucide="brain"></i><span>Forecast</span></a>
+        data-lucide="brain"></i><span data-i18n="navigation.forecast">Forecast</span></a>
     <a href="buyers.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-buyers"><i
-        data-lucide="users"></i><span>Buyers</span></a>
+        data-lucide="users"></i><span data-i18n="navigation.buyers">Buyers</span></a>
     <a href="orders.html" class="dash-bottom-nav__item" id="bnav-orders"><i
-        data-lucide="clipboard-list"></i><span>Orders</span></a>
+        data-lucide="clipboard-list"></i><span data-i18n="navigation.orders">Orders</span></a>
   </nav>
 
   <!-- MODALS -->
@@ -216,28 +205,27 @@
   <div class="dash-modal-overlay" id="negotiate-modal-overlay">
     <div class="dash-modal dash-modal--sm" id="negotiate-modal">
       <div class="dash-modal__header">
-        <h3>Negotiate Price</h3>
+        <h3 data-i18n="offers.negotiatePrice">Negotiate Price</h3>
         <button class="dash-modal__close" id="negotiate-modal-close"><i data-lucide="x"></i></button>
       </div>
       <form class="dash-modal__form" id="negotiate-form">
         <input type="hidden" id="negotiate-offer-id">
         <div class="dash-modal__field">
-          <label>Buyer Offer Details</label>
+          <label data-i18n="offers.buyerOfferDetails">Buyer Offer Details</label>
           <div id="negotiate-buyer-info"
             style="font-size:13px; font-weight:600; color:var(--ks-charcoal); background:var(--ks-bg-ivory); padding:10px; border-radius:var(--radius-sm);">
           </div>
         </div>
         <div class="dash-modal__field">
-          <label for="negotiate-price-input">Your Counter Offer Price (₹/q)</label>
+          <label for="negotiate-price-input" data-i18n="offers.counterOfferPrice">Your Counter Offer Price (₹/q)</label>
           <input type="number" id="negotiate-price-input" class="dash-form-input" required>
         </div>
         <div class="dash-modal__field">
-          <label for="negotiate-note-input">Message / Note to Buyer</label>
+          <label for="negotiate-note-input" data-i18n="offers.noteToBuyer">Message / Note to Buyer</label>
           <textarea id="negotiate-note-input" class="dash-form-textarea" rows="2"
-            placeholder="e.g. Can provide delivery to Pune warehouse within 48 hours."></textarea>
+            placeholder="e.g. Can provide delivery to Pune warehouse within 48 hours." data-i18n-placeholder="offers.notePlaceholder"></textarea>
         </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="send"></i> Send Counter
-          Offer</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="send"></i> <span data-i18n="offers.sendCounterOffer">Send Counter Offer</span></button>
       </form>
     </div>
   </div>
@@ -247,8 +235,8 @@
     <div class="dash-modal dash-modal--lg" id="buyers-modal">
       <div class="dash-modal__header">
         <div>
-          <h3>Verified Corporate & Mandi Buyers</h3>
-          <span class="dash-crop-modal__sub">Direct procurement with guaranteed digital payments</span>
+          <h3 data-i18n="farmer.verifiedBuyersTitle">Verified Corporate & Mandi Buyers</h3>
+          <span class="dash-crop-modal__sub" data-i18n="farmer.verifiedBuyersSub">Direct procurement with guaranteed digital payments</span>
         </div>
         <button class="dash-modal__close" id="buyers-modal-close"><i data-lucide="x"></i></button>
       </div>
@@ -261,7 +249,7 @@
     <div class="dash-modal dash-modal--sm" id="notifications-modal">
       <div class="dash-modal__header">
         <div>
-          <h3>Notifications</h3>
+          <h3 data-i18n="notifications.notificationsTitle">Notifications</h3>
         </div>
         <button class="dash-modal__close" id="notifications-modal-close"><i data-lucide="x"></i></button>
       </div>
@@ -272,16 +260,15 @@
   <div class="dash-modal-overlay" id="profile-modal-overlay">
     <div class="dash-modal" id="profile-modal">
       <div class="dash-modal__header">
-        <h3>Farmer Profile & Settings</h3>
+        <h3 data-i18n="farmer.farmerProfile">Farmer Profile & Settings</h3>
         <button class="dash-modal__close" id="profile-modal-close"><i data-lucide="x"></i></button>
       </div>
       <form class="dash-modal__form" id="profile-form">
         <div class="dash-modal__field">
-          <label for="prof-name">Full Name</label>
+          <label for="prof-name" data-i18n="common.fullName">Full Name</label>
           <input type="text" id="prof-name" class="dash-form-input" value="Rajesh Patil" required>
         </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save
-          Settings</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> <span data-i18n="common.saveSettings">Save Settings</span></button>
       </form>
     </div>
   </div>
@@ -289,14 +276,14 @@
   <div class="dash-modal-overlay" id="help-modal-overlay">
     <div class="dash-modal" id="help-modal">
       <div class="dash-modal__header">
-        <h3>Kisan Support & Helpline</h3>
+        <h3 data-i18n="common.kisanSupport">Kisan Support & Helpline</h3>
         <button class="dash-modal__close" id="help-modal-close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad">
         <div class="dash-help-banner">
           <i data-lucide="phone-call"></i>
           <div>
-            <div style="font-weight:700; color:var(--ks-evergreen);">Kisan Call Center (Toll Free)</div>
+            <div style="font-weight:700; color:var(--ks-evergreen);" data-i18n="farmer.kisanCallCenter">Kisan Call Center (Toll Free)</div>
             <div style="font-size:18px; font-weight:800; color:var(--ks-sage);">1800-180-1551</div>
           </div>
         </div>
@@ -305,6 +292,7 @@
   </div>
 
   <!-- SCRIPTS -->
+  <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>

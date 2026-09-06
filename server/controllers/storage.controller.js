@@ -530,7 +530,8 @@ const getStorageOptionsForCrop = async (req, res) => {
         holdingDays,
         customProjectedPrice,
         storageFacility: f,
-        distanceKm
+        distanceKm,
+        language: lang
       });
 
       return {
@@ -566,8 +567,10 @@ const getStorageOptionsForCrop = async (req, res) => {
         projectedNetGain: decision.storeAndHold.projectedNetGain,
         projectedNetRealization: decision.storeAndHold.projectedNetRealization,
         netGainPercent: decision.storeAndHold.netGainPercent,
-        recommendation: decision.recommendation === 'STORE & HOLD' ? 'STORE_AND_HOLD' : 'SELL_NOW',
-        explanation: (decision.explanations && decision.explanations[lang]) || decision.explanations.en
+        recommendation: decision.recommendation,
+        decisionType: decision.decisionType,
+        reason: decision.reason,
+        explanation: decision.explanation
       };
     });
 
@@ -677,7 +680,7 @@ const calculateSellVsStore = async (req, res) => {
     const customProjectedPrice = req.body.customProjectedPrice || req.body.projectedPrice || null;
     const storageFacilityId = req.body.storageFacilityId || req.body.facilityId || null;
     const distanceKm = req.body.distanceKm || 12;
-    const lang = req.body.lang || req.body.language || 'en';
+    const lang = req.body.language || req.body.lang || req.query.language || req.query.lang || 'en';
 
     let facility = null;
     if (storageFacilityId) {
@@ -711,30 +714,37 @@ const calculateSellVsStore = async (req, res) => {
       holdingDays,
       customProjectedPrice,
       storageFacility: facility,
-      distanceKm
+      distanceKm,
+      language: lang
     });
-
-    const expText = (decision.explanations && decision.explanations[lang]) || decision.explanations.en;
 
     return res.status(200).json({
       success: true,
-      recommendation: decision.recommendation === 'STORE & HOLD' ? 'STORE_AND_HOLD' : 'SELL_NOW',
-      decisionType: decision.recommendation,
+      recommendation: decision.recommendation,
+      decisionType: decision.decisionType,
       currentPrice: decision.currentPrice,
       projectedPrice: decision.projectedPrice,
       holdingDays: decision.holdingDays,
-      storageCost: decision.storeAndHold.storageRent,
-      handlingCost: decision.storeAndHold.handlingCost,
-      weightLossCost: decision.storeAndHold.weightLossCost,
-      logisticsCost: decision.storeAndHold.logisticsCost,
-      estimatedNetBenefit: decision.storeAndHold.projectedNetGain,
-      explanation: expText,
+      storageCost: decision.storageCost,
+      handlingCost: decision.handlingCost,
+      transportCost: decision.transportCost,
+      logisticsCost: decision.logisticsCost,
+      weightLossCost: decision.weightLossCost,
+      totalHoldingCost: decision.totalHoldingCost,
+      expectedGain: decision.expectedGain,
+      netBenefit: decision.netBenefit,
+      estimatedNetBenefit: decision.estimatedNetBenefit,
+      netGainPercent: decision.netGainPercent,
+      reason: decision.reason,
+      explanation: decision.explanation,
+      language: decision.language,
       decision
     });
   } catch (error) {
     console.error('calculateSellVsStore error:', error);
     return res.status(500).json({
       success: false,
+      code: 'INTERNAL_SERVER_ERROR',
       message: 'Failed to calculate selling decision'
     });
   }
@@ -760,7 +770,16 @@ const createStorageRequest = async (req, res) => {
     if (!facilityId || !cropName || !quantity) {
       return res.status(400).json({
         success: false,
+        code: 'VALIDATION_FAILED',
         message: 'facilityId, cropName, and quantity are required.'
+      });
+    }
+
+    if (Number(quantity) <= 0 || isNaN(Number(quantity))) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_QUANTITY',
+        message: 'Quantity must be a positive number greater than zero.'
       });
     }
 
@@ -779,7 +798,16 @@ const createStorageRequest = async (req, res) => {
     if (!facility) {
       return res.status(404).json({
         success: false,
+        code: 'STORAGE_FACILITY_NOT_FOUND',
         message: 'Storage facility not found'
+      });
+    }
+
+    if (facility.availableCapacity !== undefined && Number(quantity) > facility.availableCapacity) {
+      return res.status(400).json({
+        success: false,
+        code: 'INSUFFICIENT_STORAGE_CAPACITY',
+        message: 'Requested quantity exceeds available storage capacity.'
       });
     }
 
@@ -840,6 +868,7 @@ const createStorageRequest = async (req, res) => {
     console.error('createStorageRequest error:', error);
     return res.status(500).json({
       success: false,
+      code: 'STORAGE_REQUEST_FAILED',
       message: error.message || 'Failed to submit storage request'
     });
   }
@@ -870,6 +899,7 @@ const getMyStorageRequests = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
+      code: 'STORAGE_DATA_UNAVAILABLE',
       message: 'Failed to retrieve storage requests'
     });
   }
@@ -895,6 +925,7 @@ const getStorageRequestById = async (req, res) => {
     if (!request) {
       return res.status(404).json({
         success: false,
+        code: 'NOT_FOUND',
         message: 'Storage request not found'
       });
     }
@@ -906,6 +937,7 @@ const getStorageRequestById = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
+      code: 'INTERNAL_SERVER_ERROR',
       message: 'Error fetching storage request'
     });
   }
@@ -949,6 +981,7 @@ const updateStorageRequestStatus = async (req, res) => {
     if (!request) {
       return res.status(404).json({
         success: false,
+        code: 'NOT_FOUND',
         message: 'Storage request not found'
       });
     }
@@ -961,6 +994,7 @@ const updateStorageRequestStatus = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
+      code: 'INTERNAL_SERVER_ERROR',
       message: 'Failed to update storage request status'
     });
   }
@@ -1043,6 +1077,7 @@ const createPledgeFinancingRequest = async (req, res) => {
     console.error('createPledgeFinancingRequest error:', error);
     return res.status(500).json({
       success: false,
+      code: 'PLEDGE_FINANCING_FAILED',
       message: error.message || 'Failed to submit pledge financing request'
     });
   }
@@ -1063,6 +1098,7 @@ const getMyPledgeFinancingRequests = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
+      code: 'INTERNAL_SERVER_ERROR',
       message: 'Failed to retrieve financing requests'
     });
   }
@@ -1092,6 +1128,7 @@ const adminCreateFacility = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
+      code: 'INTERNAL_SERVER_ERROR',
       message: error.message || 'Failed to create storage facility'
     });
   }
@@ -1107,12 +1144,12 @@ const adminUpdateFacility = async (req, res) => {
     const { id } = req.params;
     const facility = INITIAL_FACILITIES.find(f => f.facilityCode === id || f._id === id);
     if (!facility) {
-      return res.status(404).json({ success: false, message: 'Facility not found' });
+      return res.status(404).json({ success: false, code: 'STORAGE_FACILITY_NOT_FOUND', message: 'Facility not found' });
     }
     Object.assign(facility, req.body);
     return res.status(200).json({ success: true, message: 'Storage facility updated', facility });
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Failed to update facility' });
+    return res.status(500).json({ success: false, code: 'INTERNAL_SERVER_ERROR', message: 'Failed to update facility' });
   }
 };
 

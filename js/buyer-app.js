@@ -13,6 +13,15 @@
  * 8. Business Profile & AgriStack KYC Verification
  */
 
+// Internationalization Helper
+const t = (key, fallback) => {
+  if (window.i18next && typeof window.i18next.t === 'function') {
+    const res = window.i18next.t(key);
+    if (res && res !== key) return res;
+  }
+  return fallback !== undefined ? fallback : key;
+};
+
 let currentRoute = 'dashboard';
 let currentSelectedLotId = null;
 let currentSelectedOrderId = null;
@@ -39,6 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.addEventListener('hashchange', handleRouteUpdate);
+  window.addEventListener('languageChanged', () => {
+    initHeaderUser();
+    renderView(currentRoute);
+  });
+
   initHeaderUser();
   initSearchInput();
   handleRouteUpdate();
@@ -157,7 +171,7 @@ async function renderDashboardView(container) {
   const user = window.Auth ? window.Auth.getUser() : null;
   const buyerName = user?.name || 'Rajesh';
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const greeting = hour < 12 ? t('buyer.goodMorning', 'Good morning') : hour < 17 ? t('buyer.goodAfternoon', 'Good afternoon') : t('buyer.goodEvening', 'Good evening');
   const dateStr = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   container.innerHTML = `
@@ -166,25 +180,25 @@ async function renderDashboardView(container) {
       <div class="buyer-hero-banner">
         <div>
           <div class="buyer-hero-banner__eyebrow">
-            <span class="buyer-hero-banner__tag">PROCUREMENT COMMAND CENTER</span>
+            <span class="buyer-hero-banner__tag">${t('buyer.procurementCommandCenter', 'PROCUREMENT COMMAND CENTER')}</span>
             <span class="buyer-hero-banner__date">
               <i data-lucide="calendar" style="width: 13px; height: 13px;"></i> ${dateStr}
             </span>
           </div>
           <h1 class="buyer-hero-banner__title">${greeting}, ${buyerName}</h1>
           <p class="buyer-hero-banner__desc">
-            Manage your agricultural procurement, active contracts, and escrow settlements.
+            ${t('buyer.dashboardSubtitle', 'Manage your agricultural procurement, active contracts, and escrow settlements.')}
           </p>
         </div>
         <div class="buyer-hero-banner__actions">
           <a href="#/buyer/marketplace" class="btn btn--primary" style="background: #D97706; color: #FFFFFF; font-weight: 700;">
-            <i data-lucide="store"></i> Browse Marketplace
+            <i data-lucide="store"></i> ${t('buyer.browseMarketplace', 'Browse Marketplace')}
           </a>
           <a href="#/buyer/inquiries" class="btn btn--secondary" style="background: rgba(255,255,255,0.12); color: #FFF; border-color: rgba(255,255,255,0.25);">
-            <i data-lucide="message-square"></i> New Inquiry
+            <i data-lucide="message-square"></i> ${t('buyer.newInquiry', 'New Inquiry')}
           </a>
           <a href="#/buyer/orders" class="btn btn--secondary" style="background: rgba(255,255,255,0.12); color: #FFF; border-color: rgba(255,255,255,0.25);">
-            <i data-lucide="clipboard-list"></i> View Orders
+            <i data-lucide="clipboard-list"></i> ${t('buyer.viewOrders', 'View Orders')}
           </a>
         </div>
       </div>
@@ -193,82 +207,82 @@ async function renderDashboardView(container) {
       <div class="buyer-stats-grid" id="buyer-stats-grid">
         <a href="#/buyer/inquiries" class="buyer-stat-card">
           <div class="buyer-stat-card__top">
-            <div class="buyer-stat-card__label">Active Inquiries</div>
+            <div class="buyer-stat-card__label">${t('buyer.activeInquiries', 'Active Inquiries')}</div>
             <span class="buyer-stat-card__icon" style="background: #FEF3C7; color: #92400E;"><i data-lucide="message-square"></i></span>
           </div>
           <div class="buyer-stat-card__val" id="stat-active-inquiries">--</div>
-          <div class="buyer-stat-card__sub">Negotiations in progress</div>
+          <div class="buyer-stat-card__sub">${t('buyer.negotiationsInProgress', 'Negotiations in progress')}</div>
         </a>
 
         <a href="#/buyer/orders" class="buyer-stat-card">
           <div class="buyer-stat-card__top">
-            <div class="buyer-stat-card__label">Pending Orders</div>
+            <div class="buyer-stat-card__label">${t('buyer.pendingOrders', 'Pending Orders')}</div>
             <span class="buyer-stat-card__icon" style="background: #E8F5EC; color: #0D4435;"><i data-lucide="clock"></i></span>
           </div>
           <div class="buyer-stat-card__val" id="stat-pending-orders">--</div>
-          <div class="buyer-stat-card__sub" style="color: #2D6A4F; font-weight: 600;">Escrow locked contracts</div>
+          <div class="buyer-stat-card__sub" style="color: #2D6A4F; font-weight: 600;">${t('buyer.escrowLockedContracts', 'Escrow locked contracts')}</div>
         </a>
 
         <a href="#/buyer/orders" class="buyer-stat-card">
           <div class="buyer-stat-card__top">
-            <div class="buyer-stat-card__label">Orders in Transit</div>
+            <div class="buyer-stat-card__label">${t('buyer.inTransit', 'Orders in Transit')}</div>
             <span class="buyer-stat-card__icon" style="background: #E0F2FE; color: #0369A1;"><i data-lucide="truck"></i></span>
           </div>
           <div class="buyer-stat-card__val" id="stat-in-transit">--</div>
-          <div class="buyer-stat-card__sub" style="color: #0369A1; font-weight: 600;">Dispatched freight loads</div>
+          <div class="buyer-stat-card__sub" style="color: #0369A1; font-weight: 600;">${t('buyer.dispatchedFreightLoads', 'Dispatched freight loads')}</div>
         </a>
 
         <a href="#/buyer/orders" class="buyer-stat-card">
           <div class="buyer-stat-card__top">
-            <div class="buyer-stat-card__label">Completed Orders</div>
+            <div class="buyer-stat-card__label">${t('buyer.completedOrders', 'Completed Orders')}</div>
             <span class="buyer-stat-card__icon" style="background: #D1FAE5; color: #065F46;"><i data-lucide="check-circle"></i></span>
           </div>
           <div class="buyer-stat-card__val" id="stat-completed-orders">--</div>
-          <div class="buyer-stat-card__sub" style="color: #065F46; font-weight: 600;">Quality verified & settled</div>
+          <div class="buyer-stat-card__sub" style="color: #065F46; font-weight: 600;">${t('buyer.qualityVerifiedSettled', 'Quality verified & settled')}</div>
         </a>
 
         <a href="#/buyer/payments" class="buyer-stat-card">
           <div class="buyer-stat-card__top">
-            <div class="buyer-stat-card__label">Total Procurement</div>
+            <div class="buyer-stat-card__label">${t('buyer.totalProcurement', 'Total Procurement')}</div>
             <span class="buyer-stat-card__icon" style="background: #FDF0EE; color: #C96D5B;"><i data-lucide="wallet"></i></span>
           </div>
           <div class="buyer-stat-card__val" id="stat-procurement-val">₹42.8L</div>
-          <div class="buyer-stat-card__sub">FY procurement allocation</div>
+          <div class="buyer-stat-card__sub">${t('buyer.fyProcurementAllocation', 'FY procurement allocation')}</div>
         </a>
       </div>
 
       <!-- Quick Actions -->
       <div class="buyer-quick-actions-panel">
         <div class="buyer-quick-actions-title">
-          Quick Actions
+          ${t('buyer.quickActions', 'Quick Actions')}
         </div>
         <div class="buyer-quick-actions-grid">
           <a href="#/buyer/marketplace" class="buyer-quick-action-card">
             <div class="buyer-quick-action-card__icon" style="background: #E8F5EC; color: #0D4435;"><i data-lucide="search"></i></div>
             <div>
-              <div class="buyer-quick-action-card__title">Browse Produce</div>
-              <div class="buyer-quick-action-card__desc">Explore farm-gate lots</div>
+              <div class="buyer-quick-action-card__title">${t('buyer.browseProduce', 'Browse Produce')}</div>
+              <div class="buyer-quick-action-card__desc">${t('buyer.exploreFarmLots', 'Explore farm-gate lots')}</div>
             </div>
           </a>
           <a href="#/buyer/inquiries" class="buyer-quick-action-card">
             <div class="buyer-quick-action-card__icon" style="background: #FEF3C7; color: #92400E;"><i data-lucide="message-square"></i></div>
             <div>
-              <div class="buyer-quick-action-card__title">My Inquiries</div>
-              <div class="buyer-quick-action-card__desc">Track negotiations & bids</div>
+              <div class="buyer-quick-action-card__title">${t('buyer.myInquiriesTitle', 'My Inquiries')}</div>
+              <div class="buyer-quick-action-card__desc">${t('buyer.trackNegotiationsBids', 'Track negotiations & bids')}</div>
             </div>
           </a>
           <a href="#/buyer/orders" class="buyer-quick-action-card">
             <div class="buyer-quick-action-card__icon" style="background: #E0F2FE; color: #0369A1;"><i data-lucide="truck"></i></div>
             <div>
-              <div class="buyer-quick-action-card__title">My Orders</div>
-              <div class="buyer-quick-action-card__desc">Track transit & escrow</div>
+              <div class="buyer-quick-action-card__title">${t('buyer.myOrdersTitle', 'My Orders')}</div>
+              <div class="buyer-quick-action-card__desc">${t('buyer.trackTransitEscrow', 'Track transit & escrow')}</div>
             </div>
           </a>
           <a href="#/buyer/directory" class="buyer-quick-action-card">
             <div class="buyer-quick-action-card__icon" style="background: #EEF2FF; color: #4F46E5;"><i data-lucide="users"></i></div>
             <div>
-              <div class="buyer-quick-action-card__title">Find Sellers</div>
-              <div class="buyer-quick-action-card__desc">Farmers & FPOs</div>
+              <div class="buyer-quick-action-card__title">${t('buyer.findSellersTitle', 'Find Sellers')}</div>
+              <div class="buyer-quick-action-card__desc">${t('buyer.farmersAndFpos', 'Farmers & FPOs')}</div>
             </div>
           </a>
         </div>
@@ -280,11 +294,11 @@ async function renderDashboardView(container) {
         <div>
           <div class="buyer-section-title-row">
             <div>
-              <h3 class="buyer-section-title">Available for You</h3>
-              <span class="buyer-section-subtitle">Verified direct farm-gate produce matching your procurement profile</span>
+              <h3 class="buyer-section-title">${t('buyer.availableForYou', 'Available for You')}</h3>
+              <span class="buyer-section-subtitle">${t('buyer.availableForYouSub', 'Verified direct farm-gate produce matching your procurement profile')}</span>
             </div>
             <a href="#/buyer/marketplace" class="btn btn--ghost btn--sm" style="font-weight: 700; color: var(--kl-sage);">
-              View All <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
+              ${t('buyer.viewAll', 'View All')} <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
             </a>
           </div>
           <div id="dash-recommended-lots" style="display: flex; flex-direction: column; gap: 10px;">
@@ -296,11 +310,11 @@ async function renderDashboardView(container) {
         <div>
           <div class="buyer-section-title-row">
             <div>
-              <h3 class="buyer-section-title">Recent Procurement Activity</h3>
-              <span class="buyer-section-subtitle">Real-time inquiry & dispatch updates</span>
+              <h3 class="buyer-section-title">${t('buyer.recentActivity', 'Recent Procurement Activity')}</h3>
+              <span class="buyer-section-subtitle">${t('buyer.recentActivitySub', 'Real-time inquiry & dispatch updates')}</span>
             </div>
             <a href="#/buyer/inquiries" class="btn btn--ghost btn--sm" style="font-weight: 700; color: var(--kl-sage);">
-              All Activity <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
+              ${t('buyer.allActivity', 'All Activity')} <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
             </a>
           </div>
           <div id="dash-activity-timeline" class="buyer-activity-card">
@@ -413,8 +427,8 @@ async function loadDashboardData() {
               </div>
               <div>
                 <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
-                  <span class="kl-badge kl-badge--confirmed">GRADE ${lot.qualityGrade || 'A'}</span>
-                  <span style="font-size: 11px; color: var(--kl-sage); font-weight: 700;">✓ Verified</span>
+                  <span class="kl-badge kl-badge--confirmed">${t('buyer.gradeBadge', 'GRADE')} ${lot.qualityGrade || 'A'}</span>
+                  <span style="font-size: 11px; color: var(--kl-sage); font-weight: 700;">✓ ${t('buyer.verifiedBadge', 'VERIFIED')}</span>
                 </div>
                 <h4 style="font-size: 15px; font-weight: 700; color: var(--kl-evergreen); margin: 0 0 2px 0;">
                   ${lot.cropName} <span style="font-weight: 400; font-size: 12.5px; color: var(--kl-muted);">(${lot.variety || 'Standard'})</span>
@@ -427,7 +441,7 @@ async function loadDashboardData() {
             <div style="text-align: right; flex-shrink: 0;">
               <div style="font-size: 17px; font-weight: 800; color: var(--kl-evergreen);">₹${lot.askingPrice?.toLocaleString('en-IN')}<span style="font-size: 11px; font-weight: 400; color: var(--kl-muted);"> / q</span></div>
               <button class="btn btn--sm btn--primary" style="margin-top: 4px;" onclick="openLotDetailModal('${lot.lotId}')">
-                View & Inquire →
+                ${t('buyer.viewAndInquire', 'View & Inquire →')}
               </button>
             </div>
           </div>
@@ -436,9 +450,9 @@ async function loadDashboardData() {
         recLotsEl.innerHTML = `
           <div class="kl-compact-empty-state">
             <div class="kl-compact-empty-icon">🌾</div>
-            <div class="kl-compact-empty-title">No produce lots available</div>
-            <div class="kl-compact-empty-desc">Check back soon for new harvests or explore the full marketplace.</div>
-            <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm" style="text-decoration: none;">Explore Marketplace</a>
+            <div class="kl-compact-empty-title">${t('buyer.noLotsAvailable', 'No produce lots available')}</div>
+            <div class="kl-compact-empty-desc">${t('buyer.noLotsAvailableSub', 'Check back soon for new harvests or explore the full marketplace.')}</div>
+            <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm" style="text-decoration: none;">${t('buyer.exploreMarketplace', 'Explore Marketplace')}</a>
           </div>
         `;
       }
@@ -448,10 +462,10 @@ async function loadDashboardData() {
     const actTimelineEl = document.getElementById('dash-activity-timeline');
     if (actTimelineEl) {
       const activities = [
-        { icon: 'truck', color: '#155E75', bg: '#CFFAFE', title: 'Shipment Dispatched', desc: 'Order ord-10245 loaded at Nashik APMC Yard 4', time: '18m ago' },
-        { icon: 'check-circle', color: '#065F46', bg: '#D1FAE5', title: 'Offer Accepted by Farmer', desc: 'Deccan Grain Growers accepted your bid for 200Q Rice', time: '1h ago' },
-        { icon: 'message-square', color: '#92400E', bg: '#FEF3C7', title: 'Counter Offer Received', desc: 'Nashik Farmer Producer Co proposed ₹2,735/q for Onion', time: '3h ago' },
-        { icon: 'wallet', color: '#12372A', bg: '#E5F0E7', title: 'Escrow Funds Secured', desc: '₹2,85,500 allocated for Order ord-10245', time: 'Yesterday' }
+        { icon: 'truck', color: '#155E75', bg: '#CFFAFE', title: t('buyer.shipmentDispatched', 'Shipment Dispatched'), desc: 'Order ord-10245 loaded at Nashik APMC Yard 4', time: '18m ago' },
+        { icon: 'check-circle', color: '#065F46', bg: '#D1FAE5', title: t('buyer.offerAcceptedByFarmer', 'Offer Accepted by Farmer'), desc: 'Deccan Grain Growers accepted your bid for 200Q Rice', time: '1h ago' },
+        { icon: 'message-square', color: '#92400E', bg: '#FEF3C7', title: t('buyer.counterOfferReceived', 'Counter Offer Received'), desc: 'Nashik Farmer Producer Co proposed ₹2,735/q for Onion', time: '3h ago' },
+        { icon: 'wallet', color: '#12372A', bg: '#E5F0E7', title: t('buyer.escrowFundsSecured', 'Escrow Funds Secured'), desc: '₹2,85,500 allocated for Order ord-10245', time: 'Yesterday' }
       ];
 
       actTimelineEl.innerHTML = `
@@ -491,32 +505,32 @@ async function renderMarketplaceView(container) {
       <!-- Standardized Page Header -->
       <div class="buyer-page-header">
         <div class="buyer-page-header__left">
-          <span class="buyer-page-header__eyebrow">B2B Sourcing Hub</span>
-          <h1 class="buyer-page-header__title">Source Fresh Produce</h1>
-          <p class="buyer-page-header__desc">Discover verified agricultural lots from farmers and FPOs.</p>
+          <span class="buyer-page-header__eyebrow">${t('buyer.b2bSourcingHub', 'B2B Sourcing Hub')}</span>
+          <h1 class="buyer-page-header__title">${t('buyer.sourceFreshProduce', 'Source Fresh Produce')}</h1>
+          <p class="buyer-page-header__desc">${t('buyer.sourceFreshProduceSub', 'Discover verified agricultural lots from farmers and FPOs.')}</p>
         </div>
       </div>
 
       <!-- Prominent Search Bar -->
       <div class="buyer-market-search-bar">
         <i data-lucide="search" style="color: var(--kl-sage); width: 18px; height: 18px; flex-shrink: 0;"></i>
-        <input type="text" id="market-filter-search" class="buyer-market-search-input" placeholder="Search crop, variety, seller, or location..." value="${currentMarketSearch}">
+        <input type="text" id="market-filter-search" class="buyer-market-search-input" placeholder="${t('buyer.searchProducePlaceholder', 'Search crop, variety, seller, or location...')}" value="${currentMarketSearch}">
         <button class="btn btn--primary btn--sm" id="btn-search-marketplace">
-          Search
+          ${t('buyer.search', 'Search')}
         </button>
       </div>
 
       <!-- Quick Filter Chips -->
       <div style="display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; padding-bottom: 4px;" id="market-quick-filter-chips">
-        <button class="kl-filter-chip ${currentQuickFilter === 'all' ? 'active' : ''}" data-qf="all">All Produce</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'Vegetables' ? 'active' : ''}" data-qf="Vegetables">Vegetables</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'Fruits' ? 'active' : ''}" data-qf="Fruits">Fruits</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'Grains' ? 'active' : ''}" data-qf="Grains">Grains</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'Pulses' ? 'active' : ''}" data-qf="Pulses">Pulses</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'Oilseeds' ? 'active' : ''}" data-qf="Oilseeds">Oilseeds</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'Spices' ? 'active' : ''}" data-qf="Spices">Spices</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'Verified' ? 'active' : ''}" data-qf="Verified">Verified Suppliers</button>
-        <button class="kl-filter-chip ${currentQuickFilter === 'GradeA' ? 'active' : ''}" data-qf="GradeA">Grade A Only</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'all' ? 'active' : ''}" data-qf="all">${t('buyer.allProduce', 'All Produce')}</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'Vegetables' ? 'active' : ''}" data-qf="Vegetables">${t('buyer.vegetables', 'Vegetables')}</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'Fruits' ? 'active' : ''}" data-qf="Fruits">${t('buyer.fruits', 'Fruits')}</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'Grains' ? 'active' : ''}" data-qf="Grains">${t('buyer.grains', 'Grains')}</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'Pulses' ? 'active' : ''}" data-qf="Pulses">${t('buyer.pulses', 'Pulses')}</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'Oilseeds' ? 'active' : ''}" data-qf="Oilseeds">${t('buyer.oilseeds', 'Oilseeds')}</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'Spices' ? 'active' : ''}" data-qf="Spices">${t('buyer.spices', 'Spices')}</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'Verified' ? 'active' : ''}" data-qf="Verified">${t('buyer.verifiedSuppliers', 'Verified Suppliers')}</button>
+        <button class="kl-filter-chip ${currentQuickFilter === 'GradeA' ? 'active' : ''}" data-qf="GradeA">${t('buyer.gradeAOnly', 'Grade A Only')}</button>
       </div>
 
       <!-- Main Layout: Sidebar Filters + Marketplace Results Grid -->
@@ -524,24 +538,24 @@ async function renderMarketplaceView(container) {
         <!-- Left Filter Sidebar -->
         <aside class="buyer-filter-sidebar">
           <div class="buyer-filter-sidebar__header">
-            <span class="buyer-filter-sidebar__title">Filters</span>
-            <button id="btn-clear-all-filters" class="buyer-filter-sidebar__clear">Clear All</button>
+            <span class="buyer-filter-sidebar__title">${t('buyer.filters', 'Filters')}</span>
+            <button id="btn-clear-all-filters" class="buyer-filter-sidebar__clear">${t('buyer.clearAll', 'Clear All')}</button>
           </div>
 
           <div class="buyer-filter-group">
-            <label class="buyer-filter-label" for="market-filter-grade">Quality Grade</label>
+            <label class="buyer-filter-label" for="market-filter-grade">${t('buyer.qualityGrade', 'Quality Grade')}</label>
             <select id="market-filter-grade" class="kl-filter-select-b2b">
-              <option value="" ${currentMarketGrade === '' ? 'selected' : ''}>All Quality Grades</option>
-              <option value="A" ${currentMarketGrade === 'A' ? 'selected' : ''}>Grade A (Premium Export)</option>
-              <option value="B" ${currentMarketGrade === 'B' ? 'selected' : ''}>Grade B (Standard Commercial)</option>
-              <option value="C" ${currentMarketGrade === 'C' ? 'selected' : ''}>Grade C (Processing)</option>
+              <option value="" ${currentMarketGrade === '' ? 'selected' : ''}>${t('buyer.allQualityGrades', 'All Quality Grades')}</option>
+              <option value="A" ${currentMarketGrade === 'A' ? 'selected' : ''}>${t('buyer.gradeAPremium', 'Grade A (Premium Export)')}</option>
+              <option value="B" ${currentMarketGrade === 'B' ? 'selected' : ''}>${t('buyer.gradeBStandard', 'Grade B (Standard Commercial)')}</option>
+              <option value="C" ${currentMarketGrade === 'C' ? 'selected' : ''}>${t('buyer.gradeCProcessing', 'Grade C (Processing)')}</option>
             </select>
           </div>
 
           <div class="buyer-filter-group">
-            <label class="buyer-filter-label" for="market-filter-location">Location</label>
+            <label class="buyer-filter-label" for="market-filter-location">${t('buyer.location', 'Location')}</label>
             <select id="market-filter-location" class="kl-filter-select-b2b">
-              <option value="" ${currentMarketState === '' ? 'selected' : ''}>All Regions</option>
+              <option value="" ${currentMarketState === '' ? 'selected' : ''}>${t('buyer.allRegions', 'All Regions')}</option>
               <option value="Maharashtra" ${currentMarketState === 'Maharashtra' ? 'selected' : ''}>Maharashtra</option>
               <option value="Madhya Pradesh" ${currentMarketState === 'Madhya Pradesh' ? 'selected' : ''}>Madhya Pradesh</option>
               <option value="Andhra Pradesh" ${currentMarketState === 'Andhra Pradesh' ? 'selected' : ''}>Andhra Pradesh</option>
@@ -552,36 +566,36 @@ async function renderMarketplaceView(container) {
           </div>
 
           <div class="buyer-filter-group">
-            <label class="buyer-filter-label" for="market-filter-seller-type">Seller</label>
+            <label class="buyer-filter-label" for="market-filter-seller-type">${t('buyer.seller', 'Seller')}</label>
             <select id="market-filter-seller-type" class="kl-filter-select-b2b">
-              <option value="all" ${currentMarketSellerType === 'all' ? 'selected' : ''}>All Verified Suppliers</option>
-              <option value="FPO" ${currentMarketSellerType === 'FPO' ? 'selected' : ''}>Farmer Producer Orgs (FPOs)</option>
-              <option value="Farmer" ${currentMarketSellerType === 'Farmer' ? 'selected' : ''}>Individual Farmers</option>
+              <option value="all" ${currentMarketSellerType === 'all' ? 'selected' : ''}>${t('buyer.allVerifiedSuppliers', 'All Verified Suppliers')}</option>
+              <option value="FPO" ${currentMarketSellerType === 'FPO' ? 'selected' : ''}>${t('buyer.fpoCoops', 'Farmer Producer Orgs (FPOs)')}</option>
+              <option value="Farmer" ${currentMarketSellerType === 'Farmer' ? 'selected' : ''}>${t('buyer.individualFarmers', 'Individual Farmers')}</option>
             </select>
           </div>
 
           <div class="buyer-filter-group">
-            <label class="buyer-filter-label" for="market-filter-qty">Quantity Available</label>
+            <label class="buyer-filter-label" for="market-filter-qty">${t('buyer.quantityAvailable', 'Quantity Available')}</label>
             <select id="market-filter-qty" class="kl-filter-select-b2b">
-              <option value="all" ${currentMarketQty === 'all' ? 'selected' : ''}>All Volumes</option>
-              <option value="50" ${currentMarketQty === '50' ? 'selected' : ''}>50+ Quintals</option>
-              <option value="100" ${currentMarketQty === '100' ? 'selected' : ''}>100+ Quintals</option>
-              <option value="250" ${currentMarketQty === '250' ? 'selected' : ''}>250+ Quintals</option>
+              <option value="all" ${currentMarketQty === 'all' ? 'selected' : ''}>${t('buyer.allVolumes', 'All Volumes')}</option>
+              <option value="50" ${currentMarketQty === '50' ? 'selected' : ''}>${t('buyer.qty50Plus', '50+ Quintals')}</option>
+              <option value="100" ${currentMarketQty === '100' ? 'selected' : ''}>${t('buyer.qty100Plus', '100+ Quintals')}</option>
+              <option value="250" ${currentMarketQty === '250' ? 'selected' : ''}>${t('buyer.qty250Plus', '250+ Quintals')}</option>
             </select>
           </div>
 
           <div class="buyer-filter-group">
-            <label class="buyer-filter-label" for="market-filter-price">Price Range</label>
+            <label class="buyer-filter-label" for="market-filter-price">${t('buyer.priceRange', 'Price Range')}</label>
             <select id="market-filter-price" class="kl-filter-select-b2b">
-              <option value="all" ${currentMarketPrice === 'all' ? 'selected' : ''}>All Price Ranges</option>
-              <option value="under_2500" ${currentMarketPrice === 'under_2500' ? 'selected' : ''}>Under ₹2,500 / q</option>
-              <option value="2500_5000" ${currentMarketPrice === '2500_5000' ? 'selected' : ''}>₹2,500 - ₹5,000 / q</option>
-              <option value="above_5000" ${currentMarketPrice === 'above_5000' ? 'selected' : ''}>Above ₹5,000 / q</option>
+              <option value="all" ${currentMarketPrice === 'all' ? 'selected' : ''}>${t('buyer.allPriceRanges', 'All Price Ranges')}</option>
+              <option value="under_2500" ${currentMarketPrice === 'under_2500' ? 'selected' : ''}>${t('buyer.under2500', 'Under ₹2,500 / q')}</option>
+              <option value="2500_5000" ${currentMarketPrice === '2500_5000' ? 'selected' : ''}>${t('buyer.price2500To5000', '₹2,500 - ₹5,000 / q')}</option>
+              <option value="above_5000" ${currentMarketPrice === 'above_5000' ? 'selected' : ''}>${t('buyer.above5000', 'Above ₹5,000 / q')}</option>
             </select>
           </div>
 
           <button class="btn btn--primary" id="btn-apply-sidebar-filters" style="width: 100%; margin-top: 14px;">
-            Apply Filters
+            ${t('buyer.applyFilters', 'Apply Filters')}
           </button>
         </aside>
 
@@ -590,19 +604,19 @@ async function renderMarketplaceView(container) {
           <!-- Results Summary & Sorting Header -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
             <div>
-              <div id="market-result-count" style="font-size: 15px; font-weight: 700; color: var(--kl-evergreen);">Loading verified lots...</div>
-              <div style="font-size: 12.5px; color: var(--kl-muted); margin-top: 2px;" id="market-result-subtitle">Showing results based on your current filters</div>
+              <div id="market-result-count" style="font-size: 15px; font-weight: 700; color: var(--kl-evergreen);">${t('common.loading', 'Loading verified lots...')}</div>
+              <div style="font-size: 12.5px; color: var(--kl-muted); margin-top: 2px;" id="market-result-subtitle">${t('buyer.showingFilteredResults', 'Showing results based on your current filters')}</div>
               <div id="market-active-chips" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;"></div>
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid var(--kl-border); border-radius: 8px; padding: 4px 12px;">
-              <span style="font-size: 12px; color: var(--kl-muted); font-weight: 600; white-space: nowrap;">Sort by:</span>
+              <span style="font-size: 12px; color: var(--kl-muted); font-weight: 600; white-space: nowrap;">${t('buyer.sortBy', 'Sort by:')}</span>
               <select id="market-filter-sort" style="border: none; font-size: 12.5px; padding: 2px 0; background: transparent; outline: none; font-weight: 600; cursor: pointer; color: var(--kl-evergreen);">
-                <option value="recommended" ${currentMarketSort === 'recommended' ? 'selected' : ''}>Recommended</option>
-                <option value="price_asc" ${currentMarketSort === 'price_asc' ? 'selected' : ''}>Price: Low to High</option>
-                <option value="price_desc" ${currentMarketSort === 'price_desc' ? 'selected' : ''}>Price: High to Low</option>
-                <option value="quantity_desc" ${currentMarketSort === 'quantity_desc' ? 'selected' : ''}>Quantity</option>
-                <option value="newest" ${currentMarketSort === 'newest' ? 'selected' : ''}>Newest</option>
+                <option value="recommended" ${currentMarketSort === 'recommended' ? 'selected' : ''}>${t('buyer.sortRecommended', 'Recommended')}</option>
+                <option value="price_asc" ${currentMarketSort === 'price_asc' ? 'selected' : ''}>${t('buyer.sortPriceLowHigh', 'Price: Low to High')}</option>
+                <option value="price_desc" ${currentMarketSort === 'price_desc' ? 'selected' : ''}>${t('buyer.sortPriceHighLow', 'Price: High to Low')}</option>
+                <option value="quantity_desc" ${currentMarketSort === 'quantity_desc' ? 'selected' : ''}>${t('buyer.sortQuantityDesc', 'Quantity')}</option>
+                <option value="newest" ${currentMarketSort === 'newest' ? 'selected' : ''}>${t('buyer.sortNewest', 'Newest')}</option>
               </select>
             </div>
           </div>
@@ -674,7 +688,7 @@ async function renderMarketplaceView(container) {
     if (chipsEl) {
       const activeChips = [];
       if (currentCategoryFilter !== 'all') activeChips.push({ label: currentCategoryFilter, key: 'cat' });
-      if (currentMarketGrade) activeChips.push({ label: `Grade ${currentMarketGrade}`, key: 'grade' });
+      if (currentMarketGrade) activeChips.push({ label: `${t('buyer.gradeBadge', 'Grade')} ${currentMarketGrade}`, key: 'grade' });
       if (currentMarketState) activeChips.push({ label: currentMarketState, key: 'state' });
       if (currentMarketSellerType !== 'all') activeChips.push({ label: currentMarketSellerType === 'FPO' ? 'FPOs' : 'Farmers', key: 'seller' });
       if (currentMarketQty !== 'all') activeChips.push({ label: `${currentMarketQty}+ Q`, key: 'qty' });
@@ -688,7 +702,7 @@ async function renderMarketplaceView(container) {
       `).join('');
     }
 
-    grid.innerHTML = `<div style="padding: 30px; text-align: center; color: #888; grid-column: 1 / -1;">Loading verified lots...</div>`;
+    grid.innerHTML = `<div style="padding: 30px; text-align: center; color: #888; grid-column: 1 / -1;">${t('common.loading', 'Loading verified lots...')}</div>`;
 
     const params = {
       limit: 30,
@@ -780,7 +794,7 @@ async function renderMarketplaceView(container) {
 
     currentMarketLots = lots;
     if (countEl) {
-      countEl.textContent = `${lots.length} agricultural lots available`;
+      countEl.textContent = `${lots.length} ${t('buyer.marketLotsAvailable', 'agricultural lots available')}`;
     }
 
     if (lots.length > 0) {
@@ -794,12 +808,12 @@ async function renderMarketplaceView(container) {
                 <div class="kl-b2b-crop-emoji">${lot.emoji || '🌾'}</div>
                 <div>
                   <span style="font-family: monospace; font-size: 11px; color: #888; font-weight: 700;">#${lot.lotId}</span>
-                  <div style="font-size: 11px; color: #777;">Harvest: ${harvestStr}</div>
+                  <div style="font-size: 11px; color: #777;">${t('buyer.harvest', 'Harvest')}: ${harvestStr}</div>
                 </div>
               </div>
               <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 3px;">
-                <span style="padding: 2px 7px; border-radius: 4px; background: #E5F0E7; color: #12372A; font-size: 10px; font-weight: 800; text-transform: uppercase;">GRADE ${lot.qualityGrade || 'A'}</span>
-                <span style="font-size: 10.5px; color: #5B9A72; font-weight: 700;">✓ VERIFIED</span>
+                <span style="padding: 2px 7px; border-radius: 4px; background: #E5F0E7; color: #12372A; font-size: 10px; font-weight: 800; text-transform: uppercase;">${t('buyer.gradeBadge', 'GRADE')} ${lot.qualityGrade || 'A'}</span>
+                <span style="font-size: 10.5px; color: #5B9A72; font-weight: 700;">✓ ${t('buyer.verifiedBadge', 'VERIFIED')}</span>
               </div>
             </div>
 
@@ -818,38 +832,38 @@ async function renderMarketplaceView(container) {
               <!-- Supply Box -->
               <div class="kl-b2b-supply-box">
                 <div>
-                  <div style="font-size: 10px; text-transform: uppercase; color: #777; font-weight: 700;">Available Volume</div>
+                  <div style="font-size: 10px; text-transform: uppercase; color: #777; font-weight: 700;">${t('buyer.availableVolume', 'Available Volume')}</div>
                   <div style="font-size: 14px; font-weight: 800; color: #12372A;">${lot.quantity} ${lot.quantityUnit || 'quintals'}</div>
                 </div>
                 <div style="text-align: right;">
-                  <div style="font-size: 10px; text-transform: uppercase; color: #777; font-weight: 700;">Min Order</div>
+                  <div style="font-size: 10px; text-transform: uppercase; color: #777; font-weight: 700;">${t('buyer.minOrder', 'Min Order')}</div>
                   <div style="font-size: 12.5px; font-weight: 700; color: #555;">${lot.minOrderQty || 25} q</div>
                 </div>
               </div>
 
               <!-- Seller Line -->
               <div style="font-size: 11.5px; color: #666;">
-                <span style="color: #888;">Seller:</span> <strong>${lot.sellerName || 'Verified Farm'}</strong>
+                <span style="color: #888;">${t('buyer.sellerLabel', 'Seller:')}</span> <strong>${lot.sellerName || 'Verified Farm'}</strong>
               </div>
 
               <!-- Price Line -->
               <div class="kl-b2b-price-line">
                 <div>
-                  <div style="font-size: 10px; text-transform: uppercase; color: #888; font-weight: 700;">Price per quintal</div>
+                  <div style="font-size: 10px; text-transform: uppercase; color: #888; font-weight: 700;">${t('buyer.pricePerQuintal', 'Price per quintal')}</div>
                   <div class="kl-b2b-price-val">₹${lot.askingPrice?.toLocaleString('en-IN')}<span class="kl-b2b-price-unit">/ quintal</span></div>
                 </div>
                 <span style="font-size: 10.5px; color: #5B9A72; font-weight: 700; background: #E5F0E7; padding: 2px 7px; border-radius: 4px;">
-                  Farm Gate
+                  ${t('buyer.farmGate', 'Farm Gate')}
                 </span>
               </div>
 
               <!-- Bottom Actions -->
               <div class="kl-b2b-card-actions">
                 <button class="btn btn--secondary" onclick="openLotDetailModal('${lot.lotId}')">
-                  View Details
+                  ${t('buyer.viewDetails', 'View Details')}
                 </button>
                 <button class="btn btn--primary" style="background: #12372A; color: #FFFFFF;" onclick="openSendInquiryModal('${lot.lotId}', ${lot.askingPrice}, ${lot.quantity})">
-                  Send Inquiry →
+                  ${t('buyer.sendInquiryBtn', 'Send Inquiry →')}
                 </button>
               </div>
             </div>
@@ -860,10 +874,10 @@ async function renderMarketplaceView(container) {
       grid.innerHTML = `
         <div class="kl-compact-empty-state" style="grid-column: 1 / -1;">
           <div class="kl-compact-empty-icon">🌾</div>
-          <div class="kl-compact-empty-title">No matching produce found</div>
-          <div class="kl-compact-empty-desc">Try changing your filters.</div>
+          <div class="kl-compact-empty-title">${t('buyer.noMatchingProduce', 'No matching produce found')}</div>
+          <div class="kl-compact-empty-desc">${t('buyer.tryChangingFilters', 'Try changing your filters.')}</div>
           <button class="btn btn--secondary btn--sm" onclick="clearAllMarketFilters()">
-            Clear Filters
+            ${t('buyer.clearFilters', 'Clear Filters')}
           </button>
         </div>
       `;
@@ -937,13 +951,13 @@ async function openLotDetailModal(lotId) {
     <div class="dash-modal" style="max-width: 760px; max-height: 90vh; overflow-y: auto;">
       <div class="dash-modal__header">
         <div>
-          <h3 style="margin: 0; font-size: 19px;">Agricultural Lot Details</h3>
+          <h3 style="margin: 0; font-size: 19px;">${t('buyer.lotDetailsTitle', 'Agricultural Lot Details')}</h3>
           <span style="font-family: monospace; font-size: 12px; color: var(--ks-gold); font-weight: 700;">LOT ID: #${lotId}</span>
         </div>
         <button class="dash-modal__close" onclick="document.getElementById('buyer-lot-detail-overlay').classList.remove('active')"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad" id="b-lot-detail-content">
-        <div style="padding: 30px; text-align: center; color: #888;">Loading specifications & landed cost calculator...</div>
+        <div style="padding: 30px; text-align: center; color: #888;">${t('common.loading', 'Loading specifications & landed cost calculator...')}</div>
       </div>
     </div>
   `;
@@ -998,7 +1012,7 @@ async function openLotDetailModal(lotId) {
   }
 
   if (!lot) {
-    document.getElementById('b-lot-detail-content').innerHTML = `<div style="padding: 20px; text-align: center; color: #dc2626;">Unable to load lot details.</div>`;
+    document.getElementById('b-lot-detail-content').innerHTML = `<div style="padding: 20px; text-align: center; color: #dc2626;">${t('errors.loadFailed', 'Unable to load lot details.')}</div>`;
     return;
   }
 
@@ -1020,32 +1034,32 @@ async function openLotDetailModal(lotId) {
             </div>
             <div>
               <h2 style="font-size: 19px; font-weight: 800; color: var(--ks-evergreen); margin: 0 0 2px 0;">${lot.cropName}</h2>
-              <div style="font-size: 13px; color: #666; font-weight: 600;">${lot.variety} • Grade ${lot.qualityGrade}</div>
+              <div style="font-size: 13px; color: #666; font-weight: 600;">${lot.variety} • ${t('buyer.gradeBadge', 'Grade')} ${lot.qualityGrade}</div>
             </div>
           </div>
           <div style="display: flex; gap: 8px;">
-            <span style="background: #E5F0E7; color: #12372A; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;">VERIFIED LOT ✓</span>
-            <span style="background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;">Harvest: ${harvestStr}</span>
+            <span style="background: #E5F0E7; color: #12372A; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;">${t('buyer.verifiedLot', 'VERIFIED LOT ✓')}</span>
+            <span style="background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;">${t('buyer.harvest', 'Harvest')}: ${harvestStr}</span>
           </div>
         </div>
 
         <!-- Quality Metrics Grid -->
-        <h4 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #777; letter-spacing: 0.05em; margin: 0 0 8px 0;">Quality Specifications</h4>
+        <h4 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #777; letter-spacing: 0.05em; margin: 0 0 8px 0;">${t('buyer.qualitySpecifications', 'Quality Specifications')}</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
           <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
-            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Moisture Content</div>
+            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">${t('buyer.moistureContent', 'Moisture Content')}</div>
             <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.moistureContent}</div>
           </div>
           <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
-            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Size / Grain Spec</div>
+            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">${t('buyer.sizeGrainSpec', 'Size / Grain Spec')}</div>
             <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.sizeSpec}</div>
           </div>
           <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
-            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Foreign Matter</div>
+            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">${t('buyer.foreignMatter', 'Foreign Matter')}</div>
             <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.defectsPct}</div>
           </div>
           <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; padding: 10px 12px;">
-            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Packaging</div>
+            <div style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">${t('buyer.packaging', 'Packaging')}</div>
             <div style="font-size: 13.5px; font-weight: 800; color: #12372A; margin-top: 2px;">${lot.packaging}</div>
           </div>
         </div>
@@ -1053,8 +1067,8 @@ async function openLotDetailModal(lotId) {
         <!-- Seller Trust Card -->
         <div style="background: #FAF9F5; border: 1px solid #EAE6DF; border-radius: 10px; padding: 12px 14px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #718E68;">Seller Verification</span>
-            <span style="font-size: 11.5px; font-weight: 800; color: #12372A;">Trust Score: ${lot.sellerTrustScore}%</span>
+            <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #718E68;">${t('buyer.sellerVerification', 'Seller Verification')}</span>
+            <span style="font-size: 11.5px; font-weight: 800; color: #12372A;">${t('buyer.trustScore', 'Trust Score:')} ${lot.sellerTrustScore}%</span>
           </div>
           <div style="font-size: 13px; font-weight: 700; color: #12372A;">${lot.sellerName}</div>
           <div style="font-size: 12px; color: #666; margin-top: 2px;">📍 ${lot.location} (${lot.mandi} · ${lot.distanceKm} km)</div>
@@ -1067,11 +1081,11 @@ async function openLotDetailModal(lotId) {
         <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px; margin-bottom: 14px;">
           <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
             <div>
-              <span style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Asking Price</span>
+              <span style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">${t('buyer.askingPrice', 'Asking Price')}</span>
               <div style="font-size: 22px; font-weight: 800; color: var(--ks-evergreen);">₹${lot.askingPrice?.toLocaleString('en-IN')}<span style="font-size: 11.5px; font-weight: 400; color: #666;"> / q</span></div>
             </div>
             <div style="text-align: right;">
-              <span style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">Available Stock</span>
+              <span style="font-size: 10.5px; color: #777; text-transform: uppercase; font-weight: 700;">${t('buyer.availableStock', 'Available Stock')}</span>
               <div style="font-size: 15px; font-weight: 800; color: #12372A;">${lot.quantity} quintals</div>
             </div>
           </div>
@@ -1080,23 +1094,23 @@ async function openLotDetailModal(lotId) {
         <!-- Real-time Landed Cost Breakdown -->
         <div style="border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px; margin-bottom: 16px; background: #FFFFFF;">
           <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ks-evergreen); letter-spacing: 0.05em; margin-bottom: 10px;">
-            Landed Cost Breakdown Calculator
+            ${t('buyer.landedCostBreakdown', 'Landed Cost Breakdown Calculator')}
           </div>
           <div style="font-size: 12px; color: #555; display: flex; flex-direction: column; gap: 5px;">
             <div style="display: flex; justify-content: space-between;">
-              <span>Produce Base Cost (${lot.quantity} q):</span>
+              <span>${t('buyer.produceBaseCost', 'Produce Base Cost')} (${lot.quantity} q):</span>
               <span>₹${(lot.askingPrice * lot.quantity).toLocaleString('en-IN')}</span>
             </div>
             <div style="display: flex; justify-content: space-between;">
-              <span>Mandi Cess & Taxes (₹${lot.mandiCess}/q):</span>
+              <span>${t('buyer.mandiCessTaxes', 'Mandi Cess & Taxes')} (₹${lot.mandiCess}/q):</span>
               <span>₹${mandiCessTotal.toLocaleString('en-IN')}</span>
             </div>
             <div style="display: flex; justify-content: space-between;">
-              <span>Estimated Logistics Freight:</span>
+              <span>${t('buyer.estLogisticsFreight', 'Estimated Logistics Freight')}:</span>
               <span>₹${estTransport.toLocaleString('en-IN')}</span>
             </div>
             <div style="border-top: 1px dashed #DDD; padding-top: 6px; margin-top: 4px; display: flex; justify-content: space-between; font-weight: 800; font-size: 13.5px; color: var(--ks-evergreen);">
-              <span>Total Estimated Landed Cost:</span>
+              <span>${t('buyer.totalEstLandedCost', 'Total Estimated Landed Cost:')}</span>
               <span>₹${totalLanded.toLocaleString('en-IN')} <span style="font-size: 11px; font-weight: 400; color: #777;">(≈ ₹${perQLanded}/q)</span></span>
             </div>
           </div>
@@ -1105,10 +1119,10 @@ async function openLotDetailModal(lotId) {
         <!-- Action CTAs -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <button class="btn btn--primary" style="width: 100%; justify-content: center; background: #12372A; color: #FFFFFF; font-weight: 700; height: 40px; border-radius: 8px;" onclick="document.getElementById('buyer-lot-detail-overlay').classList.remove('active'); openSendInquiryModal('${lot.lotId}', ${lot.askingPrice}, ${lot.quantity})">
-            Send Procurement Inquiry →
+            ${t('buyer.sendProcurementInquiry', 'Send Procurement Inquiry →')}
           </button>
           <button class="btn btn--secondary" style="width: 100%; justify-content: center; height: 36px; border-radius: 8px;" onclick="document.getElementById('buyer-lot-detail-overlay').classList.remove('active')">
-            Close
+            ${t('buyer.close', 'Close')}
           </button>
         </div>
       </div>
@@ -1143,7 +1157,7 @@ function openSendInquiryModal(lotId, askingPrice, maxQty) {
     <div class="dash-modal" style="max-width: 520px;">
       <div class="dash-modal__header">
         <div>
-          <h3 style="margin: 0; font-size: 18px;">Send Procurement Inquiry</h3>
+          <h3 style="margin: 0; font-size: 18px;">${t('buyer.sendProcurementInquiryTitle', 'Send Procurement Inquiry')}</h3>
           <span style="font-family: monospace; font-size: 12px; color: var(--ks-gold); font-weight: 700;">LOT: #${lotId}</span>
         </div>
         <button class="dash-modal__close" onclick="document.getElementById('send-inquiry-modal-overlay').classList.remove('active')"><i data-lucide="x"></i></button>
@@ -1154,51 +1168,51 @@ function openSendInquiryModal(lotId, askingPrice, maxQty) {
         <!-- Selected Lot Summary -->
         <div style="background: #F5F4ED; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; font-size: 13px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-            <span>Produce:</span>
+            <span>${t('buyer.produceSummary', 'Produce:')}</span>
             <strong>${cropName} (${variety})</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-            <span>Seller:</span>
+            <span>${t('buyer.sellerLabel', 'Seller:')}</span>
             <strong>${sellerName}</strong>
           </div>
           <div style="display: flex; justify-content: space-between;">
-            <span>Asking Price:</span>
+            <span>${t('buyer.askingPrice', 'Asking Price:')}</span>
             <strong style="color: var(--ks-evergreen);">₹${askingPrice?.toLocaleString('en-IN')}/q (Stock: ${maxQty} q)</strong>
           </div>
         </div>
 
         <div class="dash-form-row">
           <div class="dash-modal__field" style="flex: 1;">
-            <label for="inq-qty">Required Quantity (Quintals)</label>
+            <label for="inq-qty">${t('buyer.requiredQuantityQ', 'Required Quantity (Quintals)')}</label>
             <input type="number" id="inq-qty" class="dash-form-input" value="${maxQty || ''}" min="1" max="${maxQty || 10000}" required>
           </div>
           <div class="dash-modal__field" style="flex: 1;">
-            <label for="inq-price">Target Price (₹/quintal)</label>
+            <label for="inq-price">${t('buyer.targetPriceQ', 'Target Price (₹/quintal)')}</label>
             <input type="number" id="inq-price" class="dash-form-input" value="${askingPrice || ''}" min="1" required>
           </div>
         </div>
 
         <div class="dash-modal__field" style="margin-top: 10px;">
-          <label for="inq-date">Preferred Delivery Date</label>
+          <label for="inq-date">${t('buyer.prefDeliveryDate', 'Preferred Delivery Date')}</label>
           <input type="date" id="inq-date" class="dash-form-input" value="2026-09-08" required>
         </div>
 
         <div class="dash-modal__field" style="margin-top: 10px;">
-          <label for="inq-delivery-location">Delivery Location / Warehouse</label>
+          <label for="inq-delivery-location">${t('buyer.deliveryLocationWarehouse', 'Delivery Location / Warehouse')}</label>
           <input type="text" id="inq-delivery-location" class="dash-form-input" value="ABC Foods Warehouse, Chakan, Pune" required>
         </div>
 
         <div class="dash-modal__field" style="margin-top: 10px;">
-          <label for="inq-msg">Additional Requirements (Optional)</label>
+          <label for="inq-msg">${t('buyer.additionalRequirementsOptional', 'Additional Requirements (Optional)')}</label>
           <textarea id="inq-msg" class="dash-form-textarea" rows="2" placeholder="e.g. Moisture test required on delivery. Quality inspection prior to escrow release."></textarea>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; margin-top: 18px;">
           <button type="button" class="btn btn--secondary" onclick="document.getElementById('send-inquiry-modal-overlay').classList.remove('active')">
-            Cancel
+            ${t('buyer.cancel', 'Cancel')}
           </button>
           <button type="submit" class="btn btn--primary" id="btn-submit-inquiry" style="background: #12372A; color: #FFFFFF; font-weight: 700;">
-            Send Inquiry
+            ${t('buyer.sendInquiry', 'Send Inquiry')}
           </button>
         </div>
       </form>
@@ -1224,12 +1238,12 @@ function openSendInquiryModal(lotId, askingPrice, maxQty) {
       alertBox.style.display = 'block';
       alertBox.style.background = '#FEE2E2';
       alertBox.style.color = '#dc2626';
-      alertBox.textContent = 'Please enter a valid price and quantity.';
+      alertBox.textContent = t('validation.invalidAmount', 'Please enter a valid price and quantity.');
       return;
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting offer...';
+    submitBtn.textContent = t('buyer.submittingOffer', 'Submitting offer...');
 
     let successInquiry = null;
     try {
@@ -1265,10 +1279,10 @@ function openSendInquiryModal(lotId, askingPrice, maxQty) {
       alertBox.style.display = 'block';
       alertBox.style.background = '#FEE2E2';
       alertBox.style.color = '#dc2626';
-      alertBox.textContent = 'Failed to submit inquiry.';
+      alertBox.textContent = t('errors.failedToSubmit', 'Failed to submit inquiry.');
     }
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Send Inquiry';
+    submitBtn.textContent = t('buyer.sendInquiry', 'Send Inquiry');
   });
 }
 
@@ -1286,30 +1300,30 @@ function showInquirySentSuccess(inquiry) {
       <div style="width: 56px; height: 56px; border-radius: 50%; background: #E5F0E7; color: #12372A; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 12px;">
         ✓
       </div>
-      <h3 style="font-size: 19px; font-weight: 700; color: #12372A; margin: 0 0 4px 0;">Inquiry sent successfully</h3>
-      <p style="font-size: 13px; color: #666; margin: 0 0 18px 0;">Your request has been shared with the seller.</p>
+      <h3 style="font-size: 19px; font-weight: 700; color: #12372A; margin: 0 0 4px 0;">${t('buyer.inquirySentSuccess', 'Inquiry sent successfully')}</h3>
+      <p style="font-size: 13px; color: #666; margin: 0 0 18px 0;">${t('buyer.inquirySentSuccessSub', 'Your request has been shared with the seller.')}</p>
 
       <div style="background: #F5F4ED; border-radius: 10px; padding: 12px 16px; text-align: left; margin-bottom: 18px; font-size: 13px;">
         <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-          <span style="color: #666;">Target Price:</span>
+          <span style="color: #666;">${t('buyer.targetPriceLabel', 'Target Price:')}</span>
           <strong>₹${inquiry.offeredPrice?.toLocaleString('en-IN')}/q</strong>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-          <span style="color: #666;">Required Volume:</span>
+          <span style="color: #666;">${t('buyer.requiredVolumeLabel', 'Required Volume:')}</span>
           <strong>${inquiry.quantityRequired} quintals</strong>
         </div>
         <div style="display: flex; justify-content: space-between;">
-          <span style="color: #666;">Status:</span>
-          <span style="padding: 2px 7px; border-radius: 4px; background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 700; text-transform: uppercase;">PENDING SELLER RESPONSE</span>
+          <span style="color: #666;">${t('buyer.statusCol', 'Status:')}</span>
+          <span style="padding: 2px 7px; border-radius: 4px; background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 700; text-transform: uppercase;">${t('buyer.pendingSellerResponse', 'PENDING SELLER RESPONSE')}</span>
         </div>
       </div>
 
       <div style="display: flex; gap: 10px;">
         <a href="#/buyer/inquiries" class="btn btn--primary" style="flex: 1; text-decoration: none; justify-content: center; background: #12372A; border-radius: 8px;" onclick="document.getElementById('inquiry-success-overlay').classList.remove('active')">
-          View Inquiry →
+          ${t('buyer.viewInquiry', 'View Inquiry →')}
         </a>
         <button class="btn btn--secondary" style="flex: 1; border-radius: 8px;" onclick="document.getElementById('inquiry-success-overlay').classList.remove('active')">
-          Done
+          ${t('buyer.done', 'Done')}
         </button>
       </div>
     </div>
@@ -1332,13 +1346,13 @@ async function renderInquiriesView(container) {
     <div class="buyer-view">
       <div class="buyer-page-header">
         <div class="buyer-page-header__left">
-          <span class="buyer-page-header__eyebrow">Procurement Requests</span>
-          <h1 class="buyer-page-header__title">My Inquiries</h1>
-          <p class="buyer-page-header__desc">Manage your procurement requests and seller responses.</p>
+          <span class="buyer-page-header__eyebrow">${t('buyer.procurementRequests', 'Procurement Requests')}</span>
+          <h1 class="buyer-page-header__title">${t('buyer.myInquiries', 'My Inquiries')}</h1>
+          <p class="buyer-page-header__desc">${t('buyer.myInquiriesSub', 'Manage your procurement requests and seller responses.')}</p>
         </div>
         <div class="buyer-page-header__actions">
           <a href="#/buyer/marketplace" class="btn btn--primary btn--sm">
-            <i data-lucide="plus"></i> + New Inquiry
+            <i data-lucide="plus"></i> ${t('buyer.newInquiryBtn', '+ New Inquiry')}
           </a>
         </div>
       </div>
@@ -1346,30 +1360,30 @@ async function renderInquiriesView(container) {
       <!-- Professional Segmented Status Tabs -->
       <div class="kl-segmented-tabs" id="inquiries-segmented-tabs">
         <button class="kl-segmented-tab ${currentInquiryFilter === 'all' ? 'active' : ''}" data-status="all">
-          All <span class="kl-tab-badge">${countAll}</span>
+          ${t('common.all', 'All')} <span class="kl-tab-badge">${countAll}</span>
         </button>
         <button class="kl-segmented-tab ${currentInquiryFilter === 'pending' ? 'active' : ''}" data-status="pending">
-          Pending <span class="kl-tab-badge">${countPending}</span>
+          ${t('buyer.statusPending', 'Pending')} <span class="kl-tab-badge">${countPending}</span>
         </button>
         <button class="kl-segmented-tab ${currentInquiryFilter === 'negotiating' ? 'active' : ''}" data-status="negotiating">
-          Negotiating <span class="kl-tab-badge">${countNeg}</span>
+          ${t('buyer.statusNegotiating', 'Negotiating')} <span class="kl-tab-badge">${countNeg}</span>
         </button>
         <button class="kl-segmented-tab ${currentInquiryFilter === 'accepted' ? 'active' : ''}" data-status="accepted">
-          Accepted <span class="kl-tab-badge">${countAcc}</span>
+          ${t('buyer.statusAccepted', 'Accepted')} <span class="kl-tab-badge">${countAcc}</span>
         </button>
         <button class="kl-segmented-tab ${currentInquiryFilter === 'rejected' ? 'active' : ''}" data-status="rejected">
-          Rejected <span class="kl-tab-badge">${countRej}</span>
+          ${t('buyer.statusRejected', 'Rejected')} <span class="kl-tab-badge">${countRej}</span>
         </button>
       </div>
 
       <!-- Search / Filter Bar -->
       <div class="buyer-market-search-bar" style="margin-bottom: 18px;">
         <i data-lucide="search" style="color: var(--kl-muted); width: 16px; height: 16px;"></i>
-        <input type="text" id="inq-search-input" class="buyer-market-search-input" placeholder="Search inquiry, crop, or seller...">
+        <input type="text" id="inq-search-input" class="buyer-market-search-input" placeholder="${t('buyer.searchDirectoryPlaceholder', 'Search inquiry, crop, or seller...')}">
       </div>
 
       <div id="buyer-inquiries-list">
-        <div style="padding: 30px; text-align: center; color: var(--kl-muted);">Loading inquiries...</div>
+        <div style="padding: 30px; text-align: center; color: var(--kl-muted);">${t('common.loading', 'Loading inquiries...')}</div>
       </div>
     </div>
   `;
@@ -1411,14 +1425,14 @@ async function renderInquiriesView(container) {
           <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
             <thead>
               <tr style="border-bottom: 2px solid #E5E4DD; text-align: left; color: #777; font-size: 11px; text-transform: uppercase; background: #FAF9F5;">
-                <th style="padding: 12px 14px;">Inquiry</th>
-                <th style="padding: 12px 14px;">Produce</th>
-                <th style="padding: 12px 14px;">Seller</th>
-                <th style="padding: 12px 14px;">Quantity</th>
-                <th style="padding: 12px 14px;">Target Price</th>
-                <th style="padding: 12px 14px;">Updated</th>
-                <th style="padding: 12px 14px;">Status</th>
-                <th style="padding: 12px 14px; text-align: right;">Action</th>
+                <th style="padding: 12px 14px;">${t('buyer.inquiryCol', 'Inquiry')}</th>
+                <th style="padding: 12px 14px;">${t('buyer.produceCol', 'Produce')}</th>
+                <th style="padding: 12px 14px;">${t('buyer.sellerCol', 'Seller')}</th>
+                <th style="padding: 12px 14px;">${t('buyer.qtyCol', 'Quantity')}</th>
+                <th style="padding: 12px 14px;">${t('buyer.targetPriceCol', 'Target Price')}</th>
+                <th style="padding: 12px 14px;">${t('buyer.updatedCol', 'Updated')}</th>
+                <th style="padding: 12px 14px;">${t('buyer.statusCol', 'Status')}</th>
+                <th style="padding: 12px 14px; text-align: right;">${t('buyer.actionCol', 'Action')}</th>
               </tr>
             </thead>
             <tbody>
@@ -1439,7 +1453,7 @@ async function renderInquiriesView(container) {
                     </td>
                     <td style="padding: 12px 14px; text-align: right;">
                       <button class="btn btn--secondary btn--sm" style="border-radius: 6px; font-size: 12px; padding: 5px 12px;" onclick="openNegotiationModal('${inq.id}')">
-                        Timeline & Offers
+                        ${t('buyer.timelineOffers', 'Timeline & Offers')}
                       </button>
                     </td>
                   </tr>
@@ -1453,9 +1467,9 @@ async function renderInquiriesView(container) {
       list.innerHTML = `
         <div class="kl-compact-empty-state">
           <div class="kl-compact-empty-icon">📋</div>
-          <div class="kl-compact-empty-title">No inquiries yet</div>
-          <div class="kl-compact-empty-desc">Explore the marketplace and send your first procurement request.</div>
-          <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none; background: #12372A; border-radius: 8px;">Browse Marketplace</a>
+          <div class="kl-compact-empty-title">${t('buyer.noInquiriesYet', 'No inquiries yet')}</div>
+          <div class="kl-compact-empty-desc">${t('buyer.noInquiriesYetDesc', 'Explore the marketplace and send your first procurement request.')}</div>
+          <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none; background: #12372A; border-radius: 8px;">${t('buyer.exploreMarketplace', 'Browse Marketplace')}</a>
         </div>
       `;
     }
@@ -1480,47 +1494,47 @@ async function openNegotiationModal(inquiryId) {
     <div class="dash-modal" style="max-width: 620px; max-height: 90vh; overflow-y: auto;">
       <div class="dash-modal__header">
         <div>
-          <h3 style="margin: 0; font-size: 18px;">Inquiry #${mock.id}</h3>
-          <span style="font-size: 12px; color: var(--ks-text-muted);">Status: ${mock.status} • Updated: ${mock.updatedAt}</span>
+          <h3 style="margin: 0; font-size: 18px;">${t('buyer.inquiryCol', 'Inquiry')} #${mock.id}</h3>
+          <span style="font-size: 12px; color: var(--ks-text-muted);">${t('buyer.statusCol', 'Status')}: ${mock.status} • ${t('buyer.updatedCol', 'Updated')}: ${mock.updatedAt}</span>
         </div>
         <button class="dash-modal__close" onclick="document.getElementById('negotiation-modal-overlay').classList.remove('active')"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad" style="padding: 20px 22px;">
         <!-- Procurement Progress Stepper -->
-        <h4 style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #718E68; margin: 0 0 10px 0;">Procurement Timeline</h4>
+        <h4 style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #718E68; margin: 0 0 10px 0;">${t('buyer.procurementTimeline', 'Procurement Timeline')}</h4>
         <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; text-align: center; font-size: 11px; margin-bottom: 18px;">
-          <div style="padding: 6px 2px; background: #E5F0E7; color: #12372A; font-weight: 700; border-radius: 4px;">✓ Inquiry Sent</div>
-          <div style="padding: 6px 2px; background: #E5F0E7; color: #12372A; font-weight: 700; border-radius: 4px;">✓ Seller Responded</div>
-          <div style="padding: 6px 2px; background: ${mock.status === 'NEGOTIATING' || mock.status === 'ACCEPTED' ? '#E5F0E7' : '#FAF9F5'}; color: #12372A; font-weight: 700; border-radius: 4px;">${mock.status === 'NEGOTIATING' ? '● Negotiation' : '✓ Negotiation'}</div>
-          <div style="padding: 6px 2px; background: ${mock.status === 'ACCEPTED' ? '#E5F0E7' : '#FAF9F5'}; color: #12372A; font-weight: 700; border-radius: 4px;">${mock.status === 'ACCEPTED' ? '✓ Accepted' : '○ Accepted'}</div>
-          <div style="padding: 6px 2px; background: #FAF9F5; color: #888; font-weight: 600; border-radius: 4px;">○ Order Created</div>
+          <div style="padding: 6px 2px; background: #E5F0E7; color: #12372A; font-weight: 700; border-radius: 4px;">✓ ${t('buyer.inquirySent', 'Inquiry Sent')}</div>
+          <div style="padding: 6px 2px; background: #E5F0E7; color: #12372A; font-weight: 700; border-radius: 4px;">✓ ${t('buyer.sellerResponded', 'Seller Responded')}</div>
+          <div style="padding: 6px 2px; background: ${mock.status === 'NEGOTIATING' || mock.status === 'ACCEPTED' ? '#E5F0E7' : '#FAF9F5'}; color: #12372A; font-weight: 700; border-radius: 4px;">${mock.status === 'NEGOTIATING' ? '● ' + t('buyer.negotiation', 'Negotiation') : '✓ ' + t('buyer.negotiation', 'Negotiation')}</div>
+          <div style="padding: 6px 2px; background: ${mock.status === 'ACCEPTED' ? '#E5F0E7' : '#FAF9F5'}; color: #12372A; font-weight: 700; border-radius: 4px;">${mock.status === 'ACCEPTED' ? '✓ ' + t('buyer.accepted', 'Accepted') : '○ ' + t('buyer.accepted', 'Accepted')}</div>
+          <div style="padding: 6px 2px; background: #FAF9F5; color: #888; font-weight: 600; border-radius: 4px;">○ ${t('buyer.orderCreated', 'Order Created')}</div>
         </div>
 
         <!-- Inquiry Summary -->
         <div style="background: #FAF8F5; border: 1px solid #EAE6DF; border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; font-size: 13px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-            <span>Produce & Volume:</span>
+            <span>${t('buyer.produceSummary', 'Produce & Volume:')}</span>
             <strong>${mock.crop} (${mock.quantity} quintals)</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-            <span>Seller:</span>
+            <span>${t('buyer.sellerLabel', 'Seller:')}</span>
             <strong>${mock.sellerName}</strong>
           </div>
           <div style="display: flex; justify-content: space-between;">
-            <span>Current Offer:</span>
+            <span>${t('buyer.targetPriceLabel', 'Current Offer:')}</span>
             <strong style="color: var(--ks-evergreen);">₹${mock.currentBuyerOffer?.toLocaleString('en-IN')}/q (Listed Ask: ₹${mock.sellerAsk}/q)</strong>
           </div>
         </div>
 
         <!-- Negotiation Conversation Log -->
-        <h4 style="font-size: 13px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 10px 0;">Negotiation History</h4>
+        <h4 style="font-size: 13px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 10px 0;">${t('buyer.negotiationHistory', 'Negotiation History')}</h4>
         <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
           ${(mock.history || []).map(h => {
             const isBuyer = h.party === 'Buyer';
             return `
               <div style="background: ${isBuyer ? '#FAF8F5' : '#FFFBEB'}; border-left: 3px solid ${isBuyer ? 'var(--ks-evergreen)' : '#D97706'}; padding: 8px 12px; border-radius: 4px;">
                 <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
-                  <strong style="color: ${isBuyer ? 'var(--ks-evergreen)' : '#D97706'};">${isBuyer ? 'BUYER OFFER' : 'SELLER RESPONSE'}</strong>
+                  <strong style="color: ${isBuyer ? 'var(--ks-evergreen)' : '#D97706'};">${isBuyer ? t('buyer.buyerOffer', 'BUYER OFFER') : t('buyer.sellerResponse', 'SELLER RESPONSE')}</strong>
                   <span style="font-size: 10.5px; color: #888;">Recorded</span>
                 </div>
                 <div style="font-size: 12.5px;">Price: <strong>₹${h.price?.toLocaleString('en-IN')}/q</strong> • ${h.note || ''}</div>
@@ -1532,19 +1546,19 @@ async function openNegotiationModal(inquiryId) {
         <!-- Action CTAs -->
         ${mock.status === 'ACCEPTED' ? `
           <div style="background: #E5F0E7; border-radius: 10px; padding: 14px; text-align: center;">
-            <div style="font-size: 14px; font-weight: 700; color: #12372A; margin-bottom: 4px;">🎉 Offer Accepted by Seller!</div>
-            <p style="font-size: 12.5px; color: #12372A; margin: 0 0 12px 0;">Lock in your procurement contract with secure escrow backing.</p>
+            <div style="font-size: 14px; font-weight: 700; color: #12372A; margin-bottom: 4px;">${t('buyer.offerAcceptedNotice', '🎉 Offer Accepted by Seller!')}</div>
+            <p style="font-size: 12.5px; color: #12372A; margin: 0 0 12px 0;">${t('buyer.offerAcceptedNoticeSub', 'Lock in your procurement contract with secure escrow backing.')}</p>
             <button class="btn btn--primary" style="background: #12372A; color: #FFFFFF; font-weight: 700; width: 100%; justify-content: center; height: 40px; border-radius: 8px;" onclick="document.getElementById('negotiation-modal-overlay').classList.remove('active'); openCreateOrderModal('${mock.id}')">
-              Confirm Deal & Place Escrow Order →
+              ${t('buyer.confirmDealPlaceOrder', 'Confirm Deal & Place Escrow Order →')}
             </button>
           </div>
         ` : `
           <div style="border-top: 1px solid #EEE; padding-top: 14px;">
-            <h4 style="font-size: 13px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 8px 0;">Send Counter Offer</h4>
+            <h4 style="font-size: 13px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 8px 0;">${t('buyer.sendCounterOffer', 'Send Counter Offer')}</h4>
             <div style="display: flex; gap: 8px;">
-              <input type="number" id="co-price" class="dash-form-input" value="${mock.currentBuyerOffer}" placeholder="Counter Price (₹/q)" style="flex: 1;">
+              <input type="number" id="co-price" class="dash-form-input" value="${mock.currentBuyerOffer}" placeholder="${t('buyer.counterPricePlaceholder', 'Counter Price (₹/q)')}" style="flex: 1;">
               <button class="btn btn--primary" style="background: #12372A; font-weight: 700; border-radius: 8px;" onclick="submitCounterOffer('${mock.id}')">
-                Send Counter Offer
+                ${t('buyer.sendCounterOffer', 'Send Counter Offer')}
               </button>
             </div>
           </div>
@@ -1562,14 +1576,14 @@ function submitCounterOffer(inquiryId) {
   const priceInput = document.getElementById('co-price');
   const p = parseFloat(priceInput?.value);
   if (!p || p <= 0) {
-    alert('Please enter a valid counter price.');
+    alert(t('validation.invalidAmount', 'Please enter a valid counter price.'));
     return;
   }
   const inq = window.INITIAL_OFFERS_DATA?.find(o => o.id === inquiryId);
   if (inq) {
     inq.currentBuyerOffer = p;
     inq.history.push({ party: 'Buyer', price: p, note: 'Revised procurement counter-offer' });
-    showToast(`Counter offer of ₹${p}/q submitted to seller`, 'success');
+    showToast(`${t('buyer.sendCounterOffer', 'Counter offer')} ₹${p}/q ${t('success.saved', 'submitted to seller')}`, 'success');
     openNegotiationModal(inquiryId);
   }
 }
@@ -1578,12 +1592,12 @@ function openCreateOrderModal(inquiryId) {
   if (window.offerService) {
     const res = window.offerService.acceptOffer(inquiryId);
     if (res && res.order) {
-      showToast(`Escrow order created: #${res.order.id}`, 'success');
+      showToast(`${t('buyer.orderHash', 'Escrow order created:')} #${res.order.id}`, 'success');
       window.location.hash = '#/buyer/orders';
       return;
     }
   }
-  showToast('Procurement order placed with Escrow protection.', 'success');
+  showToast(t('buyer.offerAcceptedNoticeSub', 'Procurement order placed with Escrow protection.'), 'success');
   window.location.hash = '#/buyer/orders';
 }
 
@@ -1596,13 +1610,13 @@ async function renderOrdersView(container) {
       <!-- Standardized Orders Header -->
       <div class="buyer-page-header">
         <div class="buyer-page-header__left">
-          <span class="buyer-page-header__eyebrow">Fulfillment & Logistics</span>
-          <h1 class="buyer-page-header__title">My Orders</h1>
-          <p class="buyer-page-header__desc">Track every procurement from confirmation to delivery.</p>
+          <span class="buyer-page-header__eyebrow">${t('buyer.fulfillmentLogistics', 'Fulfillment & Logistics')}</span>
+          <h1 class="buyer-page-header__title">${t('buyer.myOrders', 'My Orders')}</h1>
+          <p class="buyer-page-header__desc">${t('buyer.myOrdersSub', 'Track every procurement from confirmation to delivery.')}</p>
         </div>
         <div class="buyer-page-header__actions">
           <a href="#/buyer/marketplace" class="btn btn--primary btn--sm">
-            <i data-lucide="store"></i> Browse Marketplace
+            <i data-lucide="store"></i> ${t('buyer.browseMarketplace', 'Browse Marketplace')}
           </a>
         </div>
       </div>
@@ -1610,16 +1624,16 @@ async function renderOrdersView(container) {
       <!-- Professional Segmented Status Tabs -->
       <div class="kl-segmented-tabs" id="orders-segmented-tabs">
         <button class="kl-segmented-tab ${currentOrderFilter === 'all' ? 'active' : ''}" data-status="all">
-          All Orders <span class="kl-tab-badge" id="tab-badge-all">-</span>
+          ${t('buyer.allOrdersTab', 'All Orders')} <span class="kl-tab-badge" id="tab-badge-all">-</span>
         </button>
         <button class="kl-segmented-tab ${currentOrderFilter === 'CONFIRMED' ? 'active' : ''}" data-status="CONFIRMED">
-          Confirmed <span class="kl-tab-badge" id="tab-badge-confirmed">-</span>
+          ${t('buyer.confirmedTab', 'Confirmed')} <span class="kl-tab-badge" id="tab-badge-confirmed">-</span>
         </button>
         <button class="kl-segmented-tab ${currentOrderFilter === 'IN_TRANSIT' ? 'active' : ''}" data-status="IN_TRANSIT">
-          In Transit <span class="kl-tab-badge" id="tab-badge-transit">-</span>
+          ${t('buyer.inTransitTab', 'In Transit')} <span class="kl-tab-badge" id="tab-badge-transit">-</span>
         </button>
         <button class="kl-segmented-tab ${currentOrderFilter === 'DELIVERED' ? 'active' : ''}" data-status="DELIVERED">
-          Delivered <span class="kl-tab-badge" id="tab-badge-delivered">-</span>
+          ${t('buyer.deliveredTab', 'Delivered')} <span class="kl-tab-badge" id="tab-badge-delivered">-</span>
         </button>
       </div>
 
@@ -1627,14 +1641,14 @@ async function renderOrdersView(container) {
       <div style="background: #FFFFFF; border: 1px solid var(--kl-border); border-radius: 10px; padding: 8px 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 240px;">
           <i data-lucide="search" style="color: var(--kl-muted); width: 16px; height: 16px;"></i>
-          <input type="text" id="order-search-input" class="buyer-market-search-input" placeholder="Search order ID, produce, or seller..." value="${currentOrderSearch}">
+          <input type="text" id="order-search-input" class="buyer-market-search-input" placeholder="${t('buyer.searchOrdersPlaceholder', 'Search order ID, produce, or seller...')}" value="${currentOrderSearch}">
         </div>
 
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 12px; color: var(--kl-muted); font-weight: 600; white-space: nowrap;">Sort:</span>
+          <span style="font-size: 12px; color: var(--kl-muted); font-weight: 600; white-space: nowrap;">${t('buyer.sortLabel', 'Sort:')}</span>
           <select id="order-sort-select" style="border: 1px solid var(--kl-border); border-radius: 6px; font-size: 12px; padding: 4px 8px; background: #FAF9F5; outline: none; font-weight: 600; color: var(--kl-evergreen); cursor: pointer;">
-            <option value="newest" ${currentOrderSort === 'newest' ? 'selected' : ''}>Newest</option>
-            <option value="oldest" ${currentOrderSort === 'oldest' ? 'selected' : ''}>Oldest</option>
+            <option value="newest" ${currentOrderSort === 'newest' ? 'selected' : ''}>${t('buyer.sortNewest', 'Newest')}</option>
+            <option value="oldest" ${currentOrderSort === 'oldest' ? 'selected' : ''}>${t('common.previous', 'Oldest')}</option>
           </select>
         </div>
       </div>
@@ -1642,7 +1656,7 @@ async function renderOrdersView(container) {
       <div id="buyer-orders-list">
         <div style="padding: 48px; text-align: center; color: var(--kl-muted);">
           <div class="spinner" style="margin: 0 auto 12px auto;"></div>
-          Loading orders...
+          ${t('common.loading', 'Loading orders...')}
         </div>
       </div>
     </div>
@@ -1686,7 +1700,7 @@ async function renderOrdersView(container) {
       list.innerHTML = `
         <div style="padding: 48px; text-align: center; color: var(--ks-text-muted);">
           <div class="spinner" style="margin: 0 auto 12px auto; width: 28px; height: 28px; border: 3px solid #E5E4DD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-          Loading orders...
+          ${t('common.loading', 'Loading orders...')}
         </div>
       `;
 
@@ -1713,11 +1727,11 @@ async function renderOrdersView(container) {
         list.innerHTML = `
           <div class="kl-compact-empty-state" style="border: 1px dashed #E5E4DD; background: #FAF9F5; border-radius: 12px; padding: 48px 24px; text-align: center;">
             <div class="kl-compact-empty-icon" style="font-size: 36px; margin-bottom: 12px;">⚠️</div>
-            <div class="kl-compact-empty-title" style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 6px;">Unable to load orders</div>
-            <div class="kl-compact-empty-desc" style="font-size: 13px; color: #666; max-width: 420px; margin: 0 auto 16px auto;">We could not retrieve your orders at this time. Please check your connection and try again.</div>
+            <div class="kl-compact-empty-title" style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 6px;">${t('errors.loadFailed', 'Unable to load orders')}</div>
+            <div class="kl-compact-empty-desc" style="font-size: 13px; color: #666; max-width: 420px; margin: 0 auto 16px auto;">${t('errors.tryAgain', 'We could not retrieve your orders at this time. Please check your connection and try again.')}</div>
             <div style="display: flex; gap: 10px; justify-content: center;">
-              <button class="btn btn--primary btn--sm" onclick="fetchOrders()" style="background: #12372A;">Try Again</button>
-              <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm" style="text-decoration: none;">Browse Marketplace</a>
+              <button class="btn btn--primary btn--sm" onclick="fetchOrders()" style="background: #12372A;">${t('common.refresh', 'Try Again')}</button>
+              <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm" style="text-decoration: none;">${t('buyer.browseMarketplace', 'Browse Marketplace')}</a>
             </div>
           </div>
         `;
@@ -1786,7 +1800,7 @@ async function renderOrdersView(container) {
             <!-- Header Row -->
             <div class="kl-order-card-header">
               <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-family: monospace; font-size: 13.5px; font-weight: 800; color: var(--ks-evergreen);">ORDER #${id.toUpperCase().replace('ORD-', 'KS-')}</span>
+                <span style="font-family: monospace; font-size: 13.5px; font-weight: 800; color: var(--ks-evergreen);">${t('buyer.orderHash', 'ORDER #')}${id.toUpperCase().replace('ORD-', 'KS-')}</span>
                 <span style="background: ${s.bg}; color: ${s.color}; padding: 3px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 800; text-transform: uppercase;">
                   ${s.text}
                 </span>
@@ -1795,36 +1809,36 @@ async function renderOrdersView(container) {
                 </span>
               </div>
               <div style="font-size: 12px; color: #777;">
-                Ordered: ${orderedAt.toString().split('T')[0].split(' ')[0]}
+                ${t('buyer.orderedAt', 'Ordered:')} ${orderedAt.toString().split('T')[0].split(' ')[0]}
               </div>
             </div>
 
             <!-- Content Grid -->
             <div class="kl-order-grid-3col">
               <div>
-                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 2px;">Produce Sourced</div>
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 2px;">${t('buyer.produceSourced', 'Produce Sourced')}</div>
                 <div style="font-size: 15px; font-weight: 800; color: #12372A;">${crop} <span style="font-size: 13px; font-weight: 500; color: #666;">(${variety})</span></div>
-                <div style="font-size: 12px; color: #666; margin-top: 2px;">Seller: <strong>${sellerName}</strong></div>
+                <div style="font-size: 12px; color: #666; margin-top: 2px;">${t('buyer.sellerLabel', 'Seller:')} <strong>${sellerName}</strong></div>
               </div>
 
               <div>
-                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 2px;">Quantity & Value</div>
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 2px;">${t('buyer.qtyAndValue', 'Quantity & Value')}</div>
                 <div style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen);">₹${grandTotal.toLocaleString('en-IN')}</div>
-                <div style="font-size: 12px; color: #666; margin-top: 2px;">Volume: <strong>${quantity} quintals</strong> (@ ₹${pricePerQ}/q)</div>
+                <div style="font-size: 12px; color: #666; margin-top: 2px;">${t('buyer.volumeLabel', 'Volume:')} <strong>${quantity} quintals</strong> (@ ₹${pricePerQ}/q)</div>
               </div>
 
               <div>
-                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 2px;">Delivery Destination</div>
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 2px;">${t('buyer.deliveryDest', 'Delivery Destination')}</div>
                 <div style="font-size: 12.5px; font-weight: 600; color: #333;">${deliveryAddress}</div>
-                <div style="font-size: 11.5px; color: #155E75; margin-top: 2px; font-weight: 600;">Status: ${logisticsStatus}</div>
+                <div style="font-size: 11.5px; color: #155E75; margin-top: 2px; font-weight: 600;">${t('buyer.statusCol', 'Status:')} ${logisticsStatus}</div>
               </div>
 
               <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-end;">
                 <button class="btn btn--secondary btn--sm" style="border-radius: 6px; font-size: 12px; padding: 6px 14px;" onclick="openOrderTrackingModal('${id}')">
-                  View Order
+                  ${t('buyer.viewOrder', 'View Order')}
                 </button>
                 <button class="btn btn--primary btn--sm" style="background: #12372A; border-radius: 6px; font-size: 12px; padding: 6px 14px;" onclick="openOrderTrackingModal('${id}')">
-                  Track
+                  ${t('buyer.trackBtn', 'Track')}
                 </button>
               </div>
             </div>
@@ -1835,10 +1849,10 @@ async function renderOrdersView(container) {
       list.innerHTML = `
         <div class="kl-compact-empty-state" style="border: 1px dashed #E5E4DD; background: #FAF9F5; border-radius: 12px; padding: 48px 24px; text-align: center;">
           <div class="kl-compact-empty-icon" style="font-size: 40px; margin-bottom: 12px;">📦</div>
-          <div class="kl-compact-empty-title" style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 6px;">No Orders Yet</div>
-          <div class="kl-compact-empty-desc" style="font-size: 13px; color: #666; max-width: 440px; margin: 0 auto 18px auto;">Your confirmed purchases and active shipments will appear here.</div>
+          <div class="kl-compact-empty-title" style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 6px;">${t('buyer.noOrdersYet', 'No Orders Yet')}</div>
+          <div class="kl-compact-empty-desc" style="font-size: 13px; color: #666; max-width: 440px; margin: 0 auto 18px auto;">${t('buyer.noOrdersYetDesc', 'Your confirmed purchases and active shipments will appear here.')}</div>
           <a href="#/buyer/marketplace" class="btn btn--primary btn--sm" style="text-decoration: none; background: #12372A; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
-            <i data-lucide="store"></i> Browse Marketplace
+            <i data-lucide="store"></i> ${t('buyer.browseMarketplace', 'Browse Marketplace')}
           </a>
         </div>
       `;
@@ -1846,9 +1860,9 @@ async function renderOrdersView(container) {
       list.innerHTML = `
         <div class="kl-compact-empty-state" style="border: 1px dashed #E5E4DD; background: #FAF9F5; border-radius: 12px; padding: 36px 24px; text-align: center;">
           <div class="kl-compact-empty-icon" style="font-size: 32px; margin-bottom: 8px;">🔍</div>
-          <div class="kl-compact-empty-title" style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 4px;">No matching orders</div>
+          <div class="kl-compact-empty-title" style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 4px;">${t('buyer.noMatchingOrders', 'No matching orders')}</div>
           <div class="kl-compact-empty-desc" style="font-size: 13px; color: #666; margin-bottom: 14px;">No orders found with status '${currentOrderFilter}'.</div>
-          <button class="btn btn--secondary btn--sm" onclick="currentOrderFilter='all'; fetchOrders();">Show All Orders</button>
+          <button class="btn btn--secondary btn--sm" onclick="currentOrderFilter='all'; fetchOrders();">${t('buyer.showAllOrders', 'Show All Orders')}</button>
         </div>
       `;
     }
@@ -1876,23 +1890,23 @@ function openOrderTrackingModal(orderId) {
     <div class="dash-modal" style="max-width: 660px; max-height: 90vh; overflow-y: auto;">
       <div class="dash-modal__header">
         <div>
-          <h3 style="margin: 0; font-size: 18px;">Order #KS-${order.id.replace('ord-', '')}</h3>
-          <span style="font-size: 12px; color: var(--ks-text-muted);">Status: ${order.status} • Order Date: ${order.orderedAt}</span>
+          <h3 style="margin: 0; font-size: 18px;">${t('buyer.orderHash', 'Order #')}KS-${order.id.replace('ord-', '')}</h3>
+          <span style="font-size: 12px; color: var(--ks-text-muted);">${t('buyer.statusCol', 'Status')}: ${order.status} • ${t('buyer.orderedAt', 'Order Date:')} ${order.orderedAt}</span>
         </div>
         <button class="dash-modal__close" onclick="document.getElementById('order-tracking-modal-overlay').classList.remove('active')"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad" style="padding: 20px 22px;">
         <!-- Visual Progress Tracker -->
-        <h4 style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #718E68; margin: 0 0 10px 0;">Order Progress</h4>
+        <h4 style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #718E68; margin: 0 0 10px 0;">${t('buyer.orderProgress', 'Order Progress')}</h4>
         <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px;">
-          ${(order.timeline || []).map(t => `
-            <div style="display: flex; align-items: center; gap: 10px; padding: 7px 12px; background: ${t.done ? '#FAF9F5' : '#FFFFFF'}; border-radius: 6px; border-left: 3px solid ${t.done ? '#12372A' : '#DDD'};">
-              <span style="width: 20px; height: 20px; border-radius: 50%; background: ${t.done ? '#12372A' : '#EEE'}; color: ${t.done ? '#FFF' : '#777'}; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700;">
-                ${t.done ? '✓' : '○'}
+          ${(order.timeline || []).map(tItem => `
+            <div style="display: flex; align-items: center; gap: 10px; padding: 7px 12px; background: ${tItem.done ? '#FAF9F5' : '#FFFFFF'}; border-radius: 6px; border-left: 3px solid ${tItem.done ? '#12372A' : '#DDD'};">
+              <span style="width: 20px; height: 20px; border-radius: 50%; background: ${tItem.done ? '#12372A' : '#EEE'}; color: ${tItem.done ? '#FFF' : '#777'}; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700;">
+                ${tItem.done ? '✓' : '○'}
               </span>
               <div style="flex: 1; display: flex; justify-content: space-between;">
-                <span style="font-size: 12.5px; font-weight: ${t.done ? '700' : '400'}; color: ${t.done ? '#12372A' : '#777'};">${t.label}</span>
-                <span style="font-size: 11px; color: ${t.done ? '#5B9A72' : '#999'}; font-weight: 600;">${t.time}</span>
+                <span style="font-size: 12.5px; font-weight: ${tItem.done ? '700' : '400'}; color: ${tItem.done ? '#12372A' : '#777'};">${tItem.label}</span>
+                <span style="font-size: 11px; color: ${tItem.done ? '#5B9A72' : '#999'}; font-weight: 600;">${tItem.time}</span>
               </div>
             </div>
           `).join('')}
@@ -1901,22 +1915,22 @@ function openOrderTrackingModal(orderId) {
         <!-- Order & Financial Summary -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
           <div style="background: #FAF8F5; border: 1px solid #EAE6DF; border-radius: 10px; padding: 12px 14px;">
-            <div style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: #777; margin-bottom: 4px;">Produce Details</div>
+            <div style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: #777; margin-bottom: 4px;">${t('buyer.produceDetails', 'Produce Details')}</div>
             <div style="font-size: 13.5px; font-weight: 700; color: #12372A;">${order.crop} (${order.variety})</div>
-            <div style="font-size: 12px; color: #666; margin-top: 2px;">Volume: <strong>${order.quantity} quintals</strong> @ ₹${order.pricePerQ}/q</div>
-            <div style="font-size: 11.5px; color: #666; margin-top: 2px;">Seller: <strong>${order.sellerName}</strong></div>
+            <div style="font-size: 12px; color: #666; margin-top: 2px;">${t('buyer.volumeLabel', 'Volume:')} <strong>${order.quantity} quintals</strong> @ ₹${order.pricePerQ}/q</div>
+            <div style="font-size: 11.5px; color: #666; margin-top: 2px;">${t('buyer.sellerLabel', 'Seller:')} <strong>${order.sellerName}</strong></div>
           </div>
 
           <div style="background: #FAF8F5; border: 1px solid #EAE6DF; border-radius: 10px; padding: 12px 14px;">
-            <div style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: #777; margin-bottom: 4px;">Payment Breakdown</div>
+            <div style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: #777; margin-bottom: 4px;">${t('buyer.paymentBreakdown', 'Payment Breakdown')}</div>
             <div style="font-size: 12px; color: #555; display: flex; justify-content: space-between;">
-              <span>Subtotal:</span> <span>₹${order.productTotal?.toLocaleString('en-IN')}</span>
+              <span>${t('buyer.subtotal', 'Subtotal:')}</span> <span>₹${order.productTotal?.toLocaleString('en-IN')}</span>
             </div>
             <div style="font-size: 12px; color: #555; display: flex; justify-content: space-between;">
-              <span>Transport:</span> <span>₹${order.transportCost?.toLocaleString('en-IN')}</span>
+              <span>${t('buyer.transport', 'Transport:')}</span> <span>₹${order.transportCost?.toLocaleString('en-IN')}</span>
             </div>
             <div style="font-size: 13px; font-weight: 800; color: var(--ks-evergreen); border-top: 1px dashed #DDD; padding-top: 4px; margin-top: 3px; display: flex; justify-content: space-between;">
-              <span>Grand Total:</span> <span>₹${order.grandTotal?.toLocaleString('en-IN')}</span>
+              <span>${t('buyer.grandTotal', 'Grand Total:')}</span> <span>₹${order.grandTotal?.toLocaleString('en-IN')}</span>
             </div>
           </div>
         </div>
@@ -1925,29 +1939,30 @@ function openOrderTrackingModal(orderId) {
         ${order.logistics ? `
           <div style="background: #F5F4ED; border-radius: 10px; padding: 12px 16px; margin-bottom: 18px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <strong style="color: var(--ks-evergreen); font-size: 13px;"><i data-lucide="truck"></i> Carrier Fleet: KrishiExpress</strong>
+              <strong style="color: var(--ks-evergreen); font-size: 13px;"><i data-lucide="truck"></i> ${t('buyer.carrierFleet', 'Carrier Fleet: KrishiExpress')}</strong>
               <span style="background: #E5F0E7; color: #12372A; padding: 2px 7px; border-radius: 4px; font-weight: 700; font-size: 10px;">${order.logistics.status}</span>
             </div>
             <div style="font-size: 12px; color: #555;">
-              Driver: <strong>${order.logistics.driverName} (${order.logistics.driverPhone})</strong> • Vehicle: <strong>${order.logistics.truckNumber}</strong>
+              ${t('buyer.driver', 'Driver:')} <strong>${order.logistics.driverName} (${order.logistics.driverPhone})</strong> • ${t('buyer.vehicle', 'Vehicle:')} <strong>${order.logistics.truckNumber}</strong>
             </div>
             <div style="font-size: 12px; color: #555; margin-top: 2px;">
-              Destination: <strong>${order.deliveryAddress}</strong> (ETA: ${order.logistics.eta})
+              ${t('buyer.destination', 'Destination:')} <strong>${order.deliveryAddress}</strong> (ETA: ${order.logistics.eta})
             </div>
           </div>
         ` : ''}
 
         <!-- Quality Inspection Release Action -->
         <div style="background: #FAF8F5; border: 1px solid #E5E4DD; border-radius: 10px; padding: 14px; text-align: center;">
-          <div style="font-size: 13px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 3px;">Quality Inspection & Escrow Release</div>
-          <p style="font-size: 12px; color: #666; margin: 0 0 10px 0;">Upon unloading and verifying produce quality at your warehouse, release escrow payment to the farmer.</p>
+          <div style="font-size: 13px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 3px;">${t('buyer.qualityInspectionRelease', 'Quality Inspection & Escrow Release')}</div>
+          <p style="font-size: 12px; color: #666; margin: 0 0 10px 0;">${t('buyer.qualityInspectionReleaseDesc', 'Upon unloading and verifying produce quality at your warehouse, release escrow payment to the farmer.')}</p>
           <button class="btn btn--primary" style="background: #12372A; color: #FFFFFF; font-weight: 700; width: 100%; justify-content: center; height: 38px; border-radius: 8px; font-size: 13px;" onclick="confirmReleaseEscrow('${order.id}')">
-            <i data-lucide="check-circle"></i> Confirm Quality & Release Escrow Payment
+            <i data-lucide="check-circle"></i> ${t('buyer.confirmQualityReleaseEscrow', 'Confirm Quality & Release Escrow Payment')}
           </button>
         </div>
       </div>
     </div>
   `;
+
   overlay.classList.add('active');
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
@@ -1958,7 +1973,7 @@ function confirmReleaseEscrow(orderId) {
   if (window.orderService) {
     window.orderService.confirmQualityAndRelease(orderId);
   }
-  showToast(`Quality inspection approved for Order ${orderId}. Escrow funds released to farmer.`, 'success');
+  showToast(`${t('buyer.qualityInspectionRelease', 'Quality inspection approved')} for Order ${orderId}. ${t('buyer.escrowFundsSecured', 'Escrow funds released to farmer.')}`, 'success');
   const overlay = document.getElementById('order-tracking-modal-overlay');
   if (overlay) overlay.classList.remove('active');
   renderOrdersView(document.getElementById('buyer-page-content'));
@@ -2030,22 +2045,22 @@ async function renderDirectoryView(container) {
     <div class="buyer-view">
       <div class="buyer-page-header">
         <div class="buyer-page-header__left">
-          <span class="buyer-page-header__eyebrow">Supplier Network</span>
-          <h1 class="buyer-page-header__title">Find Trusted Sellers</h1>
-          <p class="buyer-page-header__desc">Connect directly with verified individual farmers and farmer producer cooperatives for contract sourcing.</p>
+          <span class="buyer-page-header__eyebrow">${t('buyer.supplierNetwork', 'Supplier Network')}</span>
+          <h1 class="buyer-page-header__title">${t('buyer.findTrustedSellers', 'Find Trusted Sellers')}</h1>
+          <p class="buyer-page-header__desc">${t('buyer.findTrustedSellersDesc', 'Connect directly with verified individual farmers and farmer producer cooperatives for contract sourcing.')}</p>
         </div>
       </div>
 
       <!-- Filter Controls Bar -->
       <div style="background: #FFFFFF; border: 1px solid var(--kl-border); border-radius: 12px; padding: 12px 16px; margin-bottom: 22px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-        <input type="text" id="dir-filter-search" class="dash-form-input" placeholder="Search by farmer name, FPO, district, or crop..." style="flex: 2; min-width: 220px; background: transparent;">
+        <input type="text" id="dir-filter-search" class="dash-form-input" placeholder="${t('buyer.searchDirectoryPlaceholder', 'Search by farmer name, FPO, district, or crop...')}" style="flex: 2; min-width: 220px; background: transparent;">
         <select id="dir-filter-type" class="kl-filter-select-b2b" style="flex: 1; min-width: 160px;">
-          <option value="all">All Organization Types</option>
-          <option value="FPO">Farmer Producer Orgs (FPOs)</option>
-          <option value="Farmer">Individual Farmers</option>
+          <option value="all">${t('buyer.allOrgTypes', 'All Organization Types')}</option>
+          <option value="FPO">${t('buyer.fpoCoops', 'Farmer Producer Orgs (FPOs)')}</option>
+          <option value="Farmer">${t('buyer.individualFarmers', 'Individual Farmers')}</option>
         </select>
         <button class="btn btn--primary" id="btn-apply-dir-filter" style="white-space: nowrap;">
-          <i data-lucide="search"></i> Search Directory
+          <i data-lucide="search"></i> ${t('buyer.searchDirectory', 'Search Directory')}
         </button>
       </div>
 
@@ -2088,7 +2103,7 @@ async function renderDirectoryView(container) {
                 ${d.type}
               </span>
               <span style="font-size: 11.5px; color: var(--kl-sage); font-weight: 700; display: flex; align-items: center; gap: 4px;">
-                ✓ Verified Supplier
+                ${t('buyer.verifiedSupplier', '✓ Verified Supplier')}
               </span>
             </div>
 
@@ -2096,12 +2111,12 @@ async function renderDirectoryView(container) {
             <div style="font-size: 12px; color: var(--kl-muted); margin-bottom: 10px;"><i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle;"></i> ${d.location}</div>
 
             <div style="background: #FAF8F5; border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; font-size: 12px; color: var(--kl-text-body); border: 1px solid var(--kl-border-subtle);">
-              <div style="margin-bottom: 2px;"><strong>Member Base:</strong> ${d.farmersCount} Farmers • Est. ${d.established}</div>
-              <div><strong>Annual Capacity:</strong> ${d.annualVolume}</div>
+              <div style="margin-bottom: 2px;"><strong>${t('buyer.memberBase', 'Member Base:')}</strong> ${d.farmersCount} ${t('buyer.farmersCount', 'Farmers')} • ${t('buyer.estYear', 'Est.')} ${d.established}</div>
+              <div><strong>${t('buyer.annualCapacity', 'Annual Capacity:')}</strong> ${d.annualVolume}</div>
             </div>
 
             <div style="margin-bottom: 14px;">
-              <div style="font-size: 10.5px; font-weight: 700; color: var(--kl-muted); text-transform: uppercase; margin-bottom: 5px;">Crops Cultivated:</div>
+              <div style="font-size: 10.5px; font-weight: 700; color: var(--kl-muted); text-transform: uppercase; margin-bottom: 5px;">${t('buyer.cropsCultivated', 'Crops Cultivated:')}</div>
               <div style="display: flex; gap: 5px; flex-wrap: wrap;">
                 ${d.crops.map(c => `
                   <span style="background: #FAF9F5; border: 1px solid var(--kl-border); color: var(--kl-charcoal); font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600;">${c}</span>
@@ -2112,10 +2127,10 @@ async function renderDirectoryView(container) {
 
           <div style="border-top: 1px solid var(--kl-border-subtle); padding-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
             <a href="#/buyer/marketplace" class="btn btn--secondary btn--sm">
-              View Profile
+              ${t('buyer.viewProfileBtn', 'View Profile')}
             </a>
             <button class="btn btn--primary btn--sm" onclick="window.location.hash='#/buyer/marketplace'; showToast('Opening produce lots for ${d.name}');">
-              Send Inquiry →
+              ${t('buyer.sendInquiryBtn', 'Send Inquiry →')}
             </button>
           </div>
         </div>
@@ -2124,8 +2139,8 @@ async function renderDirectoryView(container) {
       grid.innerHTML = `
         <div class="kl-compact-empty-state" style="grid-column: 1 / -1;">
           <div class="kl-compact-empty-icon">👥</div>
-          <div class="kl-compact-empty-title">No sellers found</div>
-          <div class="kl-compact-empty-desc">Try adjusting your search query or organization filter.</div>
+          <div class="kl-compact-empty-title">${t('buyer.noSellersFound', 'No sellers found')}</div>
+          <div class="kl-compact-empty-desc">${t('buyer.noSellersFoundDesc', 'Try adjusting your search query or organization filter.')}</div>
         </div>
       `;
     }
@@ -2150,26 +2165,26 @@ async function renderLogisticsView(container) {
     <div class="buyer-view" style="padding-top: 24px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
         <div>
-          <h1 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 3px 0;">Logistics & Fleet Dispatch</h1>
-          <p style="font-size: 13.5px; color: #666; margin: 0;">Real-time transit telemetry and delivery schedules for confirmed procurement contracts</p>
+          <h1 style="font-size: 22px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 3px 0;">${t('buyer.logisticsFleetDispatch', 'Logistics & Fleet Dispatch')}</h1>
+          <p style="font-size: 13.5px; color: #666; margin: 0;">${t('buyer.logisticsFleetDispatchDesc', 'Real-time transit telemetry and delivery schedules for confirmed procurement contracts')}</p>
         </div>
         <div style="display: flex; gap: 8px;">
-          <a href="#/buyer/orders" class="btn btn--secondary btn--sm" style="text-decoration: none;"><i data-lucide="package"></i> View Orders</a>
+          <a href="#/buyer/orders" class="btn btn--secondary btn--sm" style="text-decoration: none;"><i data-lucide="package"></i> ${t('buyer.viewOrders', 'View Orders')}</a>
         </div>
       </div>
 
       <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 22px;">
-        <h3 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 14px 0;">Active Shipments & Fleet Telemetry</h3>
+        <h3 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 14px 0;">${t('buyer.activeShipmentsFleet', 'Active Shipments & Fleet Telemetry')}</h3>
         <div style="overflow-x: auto;">
           <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
             <thead>
               <tr style="border-bottom: 2px solid #E5E4DD; text-align: left; color: #777; font-size: 11px; text-transform: uppercase; background: #FAF9F5;">
-                <th style="padding: 10px 12px;">Order ID</th>
-                <th style="padding: 10px 12px;">Produce & Quantity</th>
-                <th style="padding: 10px 12px;">Supplier / Origin</th>
-                <th style="padding: 10px 12px;">Destination Warehouse</th>
-                <th style="padding: 10px 12px;">Logistics Status</th>
-                <th style="padding: 10px 12px; text-align: right;">Action</th>
+                <th style="padding: 10px 12px;">${t('buyer.orderHash', 'Order ID')}</th>
+                <th style="padding: 10px 12px;">${t('buyer.produceSourced', 'Produce & Quantity')}</th>
+                <th style="padding: 10px 12px;">${t('buyer.sellerLabel', 'Supplier / Origin')}</th>
+                <th style="padding: 10px 12px;">${t('buyer.deliveryDest', 'Destination Warehouse')}</th>
+                <th style="padding: 10px 12px;">${t('buyer.statusCol', 'Logistics Status')}</th>
+                <th style="padding: 10px 12px; text-align: right;">${t('buyer.actionCol', 'Action')}</th>
               </tr>
             </thead>
             <tbody>
@@ -2220,13 +2235,13 @@ async function renderPaymentsView(container) {
     <div class="buyer-view">
       <div class="buyer-page-header">
         <div class="buyer-page-header__left">
-          <span class="buyer-page-header__eyebrow">Financial Security</span>
-          <h1 class="buyer-page-header__title">Escrow & Settlement Ledger</h1>
-          <p class="buyer-page-header__desc">Secured B2B smart contract escrow accounts for zero-risk produce procurement.</p>
+          <span class="buyer-page-header__eyebrow">${t('buyer.financialSecurity', 'Financial Security')}</span>
+          <h1 class="buyer-page-header__title">${t('buyer.escrowSettlementLedger', 'Escrow & Settlement Ledger')}</h1>
+          <p class="buyer-page-header__desc">${t('buyer.escrowSettlementLedgerDesc', 'Secured B2B smart contract escrow accounts for zero-risk produce procurement.')}</p>
         </div>
         <div class="buyer-page-header__actions">
           <button class="btn btn--primary btn--sm" onclick="openDepositModal()">
-            <i data-lucide="plus-circle"></i> Top-up Escrow Allocation
+            <i data-lucide="plus-circle"></i> ${t('buyer.topupEscrow', 'Top-up Escrow Allocation')}
           </button>
         </div>
       </div>
@@ -2234,42 +2249,42 @@ async function renderPaymentsView(container) {
       <div class="buyer-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 22px;">
         <div class="buyer-stat-card">
           <div class="buyer-stat-card__top">
-            <div class="buyer-stat-card__label">Locked in Active Escrow</div>
+            <div class="buyer-stat-card__label">${t('buyer.lockedInActiveEscrow', 'Locked in Active Escrow')}</div>
             <span class="buyer-stat-card__icon" style="background: #FEF3C7; color: #92400E;"><i data-lucide="lock"></i></span>
           </div>
           <div class="buyer-stat-card__val" style="color: #92400E;">${summary.pendingEscrow}</div>
-          <div class="buyer-stat-card__sub" style="color: #92400E; font-weight: 600;">Protected for active orders</div>
+          <div class="buyer-stat-card__sub" style="color: #92400E; font-weight: 600;">${t('buyer.protectedActiveOrders', 'Protected for active orders')}</div>
         </div>
         <div class="buyer-stat-card">
           <div class="buyer-stat-card__top">
-            <div class="buyer-stat-card__label">Released & Settled</div>
+            <div class="buyer-stat-card__label">${t('buyer.releasedSettled', 'Released & Settled')}</div>
             <span class="buyer-stat-card__icon" style="background: #E8F5EC; color: #0D4435;"><i data-lucide="check-circle-2"></i></span>
           </div>
           <div class="buyer-stat-card__val" style="color: var(--kl-evergreen);">${summary.paidCompleted}</div>
-          <div class="buyer-stat-card__sub" style="color: #059669; font-weight: 600;">Completed farmer payouts</div>
+          <div class="buyer-stat-card__sub" style="color: #059669; font-weight: 600;">${t('buyer.completedFarmerPayouts', 'Completed farmer payouts')}</div>
         </div>
         <div class="buyer-stat-card">
           <div class="buyer-stat-card__top">
-            <div class="buyer-stat-card__label">Total Procurement Budget</div>
+            <div class="buyer-stat-card__label">${t('buyer.totalProcurementBudget', 'Total Procurement Budget')}</div>
             <span class="buyer-stat-card__icon" style="background: #EEF2FF; color: #4F46E5;"><i data-lucide="wallet"></i></span>
           </div>
           <div class="buyer-stat-card__val" style="color: var(--kl-evergreen);">${summary.totalProcurement}</div>
-          <div class="buyer-stat-card__sub">Current FY Allocation</div>
+          <div class="buyer-stat-card__sub">${t('buyer.currentFyAllocation', 'Current FY Allocation')}</div>
         </div>
       </div>
 
       <div class="buyer-table-card" style="padding: 22px;">
-        <h3 style="font-size: 16px; font-weight: 700; color: var(--kl-evergreen); margin: 0 0 14px 0;">Escrow Transaction History</h3>
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--kl-evergreen); margin: 0 0 14px 0;">${t('buyer.escrowTransactionHistory', 'Escrow Transaction History')}</h3>
         <div style="overflow-x: auto;">
           <table class="buyer-data-table">
             <thead>
               <tr>
                 <th>TRANSACTION / INVOICE</th>
-                <th>DATE</th>
-                <th>SUPPLIER / BENEFICIARY</th>
-                <th>PRODUCE & VOLUME</th>
-                <th>AMOUNT</th>
-                <th>ESCROW STATE</th>
+                <th>${t('common.date', 'DATE')}</th>
+                <th>${t('buyer.sellerLabel', 'SUPPLIER / BENEFICIARY')}</th>
+                <th>${t('buyer.produceSourced', 'PRODUCE & VOLUME')}</th>
+                <th>${t('common.total', 'AMOUNT')}</th>
+                <th>${t('buyer.statusCol', 'ESCROW STATE')}</th>
               </tr>
             </thead>
             <tbody>
@@ -2302,12 +2317,12 @@ async function renderPaymentsView(container) {
 }
 
 function openDepositModal() {
-  const amt = prompt('Enter Escrow Top-up Allocation Amount (₹):', '500000');
+  const amt = prompt(t('buyer.topupEscrow', 'Enter Escrow Top-up Allocation Amount (₹):'), '500000');
   if (amt && Number(amt) > 0) {
     if (window.paymentService) {
       window.paymentService.depositFunds(amt);
     }
-    showToast(`Successfully allocated ₹${Number(amt).toLocaleString('en-IN')} to Escrow Vault`, 'success');
+    showToast(`${t('success.saved', 'Successfully allocated')} ₹${Number(amt).toLocaleString('en-IN')} to Escrow Vault`, 'success');
     renderPaymentsView(document.getElementById('buyer-page-content'));
   }
 }
@@ -2331,26 +2346,26 @@ function renderProfileView(container) {
             <h2 style="font-size: 19px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 3px 0;">${userName} (ABC Foods Pvt Ltd)</h2>
             <div style="font-size: 13px; color: #666; margin-bottom: 5px;">${userEmail} · FMCG & Wholesale Food Processing</div>
             <span style="background: #E5F0E7; color: #12372A; padding: 3px 8px; border-radius: 4px; font-weight: 700; font-size: 11px;">
-              ✓ KYC Verified B2B Procurement Account
+              ${t('buyer.kycVerifiedB2B', '✓ KYC Verified B2B Procurement Account')}
             </span>
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;">
           <div style="background: #FAF9F5; padding: 14px; border-radius: 8px;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 600;">GSTIN Verification</div>
+            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 600;">${t('buyer.gstinVerification', 'GSTIN Verification')}</div>
             <div style="font-size: 13.5px; font-weight: 700; color: var(--ks-evergreen); margin-top: 2px;">27AABCA1234F1ZM (Active)</div>
           </div>
           <div style="background: #FAF9F5; padding: 14px; border-radius: 8px;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 600;">Default Receiving Warehouse</div>
+            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 600;">${t('buyer.defaultWarehouse', 'Default Receiving Warehouse')}</div>
             <div style="font-size: 13.5px; font-weight: 700; color: var(--ks-evergreen); margin-top: 2px;">Chakan MIDC Phase 2, Pune</div>
           </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #E5E4DD; padding-top: 16px; flex-wrap: wrap; gap: 10px;">
-          <a href="#/buyer/dashboard" class="btn btn--secondary btn--sm" style="text-decoration: none;">Back to Command</a>
+          <a href="#/buyer/dashboard" class="btn btn--secondary btn--sm" style="text-decoration: none;">${t('buyer.backToCommand', 'Back to Command')}</a>
           <button class="btn btn--danger btn--sm" style="background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; font-weight: 700; cursor: pointer;" onclick="if (window.Auth && window.Auth.logout) { window.Auth.logout(); } else { localStorage.clear(); window.location.href='login.html'; }">
-            <i data-lucide="log-out"></i> Log Out
+            <i data-lucide="log-out"></i> ${t('common.logout', 'Log Out')}
           </button>
         </div>
       </div>
@@ -2366,10 +2381,10 @@ function renderKycView(container) {
     <div class="buyer-view" style="padding-top: 24px;">
       <div class="kl-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 14px; padding: 28px; max-width: 540px; margin: 0 auto; text-align: center;">
         <div style="font-size: 36px; margin-bottom: 10px;">🛡️</div>
-        <h2 style="font-size: 19px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">AgriStack KYC Verified</h2>
-        <p style="font-size: 13px; color: #666; line-height: 1.45; margin: 0 0 16px 0;">Your business documents, GSTIN registration, and APMC trader licenses are verified for bulk procurement on KrishiShetra.</p>
+        <h2 style="font-size: 19px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">${t('buyer.agristackKycVerified', 'AgriStack KYC Verified')}</h2>
+        <p style="font-size: 13px; color: #666; line-height: 1.45; margin: 0 0 16px 0;">${t('buyer.agristackKycVerifiedDesc', 'Your business documents, GSTIN registration, and APMC trader licenses are verified for bulk procurement on KrishiShetra.')}</p>
         <div style="background: #E5F0E7; color: #12372A; padding: 8px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; display: inline-block;">
-          ✓ Verified Institutional Procurement Account
+          ${t('buyer.verifiedInstitutionalAccount', '✓ Verified Institutional Procurement Account')}
         </div>
       </div>
     </div>
@@ -2384,25 +2399,25 @@ function renderKycView(container) {
 // ═══════════════════════════════════════════════════════════════════════
 function getStatusBadge(status) {
   const map = {
-    pending: { bg: '#FEF3C7', color: '#92400E', border: '#FCD34D', text: 'Pending' },
-    negotiating: { bg: '#EEF2FF', color: '#4F46E5', border: '#C7D2FE', text: 'Negotiating' },
-    accepted: { bg: '#E8F5EC', color: '#0D4435', border: '#A3D9B5', text: 'Accepted' },
-    rejected: { bg: '#FDF0EE', color: '#991B1B', border: '#FECACA', text: 'Rejected' },
-    expired: { bg: '#F1F5F9', color: '#64748B', border: '#CBD5E1', text: 'Expired' },
-    completed: { bg: '#D1FAE5', color: '#065F46', border: '#A7F3D0', text: 'Completed' }
+    pending: { bg: '#FEF3C7', color: '#92400E', border: '#FCD34D', text: t('buyer.statusPending', 'Pending') },
+    negotiating: { bg: '#EEF2FF', color: '#4F46E5', border: '#C7D2FE', text: t('buyer.statusNegotiating', 'Negotiating') },
+    accepted: { bg: '#E8F5EC', color: '#0D4435', border: '#A3D9B5', text: t('buyer.statusAccepted', 'Accepted') },
+    rejected: { bg: '#FDF0EE', color: '#991B1B', border: '#FECACA', text: t('buyer.statusRejected', 'Rejected') },
+    expired: { bg: '#F1F5F9', color: '#64748B', border: '#CBD5E1', text: t('buyer.statusExpired', 'Expired') },
+    completed: { bg: '#D1FAE5', color: '#065F46', border: '#A7F3D0', text: t('buyer.statusCompleted', 'Completed') }
   };
   return map[status] || map.pending;
 }
 
 function getOrderStatusBadge(status) {
   const map = {
-    pending: { bg: '#FEF3C7', color: '#92400E', border: '#FCD34D', text: 'Pending' },
-    confirmed: { bg: '#E8F5EC', color: '#0D4435', border: '#A3D9B5', text: 'Confirmed' },
-    processing: { bg: '#EEF2FF', color: '#4F46E5', border: '#C7D2FE', text: 'Preparing' },
-    ready_for_pickup: { bg: '#FEF3C7', color: '#92400E', border: '#FCD34D', text: 'Ready For Pickup' },
-    in_transit: { bg: '#E0F2FE', color: '#0369A1', border: '#BAE6FD', text: 'In Transit' },
-    delivered: { bg: '#D1FAE5', color: '#065F46', border: '#A7F3D0', text: 'Delivered' },
-    cancelled: { bg: '#FDF0EE', color: '#991B1B', border: '#FECACA', text: 'Cancelled' }
+    pending: { bg: '#FEF3C7', color: '#92400E', border: '#FCD34D', text: t('buyer.statusPending', 'Pending') },
+    confirmed: { bg: '#E8F5EC', color: '#0D4435', border: '#A3D9B5', text: t('buyer.statusConfirmed', 'Confirmed') },
+    processing: { bg: '#EEF2FF', color: '#4F46E5', border: '#C7D2FE', text: t('buyer.statusPreparing', 'Preparing') },
+    ready_for_pickup: { bg: '#FEF3C7', color: '#92400E', border: '#FCD34D', text: t('buyer.statusReadyForPickup', 'Ready For Pickup') },
+    in_transit: { bg: '#E0F2FE', color: '#0369A1', border: '#BAE6FD', text: t('buyer.statusInTransit', 'In Transit') },
+    delivered: { bg: '#D1FAE5', color: '#065F46', border: '#A7F3D0', text: t('buyer.statusDelivered', 'Delivered') },
+    cancelled: { bg: '#FDF0EE', color: '#991B1B', border: '#FECACA', text: t('buyer.statusCancelled', 'Cancelled') }
   };
   return map[status] || map.pending;
 }

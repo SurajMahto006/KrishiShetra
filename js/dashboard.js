@@ -5,6 +5,8 @@
  * Interactive Offer Negotiations, and Complete Responsive Handlers.
  */
 
+const t = (key, fallback) => (window.i18next && typeof window.i18next.t === 'function' ? window.i18next.t(key) || fallback || key : fallback || key);
+
 // ═════════════════════════════════════════════════════════════════════
 // 1. REUSABLE DATA DEFINITIONS (All 15 Crops & Mandis)
 // ═════════════════════════════════════════════════════════════════════
@@ -186,9 +188,36 @@ class KrishiStore {
         { id: 'alt-3', crop: 'Wheat', cropId: 'wheat', price: 2800, market: 'Mumbai APMC', active: false, via: 'SMS' }
       ],
       notifications: [
-        { id: 'n1', title: 'New Buyer Offer Received', desc: 'ABC Foods offered ₹2,950/q for 20q Rice.', time: '10 mins ago', unread: true },
-        { id: 'n2', title: 'Price Spike Alert · Pune', desc: 'Rice APMC rate surged +5.2% today.', time: '2 hours ago', unread: true },
-        { id: 'n3', title: 'Order Payment Processed', desc: '₹43,500 transferred to HDFC A/C **4821.', time: 'Yesterday', unread: false }
+        {
+          id: 'n1',
+          titleKey: 'notifications.offerReceivedTitle',
+          templateKey: 'notifications.offerReceivedDetailed',
+          params: { buyerName: 'ABC Foods', price: 2950, quantity: 20, cropName: 'Rice' },
+          title: 'New Buyer Offer Received',
+          desc: 'ABC Foods offered ₹2,950/q for 20q Rice.',
+          time: '10 mins ago',
+          unread: true
+        },
+        {
+          id: 'n2',
+          titleKey: 'notifications.marketAlertTitle',
+          templateKey: 'notifications.marketAlertDetailed',
+          params: { cropName: 'Rice', mandiName: 'Pune APMC', changePercent: 5.2, price: 3000 },
+          title: 'Price Spike Alert · Pune',
+          desc: 'Rice APMC rate surged +5.2% today.',
+          time: '2 hours ago',
+          unread: true
+        },
+        {
+          id: 'n3',
+          titleKey: 'notifications.paymentUpdateTitle',
+          templateKey: 'notifications.paymentUpdateDetailed',
+          params: { amount: '43,500', orderId: 'ord-10245', accountNumber: 'HDFC A/C **4821' },
+          title: 'Order Payment Processed',
+          desc: '₹43,500 transferred to HDFC A/C **4821.',
+          time: 'Yesterday',
+          unread: false
+        }
       ],
       profile: {
         name: 'Rajesh Patil',
@@ -389,6 +418,7 @@ const forecastService = {
   generate(cropId, mandiName, days = 7) {
     const crop = CROPS_DATA.find(c => c.id === cropId) || CROPS_DATA[0];
     const basePrice = crop.price;
+    const lang = (window.i18next && window.i18next.language) || localStorage.getItem('krishi_lang') || 'en';
 
     // Deterministic realistic variance based on crop and days
     const multiplier = 1 + (crop.change > 0 ? (days * 0.006) : -(days * 0.003));
@@ -411,11 +441,34 @@ const forecastService = {
       reason = `"Institutional procurement bids rising rapidly across regional APMCs. High probability of crossing ₹${expectedPrice}/q."`;
     }
 
+    if (lang === 'hi') {
+      recommendation = isUp ? (changePct > 6 ? '7 दिन रोकें' : '3 दिन रुकें') : 'अभी बेचें';
+      actionBadge = isUp ? (changePct > 6 ? 'रोकें' : 'रुकें') : 'बेचें';
+      if (!isUp) {
+        reason = `"${mandiName} में मंडी आवक तेजी से बढ़ रही है। अभी स्टॉक बेचने से 2-4% संभावित गिरावट से सुरक्षा मिलेगी।"`;
+      } else if (changePct > 6) {
+        reason = `"क्षेत्रीय मंडियों में संस्थागत खरीद बोलियां तेजी से बढ़ रही हैं। भाव ₹${expectedPrice}/क्विंटल पार करने की उच्च संभावना है।"`;
+      } else {
+        reason = `"सुझाव: ${mandiName} में खरीदारों की मांग बढ़ रही है और आवक कम होने की उम्मीद है। 3-5 दिनों में बेचना सबसे अच्छा रहेगा।"`;
+      }
+    } else if (lang === 'mr') {
+      recommendation = isUp ? (changePct > 6 ? '7 दिवस ठेवा' : '3 दिवस थांबा') : 'आत्ताच विका';
+      actionBadge = isUp ? (changePct > 6 ? 'ठेवा' : 'थांबा') : 'विका';
+      if (!isUp) {
+        reason = `"${mandiName} मध्ये बाजारातील आवक वेगाने वाढत आहे. सध्याचा साठा आत्ताच विकल्यास अपेक्षित 2-4% तोट्यापासून संरक्षण मिळेल."`;
+      } else if (changePct > 6) {
+        reason = `"${mandiName} मध्ये संस्थागत खरेदीदारांच्या बोली वेगाने वाढत आहेत. भाव ₹${expectedPrice}/क्विंटल पार करण्याची शक्यता जास्त आहे."`;
+      } else {
+        reason = `"शिफारस: ${mandiName} मध्ये खरेदीदारांची मागणी वाढत असून आवक कमी होण्याची शक्यता आहे. 3-5 दिवसांत विक्री करणे फायदेशीर ठरेल."`;
+      }
+    }
+
     const confidence = Math.min(94, Math.max(82, 85 + Math.round((Math.sin(basePrice) * 5))));
+    const cropName = t('crops.' + crop.id, crop.name);
 
     return {
       cropId: crop.id,
-      cropName: crop.name,
+      cropName: cropName,
       mandi: mandiName,
       days: days,
       currentPrice: basePrice,
@@ -524,33 +577,34 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
   grid.innerHTML = crops.map(c => `
     <div class="dash-crop-card" onclick="openCropDetails('${c.id}')" data-crop-id="${c.id}">
       <div class="dash-crop-card__image-wrap">
-        <img src="${c.image}" alt="${c.name}" class="dash-crop-card__img" loading="lazy" onerror="this.style.display='none';">
+        <img src="${c.image}" alt="${t('crops.' + c.id, c.name)}" class="dash-crop-card__img" loading="lazy" onerror="this.style.display='none';">
         <span class="dash-crop-card__demand-badge dash-crop-card__demand-badge--${c.demand}">
-          ${c.demand === 'high' ? '<i data-lucide="trending-up" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> High Demand' : (c.demand === 'medium' ? '<i data-lucide="activity" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> Medium' : 'Low Demand')}
+          ${c.demand === 'high' ? '<i data-lucide="trending-up" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ' : (c.demand === 'medium' ? '<i data-lucide="activity" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ' : '<i data-lucide="trending-down" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ')}${t('demand.' + c.demand, c.demand === 'high' ? 'HIGH DEMAND' : (c.demand === 'medium' ? 'MEDIUM' : 'LOW DEMAND'))}
         </span>
       </div>
       <div class="dash-crop-card__body">
         <div class="dash-crop-card__header">
           <div class="dash-crop-card__title-row">
-            <span class="dash-crop-card__name">${c.name}</span>
+            <span class="dash-crop-card__name">${t('crops.' + c.id, c.name)}</span>
           </div>
           <span class="dash-crop-card__market">${c.market}</span>
         </div>
         <div class="dash-crop-card__price-row">
           <div class="dash-crop-card__price">
             <span class="dash-crop-card__price-value">₹${c.price.toLocaleString('en-IN')}</span>
-            <span class="dash-crop-card__price-unit">${c.unit}</span>
+            <span class="dash-crop-card__price-unit">/${t('common.quintal', 'q')}</span>
           </div>
           <div class="dash-crop-card__change dash-crop-card__change--${c.dir}">
             ${c.dir === 'up' ? '↑' : '↓'} ${c.change}%
           </div>
         </div>
         <button class="btn btn--secondary dash-crop-card__btn" onclick="event.stopPropagation(); openCropDetails('${c.id}')">
-          View Details
+          ${t('marketplace.viewDetails', 'View Details')}
         </button>
       </div>
     </div>
   `).join('');
+  if (window.lucide) lucide.createIcons({ root: grid });
 }
 
 // Render "What Farmers Are Selling"
@@ -559,28 +613,30 @@ function renderFarmerListings() {
   if (!scroll) return;
 
   const popular = [
-    { id: 'rice', count: 42, demand: 'hot', demandText: 'High demand' },
-    { id: 'wheat', count: 36, demand: 'rising', demandText: 'Medium demand' },
-    { id: 'onion', count: 28, demand: 'hot', demandText: 'High demand' },
-    { id: 'tomato', count: 21, demand: 'rising', demandText: 'Rising demand' },
-    { id: 'maize', count: 18, demand: 'stable', demandText: 'Stable' },
-    { id: 'soybean', count: 24, demand: 'hot', demandText: 'High demand' },
-    { id: 'chilli', count: 15, demand: 'hot', demandText: 'Export order' }
+    { id: 'rice', count: 42, demand: 'hot', demandKey: 'demand.high', demandFallback: 'High demand' },
+    { id: 'wheat', count: 36, demand: 'rising', demandKey: 'demand.medium', demandFallback: 'Medium demand' },
+    { id: 'onion', count: 28, demand: 'hot', demandKey: 'demand.high', demandFallback: 'High demand' },
+    { id: 'tomato', count: 21, demand: 'rising', demandKey: 'demand.medium', demandFallback: 'Rising demand' },
+    { id: 'maize', count: 18, demand: 'stable', demandKey: 'demand.medium', demandFallback: 'Stable' },
+    { id: 'soybean', count: 24, demand: 'hot', demandKey: 'demand.high', demandFallback: 'High demand' },
+    { id: 'chilli', count: 15, demand: 'hot', demandKey: 'demand.high', demandFallback: 'Export order' }
   ];
 
   scroll.innerHTML = popular.map(item => {
     const crop = CROPS_DATA.find(c => c.id === item.id) || CROPS_DATA[0];
+    const cropName = t('crops.' + crop.id, crop.name);
+    const demandLabel = t(item.demandKey, item.demandFallback);
     return `
       <div class="dash-farmer-listing" onclick="openCropDetails('${crop.id}')">
         <div class="dash-farmer-listing__img-wrap">
-          <img src="${crop.image}" alt="${crop.name}" class="dash-farmer-listing__img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-          <div class="dash-farmer-listing__fallback" style="display:none;">${crop.emoji}</div>
+          <img src="${crop.image}" alt="${cropName}" class="dash-farmer-listing__img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="dash-farmer-listing__fallback" style="display:none;">${crop.emoji || '🌾'}</div>
         </div>
         <div class="dash-farmer-listing__body">
-          <div class="dash-farmer-listing__crop">${crop.name}</div>
-          <div class="dash-farmer-listing__count">${item.count} farmer listings</div>
-          <div class="dash-farmer-listing__price">₹${crop.price.toLocaleString('en-IN')}/q</div>
-          <span class="dash-farmer-listing__demand dash-farmer-listing__demand--${item.demand}">${item.demandText}</span>
+          <div class="dash-farmer-listing__crop">${cropName}</div>
+          <div class="dash-farmer-listing__count">${item.count} ${t('market.farmerListings', 'farmer listings')}</div>
+          <div class="dash-farmer-listing__price">₹${crop.price.toLocaleString('en-IN')}/${t('common.quintal', 'q')}</div>
+          <span class="dash-farmer-listing__demand dash-farmer-listing__demand--${item.demand}">${demandLabel}</span>
         </div>
       </div>
     `;
@@ -865,26 +921,34 @@ function applyForecastResults(res) {
   const miniLabel = document.getElementById('forecast-mini-target-label');
   const alertBtn = document.getElementById('btn-set-alert-ai');
   const trendLabel = document.getElementById('forecast-trend-label');
+  const lang = (window.i18next && window.i18next.language) || localStorage.getItem('krishi_lang') || 'en';
 
-  if (headline) headline.textContent = `${res.cropName} — ${res.mandi} Forecast`;
+  if (headline) headline.textContent = `${res.cropName} — ${res.mandi} ${t('ai.forecast', 'Forecast')}`;
   if (insight) {
-    insight.innerHTML = `"${res.cropName} prices are projected to <em>${res.isUp ? 'rise by ' + res.changePct : 'soften by ' + res.changePct}</em> over the next ${res.days} days."`;
+    if (lang === 'hi') {
+      insight.innerHTML = `"${res.cropName} के भाव अगले ${res.days} दिनों में <em>${res.isUp ? res.changePct + ' बढ़ने' : res.changePct + ' कम होने'}</em> का अनुमान है।"`;
+    } else if (lang === 'mr') {
+      insight.innerHTML = `"${res.cropName} चे भाव पुढील ${res.days} दिवसांत <em>${res.isUp ? res.changePct + ' वाढण्याचा' : res.changePct + ' कमी होण्याचा'}</em> अंदाज आहे."`;
+    } else {
+      insight.innerHTML = `"${res.cropName} prices are projected to <em>${res.isUp ? 'rise by ' + res.changePct : 'soften by ' + res.changePct}</em> over the next ${res.days} days."`;
+    }
   }
   if (trendLabel) {
-    trendLabel.textContent = res.isUp ? '📈 Price Rising' : '📉 Price Falling';
+    const isRisingText = lang === 'hi' ? '📈 भाव बढ़ रहे हैं' : (lang === 'mr' ? '📈 भाव वाढत आहेत' : '📈 Price Rising');
+    const isFallingText = lang === 'hi' ? '📉 भाव गिर रहे हैं' : (lang === 'mr' ? '📉 भाव घसरत आहेत' : '📉 Price Falling');
+    trendLabel.textContent = res.isUp ? isRisingText : isFallingText;
     trendLabel.parentElement.style.background = res.isUp ? '#E8F5E9' : '#FFEBEE';
     trendLabel.parentElement.style.color = res.isUp ? '#2E7D32' : '#C62828';
   }
   if (recBadge) {
-    const verdictText = res.isUp ? '⏳ WAIT 3 DAYS' : '⚡ SELL NOW';
-    recBadge.textContent = verdictText;
+    recBadge.textContent = res.recommendation;
     recBadge.style.background = res.isUp ? 'var(--ks-amber)' : 'var(--ks-terracotta)';
     recBadge.style.color = res.isUp ? 'var(--ks-evergreen)' : '#FFFFFF';
   }
-  if (curPrice) curPrice.textContent = `₹${res.currentPrice.toLocaleString('en-IN')}/q`;
-  if (expPrice) expPrice.textContent = `₹${res.expectedPrice.toLocaleString('en-IN')}/q`;
+  if (curPrice) curPrice.textContent = `₹${res.currentPrice.toLocaleString('en-IN')}/${t('common.quintal', 'q')}`;
+  if (expPrice) expPrice.textContent = `₹${res.expectedPrice.toLocaleString('en-IN')}/${t('common.quintal', 'q')}`;
   if (changeVal) {
-    changeVal.textContent = `${res.changePct} (${res.isUp ? '↑' : '↓'} ₹${Math.abs(res.changeAmount)}/q)`;
+    changeVal.textContent = `${res.changePct} (${res.isUp ? '↑' : '↓'} ₹${Math.abs(res.changeAmount)}/${t('common.quintal', 'q')})`;
     changeVal.style.color = res.isUp ? 'var(--ks-mint)' : 'var(--ks-terracotta)';
   }
   if (confVal) confVal.textContent = `${res.confidence}%`;
@@ -892,8 +956,8 @@ function applyForecastResults(res) {
   if (ringText) ringText.textContent = `${res.confidence}%`;
   if (miniToday) miniToday.textContent = `₹${res.currentPrice.toLocaleString('en-IN')}`;
   if (miniTarget) miniTarget.textContent = `₹${res.expectedPrice.toLocaleString('en-IN')}`;
-  if (miniLabel) miniLabel.textContent = `In ${res.days} Days`;
-  if (alertBtn) alertBtn.innerHTML = `<i data-lucide="bell-ring"></i> Set Target Alert (₹${res.expectedPrice.toLocaleString('en-IN')})`;
+  if (miniLabel) miniLabel.textContent = lang === 'hi' ? `${res.days} दिनों में` : (lang === 'mr' ? `${res.days} दिवसांत` : `In ${res.days} Days`);
+  if (alertBtn) alertBtn.innerHTML = `<i data-lucide="bell-ring"></i> ${t('ai.setTargetAlert', 'Set Target Alert')} (₹${res.expectedPrice.toLocaleString('en-IN')})`;
 
   // Animate ring
   const circle = document.getElementById('forecast-ring-circle');
@@ -1014,12 +1078,13 @@ function openCropDetails(cropId) {
   const overlay = document.getElementById('crop-modal-overlay');
   if (!overlay) return;
 
-  document.getElementById('crop-modal-emoji').textContent = crop.emoji;
-  document.getElementById('crop-modal-name').textContent = `${crop.name} Market Details`;
-  document.getElementById('crop-modal-market').textContent = `${crop.market} · Live Market Data`;
+  const cropName = t('crops.' + crop.id, crop.name);
+  document.getElementById('crop-modal-emoji').textContent = crop.emoji || '🌾';
+  document.getElementById('crop-modal-name').textContent = `${cropName} ${t('market.marketDetails', 'Market Details')}`;
+  document.getElementById('crop-modal-market').textContent = `${crop.market} · ${t('market.liveMarketData', 'Live Market Data')}`;
   document.getElementById('crop-modal-img').src = crop.image;
-  document.getElementById('crop-modal-price').textContent = `₹${crop.price.toLocaleString('en-IN')}/q`;
-  document.getElementById('crop-modal-change').textContent = `${crop.dir === 'up' ? '↑' : '↓'} ${crop.change}% from last week`;
+  document.getElementById('crop-modal-price').textContent = `₹${crop.price.toLocaleString('en-IN')}/${t('common.quintal', 'q')}`;
+  document.getElementById('crop-modal-change').textContent = `${crop.dir === 'up' ? '↑' : '↓'} ${crop.change}% ${t('market.fromLastWeek', 'from last week')}`;
   document.getElementById('crop-modal-change').className = `dash-crop-modal__price-change dash-crop-modal__price-change--${crop.dir}`;
 
   // Mandis
@@ -1035,7 +1100,7 @@ function openCropDetails(cropId) {
             <strong>${m.name}</strong>
             <span style="font-size:11px; color:var(--ks-text-muted); display:block;">${m.dist}</span>
           </div>
-          <div style="font-weight:700; color:var(--ks-evergreen);">₹${mPrice.toLocaleString('en-IN')}/q</div>
+          <div style="font-weight:700; color:var(--ks-evergreen);">₹${mPrice.toLocaleString('en-IN')}/${t('common.quintal', 'q')}</div>
         </div>
       `;
     }).join('');
@@ -1049,9 +1114,9 @@ function openCropDetails(cropId) {
       <div class="dash-crop-modal__buyer-row">
         <div>
           <strong>${b.name}</strong>
-          <span style="font-size:11px; color:var(--ks-sage); display:block;">✓ Verified · ${b.rating}</span>
+          <span style="font-size:11px; color:var(--ks-sage); display:block;">✓ ${t('common.verified', 'Verified')} · ${b.rating}</span>
         </div>
-        <button class="btn btn--primary btn--sm" onclick="closeModal('crop-modal-overlay'); openCreateLotModal('${crop.id}')">Sell to Buyer</button>
+        <button class="btn btn--primary btn--sm" onclick="closeModal('crop-modal-overlay'); openCreateLotModal('${crop.id}')">${t('market.sellToBuyer', 'Sell to Buyer')}</button>
       </div>
     `).join('');
   }
@@ -1325,18 +1390,43 @@ function initNegotiateForm() {
   }
 }
 
-// 9. Buyers Directory Modal
-function openBuyersModal() {
+// 9. Buyers Directory & Modal
+function renderBuyersDirectoryList() {
   const list = document.getElementById('buyers-directory-list');
+  if (!list) return;
+
+  list.innerHTML = CORPORATE_BUYERS.map(b => `
+    <div class="dash-crop-modal__buyer-row" style="margin-bottom:12px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; background:#FAF9F5; border:1px solid #E5E4DD; border-radius:10px; gap:16px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:240px;">
+        <div style="font-size:15px; font-weight:700; color:var(--ks-charcoal); display:flex; align-items:center; gap:8px;">
+          ${b.name} <span class="dash-offer-row__verified">✓ ${b.rating}</span>
+        </div>
+        <div style="font-size:13px; color:var(--ks-text-muted); margin-top:3px;">
+          ${t('farmer.purchasing', 'Purchasing:')} <strong>${b.crops.map(c => t('crops.' + c.toLowerCase(), c)).join(', ')}</strong> · ${t('farmer.min', 'Min')} <strong>${b.minQty}</strong>
+        </div>
+        <div style="font-size:12px; color:var(--ks-sage); margin-top:3px;">
+          <i data-lucide="zap" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:3px;"></i> ${b.paymentDays}
+        </div>
+      </div>
+      <a href="lots.html" class="btn btn--primary btn--sm" style="text-decoration:none; white-space:nowrap;">
+        <i data-lucide="plus-circle" style="width:14px;height:14px;"></i> <span>${t('cropLot.createLot', 'Sell Crop')}</span>
+      </a>
+    </div>
+  `).join('');
+  if (window.lucide) lucide.createIcons({ root: list });
+}
+
+function openBuyersModal() {
+  const list = document.getElementById('buyers-directory-list-modal') || document.getElementById('buyers-directory-list');
   if (list) {
     list.innerHTML = CORPORATE_BUYERS.map(b => `
       <div class="dash-crop-modal__buyer-row" style="margin-bottom:10px; padding:12px 14px;">
         <div>
           <div style="font-size:15px; font-weight:700; color:var(--ks-charcoal);">${b.name} <span class="dash-offer-row__verified">✓ ${b.rating}</span></div>
-          <div style="font-size:12px; color:var(--ks-text-muted); margin-top:2px;">Purchasing: ${b.crops.join(', ')} · Min ${b.minQty}</div>
+          <div style="font-size:12px; color:var(--ks-text-muted); margin-top:2px;">${t('farmer.purchasing', 'Purchasing:')} ${b.crops.map(c => t('crops.' + c.toLowerCase(), c)).join(', ')} · ${t('farmer.min', 'Min')} ${b.minQty}</div>
           <div style="font-size:11px; color:var(--ks-sage); margin-top:2px;"><i data-lucide="zap" style="width:11px;height:11px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ${b.paymentDays}</div>
         </div>
-        <button class="btn btn--primary btn--sm" onclick="closeModal('buyers-modal-overlay'); openCreateLotModal()">Sell Crop</button>
+        <button class="btn btn--primary btn--sm" onclick="closeModal('buyers-modal-overlay'); openCreateLotModal()">${t('cropLot.createLot', 'Sell Crop')}</button>
       </div>
     `).join('');
     if (window.lucide) lucide.createIcons({ root: list });
@@ -1425,16 +1515,28 @@ function openNotificationsModal() {
   const list = document.getElementById('notifications-list');
   if (list) {
     const notifs = krishiStore.getNotifications();
-    list.innerHTML = notifs.map(n => `
+    const t = (window.i18next && typeof window.i18next.t === 'function')
+      ? window.i18next.t.bind(window.i18next)
+      : ((k, fb) => fb || k);
+
+    list.innerHTML = notifs.map(n => {
+      const displayTitle = n.titleKey ? t(n.titleKey, n.title) : (n.title || '');
+      const displayDesc = n.templateKey ? t(n.templateKey, n.params || {}, n.desc) : (n.desc || '');
+      return `
       <div class="dash-notif-item ${n.unread ? 'dash-notif-item--unread' : ''}">
         <i data-lucide="bell" style="width:16px;height:16px;color:var(--ks-sage);flex-shrink:0;"></i>
         <div>
-          <div class="dash-notif-item__title">${n.title}</div>
-          <div class="dash-notif-item__desc">${n.desc}</div>
+          <div class="dash-notif-item__title">${displayTitle}</div>
+          <div class="dash-notif-item__desc">${displayDesc}</div>
           <div class="dash-notif-item__time">${n.time}</div>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
+
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
 
     const badge = document.getElementById('notifications-badge');
     if (badge) badge.style.display = 'none';
@@ -1857,7 +1959,12 @@ function initPriceTrendChart() {
     if (elHigh) elHigh.textContent = `₹${(base + 80).toLocaleString('en-IN')}`;
     if (elLow) elLow.textContent = `₹${(base - 180).toLocaleString('en-IN')}`;
     if (elAvg) elAvg.textContent = `₹${(base - 40).toLocaleString('en-IN')}`;
-    if (elTitle) elTitle.textContent = `${crop.name} Price Trend (${range}D)`;
+
+    const t = (window.i18next && typeof window.i18next.t === 'function')
+      ? window.i18next.t.bind(window.i18next)
+      : ((k, fb) => (typeof fb === 'string' ? fb : k));
+    const trendText = t('market.priceTrend', 'Price Trend');
+    if (elTitle) elTitle.textContent = `${crop.name} ${trendText} (${range}D)`;
 
     // Simple smooth curve coordinates
     const points = [
@@ -1891,6 +1998,13 @@ function initPriceTrendChart() {
     });
   }
 
+  window.addEventListener('languageChanged', () => {
+    const activeTab = document.querySelector('.dash-chart-tab--active');
+    const range = activeTab ? activeTab.getAttribute('data-range') : '30';
+    const cropId = cropSelect ? cropSelect.value : 'rice';
+    updateChart(cropId, range);
+  });
+
   updateChart('rice', '30');
 }
 
@@ -1923,6 +2037,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderFarmerListings();
   renderLotsPanel();
   renderOffersPanel();
+  renderBuyersDirectoryList();
   renderOrdersGrid();
   renderAlertsGrid();
   updateStatsCounts();
@@ -2032,6 +2147,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Mobile Profile Nav link
   const mobileProf = document.getElementById('mobile-nav-profile');
   if (mobileProf) mobileProf.onclick = openProfileModal;
+
+  // Global Language Change Listener to re-render all dynamic components
+  window.addEventListener('languageChanged', () => {
+    renderMarketGrid();
+    renderFarmerListings();
+    renderLotsPanel();
+    renderOffersPanel();
+    renderBuyersDirectoryList();
+    renderOrdersGrid();
+    renderAlertsGrid();
+    if (document.getElementById('forecast-headline')) {
+      const cropSelect = document.getElementById('forecast-crop-select');
+      const cropId = cropSelect ? cropSelect.value : 'rice';
+      const result = forecastService.generate(cropId, 'Pune APMC', currentForecastDays || 7);
+      applyForecastResults(result);
+    }
+    if (window.lucide) lucide.createIcons();
+  });
 
   // Initialize Lucide icons
   if (window.lucide) lucide.createIcons();

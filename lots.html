@@ -44,31 +44,31 @@
       <div class="dash-search" id="dash-search">
         <i data-lucide="search" class="dash-search__icon"></i>
         <input type="text" id="dash-search-input" class="dash-search__input"
-          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
+          placeholder="Search crops, markets, buyers..." data-i18n-placeholder="common.search" autocomplete="off" aria-label="Global search">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="dash-search__results" id="dash-search-results"></div>
       </div>
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
-          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> Dashboard
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> <span data-i18n="navigation.dashboard">Dashboard</span>
         </a>
         <a href="lots.html" class="dash-header__link dash-header__link--active" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
         </a>
         <a href="storage.html" class="dash-header__link" id="nav-storage">
-          <i data-lucide="warehouse" class="dash-header__link-icon"></i> Storage Options
+          <i data-lucide="warehouse" class="dash-header__link-icon"></i> <span data-i18n="navigation.storage">Storage Options</span>
         </a>
         <a href="market.html" class="dash-header__link" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> Market
+          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="navigation.marketplace">Market</span>
         </a>
         <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> AI Forecast
+          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span>
         </a>
         <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
+          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyers">Buyers</span>
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> Orders
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span>
         </a>
       </nav>
 
@@ -142,19 +142,19 @@
 
       <!-- Breadcrumb -->
       <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
-        <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
-        <strong>My Lots</strong>
+        <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;" data-i18n="navigation.dashboard">Dashboard</a> /
+        <strong data-i18n="navigation.myLots">My Lots</strong>
       </nav>
 
       <!-- Page Header Banner -->
       <div class="dash-section__header" style="margin-bottom: 20px;">
         <div>
-          <h1 class="dash-section__title" style="font-size: 26px;"><i data-lucide="package" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i> My Produce Lots</h1>
-          <p class="dash-section__subtitle">Manage your farm produce listings, storage holdings, and review buyer inquiries.</p>
+          <h1 class="dash-section__title" style="font-size: 26px;"><i data-lucide="package" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;color:var(--ks-gold);"></i> <span data-i18n="farmer.cropListingsTitle">My Produce Lots</span></h1>
+          <p class="dash-section__subtitle" data-i18n="farmer.cropListingsSubtitle">Manage your farm produce listings, storage holdings, and review buyer inquiries.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <a href="storage.html" class="btn btn--secondary" style="display:inline-flex; align-items:center; gap:6px;">
-            <i data-lucide="warehouse"></i> Storage Hub & Advisor
+            <i data-lucide="warehouse"></i> <span data-i18n="farmer.storageHubAdvisor">Storage Hub & Advisor</span>
           </a>
           <button class="btn btn--primary" id="btn-create-lot-page" onclick="FarmerFlow.openCreateLotModal()"><i
               data-lucide="plus-circle"></i> + Create Produce Lot</button>
@@ -164,16 +164,16 @@
       <!-- Produce Lot Navigation Tabs -->
       <div class="dash-lots-tabs" style="display:flex; gap:8px; margin-bottom:20px; border-bottom:2px solid #E5E4DD; padding-bottom:8px; overflow-x:auto;">
         <button class="btn btn--sm dash-lot-tab active" id="tab-lot-all" onclick="filterLotTab('all')" style="border-radius:20px; font-weight:700; background:var(--ks-evergreen, #12372A); color:#FFF; border:none; padding:8px 16px;">
-          📦 All Produce Lots
+          📦 <span data-i18n="farmer.allProduceLotsTab">All Produce Lots</span>
         </button>
         <button class="btn btn--sm dash-lot-tab" id="tab-lot-active" onclick="filterLotTab('active')" style="border-radius:20px; font-weight:600; background:#FFF; color:#444; border:1px solid #DDD; padding:8px 16px;">
-          🌾 On Farm / Active
+          🌾 <span data-i18n="farmer.onFarmActiveTab">On Farm / Active</span>
         </button>
         <button class="btn btn--sm dash-lot-tab" id="tab-lot-stored" onclick="filterLotTab('stored')" style="border-radius:20px; font-weight:600; background:#FFF; color:#444; border:1px solid #DDD; padding:8px 16px;">
-          🏬 Stored & Warehouse Lots
+          🏬 <span data-i18n="farmer.storedWarehouseLotsTab">Stored & Warehouse Lots</span>
         </button>
         <a href="storage.html#storage-calculator" class="btn btn--sm" style="border-radius:20px; font-weight:700; background:#F5F4ED; color:var(--ks-evergreen, #12372A); border:1px solid #C9973B; padding:8px 16px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-          <i data-lucide="sparkles" style="width:13px;height:13px;color:#C9973B;"></i> ⚡ Sell vs. Store Decision Support
+          <i data-lucide="sparkles" style="width:13px;height:13px;color:#C9973B;"></i> ⚡ <span data-i18n="farmer.sellVsStoreDecisionTab">Sell vs. Store Decision Support</span>
         </a>
       </div>
 
@@ -185,8 +185,8 @@
           <div class="dash-card dash-panel" id="dash-active-lots">
             <div class="dash-panel__header">
               <div>
-                <h3 class="dash-panel__title" id="lots-panel-title">My Active Lots</h3>
-                <p class="dash-panel__subtitle">Manage listed crops & storage options</p>
+                <h3 class="dash-panel__title" id="lots-panel-title" data-i18n="farmer.myActiveLotsTitle">My Active Lots</h3>
+                <p class="dash-panel__subtitle" data-i18n="farmer.manageListedCropsSubtitle">Manage listed crops & storage options</p>
               </div>
               <button class="btn btn--primary btn--sm" id="btn-create-lot" onclick="openCreateLotModal()"><i
                   data-lucide="plus"></i> + New Lot</button>
@@ -204,10 +204,10 @@
           <div class="dash-card dash-panel" id="dash-buyer-offers">
             <div class="dash-panel__header">
               <div>
-                <h3 class="dash-panel__title">Received Buyer Offers</h3>
-                <p class="dash-panel__subtitle">Direct quotes from verified corporate procurement companies</p>
+                <h3 class="dash-panel__title" data-i18n="farmer.receivedOffersTitle">Received Buyer Offers</h3>
+                <p class="dash-panel__subtitle" data-i18n="farmer.receivedOffersSubtitle">Direct quotes from verified corporate procurement companies</p>
               </div>
-              <a href="buyers.html" class="dash-panel__action">Browse All Buyers <i data-lucide="arrow-right"></i></a>
+              <a href="buyers.html" class="dash-panel__action"><span data-i18n="farmer.browseAllBuyers">Browse All Buyers</span> <i data-lucide="arrow-right"></i></a>
             </div>
             <div class="dash-panel__body" id="offers-panel-body">
               <!-- Rendered dynamically by JS -->
@@ -239,7 +239,7 @@
           <a href="index.html" class="footer__link">About KrishiShetra</a>
         </div>
       </div>
-      <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
+      <div class="footer__copyright" data-i18n="common.footerCopyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
     </div>
   </footer>
 
@@ -264,13 +264,13 @@
   <div class="dash-modal-overlay" id="create-lot-modal-overlay">
     <div class="dash-modal" id="create-lot-modal">
       <div class="dash-modal__header">
-        <h3>+ Create New Crop Lot</h3>
+        <h3>+ <span data-i18n="cropLotModal.createLotHeading">Create New Crop Lot</span></h3>
         <button class="dash-modal__close" id="create-lot-modal-close" aria-label="Close"><i
             data-lucide="x"></i></button>
       </div>
       <form class="dash-modal__form" id="create-lot-form">
         <div class="dash-modal__field">
-          <label for="lot-crop-select">Crop</label>
+          <label for="lot-crop-select" data-i18n="cropLotModal.cropCategory">Crop</label>
           <select id="lot-crop-select" class="dash-filter-select" required>
             <option value="rice">Rice</option>
             <option value="wheat">Wheat</option>
@@ -285,19 +285,19 @@
         </div>
         <div class="dash-form-row">
           <div class="dash-modal__field">
-            <label for="lot-qty-input">Quantity (Quintals)</label>
+            <label for="lot-qty-input" data-i18n="cropLotModal.quantityAvailable">Quantity (Quintals)</label>
             <input type="number" id="lot-qty-input" class="dash-form-input" placeholder="e.g. 25" min="1" max="10000"
               required>
           </div>
           <div class="dash-modal__field">
-            <label for="lot-price-input">Expected Price (₹/q)</label>
+            <label for="lot-price-input" data-i18n="cropLotModal.expectedPricePerUnit">Expected Price (₹/q)</label>
             <input type="number" id="lot-price-input" class="dash-form-input" placeholder="e.g. 3000" min="100"
               required>
           </div>
         </div>
         <div class="dash-form-row">
           <div class="dash-modal__field">
-            <label for="lot-grade-select">Quality / Grade</label>
+            <label for="lot-grade-select" data-i18n="cropLotModal.gradeSelection">Quality / Grade</label>
             <select id="lot-grade-select" class="dash-filter-select">
               <option value="Grade A">Grade A (Premium)</option>
               <option value="Grade B">Grade B (Standard)</option>
@@ -306,17 +306,17 @@
             </select>
           </div>
           <div class="dash-modal__field">
-            <label for="lot-harvest-input">Harvest Date</label>
+            <label for="lot-harvest-input" data-i18n="market.harvestDate">Harvest Date</label>
             <input type="date" id="lot-harvest-input" class="dash-form-input" required>
           </div>
         </div>
         <div class="dash-modal__field">
-          <label for="lot-location-input">Farm Location / Mandi</label>
+          <label for="lot-location-input" data-i18n="cropLotModal.originDistrict">Farm Location / Mandi</label>
           <input type="text" id="lot-location-input" class="dash-form-input" value="Pune, Maharashtra"
             placeholder="Village, Taluka, District" required>
         </div>
         <div class="dash-modal__field">
-          <label for="lot-desc-input">Description / Moisture / Variety</label>
+          <label for="lot-desc-input" data-i18n="cropLotModal.moistureQualityNotes">Description / Moisture / Variety</label>
           <textarea id="lot-desc-input" class="dash-form-textarea" rows="2"
             placeholder="e.g. Basmati variety, moisture below 10%, clean machine cleaned grain."></textarea>
         </div>
@@ -330,7 +330,7 @@
   <div class="dash-modal-overlay" id="edit-lot-modal-overlay">
     <div class="dash-modal" id="edit-lot-modal">
       <div class="dash-modal__header">
-        <h3>Edit Crop Lot</h3>
+        <h3 data-i18n="cropLot.editProduceLot">Edit Crop Lot</h3>
         <button class="dash-modal__close" id="edit-lot-modal-close" aria-label="Close"><i data-lucide="x"></i></button>
       </div>
       <form class="dash-modal__form" id="edit-lot-form">
@@ -340,17 +340,17 @@
         </div>
         <div class="dash-form-row">
           <div class="dash-modal__field">
-            <label for="edit-lot-qty">Quantity (Quintals)</label>
+            <label for="edit-lot-qty" data-i18n="cropLotModal.quantityAvailable">Quantity (Quintals)</label>
             <input type="number" id="edit-lot-qty" class="dash-form-input" required>
           </div>
           <div class="dash-modal__field">
-            <label for="edit-lot-price">Expected Price (₹/q)</label>
+            <label for="edit-lot-price" data-i18n="cropLotModal.expectedPricePerUnit">Expected Price (₹/q)</label>
             <input type="number" id="edit-lot-price" class="dash-form-input" required>
           </div>
         </div>
         <div class="dash-form-row">
           <div class="dash-modal__field">
-            <label for="edit-lot-grade">Quality / Grade</label>
+            <label for="edit-lot-grade" data-i18n="cropLotModal.gradeSelection">Quality / Grade</label>
             <select id="edit-lot-grade" class="dash-filter-select">
               <option value="Grade A">Grade A</option>
               <option value="Grade B">Grade B</option>
@@ -358,12 +358,12 @@
             </select>
           </div>
           <div class="dash-modal__field">
-            <label for="edit-lot-location">Location</label>
+            <label for="edit-lot-location" data-i18n="cropLotModal.locationHarvestOrigin">Location</label>
             <input type="text" id="edit-lot-location" class="dash-form-input" required>
           </div>
         </div>
         <div class="dash-modal__field">
-          <label for="edit-lot-desc">Description</label>
+          <label for="edit-lot-desc" data-i18n="cropLotModal.qualityMoistureNotes">Description</label>
           <textarea id="edit-lot-desc" class="dash-form-textarea" rows="2"></textarea>
         </div>
         <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="save"></i> Save
@@ -376,15 +376,15 @@
   <div class="dash-modal-overlay" id="pause-lot-modal-overlay">
     <div class="dash-modal dash-modal--sm" id="pause-lot-modal">
       <div class="dash-modal__header">
-        <h3 id="pause-modal-title">Pause Listing?</h3>
+        <h3 id="pause-modal-title" data-i18n="cropLot.pauseProduceLot">Pause Listing?</h3>
         <button class="dash-modal__close" id="pause-lot-modal-close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad">
         <p id="pause-modal-desc">Paused listings will temporarily be hidden from buyers on the marketplace. You can
           resume anytime.</p>
         <div class="dash-modal__actions-row">
-          <button class="btn btn--secondary" id="btn-cancel-pause">Cancel</button>
-          <button class="btn btn--primary" id="btn-confirm-pause">Confirm Pause</button>
+          <button class="btn btn--secondary" id="btn-cancel-pause" data-i18n="common.cancel">Cancel</button>
+          <button class="btn btn--primary" id="btn-confirm-pause" data-i18n="cropLot.pauseProduceLot">Confirm Pause</button>
         </div>
       </div>
     </div>
@@ -394,13 +394,13 @@
   <div class="dash-modal-overlay" id="delete-lot-modal-overlay">
     <div class="dash-modal dash-modal--sm" id="delete-lot-modal">
       <div class="dash-modal__header">
-        <h3>Delete Crop Lot</h3>
+        <h3 data-i18n="cropLot.deleteProduceLot">Delete Crop Lot</h3>
         <button class="dash-modal__close" id="delete-lot-modal-close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad">
         <p>Are you sure you want to remove this crop listing from KrishiShetra? This action cannot be undone.</p>
         <div class="dash-modal__actions-row">
-          <button class="btn btn--secondary" id="btn-cancel-delete">Cancel</button>
+          <button class="btn btn--secondary" id="btn-cancel-delete" data-i18n="common.cancel">Cancel</button>
           <button class="btn btn--danger" id="btn-confirm-delete"><i data-lucide="trash-2"></i> Delete Lot</button>
         </div>
       </div>
@@ -411,19 +411,19 @@
   <div class="dash-modal-overlay" id="negotiate-modal-overlay">
     <div class="dash-modal dash-modal--sm" id="negotiate-modal">
       <div class="dash-modal__header">
-        <h3>Negotiate Price</h3>
+        <h3 data-i18n="buyer.negotiateRate">Negotiate Price</h3>
         <button class="dash-modal__close" id="negotiate-modal-close"><i data-lucide="x"></i></button>
       </div>
       <form class="dash-modal__form" id="negotiate-form">
         <input type="hidden" id="negotiate-offer-id">
         <div class="dash-modal__field">
-          <label>Buyer Offer Details</label>
+          <label data-i18n="offers.receivedInquiries">Buyer Offer Details</label>
           <div id="negotiate-buyer-info"
             style="font-size:13px; font-weight:600; color:var(--ks-charcoal); background:var(--ks-bg-ivory); padding:10px; border-radius:var(--radius-sm);">
           </div>
         </div>
         <div class="dash-modal__field">
-          <label for="negotiate-price-input">Your Counter Offer Price (₹/q)</label>
+          <label for="negotiate-price-input" data-i18n="offers.counterOffer">Your Counter Offer Price (₹/q)</label>
           <input type="number" id="negotiate-price-input" class="dash-form-input" required>
         </div>
         <div class="dash-modal__field">
@@ -510,6 +510,7 @@
   </div>
 
   <!-- SCRIPTS -->
+  <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>

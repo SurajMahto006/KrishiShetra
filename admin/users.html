@@ -403,96 +403,141 @@
 
     lucide.createIcons();
 
-    // ── Role Distribution Doughnut ──
-    new Chart(document.getElementById('roleDistChart').getContext('2d'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Farmers', 'Buyers', 'FPOs', 'Admins'],
-        datasets: [{
-          data: [856, 340, 42, 10],
-          backgroundColor: ['#5B9A72','#D6A84F','#6BA3F7','#C96D5B'],
-          borderColor: 'rgba(15, 42, 31, 0.8)',
-          borderWidth: 3,
-          hoverOffset: 8,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '66%',
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              color: '#B8CDC2',
-              font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
-              boxWidth: 12, boxHeight: 12, padding: 18,
-              usePointStyle: true, pointStyle: 'circle',
-            }
+    // ── Admin Users Charts ──
+    let roleDistChartInstance = null;
+    let userGrowthChartInstance = null;
+
+    function initAdminUsersCharts() {
+      const t = (key, def, opts) => (window.i18next ? window.i18next.t(key, opts || def) : def);
+
+      // Role Distribution Doughnut
+      const roleCanvas = document.getElementById('roleDistChart');
+      if (roleCanvas) {
+        const roleCtx = roleCanvas.getContext('2d');
+        if (roleDistChartInstance) {
+          roleDistChartInstance.destroy();
+          roleDistChartInstance = null;
+        }
+        roleDistChartInstance = new Chart(roleCtx, {
+          type: 'doughnut',
+          data: {
+            labels: [
+              t('admin.farmersLabel', 'Farmers'),
+              t('admin.buyersLabel', 'Buyers'),
+              t('admin.fposLabel', 'FPOs'),
+              t('admin.adminsLabel', 'Admins')
+            ],
+            datasets: [{
+              data: [856, 340, 42, 10],
+              backgroundColor: ['#5B9A72','#D6A84F','#6BA3F7','#C96D5B'],
+              borderColor: 'rgba(15, 42, 31, 0.8)',
+              borderWidth: 3,
+              hoverOffset: 8,
+            }]
           },
-          tooltip: {
-            backgroundColor: 'rgba(20,46,35,0.95)',
-            titleColor: '#F5F2EB',
-            bodyColor: '#B8CDC2',
-            borderColor: 'rgba(255,255,255,0.1)',
-            borderWidth: 1,
-            cornerRadius: 10,
-            padding: 12,
-            callbacks: {
-              label(ctx) {
-                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                const pct = ((ctx.parsed / total) * 100).toFixed(1);
-                return ` ${ctx.label}: ${ctx.parsed.toLocaleString()} (${pct}%)`;
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '66%',
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#B8CDC2',
+                  font: { family: "'Plus Jakarta Sans'", size: 12, weight: '500' },
+                  boxWidth: 12, boxHeight: 12, padding: 18,
+                  usePointStyle: true, pointStyle: 'circle',
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(20,46,35,0.95)',
+                titleColor: '#F5F2EB',
+                bodyColor: '#B8CDC2',
+                borderColor: 'rgba(255,255,255,0.1)',
+                borderWidth: 1,
+                cornerRadius: 10,
+                padding: 12,
+                callbacks: {
+                  label(ctx) {
+                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct = ((ctx.parsed / total) * 100).toFixed(1);
+                    return ` ${ctx.label}: ${ctx.parsed.toLocaleString()} (${pct}%)`;
+                  }
+                }
               }
             }
           }
-        }
+        });
       }
-    });
 
-    // ── User Growth Bar ──
-    new Chart(document.getElementById('userGrowthChart').getContext('2d'), {
-      type: 'bar',
-      data: {
-        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-        datasets: [{
-          label: 'New Users',
-          data: [148, 192, 216, 240, 268, 184],
-          backgroundColor: 'rgba(91, 154, 114, 0.55)',
-          borderColor: '#5B9A72',
-          borderWidth: 1.5,
-          borderRadius: 8,
-          borderSkipped: false,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: 'rgba(20,46,35,0.95)',
-            titleColor: '#F5F2EB',
-            bodyColor: '#B8CDC2',
-            borderColor: 'rgba(255,255,255,0.1)',
-            borderWidth: 1,
-            cornerRadius: 10,
-            padding: 12,
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-            ticks: { color: '#7A9B8A', font: { family: "'Plus Jakarta Sans'", size: 12 } }
-          },
-          y: {
-            grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-            ticks: { color: '#7A9B8A', font: { family: "'Plus Jakarta Sans'", size: 12 } },
-            beginAtZero: true
-          }
+      // User Growth Bar
+      const growthCanvas = document.getElementById('userGrowthChart');
+      if (growthCanvas) {
+        const growthCtx = growthCanvas.getContext('2d');
+        if (userGrowthChartInstance) {
+          userGrowthChartInstance.destroy();
+          userGrowthChartInstance = null;
         }
+        userGrowthChartInstance = new Chart(growthCtx, {
+          type: 'bar',
+          data: {
+            labels: [
+              t('common.monthMar', 'Mar'),
+              t('common.monthApr', 'Apr'),
+              t('common.monthMay', 'May'),
+              t('common.monthJun', 'Jun'),
+              t('common.monthJul', 'Jul'),
+              t('common.monthAug', 'Aug')
+            ],
+            datasets: [{
+              label: t('admin.newUsers', 'New Users'),
+              data: [148, 192, 216, 240, 268, 184],
+              backgroundColor: 'rgba(91, 154, 114, 0.55)',
+              borderColor: '#5B9A72',
+              borderWidth: 1.5,
+              borderRadius: 8,
+              borderSkipped: false,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(20,46,35,0.95)',
+                titleColor: '#F5F2EB',
+                bodyColor: '#B8CDC2',
+                borderColor: 'rgba(255,255,255,0.1)',
+                borderWidth: 1,
+                cornerRadius: 10,
+                padding: 12,
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+                ticks: { color: '#7A9B8A', font: { family: "'Plus Jakarta Sans'", size: 12 } }
+              },
+              y: {
+                grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+                ticks: { color: '#7A9B8A', font: { family: "'Plus Jakarta Sans'", size: 12 } },
+                beginAtZero: true
+              }
+            }
+          }
+        });
       }
+    }
+
+    // Initialize on Load & Language Change
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminUsersCharts();
+    });
+    window.addEventListener('languageChanged', () => {
+      initAdminUsersCharts();
     });
   </script>
+  <script src="../js/i18n.js"></script>
 </body>
 </html>

@@ -85,6 +85,8 @@
 
   function openWorkspaceModal(prefix) {
     let modal = document.getElementById('ks-workspace-modal');
+    const t = (k, f) => (window.i18next && typeof window.i18next.t === 'function') ? window.i18next.t(k, f) : f;
+
     if (!modal) {
       modal = document.createElement('div');
       modal.id = 'ks-workspace-modal';
@@ -94,45 +96,45 @@
           <div class="ks-workspace-modal-header">
             <div style="display:flex;align-items:center;gap:8px;">
               <div class="dash-header__logo-icon" style="width:32px;height:32px;"><i data-lucide="sprout"></i></div>
-              <h3 style="margin:0;font-family:'Playfair Display',serif;color:#12372A;font-size:18px;">Switch KrishiShetra Workspace</h3>
+              <h3 style="margin:0;font-family:'Playfair Display',serif;color:#12372A;font-size:18px;" data-i18n="common.switchWorkspace">${t('common.switchWorkspace', 'Switch KrishiShetra Workspace')}</h3>
             </div>
             <button class="ks-workspace-modal-close" style="background:none;border:none;font-size:20px;color:#6F7F75;cursor:pointer;">✕</button>
           </div>
-          <p style="font-size:13px;color:#6F7F75;margin:8px 0 16px 0;">Select your operational workspace to navigate directly to role-specific intelligence and tools.</p>
+          <p style="font-size:13px;color:#6F7F75;margin:8px 0 16px 0;" data-i18n="farmer.dashboardSubtitle">${t('farmer.dashboardSubtitle', 'Select your operational workspace to navigate directly to role-specific intelligence and tools.')}</p>
           <div class="ks-workspace-grid">
             <a href="${prefix}dashboard.html" class="ks-workspace-card">
               <div class="ks-workspace-icon" style="background:#EAF6ED;color:#2E7246;"><i data-lucide="sprout"></i></div>
               <div>
-                <div class="ks-workspace-title">Farmer Workspace</div>
-                <div class="ks-workspace-sub">Live mandi prices, crop selling & AI insights</div>
+                <div class="ks-workspace-title" data-i18n="farmer.dashboardTitle">${t('farmer.dashboardTitle', 'Farmer Workspace')}</div>
+                <div class="ks-workspace-sub" data-i18n="farmer.dashboardSubtitle">${t('farmer.dashboardSubtitle', 'Live mandi prices, crop selling & AI insights')}</div>
               </div>
             </a>
             <a href="${prefix}fpo-dashboard.html" class="ks-workspace-card">
               <div class="ks-workspace-icon" style="background:#FDF8ED;color:#B88935;"><i data-lucide="users"></i></div>
               <div>
-                <div class="ks-workspace-title">FPO Command Center</div>
-                <div class="ks-workspace-sub">Member aggregation, bulk lots & institutional buyers</div>
+                <div class="ks-workspace-title" data-i18n="fpo.commandCenter">${t('fpo.commandCenter', 'FPO Command Center')}</div>
+                <div class="ks-workspace-sub" data-i18n="fpo.institutionalBuyers">${t('fpo.institutionalBuyers', 'Member aggregation, bulk lots & institutional buyers')}</div>
               </div>
             </a>
             <a href="${prefix}buyer.html" class="ks-workspace-card">
               <div class="ks-workspace-icon" style="background:#EBF4FC;color:#1E5C99;"><i data-lucide="store"></i></div>
               <div>
-                <div class="ks-workspace-title">Buyer Hub</div>
-                <div class="ks-workspace-sub">Procurement demand, mandi lots & escrow deals</div>
+                <div class="ks-workspace-title" data-i18n="buyer.procurementHub">${t('buyer.procurementHub', 'Buyer Hub')}</div>
+                <div class="ks-workspace-sub" data-i18n="buyer.browseLots">${t('buyer.browseLots', 'Procurement demand, mandi lots & escrow deals')}</div>
               </div>
             </a>
             <a href="${prefix}transporter/dashboard.html" class="ks-workspace-card">
               <div class="ks-workspace-icon" style="background:#FAF2EB;color:#C96D5B;"><i data-lucide="truck"></i></div>
               <div>
-                <div class="ks-workspace-title">Transporter Hub</div>
-                <div class="ks-workspace-sub">Available loads, telemetry tracking & fleet earnings</div>
+                <div class="ks-workspace-title" data-i18n="transporter.logisticsHub">${t('transporter.logisticsHub', 'Transporter Hub')}</div>
+                <div class="ks-workspace-sub" data-i18n="transporter.availableFreight">${t('transporter.availableFreight', 'Available loads, telemetry tracking & fleet earnings')}</div>
               </div>
             </a>
             <a href="${prefix}admin/dashboard.html" class="ks-workspace-card">
               <div class="ks-workspace-icon" style="background:#EDE8F5;color:#7B5EA7;"><i data-lucide="shield-check"></i></div>
               <div>
-                <div class="ks-workspace-title">Admin Management</div>
-                <div class="ks-workspace-sub">Platform compliance, user verification & health</div>
+                <div class="ks-workspace-title" data-i18n="admin.adminPanel">${t('admin.adminPanel', 'Admin Management')}</div>
+                <div class="ks-workspace-sub" data-i18n="admin.platformOverview">${t('admin.platformOverview', 'Platform compliance, user verification & health')}</div>
               </div>
             </a>
           </div>

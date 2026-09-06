@@ -102,6 +102,11 @@ const register = async (req, res) => {
       ? role.toLowerCase().trim()
       : 'farmer';
 
+    // Validate preferredLanguage
+    const allowedLangs = ['en', 'hi', 'mr'];
+    const requestedLang = (req.body.preferredLanguage || req.body.language || '').toLowerCase().trim();
+    const assignedLang = allowedLangs.includes(requestedLang) ? requestedLang : 'en';
+
     // Create user in database (password is hashed via User schema pre-save hook)
     await User.create({
       name: name.trim(),
@@ -109,6 +114,8 @@ const register = async (req, res) => {
       phone: userPhone,
       password,
       role: assignedRole,
+      preferredLanguage: assignedLang,
+      languageUpdatedAt: new Date(),
       emailVerified: false,
       emailVerificationOtpHash: otpHash,
       emailVerificationExpiresAt: otpExpiresAt,
@@ -387,6 +394,8 @@ const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        preferredLanguage: user.preferredLanguage || 'en',
+        languageUpdatedAt: user.languageUpdatedAt || user.updatedAt || new Date(),
         emailVerified: user.emailVerified
       }
     });
@@ -411,6 +420,8 @@ const getMe = async (req, res) => {
         email: req.user.email,
         phone: req.user.phone || '',
         role: req.user.role,
+        preferredLanguage: req.user.preferredLanguage || 'en',
+        languageUpdatedAt: req.user.languageUpdatedAt || req.user.updatedAt || new Date(),
         emailVerified: req.user.emailVerified,
         createdAt: req.user.createdAt
       }
@@ -766,6 +777,20 @@ const updateProfile = async (req, res) => {
       user.phone = normalizedPhone;
     }
 
+    if (req.body.preferredLanguage !== undefined) {
+      const lang = String(req.body.preferredLanguage).toLowerCase().trim();
+      const validLangs = ['en', 'hi', 'mr'];
+      if (!validLangs.includes(lang)) {
+        return res.status(400).json({
+          success: false,
+          code: 'INVALID_LANGUAGE',
+          message: 'Preferred language must be one of: en, hi, mr'
+        });
+      }
+      user.preferredLanguage = lang;
+      user.languageUpdatedAt = new Date();
+    }
+
     await user.save();
 
     return res.status(200).json({
@@ -777,6 +802,8 @@ const updateProfile = async (req, res) => {
         email: user.email,
         phone: user.phone || '',
         role: user.role,
+        preferredLanguage: user.preferredLanguage || 'en',
+        languageUpdatedAt: user.languageUpdatedAt || user.updatedAt,
         emailVerified: user.emailVerified,
         updatedAt: user.updatedAt
       }
@@ -785,6 +812,58 @@ const updateProfile = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message || 'Server error while updating profile'
+    });
+  }
+};
+
+// @desc    Update user language preference ('en' | 'hi' | 'mr')
+// @route   PUT /api/auth/language, PUT /api/auth/preferred-language
+// @access  Private (Protected by JWT)
+const updateLanguagePreference = async (req, res) => {
+  try {
+    const requested = (req.body.preferredLanguage || req.body.language || '').toLowerCase().trim();
+    const validLangs = ['en', 'hi', 'mr'];
+
+    if (!requested || !validLangs.includes(requested)) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_LANGUAGE',
+        message: 'Invalid language code. Supported languages: en, hi, mr'
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        code: 'USER_NOT_FOUND',
+        message: 'User not found'
+      });
+    }
+
+    user.preferredLanguage = requested;
+    user.languageUpdatedAt = new Date();
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Language preference updated successfully',
+      preferredLanguage: user.preferredLanguage,
+      languageUpdatedAt: user.languageUpdatedAt,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        preferredLanguage: user.preferredLanguage,
+        languageUpdatedAt: user.languageUpdatedAt
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      code: 'SERVER_ERROR',
+      message: error.message || 'Server error while updating language preference'
     });
   }
 };
@@ -861,6 +940,7 @@ module.exports = {
   resetPassword,
   resendResetOtp,
   updateProfile,
+  updateLanguagePreference,
   changePassword
 };
 

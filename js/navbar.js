@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlobalSearch();
   initHeaderModalButtons();
   initLiveNotificationBadge();
+
+  // Re-render role navigation and highlights dynamically on language change
+  window.addEventListener('languageChanged', () => {
+    initRoleAwareNav();
+    initActiveRouteHighlight();
+  });
 });
 
 /**
@@ -29,49 +35,51 @@ function initRoleAwareNav() {
   const path = window.location.pathname.toLowerCase();
   const prefix = (path.includes('/transporter/') || path.includes('/admin/')) ? '../' : '';
 
+  const t = (key, fallback) => (window.i18next && typeof window.i18next.t === 'function') ? window.i18next.t(key, fallback) : fallback;
+
   const navMenusByRole = {
     farmer: [
-      { page: 'dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-      { page: 'lots.html', id: 'nav-lots', icon: 'package', label: 'My Lots' },
-      { page: 'storage.html', id: 'nav-storage', icon: 'warehouse', label: 'Storage Options' },
-      { page: 'market.html', id: 'nav-market', icon: 'store', label: 'Marketplace' },
-      { page: 'ai-forecast.html', id: 'nav-forecast', icon: 'brain', label: 'AI Forecast' },
-      { page: 'orders.html', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
-      { page: 'buyers.html', id: 'nav-buyers', icon: 'users', label: 'Buyer Inquiries' }
+      { page: 'dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: t('navigation.dashboard', 'Dashboard'), key: 'navigation.dashboard' },
+      { page: 'lots.html', id: 'nav-lots', icon: 'package', label: t('navigation.myLots', 'My Lots'), key: 'navigation.myLots' },
+      { page: 'storage.html', id: 'nav-storage', icon: 'warehouse', label: t('navigation.storage', 'Storage Options'), key: 'navigation.storage' },
+      { page: 'market.html', id: 'nav-market', icon: 'store', label: t('navigation.marketplace', 'Marketplace'), key: 'navigation.marketplace' },
+      { page: 'ai-forecast.html', id: 'nav-forecast', icon: 'brain', label: t('navigation.aiForecast', 'AI Forecast'), key: 'navigation.aiForecast' },
+      { page: 'orders.html', id: 'nav-orders', icon: 'clipboard-list', label: t('navigation.orders', 'Orders'), key: 'navigation.orders' },
+      { page: 'buyers.html', id: 'nav-buyers', icon: 'users', label: t('navigation.buyers', 'Buyer Inquiries'), key: 'navigation.buyers' }
     ],
     buyer: [
-      { page: 'buyer.html#/buyer/dashboard', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-      { page: 'buyer.html#/buyer/marketplace', id: 'nav-market', icon: 'store', label: 'Marketplace' },
-      { page: 'buyer.html#/buyer/inquiries', id: 'nav-inquiries', icon: 'message-square', label: 'My Inquiries' },
-      { page: 'buyer.html#/buyer/orders', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
-      { page: 'buyer.html#/buyer/directory', id: 'nav-directory', icon: 'users', label: 'Farmers & FPOs' },
-      { page: 'buyer.html#/buyer/payments', id: 'nav-payments', icon: 'wallet', label: 'Escrow & Payments' }
+      { page: 'buyer.html#/buyer/dashboard', id: 'nav-dashboard', icon: 'layout-dashboard', label: t('navigation.dashboard', 'Dashboard'), key: 'navigation.dashboard' },
+      { page: 'buyer.html#/buyer/marketplace', id: 'nav-market', icon: 'store', label: t('navigation.marketplace', 'Marketplace'), key: 'navigation.marketplace' },
+      { page: 'buyer.html#/buyer/inquiries', id: 'nav-inquiries', icon: 'message-square', label: t('navigation.inquiries', 'My Inquiries'), key: 'navigation.inquiries' },
+      { page: 'buyer.html#/buyer/orders', id: 'nav-orders', icon: 'clipboard-list', label: t('navigation.orders', 'Orders'), key: 'navigation.orders' },
+      { page: 'buyer.html#/buyer/directory', id: 'nav-directory', icon: 'users', label: t('navigation.directory', 'Farmers & FPOs'), key: 'navigation.directory' },
+      { page: 'buyer.html#/buyer/payments', id: 'nav-payments', icon: 'wallet', label: t('navigation.escrowPayments', 'Escrow & Payments'), key: 'navigation.escrowPayments' }
     ],
     transporter: [
-      { page: 'transporter/dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-      { page: 'transporter/available-loads.html', id: 'nav-loads', icon: 'package-search', label: 'Available Loads' },
-      { page: 'transporter/active-trips.html', id: 'nav-trips', icon: 'truck', label: 'Active Trips' },
-      { page: 'transporter/fleet.html', id: 'nav-fleet', icon: 'shield-check', label: 'Fleet' },
-      { page: 'transporter/drivers.html', id: 'nav-drivers', icon: 'users', label: 'Drivers' },
-      { page: 'transporter/earnings.html', id: 'nav-earnings', icon: 'wallet', label: 'Earnings' },
-      { page: 'transporter/profile.html', id: 'nav-profile', icon: 'user-check', label: 'Profile' }
+      { page: 'transporter/dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: t('navigation.dashboard', 'Dashboard'), key: 'navigation.dashboard' },
+      { page: 'transporter/available-loads.html', id: 'nav-loads', icon: 'package-search', label: t('navigation.availableLoads', 'Available Loads'), key: 'navigation.availableLoads' },
+      { page: 'transporter/active-trips.html', id: 'nav-trips', icon: 'truck', label: t('navigation.activeTrips', 'Active Trips'), key: 'navigation.activeTrips' },
+      { page: 'transporter/fleet.html', id: 'nav-fleet', icon: 'shield-check', label: t('navigation.fleet', 'Fleet'), key: 'navigation.fleet' },
+      { page: 'transporter/drivers.html', id: 'nav-drivers', icon: 'users', label: t('navigation.drivers', 'Drivers'), key: 'navigation.drivers' },
+      { page: 'transporter/earnings.html', id: 'nav-earnings', icon: 'wallet', label: t('navigation.earnings', 'Earnings'), key: 'navigation.earnings' },
+      { page: 'transporter/profile.html', id: 'nav-profile', icon: 'user-check', label: t('common.profile', 'Profile'), key: 'common.profile' }
     ],
     fpo: [
-      { page: 'fpo-dashboard.html#dashboard', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-      { page: 'fpo-dashboard.html#farmers', id: 'nav-farmers', icon: 'users', label: 'Farmers' },
-      { page: 'fpo-dashboard.html#lots', id: 'nav-lots', icon: 'package', label: 'Lots' },
-      { page: 'storage.html', id: 'nav-storage', icon: 'warehouse', label: 'Storage & Linkages' },
-      { page: 'fpo-dashboard.html#market', id: 'nav-market', icon: 'store', label: 'Market' },
-      { page: 'fpo-dashboard.html#buyers', id: 'nav-buyers', icon: 'briefcase', label: 'Buyers' },
-      { page: 'fpo-dashboard.html#orders', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
-      { page: 'fpo-dashboard.html#analytics', id: 'nav-analytics', icon: 'bar-chart-3', label: 'Analytics' }
+      { page: 'fpo-dashboard.html#dashboard', id: 'nav-dashboard', icon: 'layout-dashboard', label: t('navigation.dashboard', 'Dashboard'), key: 'navigation.dashboard' },
+      { page: 'fpo-dashboard.html#farmers', id: 'nav-farmers', icon: 'users', label: t('navigation.farmers', 'Farmers'), key: 'navigation.farmers' },
+      { page: 'fpo-dashboard.html#lots', id: 'nav-lots', icon: 'package', label: t('navigation.myLots', 'Lots'), key: 'navigation.myLots' },
+      { page: 'storage.html', id: 'nav-storage', icon: 'warehouse', label: t('navigation.storage', 'Storage & Linkages'), key: 'navigation.storage' },
+      { page: 'fpo-dashboard.html#market', id: 'nav-market', icon: 'store', label: t('navigation.marketplace', 'Market'), key: 'navigation.marketplace' },
+      { page: 'fpo-dashboard.html#buyers', id: 'nav-buyers', icon: 'briefcase', label: t('navigation.buyers', 'Buyers'), key: 'navigation.buyers' },
+      { page: 'fpo-dashboard.html#orders', id: 'nav-orders', icon: 'clipboard-list', label: t('navigation.orders', 'Orders'), key: 'navigation.orders' },
+      { page: 'fpo-dashboard.html#analytics', id: 'nav-analytics', icon: 'bar-chart-3', label: t('navigation.reports', 'Analytics'), key: 'navigation.reports' }
     ],
     admin: [
-      { page: 'admin/dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-      { page: 'admin/users.html', id: 'nav-users', icon: 'users', label: 'Users' },
-      { page: 'admin/farmers.html', id: 'nav-farmers', icon: 'user-check', label: 'Farmers' },
-      { page: 'admin/reports.html', id: 'nav-reports', icon: 'bar-chart-2', label: 'Reports' },
-      { page: 'admin/settings.html', id: 'nav-settings', icon: 'settings', label: 'Settings' }
+      { page: 'admin/dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: t('navigation.dashboard', 'Dashboard'), key: 'navigation.dashboard' },
+      { page: 'admin/users.html', id: 'nav-users', icon: 'users', label: t('navigation.users', 'Users'), key: 'navigation.users' },
+      { page: 'admin/farmers.html', id: 'nav-farmers', icon: 'user-check', label: t('navigation.farmers', 'Farmers'), key: 'navigation.farmers' },
+      { page: 'admin/reports.html', id: 'nav-reports', icon: 'bar-chart-2', label: t('navigation.reports', 'Reports'), key: 'navigation.reports' },
+      { page: 'admin/settings.html', id: 'nav-settings', icon: 'settings', label: t('navigation.settings', 'Settings'), key: 'navigation.settings' }
     ]
   };
 
@@ -80,7 +88,7 @@ function initRoleAwareNav() {
   // Render desktop nav if container is present
   navContainer.innerHTML = menuItems.map(item => `
     <a href="${prefix}${item.page}" class="dash-header__link" id="${item.id}">
-      <i data-lucide="${item.icon}" class="dash-header__link-icon"></i> ${item.label}
+      <i data-lucide="${item.icon}" class="dash-header__link-icon"></i> <span data-i18n="${item.key}">${item.label}</span>
     </a>
   `).join('');
 
@@ -88,7 +96,7 @@ function initRoleAwareNav() {
   if (mobileNavContainer) {
     mobileNavContainer.innerHTML = menuItems.map(item => `
       <a href="${prefix}${item.page}" class="dash-mobile-nav__link" id="m${item.id}">
-        <i data-lucide="${item.icon}"></i> ${item.label}
+        <i data-lucide="${item.icon}"></i> <span data-i18n="${item.key}">${item.label}</span>
       </a>
     `).join('');
   }

@@ -28,6 +28,15 @@ const notificationSchema = new mongoose.Schema(
           'delivery_delivered',
           'payment_updated',
           'profile_updated',
+          'offer_received',
+          'offer_accepted',
+          'offer_rejected',
+          'storage_request_received',
+          'storage_request_accepted',
+          'storage_request_rejected',
+          'verification_status',
+          'market_alert',
+          'ai_alert',
           'system'
         ],
         message: '{VALUE} is not a valid notification type'
@@ -40,16 +49,28 @@ const notificationSchema = new mongoose.Schema(
       trim: true,
       maxlength: [150, 'Title cannot exceed 150 characters']
     },
+    titleKey: {
+      type: String,
+      trim: true
+    },
     message: {
       type: String,
       required: [true, 'Message is required'],
       trim: true,
       maxlength: [500, 'Message cannot exceed 500 characters']
     },
+    templateKey: {
+      type: String,
+      trim: true
+    },
+    params: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
+    },
     relatedEntity: {
       entityType: {
         type: String,
-        enum: ['Inquiry', 'Order', 'Delivery', 'TransportRequest', 'ProduceLot', 'User']
+        enum: ['Inquiry', 'Order', 'Delivery', 'TransportRequest', 'ProduceLot', 'StorageRequest', 'User']
       },
       entityId: {
         type: mongoose.Schema.Types.ObjectId

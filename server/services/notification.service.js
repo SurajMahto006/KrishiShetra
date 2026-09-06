@@ -9,18 +9,24 @@ const createNotification = async ({
   type,
   title,
   message,
+  titleKey,
+  templateKey,
+  params = {},
   relatedEntity = {}
 }) => {
   try {
-    if (!recipient || !type || !title || !message) {
+    if (!recipient || !type || (!title && !titleKey) || (!message && !templateKey)) {
       return null;
     }
 
     const notification = await Notification.create({
       recipient,
       type,
-      title: String(title).trim().slice(0, 150),
-      message: String(message).trim().slice(0, 500),
+      title: title ? String(title).trim().slice(0, 150) : (titleKey || ''),
+      titleKey: titleKey || undefined,
+      message: message ? String(message).trim().slice(0, 500) : (templateKey || ''),
+      templateKey: templateKey || undefined,
+      params: params || {},
       relatedEntity: {
         entityType: relatedEntity.entityType || undefined,
         entityId: relatedEntity.entityId || undefined
@@ -45,12 +51,15 @@ const createBulkNotifications = async (notifications = []) => {
     }
 
     const docs = notifications
-      .filter((n) => n && n.recipient && n.type && n.title && n.message)
+      .filter((n) => n && n.recipient && n.type && (n.title || n.titleKey) && (n.message || n.templateKey))
       .map((n) => ({
         recipient: n.recipient,
         type: n.type,
-        title: String(n.title).trim().slice(0, 150),
-        message: String(n.message).trim().slice(0, 500),
+        title: n.title ? String(n.title).trim().slice(0, 150) : (n.titleKey || ''),
+        titleKey: n.titleKey || undefined,
+        message: n.message ? String(n.message).trim().slice(0, 500) : (n.templateKey || ''),
+        templateKey: n.templateKey || undefined,
+        params: n.params || {},
         relatedEntity: n.relatedEntity || {}
       }));
 

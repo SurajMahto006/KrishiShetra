@@ -7,8 +7,13 @@
  * 3. Interactive AI "Sell Now vs Store & Hold" Calculator
  * 4. Storage Space Booking & Request modal workflow
  * 5. Pledge Financing / e-NWR Short-Term Liquidity application
- * 6. Multilingual support (English, Hindi, Marathi)
+ * 6. Multilingual support (English, Hindi, Marathi) with dynamic reactivity
  */
+
+// Helper for i18n
+function t(key, fallback) {
+  return (window.i18next && typeof window.i18next.t === 'function') ? window.i18next.t(key, fallback) : (fallback || key);
+}
 
 // Global Storage State
 const StorageState = {
@@ -22,8 +27,12 @@ const StorageState = {
   verifiedOnly: false,
   facilities: [],
   selectedFacility: null,
+  currentCropOptions: [],
   map: null,
-  markersLayer: null
+  markersLayer: null,
+  get currentLang() {
+    return (window.i18next && window.i18next.language) ? window.i18next.language : 'en';
+  }
 };
 
 /**
@@ -32,6 +41,11 @@ const StorageState = {
 function initStorageMap() {
   const mapContainer = document.getElementById('storage-map');
   if (!mapContainer || typeof L === 'undefined') return;
+
+  if (StorageState.map) {
+    StorageState.map.remove();
+    StorageState.map = null;
+  }
 
   StorageState.map = L.map('storage-map', {
     zoomControl: false
@@ -52,9 +66,10 @@ function initStorageMap() {
     iconAnchor: [9, 9]
   });
 
+  const locationTitle = t('storage.myFarmLocation', '📍 Your Farm Location');
   L.marker([StorageState.userLat, StorageState.userLng], { icon: userIcon })
     .addTo(StorageState.map)
-    .bindPopup('<b>📍 Your Farm Location</b><br>' + StorageState.userLocationName);
+    .bindPopup(`<b>${locationTitle}</b><br>${StorageState.userLocationName}`);
 }
 
 /**
@@ -82,15 +97,15 @@ function renderMapMarkers(facilities) {
     const popupHtml = `
       <div style="font-family:Inter,sans-serif; min-width:210px;">
         <div style="font-weight:700; font-size:13.5px; color:#1A3320; margin-bottom:4px;">${f.name}</div>
-        <div style="font-size:11.5px; color:#666; margin-bottom:6px;">📍 ${f.address.district}, ${f.address.state} (${f.distanceKm || 0} km away)</div>
+        <div style="font-size:11.5px; color:#666; margin-bottom:6px;">📍 ${f.address.district}, ${f.address.state} (${f.distanceKm || 0} km ${t('storage.distanceAway', 'away')})</div>
         <div style="background:#F5F5F0; padding:6px 8px; border-radius:6px; font-size:12px; margin-bottom:8px;">
-          <div><strong>Available:</strong> ${f.availableCapacity} ${f.capacityUnit}</div>
-          <div><strong>Rate:</strong> ₹${f.storageRate}/${f.storageRateUnit.replace(/_/g, ' ')}</div>
-          <div><strong>Accreditation:</strong> ${f.accreditationType || 'Verified'}</div>
+          <div><strong>${t('storage.availableCapacity', 'Available')}:</strong> ${f.availableCapacity} ${f.capacityUnit}</div>
+          <div><strong>${t('storage.storageRate', 'Rate')}:</strong> ₹${f.storageRate}/${f.storageRateUnit ? f.storageRateUnit.replace(/_/g, ' ') : t('storage.perBagMonth', 'per bag/month')}</div>
+          <div><strong>${t('storage.accreditation', 'Accreditation')}:</strong> ${f.accreditationType || t('storage.verified', 'Verified')}</div>
         </div>
         <div style="display:flex; gap:6px;">
-          <button class="btn btn--primary btn--sm" style="flex:1; padding:4px 8px; font-size:11px;" onclick="openBookingModal('${f.facilityCode || f.id}')">Book Space</button>
-          <a class="btn btn--secondary btn--sm" style="padding:4px 8px; font-size:11px; text-decoration:none;" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${f.latitude},${f.longitude}">Navigate</a>
+          <button class="btn btn--primary btn--sm" style="flex:1; padding:4px 8px; font-size:11px;" onclick="openBookingModal('${f.facilityCode || f.id}')">${t('storage.bookSpaceBtn', 'Book Space')}</button>
+          <a class="btn btn--secondary btn--sm" style="padding:4px 8px; font-size:11px; text-decoration:none;" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${f.latitude},${f.longitude}">${t('storage.navigateBtn', 'Navigate')}</a>
         </div>
       </div>
     `;
@@ -111,9 +126,9 @@ function renderFacilityCards(facilities) {
     container.innerHTML = `
       <div style="text-align:center; padding:40px 20px; color:#777;">
         <div style="font-size:36px; margin-bottom:10px;">🏬</div>
-        <h4 style="color:#222; margin-bottom:6px;">No storage facilities found</h4>
-        <p style="font-size:13px;">Try expanding the radius or changing the crop / storage type filter.</p>
-        <button class="btn btn--secondary btn--sm" onclick="resetFilters()">Reset Filters</button>
+        <h4 style="color:#222; margin-bottom:6px;">${t('storage.noFacilitiesFoundTitle', 'No storage facilities found')}</h4>
+        <p style="font-size:13px;">${t('storage.noFacilitiesFoundDesc', 'Try expanding the radius or changing the crop / storage type filter.')}</p>
+        <button class="btn btn--secondary btn--sm" onclick="resetFilters()">${t('storage.filterResetBtn', 'Reset Filters')}</button>
       </div>
     `;
     return;
@@ -121,7 +136,7 @@ function renderFacilityCards(facilities) {
 
   container.innerHTML = facilities.map(f => {
     const isCold = f.type === 'cold_storage';
-    const typeLabel = isCold ? 'Cold Storage' : f.type === 'silo' ? 'Grain Silo' : 'Warehouse';
+    const typeLabel = isCold ? t('storage.coldStorage', 'Cold Storage') : f.type === 'silo' ? t('storage.silo', 'Grain Silo') : t('storage.warehouse', 'Warehouse');
     const typeClass = isCold ? 'facility-card__type-badge--cold_storage' : f.type === 'silo' ? 'facility-card__type-badge--silo' : 'facility-card__type-badge--warehouse';
 
     const cropsPills = (f.supportedCrops || []).slice(0, 4).map(c => `<span style="background:#F0EFEB; color:#444; font-size:10.5px; padding:2px 6px; border-radius:4px; text-transform:capitalize;">${c}</span>`).join(' ');
@@ -133,7 +148,7 @@ function renderFacilityCards(facilities) {
             <h3 class="facility-card__name">${f.name}</h3>
             <div class="facility-card__location">
               <i data-lucide="map-pin" style="width:13px;height:13px;"></i>
-              <span>${f.address.district}, ${f.address.state} · <strong>${f.distanceKm || 0} km away</strong></span>
+              <span>${f.address.district}, ${f.address.state} · <strong>${f.distanceKm || 0} km ${t('storage.distanceAway', 'away')}</strong></span>
             </div>
           </div>
           <span class="facility-card__type-badge ${typeClass}">${typeLabel}</span>
@@ -141,13 +156,13 @@ function renderFacilityCards(facilities) {
 
         <div class="facility-card__accreditation">
           <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
-          <span>${f.accreditationType || 'Verified Facility'}</span>
-          ${f.pledgeFinancingEligible ? '<span class="pledge-badge-pill" style="margin-left:auto; font-size:10px; padding:2px 6px;">e-NWR Loan Eligible</span>' : ''}
+          <span>${f.accreditationType || t('storage.verified', 'Verified Facility')}</span>
+          ${f.pledgeFinancingEligible ? `<span class="pledge-badge-pill" style="margin-left:auto; font-size:10px; padding:2px 6px;">${t('storage.eNwrReady', 'e-NWR Loan Eligible')}</span>` : ''}
         </div>
 
         <div style="font-size:11.5px; color:#555; display:flex; justify-content:space-between; margin-bottom:2px;">
-          <span>Capacity (${f.availableCapacity} / ${f.totalCapacity} ${f.capacityUnit} free)</span>
-          <span style="font-weight:700;">${f.capacityUtilizationPct || 50}% Utilized</span>
+          <span>${t('storage.capacity', 'Capacity')} (${f.availableCapacity} / ${f.totalCapacity} ${f.capacityUnit} ${t('storage.availableCapacity', 'free')})</span>
+          <span style="font-weight:700;">${f.capacityUtilizationPct || 50}% ${t('storage.utilized', 'Utilized')}</span>
         </div>
         <div class="facility-card__capacity-bar">
           <div class="facility-card__capacity-fill" style="width:${Math.min(100, f.capacityUtilizationPct || 50)}%;"></div>
@@ -156,31 +171,31 @@ function renderFacilityCards(facilities) {
         <div class="facility-card__metrics">
           <div>
             <div class="facility-card__metric-val">₹${f.storageRate}</div>
-            <div class="facility-card__metric-lbl">/${f.storageRateUnit.replace(/_/g, ' ')}</div>
+            <div class="facility-card__metric-lbl">/${f.storageRateUnit ? f.storageRateUnit.replace(/_/g, ' ') : t('storage.perBagMonth', 'per bag/month')}</div>
           </div>
           <div>
             <div class="facility-card__metric-val">₹${f.handlingCharge || 15}</div>
-            <div class="facility-card__metric-lbl">/q Handling</div>
+            <div class="facility-card__metric-lbl">${t('storage.handlingRatePerQuintal', '/q Handling')}</div>
           </div>
           <div>
             <div class="facility-card__metric-val">${f.availableCapacity} ${f.capacityUnit}</div>
-            <div class="facility-card__metric-lbl">Free Space</div>
+            <div class="facility-card__metric-lbl">${t('storage.freeSpaceMetric', 'Free Space')}</div>
           </div>
         </div>
 
         <div style="margin: 8px 0; display:flex; gap:4px; flex-wrap:wrap; align-items:center;">
-          <span style="font-size:11px; color:#777; margin-right:4px;">Crops:</span>
+          <span style="font-size:11px; color:#777; margin-right:4px;">${t('storage.cropsSupportedLabel', 'Crops:')}</span>
           ${cropsPills}
         </div>
 
         <div class="facility-card__actions" style="display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;">
           <button class="btn btn--primary" onclick="openBookingModal('${f.facilityCode || f.id}')" style="min-height: 48px; font-weight: 800; flex: 2; min-width: 150px; background: #2E7D32; border-color: #2E7D32; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 13.5px;">
-            <i data-lucide="calendar-plus"></i> <span>Book Storage</span>
+            <i data-lucide="calendar-plus"></i> <span>${t('storage.bookSpaceBtn', 'Book Storage')}</span>
           </button>
-          <button class="btn btn--secondary" onclick="openPledgeModal('${f.facilityCode || f.id}')" title="Pledge Financing" style="min-height: 48px; font-weight: 700; flex: 1.3; min-width: 120px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; font-size: 12.5px;">
-            <i data-lucide="landmark"></i> <span>Pledge Loan</span>
+          <button class="btn btn--secondary" onclick="openPledgeModal('${f.facilityCode || f.id}')" title="${t('storage.applyPledgeBtn', 'Pledge Financing')}" style="min-height: 48px; font-weight: 700; flex: 1.3; min-width: 120px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; font-size: 12.5px;">
+            <i data-lucide="landmark"></i> <span>${t('storage.applyPledgeBtn', 'Pledge Loan')}</span>
           </button>
-          <a class="btn btn--secondary" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${f.latitude},${f.longitude}" style="min-height: 48px; width: 48px; display: inline-flex; align-items: center; justify-content: center;" title="Directions">
+          <a class="btn btn--secondary" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${f.latitude},${f.longitude}" style="min-height: 48px; width: 48px; display: inline-flex; align-items: center; justify-content: center;" title="${t('storage.navigateBtn', 'Directions')}">
             <i data-lucide="navigation"></i>
           </a>
         </div>
@@ -197,7 +212,7 @@ function renderFacilityCards(facilities) {
 async function loadStorageFacilities() {
   const listContainer = document.getElementById('storage-list-panel');
   if (listContainer) {
-    listContainer.innerHTML = '<div style="text-align:center; padding:30px;"><div class="dash-spinner"></div><p style="font-size:13px; color:#777; margin-top:8px;">Finding nearby storage facilities...</p></div>';
+    listContainer.innerHTML = `<div style="text-align:center; padding:30px;"><div class="dash-spinner"></div><p style="font-size:13px; color:#777; margin-top:8px;">${t('storage.findingFacilities', 'Finding nearby storage facilities...')}</p></div>`;
   }
 
   const params = {
@@ -248,13 +263,16 @@ async function calculateSellVsStore() {
   const currentPrice = parseFloat(priceInput ? priceInput.value : 2400) || 2400;
   const holdingDays = parseInt(daysInput ? daysInput.value : 45, 10) || 45;
 
+  const lang = StorageState.currentLang || (window.i18n && window.i18n.currentLocale) || localStorage.getItem('krishi_locale') || 'en';
   const requestData = {
     cropName,
     quantity,
     currentPrice,
     holdingDays,
     storageFacilityId: StorageState.selectedFacility ? (StorageState.selectedFacility._id || StorageState.selectedFacility.facilityCode) : null,
-    distanceKm: StorageState.selectedFacility ? (StorageState.selectedFacility.distanceKm || 12) : 12
+    distanceKm: StorageState.selectedFacility ? (StorageState.selectedFacility.distanceKm || 12) : 12,
+    language: lang,
+    lang: lang
   };
 
   try {
@@ -306,7 +324,7 @@ async function loadCropStorageOptions() {
   container.innerHTML = `
     <div style="grid-column: 1/-1; text-align: center; padding: 24px; color: #777;">
       <div class="spinner" style="margin: 0 auto 8px auto; width: 20px; height: 20px; border: 2px solid #DDD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-      Evaluating all suitable warehouse & cold storage options for ${crop}...
+      ${t('storage.evaluatingCropOptions', 'Evaluating all suitable warehouse & cold storage options for')} ${crop}...
     </div>
   `;
 
@@ -335,7 +353,7 @@ async function loadCropStorageOptions() {
       StorageState.currentCropOptions = res.options;
       renderCropOptionsComparison(res.options);
     } else {
-      container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #777;">No matching facilities found.</div>`;
+      container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #777;">${t('storage.noFacilitiesFoundTitle', 'No matching facilities found.')}</div>`;
     }
   } catch (err) {
     console.error('loadCropStorageOptions error:', err);
@@ -352,7 +370,7 @@ function renderCropOptionsComparison(options) {
   if (!options || options.length === 0) {
     container.innerHTML = `
       <div style="grid-column: 1/-1; padding: 20px; text-align: center; background: #FAF9F5; border-radius: 10px; color: #777;">
-        No specific storage facilities found for this crop. Showing all accredited grain warehouses.
+        ${t('storage.noFacilitiesFoundDesc', 'No specific storage facilities found for this crop. Showing all accredited grain warehouses.')}
       </div>
     `;
     return;
@@ -364,23 +382,25 @@ function renderCropOptionsComparison(options) {
 
     let badgeHtml = '';
     if (opt.isBestNetGain) {
-      badgeHtml = `<span style="background:#E8F5E9; color:#2E7D32; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:4px; border:1px solid #C8E6C9;">🏆 HIGHEST PROFIT</span>`;
+      badgeHtml = `<span style="background:#E8F5E9; color:#2E7D32; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:4px; border:1px solid #C8E6C9;">${t('storage.highestProfit', '🏆 HIGHEST PROFIT')}</span>`;
     } else if (opt.isNearest) {
-      badgeHtml = `<span style="background:#E3F2FD; color:#1565C0; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:4px; border:1px solid #BBDEFB;">⚡ NEAREST (${opt.distanceKm} km)</span>`;
+      badgeHtml = `<span style="background:#E3F2FD; color:#1565C0; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:4px; border:1px solid #BBDEFB;">${t('storage.nearest', '⚡ NEAREST')} (${opt.distanceKm} km)</span>`;
     } else if (opt.isLowestCost) {
-      badgeHtml = `<span style="background:#FEF3C7; color:#92400E; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:4px; border:1px solid #FDE68A;">💰 LOWEST COST</span>`;
+      badgeHtml = `<span style="background:#FEF3C7; color:#92400E; font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:4px; border:1px solid #FDE68A;">${t('storage.lowestCost', '💰 LOWEST COST')}</span>`;
     }
+
+    const typeName = opt.type === 'cold_storage' ? t('storage.coldStorage', '❄️ Cold Storage') : opt.type === 'silo' ? t('storage.silo', '🏗️ Grain Silo') : t('storage.warehouse', '🏬 Warehouse');
 
     return `
       <div class="storage-crop-option-card" style="background: #FFFFFF; border: 2px solid ${isSelected ? '#2E7D32' : '#E5E4DD'}; border-radius: 12px; padding: 16px; position: relative; transition: all 0.2s ease; box-shadow: ${isSelected ? '0 4px 16px rgba(46,125,50,0.15)' : '0 2px 8px rgba(0,0,0,0.04)'};">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
           <div>
             <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">
-              Option ${idx + 1} • ${opt.type === 'cold_storage' ? '❄️ Cold Storage' : opt.type === 'silo' ? '🏗️ Grain Silo' : '🏬 Warehouse'}
+              ${t('storage.optionPrefix', 'Option')} ${idx + 1} • ${typeName}
             </div>
             <h4 style="font-size: 14.5px; font-weight: 800; color: var(--ks-evergreen); margin: 2px 0;">${opt.name}</h4>
             <div style="font-size: 11.5px; color: #666;">
-              📍 ${opt.district}, ${opt.state} • <strong>${opt.distanceKm} km away</strong>
+              📍 ${opt.district}, ${opt.state} • <strong>${opt.distanceKm} km ${t('storage.distanceAway', 'away')}</strong>
             </div>
           </div>
           <div>${badgeHtml}</div>
@@ -388,43 +408,43 @@ function renderCropOptionsComparison(options) {
 
         <div style="background: #FAF9F5; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-            <span style="color: #666;">Monthly Storage Tariff:</span>
-            <strong>₹${opt.storageRate}/${opt.storageRateUnit.replace(/_/g, ' ')}</strong>
+            <span style="color: #666;">${t('storage.monthlyStorageTariff', 'Monthly Storage Tariff:')}</span>
+            <strong>₹${opt.storageRate}/${opt.storageRateUnit ? opt.storageRateUnit.replace(/_/g, ' ') : t('storage.perBagMonth', 'per bag/month')}</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-            <span style="color: #666;">Handling & Unloading:</span>
+            <span style="color: #666;">${t('storage.handlingAndUnloading', 'Handling & Unloading:')}</span>
             <strong>₹${opt.handlingCharge || 14}/q</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-            <span style="color: #666;">Available Capacity:</span>
+            <span style="color: #666;">${t('storage.availableCapacity', 'Available Capacity:')}</span>
             <strong style="color:#2E7D32;">${opt.availableCapacity} / ${opt.totalCapacity} MT</strong>
           </div>
           <div style="display: flex; justify-content: space-between; border-top: 1px solid #E5E4DD; padding-top: 4px; margin-top: 4px;">
-            <span style="color: #666;">Total Holding Costs:</span>
+            <span style="color: #666;">${t('storage.totalHoldingCosts', 'Total Holding Costs:')}</span>
             <strong style="color:#C62828;">₹${opt.totalHoldingCost.toLocaleString('en-IN')}</strong>
           </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <div>
-            <div style="font-size: 10.5px; text-transform: uppercase; color: #777; font-weight: 700;">Projected Net Gain</div>
+            <div style="font-size: 10.5px; text-transform: uppercase; color: #777; font-weight: 700;">${t('storage.projectedNetGain', 'Projected Net Gain')}</div>
             <div style="font-size: 16px; font-weight: 800; color: ${isPos ? '#2E7D32' : '#C62828'};">
               ${isPos ? '+' : ''}₹${opt.projectedNetGain.toLocaleString('en-IN')}
               <span style="font-size: 11px; font-weight: 600;">(${isPos ? '+' : ''}${opt.netGainPercent}%)</span>
             </div>
           </div>
           <div style="text-align: right;">
-            <div style="font-size: 10.5px; text-transform: uppercase; color: #777; font-weight: 700;">Net Realization</div>
+            <div style="font-size: 10.5px; text-transform: uppercase; color: #777; font-weight: 700;">${t('storage.netRealizationHeading', 'Net Realization')}</div>
             <div style="font-size: 14px; font-weight: 700; color: #1A3320;">₹${opt.projectedNetRealization.toLocaleString('en-IN')}</div>
           </div>
         </div>
 
         <div style="display: flex; gap: 6px;">
           <button class="btn btn--sm btn--primary" style="flex: 1; padding: 7px 10px; font-size: 12px; background:${isSelected ? '#12372A' : '#2E7D32'}; border-color:${isSelected ? '#12372A' : '#2E7D32'};" onclick="selectFacilityForCalculation('${opt.facilityCode}')">
-            <i data-lucide="${isSelected ? 'check-circle' : 'check'}"></i> ${isSelected ? 'Selected' : 'Choose Facility'}
+            <i data-lucide="${isSelected ? 'check-circle' : 'check'}"></i> ${isSelected ? t('storage.selected', 'Selected') : t('storage.chooseFacility', 'Choose Facility')}
           </button>
           <button class="btn btn--sm btn--secondary" style="padding: 7px 10px; font-size: 12px;" onclick="openBookingModal('${opt.facilityCode}')">
-            Book Space
+            ${t('storage.bookSpaceBtn', 'Book Space')}
           </button>
         </div>
       </div>
@@ -477,7 +497,7 @@ function selectFacilityForCalculation(facilityCode) {
   if (facility) {
     StorageState.selectedFacility = facility;
     calculateSellVsStore();
-    showToast(`Selected ${facility.name} for calculation.`);
+    showToast(`${t('storage.selected', 'Selected')} ${facility.name}`);
   }
 }
 
@@ -497,6 +517,11 @@ function updateDecisionUI(d) {
   const explanationEl = document.getElementById('res-explanation-text');
   const recBadgeEl = document.getElementById('res-rec-badge');
 
+  const curPriceDisplayEl = document.getElementById('res-cur-price-display');
+  if (curPriceDisplayEl) {
+    curPriceDisplayEl.textContent = `₹${(d.currentPrice || 2400).toLocaleString('en-IN')} / ${t('storage.quintals', 'quintal')}`;
+  }
+
   if (sellRealizationEl) sellRealizationEl.textContent = '₹' + d.sellNow.expectedRealization.toLocaleString('en-IN');
   if (storeRealizationEl) storeRealizationEl.textContent = '₹' + d.storeAndHold.projectedNetRealization.toLocaleString('en-IN');
   
@@ -507,23 +532,24 @@ function updateDecisionUI(d) {
 
   if (storeRentEl) storeRentEl.textContent = '₹' + d.storeAndHold.storageRent.toLocaleString('en-IN');
   if (handlingEl) handlingEl.textContent = '₹' + d.storeAndHold.handlingCost.toLocaleString('en-IN');
-  if (weightLossEl) weightLossEl.textContent = `₹${d.storeAndHold.weightLossCost.toLocaleString('en-IN')} (${d.storeAndHold.weightLossPercent}% shrinkage)`;
+  if (weightLossEl) weightLossEl.textContent = `₹${d.storeAndHold.weightLossCost.toLocaleString('en-IN')} (${d.storeAndHold.weightLossPercent}% ${t('storage.weightLossMoisture', 'shrinkage')})`;
 
   if (explanationEl) {
-    explanationEl.textContent = d.explanations[lang] || d.explanations.en;
+    explanationEl.textContent = d.reason || d.explanation || ((d.explanations && d.explanations[lang]) ? d.explanations[lang] : (d.explanations?.en || ''));
   }
 
   if (recBadgeEl) {
-    if (d.recommendation === 'STORE & HOLD') {
+    const isStoreHold = d.recommendation === 'STORE_HOLD' || d.recommendation === 'STORE & HOLD' || d.decisionType === 'STORE & HOLD';
+    if (isStoreHold) {
       recBadgeEl.className = 'svs-badge';
       recBadgeEl.style.background = '#E8F5E9';
       recBadgeEl.style.color = '#2E7D32';
-      recBadgeEl.innerHTML = '<i data-lucide="check-circle" style="width:14px;height:14px;"></i> <span>RECOMMENDED: STORE & HOLD</span>';
+      recBadgeEl.innerHTML = `<i data-lucide="check-circle" style="width:14px;height:14px;"></i> <span>${t('storage.storeAndHoldOption', 'RECOMMENDED: STORE & HOLD')}</span>`;
     } else {
       recBadgeEl.className = 'svs-badge';
       recBadgeEl.style.background = '#FFF3E0';
       recBadgeEl.style.color = '#E65100';
-      recBadgeEl.innerHTML = '<i data-lucide="alert-circle" style="width:14px;height:14px;"></i> <span>RECOMMENDED: SELL NOW</span>';
+      recBadgeEl.innerHTML = `<i data-lucide="alert-circle" style="width:14px;height:14px;"></i> <span>${t('storage.sellNowOption', 'RECOMMENDED: SELL NOW')}</span>`;
     }
     if (window.lucide) window.lucide.createIcons();
   }
@@ -544,7 +570,7 @@ function openBookingModal(facilityId) {
 
   if (titleEl) titleEl.textContent = facility.name;
   if (codeInput) codeInput.value = facility.id || facility.facilityCode;
-  if (ratePreview) ratePreview.textContent = `₹${facility.storageRate}/${facility.storageRateUnit.replace(/_/g, ' ')} + ₹${facility.handlingCharge || 15}/q handling`;
+  if (ratePreview) ratePreview.textContent = `₹${facility.storageRate}/${facility.storageRateUnit ? facility.storageRateUnit.replace(/_/g, ' ') : t('storage.perBagMonth', 'per bag/month')} + ₹${facility.handlingCharge || 15}/q ${t('storage.handlingCharges', 'handling')}`;
 
   updateBookingCostPreview();
   const overlay = document.getElementById('storage-booking-modal-overlay');
@@ -621,14 +647,14 @@ async function submitStorageBooking(e) {
 
     if (res && res.success) {
       closeBookingModal();
-      showToast('Storage request submitted successfully! Facility manager will review.');
+      showToast(t('success.bookingSubmitted', 'Storage request submitted successfully! Facility manager will review.'));
     } else {
-      alert(res ? res.message : 'Booking request failed');
+      alert(res ? res.message : t('errors.bookingFailed', 'Booking request failed'));
     }
   } catch (err) {
     console.error('submitStorageBooking error:', err);
     closeBookingModal();
-    showToast('Storage request submitted! Warehouse will verify capacity.');
+    showToast(t('success.bookingSubmitted', 'Storage request submitted! Warehouse will verify capacity.'));
   }
 }
 
@@ -676,7 +702,7 @@ function updatePledgeCalculations() {
 async function submitPledgeFinancing(e) {
   if (e) e.preventDefault();
   closePledgeModal();
-  showToast('Pledge loan application submitted to partner lender!');
+  showToast(t('success.pledgeApplied', 'Pledge loan application submitted to partner lender!'));
 }
 
 /**
@@ -687,26 +713,26 @@ function setupGeolocation() {
   if (btn && navigator.geolocation) {
     btn.addEventListener('click', () => {
       btn.disabled = true;
-      btn.textContent = '📍 Locating...';
+      btn.textContent = '📍 ...';
       navigator.geolocation.getCurrentPosition(
         pos => {
           StorageState.userLat = pos.coords.latitude;
           StorageState.userLng = pos.coords.longitude;
-          StorageState.userLocationName = 'Your GPS Location';
+          StorageState.userLocationName = t('storage.myFarmLocation', 'Your GPS Location');
 
           if (StorageState.map) {
             StorageState.map.setView([StorageState.userLat, StorageState.userLng], 10);
           }
           btn.disabled = false;
-          btn.innerHTML = '<i data-lucide="crosshair"></i> <span>My Location</span>';
+          btn.innerHTML = `<i data-lucide="crosshair"></i> <span>${t('storage.useCurrentLocation', 'My Location')}</span>`;
           if (window.lucide) window.lucide.createIcons();
           loadStorageFacilities();
         },
         err => {
           btn.disabled = false;
-          btn.innerHTML = '<i data-lucide="crosshair"></i> <span>My Location</span>';
+          btn.innerHTML = `<i data-lucide="crosshair"></i> <span>${t('storage.useCurrentLocation', 'My Location')}</span>`;
           if (window.lucide) window.lucide.createIcons();
-          alert('Could not access GPS location. Showing Maharashtra facilities.');
+          alert('Could not access GPS location. Showing accredited facilities.');
         }
       );
     });
@@ -748,8 +774,8 @@ function initFilterListeners() {
         }
         const filtered = StorageState.facilities.filter(f =>
           f.name.toLowerCase().includes(query) ||
-          f.address.district.toLowerCase().includes(query) ||
-          f.address.state.toLowerCase().includes(query)
+          (f.address?.district && f.address.district.toLowerCase().includes(query)) ||
+          (f.address?.state && f.address.state.toLowerCase().includes(query))
         );
         renderFacilityCards(filtered);
       }, 250);
@@ -826,7 +852,7 @@ function speakStorageVerdict() {
     isSpeakingStorage = false;
     btn?.classList.remove('speaking');
     if (voiceIcon) voiceIcon.textContent = '🔊';
-    if (voiceText) voiceText.textContent = 'Listen';
+    if (voiceText) voiceText.textContent = t('storage.listenVerdictBtn', 'Listen');
     return;
   }
 
@@ -837,39 +863,32 @@ function speakStorageVerdict() {
 
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-IN';
+  utterance.lang = StorageState.currentLang === 'hi' ? 'hi-IN' : StorageState.currentLang === 'mr' ? 'mr-IN' : 'en-IN';
   utterance.rate = 0.95;
 
   utterance.onstart = () => {
     isSpeakingStorage = true;
     btn?.classList.add('speaking');
     if (voiceIcon) voiceIcon.textContent = '⏹️';
-    if (voiceText) voiceText.textContent = 'Stop';
+    if (voiceText) voiceText.textContent = t('storage.stopVerdictBtn', 'Stop');
   };
 
   utterance.onend = () => {
     isSpeakingStorage = false;
     btn?.classList.remove('speaking');
     if (voiceIcon) voiceIcon.textContent = '🔊';
-    if (voiceText) voiceText.textContent = 'Listen';
+    if (voiceText) voiceText.textContent = t('storage.listenVerdictBtn', 'Listen');
   };
 
   utterance.onerror = () => {
     isSpeakingStorage = false;
     btn?.classList.remove('speaking');
     if (voiceIcon) voiceIcon.textContent = '🔊';
-    if (voiceText) voiceText.textContent = 'Listen';
+    if (voiceText) voiceText.textContent = t('storage.listenVerdictBtn', 'Listen');
   };
 
   window.speechSynthesis.speak(utterance);
 }
-
-window.speakStorageVerdict = speakStorageVerdict;
-
-function setStorageLanguage(lang) {
-  showToast('Language is set to English.');
-}
-
 
 /**
  * Storage Sub-Tabs Switcher & Loader
@@ -925,22 +944,25 @@ async function loadMyStorageBookings() {
   container.innerHTML = `
     <div style="text-align: center; padding: 40px 20px; color: #777;">
       <div class="spinner" style="margin: 0 auto 12px auto; width: 24px; height: 24px; border: 3px solid #DDD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-      Loading your warehouse deposits & storage requests...
+      ${t('storage.loadingBookings', 'Loading your warehouse deposits & storage requests...')}
     </div>
   `;
 
   try {
-    const res = await window.api.storage.getMyRequests();
-    const requests = (res && res.requests) ? res.requests : [];
+    let requests = [];
+    if (window.api && window.api.storage && typeof window.api.storage.getMyRequests === 'function') {
+      const res = await window.api.storage.getMyRequests();
+      requests = (res && res.requests) ? res.requests : [];
+    }
 
     if (requests.length === 0) {
       container.innerHTML = `
         <div style="padding: 40px 24px; text-align: center; background: #FAF9F5; border-radius: 12px; border: 1px dashed #DDD;">
           <div style="font-size: 36px; margin-bottom: 8px;">🏬</div>
-          <h4 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">No Active Storage Bookings</h4>
-          <p style="font-size: 12.5px; color: var(--ks-text-muted); margin: 0 0 16px 0;">You haven't submitted any warehouse space requests yet. Discover nearby facilities to store your harvest.</p>
+          <h4 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">${t('storage.noBookingsTitle', 'No Active Storage Bookings')}</h4>
+          <p style="font-size: 12.5px; color: var(--ks-text-muted); margin: 0 0 16px 0;">${t('storage.noBookingsDesc', "You haven't submitted any warehouse space requests yet. Discover nearby facilities to store your harvest.")}</p>
           <button class="btn btn--primary btn--sm" onclick="switchStorageSubTab('discovery')">
-            <i data-lucide="map-pin"></i> Find Nearby Warehouses
+            <i data-lucide="map-pin"></i> ${t('storage.nearbyWarehouses', 'Find Nearby Warehouses')}
           </button>
         </div>
       `;
@@ -952,6 +974,7 @@ async function loadMyStorageBookings() {
       const facility = req.facility || {};
       const statusColor = req.status === 'confirmed' || req.status === 'active' ? '#2E7D32' : req.status === 'requested' ? '#D97706' : '#555';
       const statusBg = req.status === 'confirmed' || req.status === 'active' ? '#E8F5E9' : req.status === 'requested' ? '#FEF3C7' : '#F5F5F5';
+      const statusText = req.status === 'requested' ? t('storage.requested', 'Requested') : req.status === 'active' ? t('storage.active', 'Active') : req.status === 'completed' ? t('storage.completed', 'Completed') : req.status;
 
       return `
         <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
@@ -962,22 +985,22 @@ async function loadMyStorageBookings() {
             <div>
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
                 <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #555;">${req.requestId || req._id}</span>
-                <span style="padding: 2px 8px; border-radius: 6px; background: ${statusBg}; color: ${statusColor}; font-size: 11px; font-weight: 700; text-transform: uppercase;">${req.status}</span>
-                ${req.warehouseReceiptNumber ? `<span style="padding: 2px 8px; border-radius: 6px; background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: 700;">Receipt: ${req.warehouseReceiptNumber}</span>` : ''}
+                <span style="padding: 2px 8px; border-radius: 6px; background: ${statusBg}; color: ${statusColor}; font-size: 11px; font-weight: 700; text-transform: uppercase;">${statusText}</span>
+                ${req.warehouseReceiptNumber ? `<span style="padding: 2px 8px; border-radius: 6px; background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: 700;">${t('storage.receiptLabel', 'Receipt:')} ${req.warehouseReceiptNumber}</span>` : ''}
               </div>
               <h4 style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen); margin: 0 0 2px 0;">${req.cropName} (${req.quantity} ${req.quantityUnit || 'quintal'})</h4>
               <div style="font-size: 12px; color: #666;">
-                Facility: <strong>${facility.name || 'Accredited Facility'}</strong> • Duration: <strong>${req.durationDays || 30} Days</strong>
+                ${t('storage.facilityLabel', 'Facility:')} <strong>${facility.name || t('storage.verified', 'Accredited Facility')}</strong> • ${t('storage.durationLabel', 'Duration:')} <strong>${req.durationDays || 30} ${t('storage.daysLabel', 'Days')}</strong>
               </div>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 16px;">
             <div style="text-align: right;">
-              <div style="font-size: 11px; color: #777; text-transform: uppercase; font-weight: 600;">Est. Storage Cost</div>
+              <div style="font-size: 11px; color: #777; text-transform: uppercase; font-weight: 600;">${t('storage.estStorageCostLabel', 'Est. Storage Cost')}</div>
               <div style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen);">₹${(req.totalEstimatedCost || req.estimatedStorageCost || 0).toLocaleString('en-IN')}</div>
             </div>
-            <button class="btn btn--sm btn--secondary" onclick="openPledgeModal('${facility._id || 'WH-MH-PUN-001'}')" title="Apply for pledge loan against this deposit">
-              <i data-lucide="landmark"></i> Pledge Loan
+            <button class="btn btn--sm btn--secondary" onclick="openPledgeModal('${facility._id || 'WH-MH-PUN-001'}')" title="${t('storage.applyPledgeBtn', 'Apply for pledge loan')}">
+              <i data-lucide="landmark"></i> ${t('storage.applyPledgeBtn', 'Pledge Loan')}
             </button>
           </div>
         </div>
@@ -1000,22 +1023,25 @@ async function loadMyPledgeRequests() {
   container.innerHTML = `
     <div style="text-align: center; padding: 40px 20px; color: #777;">
       <div class="spinner" style="margin: 0 auto 12px auto; width: 24px; height: 24px; border: 3px solid #DDD; border-top-color: #1565C0; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-      Loading your pledge liquidity applications...
+      ${t('storage.loadingPledge', 'Loading your pledge liquidity applications...')}
     </div>
   `;
 
   try {
-    const res = await window.api.pledgeFinancing.getMyRequests();
-    const requests = (res && res.requests) ? res.requests : [];
+    let requests = [];
+    if (window.api && window.api.pledgeFinancing && typeof window.api.pledgeFinancing.getMyRequests === 'function') {
+      const res = await window.api.pledgeFinancing.getMyRequests();
+      requests = (res && res.requests) ? res.requests : [];
+    }
 
     if (requests.length === 0) {
       container.innerHTML = `
         <div style="padding: 40px 24px; text-align: center; background: #FAF9F5; border-radius: 12px; border: 1px dashed #DDD;">
           <div style="font-size: 36px; margin-bottom: 8px;">💰</div>
-          <h4 style="font-size: 15px; font-weight: 700; color: #1565C0; margin: 0 0 4px 0;">No Pledge Financing Applications</h4>
-          <p style="font-size: 12.5px; color: var(--ks-text-muted); margin: 0 0 16px 0;">Apply for immediate working capital against your stored warehouse receipts to prevent distress selling.</p>
+          <h4 style="font-size: 15px; font-weight: 700; color: #1565C0; margin: 0 0 4px 0;">${t('storage.noPledgeRequestsTitle', 'No Pledge Financing Applications')}</h4>
+          <p style="font-size: 12.5px; color: var(--ks-text-muted); margin: 0 0 16px 0;">${t('storage.noPledgeRequestsDesc', 'Apply for immediate working capital against your stored warehouse receipts to prevent distress selling.')}</p>
           <button class="btn btn--primary btn--sm" style="background: #1565C0; border-color: #1565C0;" onclick="openPledgeModal('WH-MH-PUN-001')">
-            <i data-lucide="plus"></i> Apply for Pledge Loan
+            <i data-lucide="plus"></i> ${t('storage.applyPledgeLoan', 'Apply for Pledge Loan')}
           </button>
         </div>
       `;
@@ -1030,15 +1056,15 @@ async function loadMyPledgeRequests() {
             <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #1565C0;">${p.financingId || p.loanRequestId || p._id}</span>
             <span style="padding: 2px 8px; border-radius: 6px; background: #E3F2FD; color: #0D47A1; font-size: 11px; font-weight: 700; text-transform: uppercase;">${p.status || 'Applied'}</span>
           </div>
-          <h4 style="font-size: 15px; font-weight: 800; color: #1A3320; margin: 0 0 2px 0;">${p.cropName} • Stored: ${p.storedQuantity} ${p.quantityUnit || 'q'}</h4>
+          <h4 style="font-size: 15px; font-weight: 800; color: #1A3320; margin: 0 0 2px 0;">${p.cropName} • ${t('storage.storedQuantityLabel', 'Stored:')} ${p.storedQuantity} ${p.quantityUnit || 'q'}</h4>
           <div style="font-size: 12px; color: #666;">
-            Lender: <strong>${p.partnerInstitution || 'NABARD Linked Credit'}</strong> • Est. Value: <strong>₹${(p.estimatedProduceValue || 0).toLocaleString('en-IN')}</strong>
+            ${t('storage.lenderLabel', 'Lender:')} <strong>${p.partnerInstitution || 'NABARD Linked Credit'}</strong> • ${t('storage.estValueLabel', 'Est. Value:')} <strong>₹${(p.estimatedProduceValue || 0).toLocaleString('en-IN')}</strong>
           </div>
         </div>
         <div style="text-align: right;">
-          <div style="font-size: 11px; color: #777; text-transform: uppercase; font-weight: 600;">Loan Requested</div>
+          <div style="font-size: 11px; color: #777; text-transform: uppercase; font-weight: 600;">${t('storage.loanRequestedLabel', 'Loan Requested')}</div>
           <div style="font-size: 16px; font-weight: 800; color: #1565C0;">₹${(p.requestedLoanAmount || 0).toLocaleString('en-IN')}</div>
-          <span style="font-size: 10.5px; color: #888;">Max 75% LTV Permissible</span>
+          <span style="font-size: 10.5px; color: #888;">${t('storage.maxLtvPermissible', 'Max 75% LTV Permissible')}</span>
         </div>
       </div>
     `).join('');
@@ -1056,15 +1082,20 @@ window.openPledgeModal = openPledgeModal;
 window.closePledgeModal = closePledgeModal;
 window.submitStorageBooking = submitStorageBooking;
 window.submitPledgeFinancing = submitPledgeFinancing;
-window.setStorageLanguage = setStorageLanguage;
+window.speakStorageVerdict = speakStorageVerdict;
 window.resetFilters = resetFilters;
 window.switchStorageSubTab = switchStorageSubTab;
 window.sortCropOptions = sortCropOptions;
 window.selectFacilityForCalculation = selectFacilityForCalculation;
 window.loadCropStorageOptions = loadCropStorageOptions;
+window.loadStorageFacilities = loadStorageFacilities;
 
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('languageChanged', () => {
+    loadStorageFacilities();
+    calculateSellVsStore();
+  });
   initStorageMap();
   setupGeolocation();
   initFilterListeners();
