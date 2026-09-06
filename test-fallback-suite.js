@@ -2,8 +2,16 @@ const assert = require('assert');
 const path = require('path');
 
 // 1. Load Fallback Data and DataService
-const { FALLBACK_DATA, DATA_MODE } = require(path.join(__dirname, 'data', 'fallback-data.js'));
-const DataService = require(path.join(__dirname, 'js', 'data-service.js'));
+const fs = require('fs');
+const fallbackPath = fs.existsSync(path.join(__dirname, 'frontend', 'data', 'fallback-data.js'))
+  ? path.join(__dirname, 'frontend', 'data', 'fallback-data.js')
+  : path.join(__dirname, 'data', 'fallback-data.js');
+const { FALLBACK_DATA, DATA_MODE } = require(fallbackPath);
+
+const dataServicePath = fs.existsSync(path.join(__dirname, 'frontend', 'js', 'data-service.js'))
+  ? path.join(__dirname, 'frontend', 'js', 'data-service.js')
+  : path.join(__dirname, 'js', 'data-service.js');
+const DataService = require(dataServicePath);
 
 async function runTests() {
   console.log('=== RUNNING KRISHISHETRA DATA FALLBACK & INTEGRITY SUITE ===\n');

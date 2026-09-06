@@ -12,12 +12,23 @@ global.localStorage = {
   get length() { return Object.keys(store).length; }
 };
 
-const MarketDataCache = require('./js/marketDataCache.js');
-const { FALLBACK_DATA, DATA_MODE } = require('./data/fallback-data.js');
+const fs = require('fs');
+const cachePath = fs.existsSync(path.join(__dirname, 'frontend', 'js', 'marketDataCache.js'))
+  ? path.join(__dirname, 'frontend', 'js', 'marketDataCache.js')
+  : path.join(__dirname, 'js', 'marketDataCache.js');
+const MarketDataCache = require(cachePath);
+
+const fallbackPath = fs.existsSync(path.join(__dirname, 'frontend', 'data', 'fallback-data.js'))
+  ? path.join(__dirname, 'frontend', 'data', 'fallback-data.js')
+  : path.join(__dirname, 'data', 'fallback-data.js');
+const { FALLBACK_DATA, DATA_MODE } = require(fallbackPath);
 global.FALLBACK_DATA = FALLBACK_DATA;
 global.MarketDataCache = MarketDataCache;
 
-const DataService = require('./js/data-service.js');
+const dataServicePath = fs.existsSync(path.join(__dirname, 'frontend', 'js', 'data-service.js'))
+  ? path.join(__dirname, 'frontend', 'js', 'data-service.js')
+  : path.join(__dirname, 'js', 'data-service.js');
+const DataService = require(dataServicePath);
 
 async function runVerification() {
   console.log('================================================================');
