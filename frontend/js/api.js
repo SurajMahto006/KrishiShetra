@@ -817,6 +817,7 @@ if (typeof window !== 'undefined') {
 // ═══════════════════════════════════════════════════════════════════════════
 
 if (typeof window !== 'undefined') {
+  window.resolveApiBaseUrl = resolveApiBaseUrl;
   window.API_BASE_URL = API_BASE_URL;
   window.ApiClient = ApiClient;
   window.api = api;

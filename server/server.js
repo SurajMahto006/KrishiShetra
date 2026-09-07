@@ -116,10 +116,20 @@ app.all('/api/*', apiNotFoundHandler);
 const frontendDir = path.join(__dirname, '..', 'frontend');
 
 // Serve the entire frontend directory as static files (HTML, CSS, JS, Assets, etc.)
-app.use(express.static(frontendDir, { extensions: ['html'] }));
+app.use(express.static(frontendDir, {
+  extensions: ['html'],
+  setHeaders: (res, filePath) => {
+    if (filePath && filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  }
+}));
 
 // Explicitly serve frontend/index.html for GET /
 app.get('/', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(frontendDir, 'index.html'));
 });
 
