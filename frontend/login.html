@@ -777,15 +777,18 @@
           const result = await parseResponseSafely(res);
           const data = result.data;
 
-          if (result.ok && result.success) {
-            window.Auth.setToken(data.token);
-            window.Auth.setUser(data.user);
+          const token = data.token || (data.data && data.data.token);
+          const user = data.user || (data.data && data.data.user);
+
+          if (result.ok && result.success && token && user) {
+            window.Auth.setToken(token);
+            window.Auth.setUser(user);
 
             btnLogin.innerHTML = 'Login Successful! ✓';
             btnLogin.style.background = '#5B9A72';
 
             setTimeout(() => {
-              const userRole = (data.user && data.user.role) ? data.user.role.toLowerCase() : 'farmer';
+              const userRole = (user && user.role) ? String(user.role).toLowerCase().trim() : 'farmer';
               if (userRole === 'buyer') {
                 window.location.href = 'buyer.html';
               } else if (userRole === 'fpo') {

@@ -12,7 +12,7 @@ const protect = async (req, res, next) => {
       // Extract token from 'Bearer <token>' case-insensitively
       token = authHeader.replace(/^Bearer\s+/i, '').trim();
 
-      if (!token) {
+      if (!token || token === 'null' || token === 'undefined') {
         return res.status(401).json({
           success: false,
           message: 'Not authorized, token missing'
@@ -32,27 +32,51 @@ const protect = async (req, res, next) => {
         return next();
       }
 
-      // Verify token
-      const decoded = jwt.verify(token, JWT_SECRET);
-
-      // Get user from token payload (excluding sensitive fields)
-      const user = await User.findById(decoded.userId).select(
-        '-password -emailVerificationOtpHash -passwordResetOtpHash -passwordResetTokenHash'
-      );
-
-      if (!user) {
+      // Cryptographically verify token
+      let decoded;
+      try {
+        decoded = jwt.verify(token, JWT_SECRET);
+      } catch (jwtError) {
         return res.status(401).json({
           success: false,
-          message: 'Not authorized, user not found'
+          message: 'Not authorized, invalid or expired token'
         });
       }
 
-      req.user = user;
-      next();
-    } catch (error) {
-      return res.status(401).json({
+      const targetId = decoded.userId || decoded.id || decoded._id;
+      if (!targetId) {
+        return res.status(401).json({
+          success: false,
+          message: 'Not authorized, invalid token payload'
+        });
+      }
+
+      // Get user from token payload (with DB error isolation)
+      try {
+        const user = await User.findById(targetId).select(
+          '-password -emailVerificationOtpHash -passwordResetOtpHash -passwordResetTokenHash'
+        );
+
+        if (!user) {
+          return res.status(401).json({
+            success: false,
+            message: 'Not authorized, user not found'
+          });
+        }
+
+        req.user = user;
+        next();
+      } catch (dbError) {
+        console.error('[Auth Middleware DB Error]:', dbError.message);
+        return res.status(500).json({
+          success: false,
+          message: 'Database error verifying authentication. Please try again.'
+        });
+      }
+    } catch (unexpectedError) {
+      return res.status(500).json({
         success: false,
-        message: 'Not authorized, invalid or expired token'
+        message: 'Internal server authentication error'
       });
     }
   } else {

@@ -383,7 +383,7 @@ class ApiClient {
         ...(options.headers || {})
       };
 
-      if (token) {
+      if (token && token !== 'null' && token !== 'undefined') {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
@@ -422,8 +422,8 @@ class ApiClient {
         if (response.status === 401) {
           const isLocalDev = window.Auth && typeof window.Auth.isLocalEnv === 'function' && window.Auth.isLocalEnv() && (typeof localStorage !== 'undefined' && localStorage.getItem('krishishetra_dev_session'));
 
-          // Only clear session and redirect if token is missing or if the dedicated /auth/me check returned 401
-          if (!isLocalDev && (endpoint.includes('/auth/me') || !token)) {
+          // Only clear session and redirect if dedicated /auth/me verification explicitly returned 401 for an active token
+          if (!isLocalDev && endpoint.includes('/auth/me') && token && token !== 'null' && token !== 'undefined') {
             if (window.Auth && typeof window.Auth.clearSession === 'function') {
               window.Auth.clearSession();
             } else if (typeof localStorage !== 'undefined') {
@@ -431,6 +431,7 @@ class ApiClient {
               localStorage.removeItem('krishi_user');
               localStorage.removeItem('krishi_user_role');
               localStorage.removeItem('krishi_is_logged_in');
+              localStorage.removeItem('krishi_user_phone');
             }
 
             // Only redirect if on a protected page (not login or landing)

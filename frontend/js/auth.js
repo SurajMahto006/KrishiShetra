@@ -70,13 +70,16 @@ const Auth = {
     if (!user) return;
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
     if (user.role) {
-      localStorage.setItem(this.ROLE_KEY, user.role.toLowerCase());
+      localStorage.setItem(this.ROLE_KEY, String(user.role).toLowerCase().trim());
     }
     if (user.name) {
       localStorage.setItem(this.NAME_KEY, user.name);
     }
     if (user.email) {
       localStorage.setItem(this.EMAIL_KEY, user.email);
+    }
+    if (user.phone) {
+      localStorage.setItem('krishi_user_phone', user.phone);
     }
     localStorage.setItem(this.LOGGED_IN_KEY, 'true');
   },
@@ -86,7 +89,7 @@ const Auth = {
    */
   setDevSession(role) {
     if (!this.isLocalEnv()) return null;
-    const r = (role || 'farmer').toLowerCase();
+    const r = (role || 'farmer').toLowerCase().trim();
     const devUser = {
       id: `dev_${r}_id`,
       role: r,
@@ -115,6 +118,13 @@ const Auth = {
   },
 
   /**
+   * Alias for isLoggedIn() for full backward compatibility across all modules
+   */
+  isAuthenticated() {
+    return this.isLoggedIn();
+  },
+
+  /**
    * Get current user role
    */
   getRole() {
@@ -123,16 +133,16 @@ const Auth = {
         const dev = localStorage.getItem(this.DEV_SESSION_KEY);
         if (dev) {
           const parsed = JSON.parse(dev);
-          if (parsed.role) return parsed.role.toLowerCase();
+          if (parsed.role) return String(parsed.role).toLowerCase().trim();
         }
       } catch (e) {}
     }
     const user = this.getUser();
     if (user && user.role) {
-      return user.role.toLowerCase();
+      return String(user.role).toLowerCase().trim();
     }
     const storedRole = localStorage.getItem(this.ROLE_KEY);
-    if (storedRole) return storedRole.toLowerCase();
+    if (storedRole) return String(storedRole).toLowerCase().trim();
 
     return 'farmer';
   },
@@ -150,6 +160,7 @@ const Auth = {
     localStorage.removeItem(this.NAME_KEY);
     localStorage.removeItem(this.EMAIL_KEY);
     localStorage.removeItem(this.LOGGED_IN_KEY);
+    localStorage.removeItem('krishi_user_phone');
   },
 
   /**
@@ -167,30 +178,43 @@ const Auth = {
    */
   redirectUserByRole(user) {
     const u = user || this.getUser();
-    const role = (u && u.role ? u.role : this.getRole()).toLowerCase();
+    const role = (u && u.role ? String(u.role) : this.getRole()).toLowerCase().trim();
 
-    const path = window.location.pathname.toLowerCase();
+    const path = (window.location.pathname || '').toLowerCase();
     const isSubdir = path.includes('/transporter/') || path.includes('/admin/');
     const prefix = isSubdir ? '../' : '';
 
+    let target = `${prefix}dashboard.html`;
     switch (role) {
       case 'buyer':
-        window.location.href = `${prefix}buyer.html`;
+        target = `${prefix}buyer.html`;
         break;
       case 'transporter':
-        window.location.href = `${prefix}transporter/dashboard.html`;
+        target = `${prefix}transporter/dashboard.html`;
         break;
       case 'fpo':
-        window.location.href = `${prefix}fpo-dashboard.html`;
+        target = `${prefix}fpo-dashboard.html`;
         break;
       case 'admin':
-        window.location.href = `${prefix}admin/dashboard.html`;
+        target = `${prefix}admin/dashboard.html`;
         break;
       case 'farmer':
       default:
-        window.location.href = `${prefix}dashboard.html`;
+        target = `${prefix}dashboard.html`;
         break;
     }
+
+    // Guard against redirect loops: If current URL path already points to target page, do nothing
+    const currentBase = path.split('/').filter(Boolean).pop() || 'index.html';
+    const cleanCurrent = currentBase.replace(/\.html$/, '');
+    const targetBase = target.split('/').filter(Boolean).pop() || '';
+    const cleanTarget = targetBase.replace(/\.html$/, '');
+
+    if (cleanCurrent === cleanTarget) {
+      return;
+    }
+
+    window.location.href = target;
   },
 
   /**
@@ -228,7 +252,10 @@ const Auth = {
    */
   requireAuth() {
     if (!this.isLoggedIn()) {
-      const path = window.location.pathname.toLowerCase();
+      const path = (window.location.pathname || '').toLowerCase();
+      if (path.endsWith('login.html') || path.endsWith('register.html') || path.endsWith('index.html') || path === '/' || path === '') {
+        return false;
+      }
       const loginTarget = path.includes('/transporter/') || path.includes('/admin/') ? '../login.html' : 'login.html';
       window.location.href = loginTarget;
       return false;
@@ -246,15 +273,16 @@ const Auth = {
     const currentRole = this.getRole();
     if (currentRole === 'admin') return true;
 
-    if (currentRole !== expectedRole.toLowerCase()) {
+    const normalizedExpected = (expectedRole || '').toLowerCase().trim();
+    if (currentRole !== normalizedExpected) {
       // In local development mode with an active dev session:
       // Adapt the dev session to expected role to prevent redirect loops between farmer and buyer portals
       if (this.isLocalEnv() && localStorage.getItem(this.DEV_SESSION_KEY)) {
-        this.setDevSession(expectedRole.toLowerCase());
+        this.setDevSession(normalizedExpected);
         return true;
       }
 
-      console.warn(`[PageGuard] Role mismatch. Expected: '${expectedRole}', Current: '${currentRole}'. Redirecting...`);
+      console.warn(`[PageGuard] Role mismatch. Expected: '${normalizedExpected}', Current: '${currentRole}'. Redirecting...`);
       this.redirectUserByRole();
       return false;
     }
@@ -281,19 +309,20 @@ const Auth = {
     }
 
     try {
-      if (window.api && window.api.auth) {
+      if (window.api && window.api.auth && typeof window.api.auth.getMe === 'function') {
         const res = await window.api.auth.getMe();
-        if (res.success && res.user) {
-          this.setUser(res.user);
-          return res.user;
+        const userData = res && (res.user || (res.data && res.data.user));
+        if (res && res.success && userData) {
+          this.setUser(userData);
+          return userData;
         }
-        if (res.status === 401) {
+        if (res && res.status === 401) {
           if (!this.isLocalEnv() || !localStorage.getItem(this.DEV_SESSION_KEY)) {
             this.clearSession();
           }
           return null;
         }
-        // If temporary server/network issue, retain existing valid cached user
+        // If temporary server/network issue or non-401 status, retain existing valid cached user
         const cached = this.getUser();
         if (cached) return cached;
       } else {

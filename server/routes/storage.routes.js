@@ -10,8 +10,12 @@ const optionalAuth = async (req, res, next) => {
       const token = req.headers.authorization.split(' ')[1];
       const jwt = require('jsonwebtoken');
       const User = require('../models/User');
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.userId).select('-password');
+      const JWT_SECRET = process.env.JWT_SECRET || 'krishishetra_super_secret_jwt_key_2026_dev_prod';
+      const decoded = jwt.verify(token, JWT_SECRET);
+      const targetId = decoded.userId || decoded.id || decoded._id;
+      if (targetId) {
+        req.user = await User.findById(targetId).select('-password');
+      }
     } catch (e) {
       // ignore invalid token for optional routes
     }
