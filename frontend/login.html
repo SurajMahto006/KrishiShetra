@@ -1097,14 +1097,6 @@
           showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
-          }
-        } catch (err) {
-          console.error('[Resend OTP Network Error]:', err);
-          btnResendOtp.disabled = false;
-          btnResendOtp.textContent = 'Resend Code';
-          showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
-        }
-      });
 
       // ── Local Development Role Shortcut Handler ──
       const isDevEnv = (window.Auth && typeof window.Auth.isLocalEnv === 'function' && window.Auth.isLocalEnv()) ||
