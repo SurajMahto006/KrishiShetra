@@ -85,6 +85,15 @@ const FarmerFlow = {
    * Display Farmer Onboarding Banner if profile is missing
    */
   showOnboardingBanner() {
+    // Check if dismissed in this session
+    if (sessionStorage.getItem('krishi_dismiss_profile_card') === 'true') {
+      return;
+    }
+    // If profile is already complete, do not show
+    if (this.state && this.state.profile && this.state.profile.farmName) {
+      return;
+    }
+
     let banner = document.getElementById('farmer-onboarding-banner');
     if (!banner) {
       const main = document.querySelector('main') || document.getElementById('dash-main');
@@ -94,27 +103,37 @@ const FarmerFlow = {
       banner.id = 'farmer-onboarding-banner';
       banner.className = 'container';
       banner.innerHTML = `
-        <div class="dash-onboarding-card" style="margin-top: 20px; background: linear-gradient(135deg, #12372A 0%, #1A4D3B 100%); border: 1px solid rgba(232, 185, 106, 0.4); border-radius: 16px; padding: 24px 30px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 10px 25px rgba(18, 55, 42, 0.15); flex-wrap: wrap;">
+        <div class="dash-onboarding-card" style="margin-top: 20px; background: linear-gradient(135deg, #12372A 0%, #1A4D3B 100%); border: 1px solid rgba(232, 185, 106, 0.4); border-radius: 16px; padding: 22px 28px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 10px 25px rgba(18, 55, 42, 0.15); flex-wrap: wrap;">
           <div style="display: flex; align-items: center; gap: 18px; max-width: 680px;">
             <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(232, 185, 106, 0.2); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">
               🌾
             </div>
             <div>
-              <h3 style="font-size: 19px; font-weight: 700; color: #F5F4ED; margin: 0 0 6px 0;">Complete Your Farm Profile</h3>
-              <p style="font-size: 13.5px; color: rgba(245, 244, 237, 0.82); margin: 0; line-height: 1.5;">
-                Before creating your first produce lot, tell us about your farm, location, and cultivated crops to receive verified buyer inquiries and tailored market intelligence.
+              <h3 style="font-size: 18px; font-weight: 700; color: #F5F4ED; margin: 0 0 6px 0;">Complete your farm profile</h3>
+              <p style="font-size: 13px; color: rgba(245, 244, 237, 0.82); margin: 0; line-height: 1.45;">
+                Add your farm details to receive better crop recommendations, market opportunities and buyer matches.
               </p>
             </div>
           </div>
-          <button class="btn btn--primary" id="btn-banner-complete-profile" style="background: #E8B96A; color: #12372A; font-weight: 700; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; white-space: nowrap;">
-            Complete Farm Profile →
-          </button>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn--primary" id="btn-banner-complete-profile" style="background: #E8B96A; color: #12372A; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; white-space: nowrap;">
+              Complete Profile
+            </button>
+            <button class="btn" id="btn-banner-dismiss-profile" style="background: rgba(255,255,255,0.1); color: #F5F4ED; font-weight: 600; border: 1px solid rgba(255,255,255,0.25); padding: 10px 18px; border-radius: 8px; cursor: pointer; white-space: nowrap;">
+              Dismiss
+            </button>
+          </div>
         </div>
       `;
       main.insertBefore(banner, main.firstChild);
 
       document.getElementById('btn-banner-complete-profile')?.addEventListener('click', () => {
         this.openFarmProfileModal(true);
+      });
+
+      document.getElementById('btn-banner-dismiss-profile')?.addEventListener('click', () => {
+        sessionStorage.setItem('krishi_dismiss_profile_card', 'true');
+        banner.style.display = 'none';
       });
     } else {
       banner.style.display = 'block';
@@ -1433,7 +1452,8 @@ const FarmerFlow = {
           </div>
         </div>
       </div>
-    `).join('');
+    `;
+  }).join('');
 
     if (window.lucide) window.lucide.createIcons();
   },
@@ -2114,7 +2134,7 @@ const FarmerFlow = {
 
 window.FarmerFlow = FarmerFlow;
 
-window.filterLotTab = function(filter) {
+window.filterLotTab = function (filter) {
   document.querySelectorAll('.dash-lot-tab').forEach(btn => {
     btn.classList.remove('active');
     btn.style.background = '#FFF';

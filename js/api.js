@@ -8,7 +8,7 @@
  * Production and Development API Endpoints
  */
 const PROD_API_URL = 'https://krishishetra-1.onrender.com/api';
-const DEV_API_URL = 'http://localhost:5000/api';
+const DEV_API_URL = 'http://127.0.0.1:5000/api';
 
 /**
  * Resolves API Base URL dynamically from window.API_BASE_URL, local storage override, or environment

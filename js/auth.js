@@ -87,11 +87,20 @@ const Auth = {
   setDevSession(role) {
     if (!this.isLocalEnv()) return null;
     const r = (role || 'farmer').toLowerCase();
+    const demoProfiles = {
+      farmer: { name: 'Ramesh Patil', email: 'ramesh.patil@krishishetra.demo', location: 'Navi Mumbai' },
+      fpo: { name: 'Suresh Jadhav', email: 'suresh.jadhav@vashifpo.org', location: 'Vashi, Navi Mumbai' },
+      buyer: { name: 'Amit Shah', email: 'amit.shah@shahatrading.com', location: 'Vashi APMC' },
+      transporter: { name: 'Vijay More', email: 'vijay.more@agrilogistics.in', location: 'Navi Mumbai' },
+      admin: { name: 'Admin Officer', email: 'admin@krishishetra.gov.in', location: 'Maharashtra' }
+    };
+    const profile = demoProfiles[r] || { name: `Demo ${r}`, email: `demo.${r}@krishishetra.local` };
     const devUser = {
       id: `dev_${r}_id`,
       role: r,
-      name: `Development ${r.charAt(0).toUpperCase() + r.slice(1)}`,
-      email: `dev.${r}@krishishetra.local`,
+      name: profile.name,
+      email: profile.email,
+      location: profile.location,
       isDev: true
     };
     localStorage.setItem(this.TOKEN_KEY, `dev_${r}_token`);
@@ -125,7 +134,7 @@ const Auth = {
           const parsed = JSON.parse(dev);
           if (parsed.role) return parsed.role.toLowerCase();
         }
-      } catch (e) {}
+      } catch (e) { }
     }
     const user = this.getUser();
     if (user && user.role) {

@@ -117,83 +117,83 @@ async function loadDisputes(preferredDisputeId = null) {
     state.disputes = [];
   }
 
-  // Ensure authorized roles (buyer, farmer, fpo, admin) see the demo dispute KS-DSP-DEMO-001
+  // Ensure authorized roles (buyer, farmer, fpo, admin) see the demo dispute KS-1024
   const role = state.currentUserRole;
   const isAuthorizedRole = ['buyer', 'farmer', 'admin', 'fpo'].includes(role);
-  if (isAuthorizedRole && !state.disputes.some(d => d.disputeId === 'KS-DSP-DEMO-001')) {
+  if (isAuthorizedRole && !state.disputes.some(d => d.disputeId === 'KS-1024' || d.disputeId === 'KS-DSP-DEMO-001')) {
     const demoDisp = {
-      _id: '660000000000000000000999',
-      disputeId: 'KS-DSP-DEMO-001',
-      orderId: 'KS-ORD-DEMO-001',
-      cropName: 'Tomato',
-      quantity: 50,
-      quantityUnit: 'Qtl',
-      orderAmount: 125000,
-      reason: 'Quality Mismatch',
-      description: 'Received produce does not match the agreed quality specification.',
+      _id: '660000000000000000001024',
+      disputeId: 'KS-1024',
+      orderId: 'KS-ORD-8042',
+      cropName: 'Tomato (Grade A)',
+      quantity: 8.5,
+      quantityUnit: 'Quintals (850 kg)',
+      orderAmount: 24820,
+      reason: 'Quantity received differs from dispatched quantity.',
+      description: 'Quantity received differs from dispatched quantity: 850 kg dispatched from FPO collection point vs 820 kg recorded at Vashi market receiving dock.',
       status: 'Under Review',
       raisedByRole: 'buyer',
       raisedBy: {
-        name: 'ABC Foods Pvt Ltd (Rajesh Patil)',
+        name: 'Amit Shah (Shah Wholesale Mart)',
         role: 'buyer',
-        email: 'procurement@abcfoods.in'
+        email: 'amit.shah@vashimarket.in'
       },
       counterparty: {
-        name: 'Nashik Farmer Producer Co (FPO)',
+        name: 'Ramesh Patil (via Suresh Jadhav, FPO)',
         role: 'farmer',
-        email: 'farmer@krishishetra.in'
+        email: 'ramesh.patil@krishishetra.in'
       },
       paymentProtection: {
         isProtected: true,
-        protectedAmount: 125000,
-        statusText: 'Protected During Dispute'
+        protectedAmount: 24820,
+        statusText: 'Protected Under Escrow Review'
       },
       timeline: [
         {
-          status: 'Raised',
-          title: 'Dispute Raised',
-          note: 'Buyer opened dispute for Quality Mismatch. Payment protected.',
-          actorRole: 'buyer',
-          timestamp: new Date(Date.now() - 36 * 3600 * 1000)
+          status: 'Dispatched',
+          title: 'Dispatched from FPO',
+          note: 'Ramesh: 850 kg dispatched from FPO.',
+          actorRole: 'farmer',
+          timestamp: new Date(Date.now() - 18 * 3600 * 1000)
         },
         {
-          status: 'Evidence Submitted',
-          title: 'Evidence Submitted',
-          note: '2 inspection photos and quality lab report attached.',
+          status: 'Delivered',
+          title: 'Delivery Recorded with Difference',
+          note: 'Amit: Delivery received with 820 kg recorded.',
           actorRole: 'buyer',
-          timestamp: new Date(Date.now() - 34 * 3600 * 1000)
+          timestamp: new Date(Date.now() - 12 * 3600 * 1000)
         },
         {
           status: 'Under Review',
-          title: 'Under Review',
-          note: 'Assigned to FPO / Admin mediation panel.',
+          title: 'FPO Weighment Verification',
+          note: 'FPO Suresh Jadhav: Verifying weighment records and transport scales.',
           actorRole: 'fpo',
-          timestamp: new Date(Date.now() - 12 * 3600 * 1000)
+          timestamp: new Date(Date.now() - 4 * 3600 * 1000)
         }
       ],
       evidence: [
         {
-          name: 'Batch_Inspection_Report.pdf',
+          name: 'FPO_Collection_Weigh_Slip_850kg.pdf',
           fileUrl: '',
           previewUrl: '',
-          note: 'APMC quality grading certificate documenting grade divergence',
-          uploadedAt: new Date(Date.now() - 34 * 3600 * 1000)
+          note: 'FPO collection point weighbridge certified receipt (850 kg gross)',
+          uploadedAt: new Date(Date.now() - 18 * 3600 * 1000)
         },
         {
-          name: 'Tomato_Delivery_Sample.jpg',
+          name: 'Vashi_APMC_Scale_Slip_820kg.jpg',
           fileUrl: '',
           previewUrl: 'assets/images/hero-farm.jpg',
-          note: 'Photographic evidence taken at unloading dock',
-          uploadedAt: new Date(Date.now() - 34 * 3600 * 1000)
+          note: 'Vashi APMC receiving bay calibration weigh receipt (820 kg net)',
+          uploadedAt: new Date(Date.now() - 12 * 3600 * 1000)
         }
       ],
       resolution: {
-        type: 'None',
+        type: 'Under review',
         refundAmount: 0,
-        comment: ''
+        comment: 'FPO Suresh Jadhav verifying calibration slip with transporter Vijay More.'
       },
-      createdAt: new Date(Date.now() - 36 * 3600 * 1000),
-      updatedAt: new Date(Date.now() - 12 * 3600 * 1000)
+      createdAt: new Date(Date.now() - 18 * 3600 * 1000),
+      updatedAt: new Date(Date.now() - 4 * 3600 * 1000)
     };
     state.disputes.unshift(demoDisp);
   }

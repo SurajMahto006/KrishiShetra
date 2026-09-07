@@ -62,19 +62,19 @@
         <!-- FPO Profile Pill & Dropdown -->
         <div class="profile-dropdown-wrap" id="fpoProfileWrap">
           <div class="profile-pill" id="fpoProfileBtn" onclick="toggleFpoProfileDropdown()">
-            <div class="profile-avatar">NF</div>
+            <div class="profile-avatar">SJ</div>
             <div class="profile-info">
-              <span class="profile-name">Nashik Farmers FPO</span>
-              <span class="profile-role">Registered FPC ✓</span>
+              <span class="profile-name">Suresh Jadhav</span>
+              <span class="profile-role">FPO Representative ✓</span>
             </div>
             <i data-lucide="chevron-down" class="profile-chevron"></i>
           </div>
           <div class="profile-dropdown-menu" id="fpoProfileDropdown">
             <div class="profile-dropdown-header">
-              <div class="profile-avatar profile-avatar--lg">NF</div>
+              <div class="profile-avatar profile-avatar--lg">SJ</div>
               <div>
                 <div class="profile-dropdown-title">Nashik Kisan Samriddhi FPC</div>
-                <div class="profile-dropdown-sub">CIN: U01111MH2022PTC123456 · Nashik</div>
+                <div class="profile-dropdown-sub">Lead Officer: Suresh Jadhav · Nashik Hub</div>
               </div>
             </div>
             <div class="profile-dropdown-sep"></div>
@@ -122,9 +122,9 @@
               <i data-lucide="sparkles" style="width:14px;height:14px;"></i>
               <span data-i18n="hero_badge">FPO Command Center</span>
             </div>
-            <h1 class="hero-title" data-i18n="hero_title">Welcome, <span>Nashik Farmers FPO</span> 👋</h1>
+            <h1 class="hero-title" data-i18n="hero_title">Welcome, <span>Suresh Jadhav</span> 👋</h1>
             <p class="hero-subtitle" data-i18n="hero_sub">
-              Manage your farmers, aggregate produce and connect directly with better buyers.
+              Manage incoming member farmer lots, aggregate produce and connect with institutional buyers like Amit Shah.
             </p>
 
             <!-- FPO Profile Strip -->
@@ -245,6 +245,101 @@
           <span class="kpi-trend">
             <i data-lucide="sparkles" style="width:14px;height:14px;"></i> 4 High Value Matches
           </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         DEMO FLOW: INCOMING PRODUCE & BUYER MATCH PIPELINE
+         ======================================================================= -->
+    <section class="section-wrapper" id="incoming-produce" style="margin-bottom: 2rem;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem;">
+        <!-- Left: Farmer Incoming Produce (Ramesh Patil) -->
+        <div class="glass-card" style="border-left: 4px solid var(--fresh-mint, #8FCB9B);">
+          <div class="card-header-row" style="margin-bottom: 1rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge badge-success">● Incoming Produce</span>
+                <span style="font-size: 11.5px; color: var(--text-muted-sage);">Direct Farm Submission</span>
+              </div>
+              <h3 style="font-size: 1.25rem; font-weight: 700; color: #FFFFFF; margin: 4px 0 0 0;">Ramesh Patil</h3>
+              <span style="font-size: 0.8rem; color: var(--text-muted-sage);">Navi Mumbai / Nearby Farm Cluster</span>
+            </div>
+            <span class="badge badge-warning" id="fpo-lot-status-badge">Ready for buyer matching</span>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Commodity:</span>
+                <strong style="color: #FFFFFF; font-size: 14px;">🍅 Tomato</strong>
+              </div>
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Grade:</span>
+                <span class="grade-badge grade-a" style="padding: 2px 8px; font-size: 11.5px;">Grade A</span>
+              </div>
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Available Qty:</span>
+                <strong style="color: var(--warm-amber, #D6A84F); font-size: 14px;">850 kg</strong>
+              </div>
+            </div>
+            <div style="margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.8); border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 8px;">
+              📍 <strong>Target Market:</strong> Vashi APMC / Vashi Market Corridor · Lot verified by FPO Suresh Jadhav
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-gold btn-sm" id="btn-fpo-accept-lot" onclick="handleFpoConsolidateLot()" style="flex: 1;">
+              <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Consolidate Lot
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Verified: 850 kg Tomato Grade A from Ramesh Patil.')">
+              <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> View Quality Slip
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Matched Buyer Demand (Amit Shah) -->
+        <div class="glass-card" style="border-left: 4px solid var(--warm-amber, #D6A84F);">
+          <div class="card-header-row" style="margin-bottom: 1rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge badge-gold">⚡ Buyer Demand Matched</span>
+                <span style="font-size: 11.5px; color: var(--text-muted-sage);">High Institutional Interest</span>
+              </div>
+              <h3 style="font-size: 1.25rem; font-weight: 700; color: #FFFFFF; margin: 4px 0 0 0;">Amit Shah</h3>
+              <span style="font-size: 0.8rem; color: var(--text-muted-sage);">Shah Wholesale Mart · Vashi Market</span>
+            </div>
+            <span class="badge badge-success">Status: Interested</span>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Buyer Demand:</span>
+                <strong style="color: #FFFFFF; font-size: 14px;">Tomato (Grade A)</strong>
+              </div>
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Required Volume:</span>
+                <strong style="color: var(--fresh-mint, #8FCB9B); font-size: 14px;">800–1,000 kg</strong>
+              </div>
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Delivery Point:</span>
+                <strong style="color: #FFFFFF; font-size: 14px;">Vashi APMC Dock</strong>
+              </div>
+            </div>
+            <div style="margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.8); border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 8px;">
+              💬 <em>“I can accept the Grade A tomato lot at the agreed Vashi market-linked price.”</em>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-primary btn-sm" onclick="showToast('Connected: Contract sent to Amit Shah for Ramesh Patil\\'s lot.');" style="flex: 1;">
+              <i data-lucide="handshake" style="width: 14px; height: 14px;"></i> Confirm Buyer Match
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="location.href='disputes.html'">
+              <i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i> Mediation (#KS-1024)
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -1155,6 +1250,7 @@
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
+  <script src="js/demo-data.js"></script>
   <script src="js/fpo-dashboard.js"></script>
   <script>
     // Initialize Lucide Icons

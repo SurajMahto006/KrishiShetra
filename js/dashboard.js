@@ -1603,39 +1603,93 @@ function hideModalAlert(elementId) {
   el.textContent = '';
 }
 
+function getTimeBasedGreeting() {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return 'Good morning';
+  if (hour >= 12 && hour < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
 function updateUserUI(user) {
-  if (!user) return;
-  const firstName = user.name ? user.name.split(' ')[0] : 'Farmer';
-  const initial = user.name ? user.name.charAt(0).toUpperCase() : 'F';
-  
+  const timeGreeting = getTimeBasedGreeting();
+  const isDemo = window.KrishiDemo && typeof window.KrishiDemo.isDevDemo === 'function' && window.KrishiDemo.isDevDemo();
+  const rawName = (user && user.name) ? user.name.trim() : (isDemo ? 'Ramesh Patil' : '');
+  const firstName = rawName ? rawName.split(' ')[0] : '';
+  const initial = rawName ? rawName.charAt(0).toUpperCase() : (isDemo ? 'R' : 'F');
+
   // Header Avatar & Name
   const headerAvatar = document.getElementById('header-avatar');
   const headerName = document.getElementById('header-user-name');
   if (headerAvatar) headerAvatar.textContent = initial;
-  if (headerName) headerName.textContent = firstName;
+  if (headerName) headerName.textContent = firstName || (isDemo ? 'Ramesh' : 'Farmer');
 
   // Dropdown Avatar, Name, Phone
   const dropdownAvatar = document.getElementById('dropdown-avatar');
   const dropdownName = document.getElementById('dropdown-user-name');
   const dropdownPhone = document.getElementById('dropdown-user-phone');
   if (dropdownAvatar) dropdownAvatar.textContent = initial;
-  if (dropdownName) dropdownName.textContent = user.name;
-  if (dropdownPhone) dropdownPhone.textContent = user.phone ? `+91 ${user.phone}` : (user.email || '');
+  if (dropdownName) dropdownName.textContent = rawName || (isDemo ? 'Ramesh Patil' : 'Farmer');
+  if (dropdownPhone) dropdownPhone.textContent = (user && user.phone) ? `+91 ${user.phone}` : (isDemo ? '+91 98201 44521' : ((user && user.email) || ''));
 
-  // Welcome Hero Greeting
+  // Welcome Hero Greeting (Dynamic Time-based)
   const greetingEl = document.getElementById('dash-greeting');
   if (greetingEl) {
-    const hour = new Date().getHours();
-    let timeGreeting = 'Good Morning';
-    if (hour >= 12 && hour < 17) timeGreeting = 'Good Afternoon';
-    else if (hour >= 17) timeGreeting = 'Good Evening';
-    greetingEl.textContent = `${timeGreeting}, ${firstName} 👋`;
+    greetingEl.textContent = firstName ? `${timeGreeting}, ${firstName}!` : `${timeGreeting}!`;
+  }
+
+  // Demo Location & Context
+  if (isDemo) {
+    const locEl = document.getElementById('dash-location');
+    if (locEl) locEl.innerHTML = '<i data-lucide="map-pin"></i> Navi Mumbai (Vashi APMC Hub)';
   }
 }
 
+function handleSendToFpo() {
+  const btn = document.getElementById('btn-send-fpo');
+  const hint = document.getElementById('send-fpo-status-hint');
+  const badge = document.getElementById('demo-pipeline-badge');
+  const fpoStatus = document.getElementById('journey-status-fpo');
+  const fpoHint = document.getElementById('journey-hint-fpo');
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = 'Submitted to FPO ✓';
+    btn.style.background = '#2E7D32';
+  }
+  if (hint) {
+    hint.textContent = 'FPO accepted & consolidated with Vashi shipment (Suresh Jadhav)';
+    hint.style.color = '#2E7D32';
+  }
+  if (badge) {
+    badge.textContent = 'FPO Consolidated';
+    badge.style.background = '#E8F5E9';
+    badge.style.color = '#2E7D32';
+  }
+  if (fpoStatus) {
+    fpoStatus.textContent = '✓ Consolidated';
+    fpoStatus.style.color = '#2E7D32';
+  }
+  if (fpoHint) {
+    fpoHint.textContent = 'Suresh Jadhav verified';
+  }
+
+  if (window.KrishiDemo && typeof window.KrishiDemo.setFlowState === 'function') {
+    window.KrishiDemo.setFlowState({
+      stage: 'fpo_accepted',
+      farmerSentToFpo: true,
+      fpoAccepted: true
+    });
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('Tomato lot (850 kg Grade A) submitted to Suresh Jadhav at Vashi FPO!');
+  }
+}
+window.handleSendToFpo = handleSendToFpo;
+
 function openProfileModal() {
   const user = (window.Auth && window.Auth.getUser()) || krishiStore.getProfile();
-  
+
   // Set modal badge card
   const modalAvatar = document.getElementById('modal-avatar');
   const modalName = document.getElementById('modal-user-name');
@@ -2299,16 +2353,17 @@ function initFarmerOpportunityFlow() {
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Authentication State Verification
+  let authenticatedUser = null;
   if (window.Auth) {
-    if (window.Auth.isLocalEnv() && localStorage.getItem(window.Auth.DEV_SESSION_KEY)) {
-      // Local Developer Session active — skip remote token verification
-    } else {
-      const authenticatedUser = await window.Auth.verifyAuth();
-      if (!authenticatedUser) {
-        return;
-      }
+    authenticatedUser = await window.Auth.verifyAuth();
+    if (!authenticatedUser) {
+      return;
     }
   }
+
+  // Populate authenticated user info & personalized time-based greeting
+  const currentUser = authenticatedUser || (window.Auth && window.Auth.getUser()) || JSON.parse(localStorage.getItem('krishi_user') || 'null');
+  updateUserUI(currentUser);
 
   // 1. Date Display in Hero
   const dateEl = document.getElementById('dash-date-display');
@@ -2448,173 +2503,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (window.lucide) lucide.createIcons();
 });
 
-// ═════════════════════════════════════════════════════════════════════
-// 12. SIH 26132: FARMER DECISION ENGINE ("Where & When Should You Sell?")
-// ═════════════════════════════════════════════════════════════════════
-
-const DECISION_CROP_DATA = {
-  tomato: {
-    curPrice: '₹2,490',
-    bestMandi: 'Nashik APMC',
-    dist: '42 km · Highest Net Realization',
-    bestPrice: '₹2,920',
-    netRealization: '₹2,780/q',
-    expPrice: '₹3,050',
-    trend: '+4.2%',
-    demand: '🔥 HIGH Demand',
-    adviceTitle: 'Good Time to Sell (Next 2–3 Days)',
-    adviceDesc: 'Prices are trending upward across nearby APMCs with strong institutional buyer demand. Consider listing or dispatching within the next 48 to 72 hours for maximum net realization.'
-  },
-  rice: {
-    curPrice: '₹2,850',
-    bestMandi: 'Mumbai APMC (Vashi)',
-    dist: '140 km · High Volume Buyer Hub',
-    bestPrice: '₹3,150',
-    netRealization: '₹2,980/q',
-    expPrice: '₹3,200',
-    trend: '+5.8%',
-    demand: '🔥 HIGH Demand',
-    adviceTitle: 'Strong Buying Demand — Sell or Hold 2 Days',
-    adviceDesc: 'Institutional grain millers and FMCG brands are offering premium rates for Basmati and Sona Masoori. Current arrivals are steady with strong price defense.'
-  },
-  wheat: {
-    curPrice: '₹2,650',
-    bestMandi: 'Indore Mandi',
-    dist: '520 km · Premium Sharbati Market',
-    bestPrice: '₹2,980',
-    netRealization: '₹2,720/q',
-    expPrice: '₹3,020',
-    trend: '+3.1%',
-    demand: '⚡ MODERATE Demand',
-    adviceTitle: 'Steady Market — Good Window to List Lots',
-    adviceDesc: 'Lokwan and Sharbati varieties are commanding stable floor prices. Storing in certified warehouse is an option if holding for another 3 weeks.'
-  },
-  onion: {
-    curPrice: '₹2,850',
-    bestMandi: 'Lasalgaon APMC',
-    dist: '58 km · Asia’s Largest Onion Mandi',
-    bestPrice: '₹3,320',
-    netRealization: '₹3,180/q',
-    expPrice: '₹3,450',
-    trend: '+6.4%',
-    demand: '🔥 VERY HIGH Demand',
-    adviceTitle: 'Favorable Selling Window Active',
-    adviceDesc: 'Red Garwa onions are in high demand due to export quotas. Prices are expected to remain buoyant over the next 3 to 5 days.'
-  },
-  soybean: {
-    curPrice: '₹4,650',
-    bestMandi: 'Nagpur APMC',
-    dist: '450 km · Oil Processing Cluster',
-    bestPrice: '₹5,100',
-    netRealization: '₹4,820/q',
-    expPrice: '₹5,250',
-    trend: '+4.9%',
-    demand: '🔥 HIGH Demand',
-    adviceTitle: 'Crushing Plant Buying Active — Sell This Week',
-    adviceDesc: 'Solvent extraction plants are actively procuring Grade A lots with moisture below 10%. Excellent window to lock in advance contracts.'
-  },
-  potato: {
-    curPrice: '₹1,800',
-    bestMandi: 'Pune APMC',
-    dist: '12 km · Direct Local Mandi',
-    bestPrice: '₹2,050',
-    netRealization: '₹1,990/q',
-    expPrice: '₹2,100',
-    trend: '+1.8%',
-    demand: '⚡ MODERATE Demand',
-    adviceTitle: 'Cold Storage Recommended if Holding',
-    adviceDesc: 'Local arrivals are high. Consider utilizing Nashik Cold Storage (₹2.5/kg/day) to preserve quality and sell during the upcoming festival demand.'
-  },
-  chilli: {
-    curPrice: '₹8,500',
-    bestMandi: 'Guntur APMC',
-    dist: '720 km · National Spices Market',
-    bestPrice: '₹9,800',
-    netRealization: '₹9,100/q',
-    expPrice: '₹10,200',
-    trend: '+7.2%',
-    demand: '🔥 VERY HIGH Demand',
-    adviceTitle: 'Export Demand Surge — Premium Realization',
-    adviceDesc: 'Teja and Byadgi dried red chillies are trading at seasonal highs. Verified buyers are offering instant 24h bank settlement.'
-  },
-  cotton: {
-    curPrice: '₹6,800',
-    bestMandi: 'Rajkot APMC',
-    dist: '650 km · Textile Procurement Hub',
-    bestPrice: '₹7,450',
-    netRealization: '₹7,050/q',
-    expPrice: '₹7,600',
-    trend: '+2.4%',
-    demand: '⚡ MODERATE Demand',
-    adviceTitle: 'Gradual Uptrend — Benchmark Above MSP',
-    adviceDesc: 'Spinning mills are procuring medium staple cotton. Verify moisture before dispatch to prevent weight deductions.'
-  },
-  maize: {
-    curPrice: '₹2,300',
-    bestMandi: 'Nashik APMC',
-    dist: '180 km · Feed Mill Center',
-    bestPrice: '₹2,550',
-    netRealization: '₹2,410/q',
-    expPrice: '₹2,600',
-    trend: '+3.5%',
-    demand: '🔥 HIGH Demand',
-    adviceTitle: 'Poultry Feed Demand Active',
-    adviceDesc: 'Yellow corn with moisture below 12% is receiving rapid quotes from verified livestock feed manufacturers.'
-  },
-  pulses: {
-    curPrice: '₹5,200',
-    bestMandi: 'Latur APMC',
-    dist: '310 km · Major Pulse Trading Center',
-    bestPrice: '₹5,850',
-    netRealization: '₹5,560/q',
-    expPrice: '₹6,000',
-    trend: '+5.1%',
-    demand: '🔥 HIGH Demand',
-    adviceTitle: 'Tur and Chana Firming Up',
-    adviceDesc: 'Pulse prices are supported by institutional buffer procurement. Consider listing your lot for corporate procurement.'
-  }
-};
-
-function initDecisionEngine() {
-  const pills = document.querySelectorAll('#decision-crop-pills .farmer-crop-pill');
-  if (!pills.length) return;
-
-  pills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      pills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      const cropKey = pill.getAttribute('data-crop');
-      updateDecisionSummary(cropKey);
-    });
-  });
-}
-
-function updateDecisionSummary(cropKey) {
-  const data = DECISION_CROP_DATA[cropKey] || DECISION_CROP_DATA.tomato;
-  
-  const curPriceEl = document.getElementById('dec-cur-price');
-  const bestMandiEl = document.getElementById('dec-best-mandi');
-  const distEl = document.getElementById('dec-mandi-dist');
-  const bestPriceEl = document.getElementById('dec-best-price');
-  const netValEl = document.getElementById('dec-net-val');
-  const expPriceEl = document.getElementById('dec-exp-price');
-  const trendEl = document.getElementById('dec-trend-badge');
-  const demandEl = document.getElementById('dec-demand-badge');
-  const adviceTitleEl = document.getElementById('dec-advice-title');
-  const adviceDescEl = document.getElementById('dec-advice-desc');
-
-  if (curPriceEl) curPriceEl.innerHTML = `${data.curPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
-  if (bestMandiEl) bestMandiEl.textContent = data.bestMandi;
-  if (distEl) distEl.textContent = data.dist;
-  if (bestPriceEl) bestPriceEl.innerHTML = `${data.bestPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
-  if (netValEl) netValEl.innerHTML = `Est. Net: <strong>${data.netRealization}</strong> after freight`;
-  if (expPriceEl) expPriceEl.innerHTML = `${data.expPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
-  if (trendEl) trendEl.textContent = `↑ ${data.trend}`;
-  if (demandEl) demandEl.textContent = data.demand;
-  if (adviceTitleEl) adviceTitleEl.textContent = data.adviceTitle;
-  if (adviceDescEl) adviceDescEl.textContent = data.adviceDesc;
-}
-
+// =====================================================================
+// 12. SIH 26132: FARMER DECISION ENGINE
+// (Full upgraded implementation with crop data, best options & APMC ranks in Section 17 below)
+// =====================================================================
 // ═════════════════════════════════════════════════════════════════════
 // 13. SIH 26132: 8-STEP CROP LOT CREATION WIZARD
 // ═════════════════════════════════════════════════════════════════════
@@ -2646,7 +2538,7 @@ function initLotWizard() {
       const crop = chip.getAttribute('data-crop');
       const cropVal = document.getElementById('wiz-crop-val');
       if (cropVal) cropVal.value = crop;
-      
+
       // Update variety placeholder
       const varietyInput = document.getElementById('wiz-variety-input');
       if (varietyInput) {
@@ -2693,7 +2585,7 @@ function initLotWizard() {
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       const cropKey = document.getElementById('wiz-crop-val')?.value || 'tomato';
       const cropName = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
       const qty = parseFloat(document.getElementById('wiz-qty-input')?.value || 25);
@@ -2753,7 +2645,7 @@ function initLotWizard() {
 
 function goToWizardStep(step) {
   currentWizardStep = step;
-  
+
   // Update step indicator
   document.querySelectorAll('.lot-wizard-step').forEach(node => {
     const s = parseInt(node.getAttribute('data-step'), 10);
@@ -2929,7 +2821,7 @@ function initStorageModule() {
       const crop = document.getElementById('sb-crop-select')?.value;
       const qty = document.getElementById('sb-qty-input')?.value;
       const days = document.getElementById('sb-duration-days')?.value;
-      
+
       closeModal(bookingModal);
       showToast(`🏢 Reservation Confirmed! ${qty} Tonnes of ${crop} booked at ${facility} for ${days} days. Booking ID: KS-STR-${Math.floor(1000 + Math.random() * 9000)}`);
     });
@@ -2948,9 +2840,9 @@ function renderStorageList(query = '') {
   const grid = document.getElementById('storage-modal-grid');
   if (!grid) return;
 
-  const filtered = STORAGE_FACILITIES.filter(s => 
-    s.name.toLowerCase().includes(query) || 
-    s.loc.toLowerCase().includes(query) || 
+  const filtered = STORAGE_FACILITIES.filter(s =>
+    s.name.toLowerCase().includes(query) ||
+    s.loc.toLowerCase().includes(query) ||
     s.crops.toLowerCase().includes(query)
   );
 
@@ -3122,7 +3014,7 @@ function initDisputesModule() {
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      
+
       const trx = document.getElementById('disp-trx-select')?.value || 'KS-ORD-2026-000102';
       const category = document.getElementById('disp-reason-select')?.value || 'Payment not received';
       const desc = document.getElementById('disp-desc-input')?.value || 'Grievance submitted';
@@ -3591,32 +3483,32 @@ function initDecisionEngine() {
 
 function updateDecisionSummary(cropKey = 'tomato') {
   const data = DECISION_CROP_DATA[cropKey] || DECISION_CROP_DATA.tomato;
-  
+
   // 1. Metric Cards
   const curEl = document.getElementById('dec-cur-price');
   if (curEl) curEl.innerHTML = `${data.curPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
-  
+
   const mandiEl = document.getElementById('dec-best-mandi');
   if (mandiEl) mandiEl.textContent = data.bestMandi;
-  
+
   const distEl = document.getElementById('dec-mandi-dist');
   if (distEl) distEl.textContent = data.mandiDist;
-  
+
   const priceEl = document.getElementById('dec-best-price');
   if (priceEl) priceEl.innerHTML = `${data.bestPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
-  
+
   const netEl = document.getElementById('dec-net-val');
   if (netEl) netEl.innerHTML = `Est. Net: <strong>${data.netVal}</strong> after freight`;
-  
+
   const expEl = document.getElementById('dec-exp-price');
   if (expEl) expEl.innerHTML = `${data.expPrice}<span style="font-size:14px;font-weight:600;color:#666;">/q</span>`;
-  
+
   const trendEl = document.getElementById('dec-trend-badge');
   if (trendEl) {
     trendEl.textContent = data.trendBadge;
     trendEl.className = `farmer-metric-badge ${data.trendClass}`;
   }
-  
+
   const demandEl = document.getElementById('dec-demand-badge');
   if (demandEl) {
     demandEl.textContent = `${data.demandText} Demand`;
@@ -3625,7 +3517,7 @@ function updateDecisionSummary(cropKey = 'tomato') {
   // 2. Advice Banner
   const titleEl = document.getElementById('dec-advice-title');
   if (titleEl) titleEl.textContent = data.adviceTitle;
-  
+
   const descEl = document.getElementById('dec-advice-desc');
   if (descEl) descEl.textContent = data.adviceDesc;
 

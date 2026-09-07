@@ -319,7 +319,7 @@ async function loadCropStorageOptions() {
       lat: StorageState.userLat,
       lng: StorageState.userLng,
       radius: 0,
-      lang: StorageState.currentLang
+      lang: 'en'
     };
 
     let res = null;
@@ -473,7 +473,7 @@ function sortCropOptions(criteria) {
 function selectFacilityForCalculation(facilityCode) {
   const facility = StorageState.facilities.find(f => f.facilityCode === facilityCode || f.id === facilityCode) ||
     StorageState.currentCropOptions?.find(f => f.facilityCode === facilityCode);
-  
+
   if (facility) {
     StorageState.selectedFacility = facility;
     calculateSellVsStore();
@@ -485,8 +485,6 @@ function selectFacilityForCalculation(facilityCode) {
  * Update Sell vs Store UI Card with calculated results
  */
 function updateDecisionUI(d) {
-  const lang = StorageState.currentLang;
-
   // Realizations
   const sellRealizationEl = document.getElementById('res-sell-realization');
   const storeRealizationEl = document.getElementById('res-store-realization');
@@ -499,7 +497,7 @@ function updateDecisionUI(d) {
 
   if (sellRealizationEl) sellRealizationEl.textContent = '₹' + d.sellNow.expectedRealization.toLocaleString('en-IN');
   if (storeRealizationEl) storeRealizationEl.textContent = '₹' + d.storeAndHold.projectedNetRealization.toLocaleString('en-IN');
-  
+
   if (storeNetGainEl) {
     const isPos = d.storeAndHold.projectedNetGain >= 0;
     storeNetGainEl.innerHTML = `<span style="color:${isPos ? '#2E7D32' : '#C62828'}; font-weight:800;">${isPos ? '+' : ''}₹${d.storeAndHold.projectedNetGain.toLocaleString('en-IN')} (${isPos ? '+' : ''}${d.storeAndHold.netGainPercent}%)</span>`;
@@ -510,7 +508,7 @@ function updateDecisionUI(d) {
   if (weightLossEl) weightLossEl.textContent = `₹${d.storeAndHold.weightLossCost.toLocaleString('en-IN')} (${d.storeAndHold.weightLossPercent}% shrinkage)`;
 
   if (explanationEl) {
-    explanationEl.textContent = d.explanations[lang] || d.explanations.en;
+    explanationEl.textContent = (d.explanations && (d.explanations.en || d.explanations['en'])) || d.explanation || '';
   }
 
   if (recBadgeEl) {

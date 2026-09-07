@@ -709,7 +709,54 @@ window.toggleFpoProfileDropdown = toggleFpoProfileDropdown;
 window.closeFpoProfileDropdown = closeFpoProfileDropdown;
 window.handleFpoLogout = handleFpoLogout;
 
+// Demo Flow: Consolidate Lot handler
+function handleFpoConsolidateLot() {
+  const btn = document.getElementById('btn-fpo-accept-lot');
+  const badge = document.getElementById('fpo-lot-status-badge');
+  if (btn) {
+    btn.innerHTML = '<span>✓</span> Lot Consolidated with Vashi Lot';
+    btn.classList.remove('btn-gold');
+    btn.classList.add('btn-secondary');
+    btn.disabled = true;
+  }
+  if (badge) {
+    badge.textContent = 'Lot Consolidated · Matching Amit Shah';
+    badge.className = 'badge badge-success';
+  }
+  if (window.KrishiDemo) {
+    window.KrishiDemo.setFlowState({ fpoAccepted: true });
+  }
+  showToast('✓ Ramesh Patil\'s 850 kg tomato lot consolidated with Vashi dispatch batch.');
+}
+window.handleFpoConsolidateLot = handleFpoConsolidateLot;
+
 // Document Ready Initialization
 document.addEventListener('DOMContentLoaded', () => {
   initCharts();
+
+  // Restore dev demo state if active
+  if (window.KrishiDemo && window.KrishiDemo.isDevDemo()) {
+    const state = window.KrishiDemo.getFlowState();
+    if (state && state.fpoAccepted) {
+      const btn = document.getElementById('btn-fpo-accept-lot');
+      const badge = document.getElementById('fpo-lot-status-badge');
+      if (btn) {
+        btn.innerHTML = '<span>✓</span> Lot Consolidated with Vashi Lot';
+        btn.disabled = true;
+      }
+      if (badge) {
+        badge.textContent = 'Lot Consolidated · Matching Amit Shah';
+        badge.className = 'badge badge-success';
+      }
+    }
+  }
+
+  // Active navigation alignment handler
+  const navLinks = document.querySelectorAll('#navMenu .nav-link');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function () {
+      navLinks.forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
 });

@@ -113,7 +113,7 @@ app.get('/api', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  
+
   // Safe Email Service configuration check
   if (!process.env.BREVO_API_KEY || process.env.BREVO_API_KEY.trim() === '' || process.env.BREVO_API_KEY === 'your_brevo_api_key') {
     console.warn('⚠️ Email service configuration warning: BREVO_API_KEY is missing or unconfigured in .env');

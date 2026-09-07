@@ -238,38 +238,70 @@ button, input, select, textarea {
 }
 
 /* Nav Menu */
+header nav {
+  display: flex;
+  align-items: center;
+  min-height: 0;
+}
+
 .nav-menu {
   display: flex;
   align-items: center;
   gap: 3px;
   list-style: none;
   flex-shrink: 1;
+  flex-wrap: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 6px 10px;
   color: rgba(255, 255, 255, 0.82);
   font-size: 12.5px;
   font-weight: 600;
+  line-height: 1.2;
   border-radius: var(--radius-sm, 8px);
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  height: 34px;
   transition: all 0.18s ease;
   text-decoration: none;
   white-space: nowrap;
+  vertical-align: middle;
+}
+
+.nav-link i, .nav-link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .nav-link:hover {
   color: #FFFFFF;
   background: rgba(255, 255, 255, 0.1);
+  border-color: transparent;
 }
 
 .nav-link.active {
   color: #FFFFFF;
   background: rgba(143, 203, 155, 0.2);
   border: 1px solid rgba(143, 203, 155, 0.35);
-  font-weight: 700;
+  font-weight: 600;
   box-shadow: none;
 }
 

@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KrishiShetra — Login & Access Platform</title>
-  <meta name="description" content="Access KrishiShetra AgriTech platform to discover live mandi prices, AI-driven crop forecasting, and verified buyer networks.">
+  <meta name="description"
+    content="Access KrishiShetra AgriTech platform to discover live mandi prices, AI-driven crop forecasting, and verified buyer networks.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+    rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -18,17 +22,19 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
 </head>
+
 <body>
 
   <!-- ════════════════════════════════════════
        SPLIT-SCREEN AUTHENTICATION PAGE
        ════════════════════════════════════════ -->
   <div class="auth-wrapper">
-    
+
     <!-- ── Left Visual Column (Desktop) ── -->
     <aside class="auth-hero" aria-label="Visual Brand Story">
       <div class="auth-hero__bg">
-        <img src="assets/images/hero-farm.jpg" alt="Indian farmers working in lush green terrace fields at golden sunrise" id="auth-hero-img">
+        <img src="assets/images/hero-farm.jpg"
+          alt="Indian farmers working in lush green terrace fields at golden sunrise" id="auth-hero-img">
       </div>
       <div class="auth-hero__overlay"></div>
 
@@ -48,7 +54,8 @@
           <em>markets.</em>
         </h1>
         <p class="auth-hero__subtitle" id="hero-subtitle">
-          Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and AI-powered mandi insights.
+          Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and
+          AI-powered mandi insights.
         </p>
 
         <div class="auth-hero__badges">
@@ -71,7 +78,7 @@
     <!-- ── Right Form Column ── -->
     <main class="auth-content">
       <div class="auth-card-box">
-        
+
         <!-- Header Text -->
         <header class="auth-header">
           <h2 class="auth-header__title" id="auth-title">Welcome back</h2>
@@ -92,14 +99,8 @@
           <div class="auth-input-group">
             <label class="auth-input-label" for="login-email" id="label-login-email">EMAIL ADDRESS</label>
             <div class="auth-text-box">
-              <input 
-                type="email" 
-                id="login-email" 
-                class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
-                autocomplete="email" 
-                required
-              >
+              <input type="email" id="login-email" class="auth-text-box__input" placeholder="farmer@example.com"
+                autocomplete="email" required>
             </div>
           </div>
 
@@ -110,15 +111,10 @@
               <button type="button" class="auth-forgot-link" id="link-to-forgot">Forgot Password?</button>
             </div>
             <div class="auth-text-box">
-              <input 
-                type="password" 
-                id="login-password" 
-                class="auth-text-box__input" 
-                placeholder="Enter your password" 
-                autocomplete="current-password" 
-                required
-              >
-              <button type="button" class="auth-toggle-pass-btn" data-target="login-password" aria-label="Toggle password visibility">
+              <input type="password" id="login-password" class="auth-text-box__input" placeholder="Enter your password"
+                autocomplete="current-password" required>
+              <button type="button" class="auth-toggle-pass-btn" data-target="login-password"
+                aria-label="Toggle password visibility">
                 <i data-lucide="eye" style="width:16px;height:16px;"></i>
               </button>
             </div>
@@ -131,7 +127,7 @@
           </button>
 
           <p class="auth-switch-prompt">
-            <span id="text-no-account">Don't have an account?</span> 
+            <span id="text-no-account">Don't have an account?</span>
             <button type="button" class="auth-switch-link" id="link-to-register">Create an account</button>
           </p>
         </form>
@@ -144,7 +140,7 @@
           <div class="auth-roles-group">
             <label class="auth-roles-label" id="label-role">I AM A...</label>
             <div class="auth-roles" role="radiogroup" aria-labelledby="label-role">
-              
+
               <div class="auth-role-card active" data-role="farmer" tabindex="0" role="radio" aria-checked="true">
                 <span class="auth-role-card__icon"><i data-lucide="tractor"></i></span>
                 <span class="auth-role-card__name" id="role-name-farmer">Farmer</span>
@@ -176,14 +172,8 @@
           <div class="auth-input-group">
             <label class="auth-input-label" for="register-name" id="label-register-name">FULL NAME</label>
             <div class="auth-text-box">
-              <input 
-                type="text" 
-                id="register-name" 
-                class="auth-text-box__input" 
-                placeholder="e.g. Rajesh Patil" 
-                autocomplete="name" 
-                required
-              >
+              <input type="text" id="register-name" class="auth-text-box__input" placeholder="e.g. Rajesh Patil"
+                autocomplete="name" required>
             </div>
           </div>
 
@@ -191,14 +181,8 @@
           <div class="auth-input-group">
             <label class="auth-input-label" for="register-email" id="label-register-email">EMAIL ADDRESS</label>
             <div class="auth-text-box">
-              <input 
-                type="email" 
-                id="register-email" 
-                class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
-                autocomplete="email" 
-                required
-              >
+              <input type="email" id="register-email" class="auth-text-box__input" placeholder="farmer@example.com"
+                autocomplete="email" required>
             </div>
           </div>
 
@@ -210,16 +194,8 @@
                 <span>🇮🇳</span>
                 <span>+91</span>
               </div>
-              <input 
-                type="tel" 
-                id="register-phone" 
-                class="auth-phone-box__input" 
-                placeholder="10-digit number" 
-                maxlength="10" 
-                inputmode="numeric" 
-                pattern="[0-9]{10}"
-                autocomplete="tel-national"
-              >
+              <input type="tel" id="register-phone" class="auth-phone-box__input" placeholder="10-digit number"
+                maxlength="10" inputmode="numeric" pattern="[0-9]{10}" autocomplete="tel-national">
             </div>
           </div>
 
@@ -227,15 +203,10 @@
           <div class="auth-input-group">
             <label class="auth-input-label" for="register-password" id="label-register-password">PASSWORD</label>
             <div class="auth-text-box">
-              <input 
-                type="password" 
-                id="register-password" 
-                class="auth-text-box__input" 
-                placeholder="Minimum 6 characters" 
-                autocomplete="new-password" 
-                required
-              >
-              <button type="button" class="auth-toggle-pass-btn" data-target="register-password" aria-label="Toggle password visibility">
+              <input type="password" id="register-password" class="auth-text-box__input"
+                placeholder="Minimum 6 characters" autocomplete="new-password" required>
+              <button type="button" class="auth-toggle-pass-btn" data-target="register-password"
+                aria-label="Toggle password visibility">
                 <i data-lucide="eye" style="width:16px;height:16px;"></i>
               </button>
             </div>
@@ -248,7 +219,7 @@
           </button>
 
           <p class="auth-switch-prompt">
-            <span id="text-have-account">Already have an account?</span> 
+            <span id="text-have-account">Already have an account?</span>
             <button type="button" class="auth-switch-link" id="link-to-login">Log In</button>
           </p>
         </form>
@@ -260,14 +231,8 @@
           <div class="auth-input-group">
             <label class="auth-input-label" for="forgot-email" id="label-forgot-email">EMAIL ADDRESS</label>
             <div class="auth-text-box">
-              <input 
-                type="email" 
-                id="forgot-email" 
-                class="auth-text-box__input" 
-                placeholder="farmer@example.com" 
-                autocomplete="email" 
-                required
-              >
+              <input type="email" id="forgot-email" class="auth-text-box__input" placeholder="farmer@example.com"
+                autocomplete="email" required>
             </div>
           </div>
 
@@ -288,16 +253,10 @@
           <div class="auth-input-group">
             <label class="auth-input-label" for="reset-new-password" id="label-reset-password">NEW PASSWORD</label>
             <div class="auth-text-box">
-              <input 
-                type="password" 
-                id="reset-new-password" 
-                class="auth-text-box__input" 
-                placeholder="Minimum 6 characters" 
-                autocomplete="new-password" 
-                minlength="6"
-                required
-              >
-              <button type="button" class="auth-toggle-pass-btn" data-target="reset-new-password" aria-label="Toggle password visibility">
+              <input type="password" id="reset-new-password" class="auth-text-box__input"
+                placeholder="Minimum 6 characters" autocomplete="new-password" minlength="6" required>
+              <button type="button" class="auth-toggle-pass-btn" data-target="reset-new-password"
+                aria-label="Toggle password visibility">
                 <i data-lucide="eye" style="width:16px;height:16px;"></i>
               </button>
             </div>
@@ -321,16 +280,18 @@
             <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT EMAIL OTP</label>
             <div style="font-size: 14px; color: #6F7F75; margin-bottom: 12px;">
               <span id="otp-sent-text">Verification code sent to</span>
-              <strong id="display-user-email" style="color: #12372A; margin: 0 4px; word-break: break-all;">user@example.com</strong>
+              <strong id="display-user-email"
+                style="color: #12372A; margin: 0 4px; word-break: break-all;">user@example.com</strong>
               <button type="button" class="auth-otp-change-num" id="btn-change-email">
-                <i data-lucide="edit-3" style="width:12px;height:12px;vertical-align:middle;"></i> 
+                <i data-lucide="edit-3" style="width:12px;height:12px;vertical-align:middle;"></i>
                 <span id="btn-edit-text">Change</span>
               </button>
             </div>
 
             <!-- 6-box OTP entry -->
             <div class="auth-otp-boxes" id="otp-inputs">
-              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" required>
+              <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*"
+                autocomplete="one-time-code" required>
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
               <input type="text" class="auth-otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
@@ -341,7 +302,8 @@
 
           <!-- OTP Timer and Resend -->
           <div class="auth-otp-meta">
-            <span class="auth-otp-timer" id="otp-timer-display">Resend OTP in <strong id="timer-count">60</strong>s</span>
+            <span class="auth-otp-timer" id="otp-timer-display">Resend OTP in <strong
+                id="timer-count">60</strong>s</span>
             <button type="button" class="auth-otp-resend-btn" id="btn-resend-otp" disabled>Resend Code</button>
           </div>
 
@@ -363,10 +325,10 @@
             <span class="auth-dev-testing__badge">Local Dev Only</span>
           </div>
           <div class="auth-dev-testing__grid">
-            <button type="button" class="dev-role-btn" data-dev-role="farmer">Farmer</button>
-            <button type="button" class="dev-role-btn" data-dev-role="fpo">FPO</button>
-            <button type="button" class="dev-role-btn" data-dev-role="buyer">Buyer</button>
-            <button type="button" class="dev-role-btn" data-dev-role="transporter">Transporter</button>
+            <button type="button" class="dev-role-btn" data-dev-role="farmer">Farmer (Ramesh Patil)</button>
+            <button type="button" class="dev-role-btn" data-dev-role="fpo">FPO (Suresh Jadhav)</button>
+            <button type="button" class="dev-role-btn" data-dev-role="buyer">Buyer (Amit Shah)</button>
+            <button type="button" class="dev-role-btn" data-dev-role="transporter">Transporter (Vijay More)</button>
             <button type="button" class="dev-role-btn" data-dev-role="admin">Admin</button>
           </div>
         </div>
@@ -374,11 +336,17 @@
         <!-- Trust & Security Footer -->
         <div class="auth-trust-divider"></div>
         <div class="auth-trust-items">
-          <span class="auth-trust-item"><i data-lucide="shield-check" style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span id="trust-secure">Secure</span></span>
+          <span class="auth-trust-item"><i data-lucide="shield-check"
+              style="width:14px;height:14px;color:#5B9A72;vertical-align:middle;"></i> <span
+              id="trust-secure">Secure</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="zap" style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span id="trust-simple">Simple</span></span>
+          <span class="auth-trust-item"><i data-lucide="zap"
+              style="width:14px;height:14px;color:#D6A84F;vertical-align:middle;"></i> <span
+              id="trust-simple">Simple</span></span>
           <span class="auth-trust-dot">•</span>
-          <span class="auth-trust-item"><i data-lucide="eye" style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span id="trust-transparent">Transparent</span></span>
+          <span class="auth-trust-item"><i data-lucide="eye"
+              style="width:14px;height:14px;color:#3B82F6;vertical-align:middle;"></i> <span
+              id="trust-transparent">Transparent</span></span>
         </div>
         <p class="auth-secure-subtext">
           <i data-lucide="lock" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i>
@@ -402,7 +370,7 @@
       if (window.lucide) lucide.createIcons();
 
       const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      const API_BASE = (window.API_BASE_URL || (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api')).replace(/\/+$/, '');
+      const API_BASE = (window.API_BASE_URL || (isLocal ? 'http://127.0.0.1:5000/api' : 'https://krishishetra-1.onrender.com/api')).replace(/\/+$/, '');
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');
@@ -642,7 +610,7 @@
         btnResendOtp.disabled = true;
         otpTimerDisplay.style.display = 'inline';
         timerCount.textContent = countdown;
-        
+
         clearInterval(timerInterval);
         timerInterval = setInterval(() => {
           countdown--;
@@ -743,7 +711,7 @@
             }, 600);
           } else {
             btnLogin.disabled = false;
-            btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
+            btnLogin.innerHTML = '<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>';
             showAlert(loginAlert, data.message || 'Invalid email or password');
 
             if (data.message && data.message.includes('verify your email')) {
@@ -757,8 +725,8 @@
         } catch (err) {
           console.error('[Login Network Error]:', err);
           btnLogin.disabled = false;
-          btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
+          btnLogin.innerHTML = '<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>';
+          showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please make sure the backend server is running.');
         }
       });
 
@@ -807,14 +775,14 @@
 
           if (res.ok && data.success) {
             btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
-            
+            btnRegister.innerHTML = '<span id="btn-register-text">Create Account</span> <span class="auth-btn-arrow">→</span>';
+
             showOtpStep(email, false);
             showAlert(otpAlert, data.message || 'Registration successful. Check your email for the OTP.', 'success');
           } else if (data.message && (data.message.includes('verification email could not be sent') || data.message.includes('Resend OTP'))) {
             btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
-            
+            btnRegister.innerHTML = '<span id="btn-register-text">Create Account</span> <span class="auth-btn-arrow">→</span>';
+
             showStructuredAlert(registerAlert, {
               title: 'Verification email not sent',
               message: "Your account was created, but we couldn't send the verification email. You can request a new OTP.",
@@ -842,13 +810,13 @@
             });
           } else {
             btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            btnRegister.innerHTML = '<span id="btn-register-text">Create Account</span> <span class="auth-btn-arrow">→</span>';
             showAlert(registerAlert, data.message || 'Registration failed. Please try again.');
           }
         } catch (err) {
           console.error('[Register Network Error]:', err);
           btnRegister.disabled = false;
-          btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+          btnRegister.innerHTML = '<span id="btn-register-text">Create Account</span> <span class="auth-btn-arrow">→</span>';
           showAlert(registerAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
@@ -939,7 +907,7 @@
               setTimeout(() => {
                 btnVerifyOtp.disabled = false;
                 btnVerifyOtp.style.background = '';
-                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+                btnVerifyOtp.innerHTML = '<span id="btn-verify-text">Verify & Continue</span> <span class="auth-btn-arrow">→</span>';
                 showResetPassStep();
               }, 800);
             } else {
@@ -948,8 +916,8 @@
               setTimeout(() => {
                 btnVerifyOtp.disabled = false;
                 btnVerifyOtp.style.background = '';
-                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
-                
+                btnVerifyOtp.innerHTML = '<span id="btn-verify-text">Verify & Continue</span> <span class="auth-btn-arrow">→</span>';
+
                 showLoginTab();
                 loginEmail.value = activeOtpEmail;
                 showAlert(loginAlert, 'Email verified successfully. Please log in with your password.', 'success');
@@ -957,13 +925,13 @@
             }
           } else {
             btnVerifyOtp.disabled = false;
-            btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+            btnVerifyOtp.innerHTML = '<span id="btn-verify-text">Verify & Continue</span> <span class="auth-btn-arrow">→</span>';
             showAlert(otpAlert, data.message || 'Invalid or expired OTP.');
           }
         } catch (err) {
           console.error('[Verify OTP Network Error]:', err);
           btnVerifyOtp.disabled = false;
-          btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+          btnVerifyOtp.innerHTML = '<span id="btn-verify-text">Verify & Continue</span> <span class="auth-btn-arrow">→</span>';
           showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
@@ -1004,7 +972,7 @@
               btnResetPassSubmit.disabled = false;
               btnResetPassSubmit.style.background = '';
               btnResetPassSubmit.innerHTML = '<span id="btn-reset-text">Reset Password</span> <span class="auth-btn-arrow">→</span>';
-              
+
               showLoginTab();
               loginEmail.value = activeOtpEmail;
               showAlert(loginAlert, 'Password reset successfully. Please log in with your new password.', 'success');
@@ -1044,27 +1012,27 @@
           }
 
           if (res.ok && data.success) {
-            btnResendOtp.textContent = translations[currentLang].btnResend;
+            btnResendOtp.textContent = 'Resend Code';
             showAlert(otpAlert, data.message || 'A new verification OTP has been sent.', 'success');
             startResendTimer();
           } else {
             btnResendOtp.disabled = false;
-            btnResendOtp.textContent = translations[currentLang].btnResend;
+            btnResendOtp.textContent = 'Resend Code';
             showAlert(otpAlert, data.message || 'Failed to resend OTP.');
           }
         } catch (err) {
           console.error('[Resend OTP Network Error]:', err);
           btnResendOtp.disabled = false;
-          btnResendOtp.textContent = translations[currentLang].btnResend;
+          btnResendOtp.textContent = 'Resend Code';
           showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
 
       // ── Local Development Role Shortcut Handler ──
       const isDevEnv = (window.Auth && typeof window.Auth.isLocalEnv === 'function' && window.Auth.isLocalEnv()) ||
-                       window.location.hostname === 'localhost' ||
-                       window.location.hostname === '127.0.0.1' ||
-                       window.location.protocol === 'file:';
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.protocol === 'file:';
 
       if (isDevEnv) {
         const devBlock = document.getElementById('local-dev-testing');
@@ -1074,7 +1042,7 @@
             btn.addEventListener('click', (e) => {
               e.preventDefault();
               const role = (btn.getAttribute('data-dev-role') || 'farmer').toLowerCase();
-              
+
               if (window.Auth && typeof window.Auth.setDevSession === 'function') {
                 window.Auth.setDevSession(role);
               } else {
@@ -1118,4 +1086,5 @@
     });
   </script>
 </body>
+
 </html>

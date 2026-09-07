@@ -52,15 +52,31 @@ function initHeaderUser() {
   const dropPhone = document.getElementById('dropdown-user-phone');
   const dropAvatar = document.getElementById('dropdown-avatar');
 
-  const displayName = (user && user.name) ? user.name : 'Rajesh Patil';
-  const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'RP';
+  const isDemo = window.KrishiDemo ? window.KrishiDemo.isDevDemo() : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const fallbackName = isDemo ? 'Amit Shah' : 'Verified Buyer';
+  const displayName = (user && user.name) ? user.name : fallbackName;
+  const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'AS';
 
   if (nameElem) nameElem.textContent = displayName.split(' ')[0];
   if (avatarElem) avatarElem.textContent = initials;
-  if (dropName) dropName.textContent = (user && user.name) ? `${user.name} (ABC Foods)` : 'ABC Foods Pvt Ltd';
-  if (dropPhone) dropPhone.textContent = (user && user.email) ? user.email : 'rajesh.patil@abcfoods.in';
+  if (dropName) dropName.textContent = (user && user.name) ? `${user.name} (Shah Wholesale Mart)` : 'Shah Wholesale Mart';
+  if (dropPhone) dropPhone.textContent = (user && user.email) ? user.email : 'amit.shah@vashimarket.in';
   if (dropAvatar) dropAvatar.textContent = initials;
 }
+
+function handleBuyerAcceptLot() {
+  const btn = document.getElementById('btn-buyer-accept-ramesh');
+  if (btn) {
+    btn.innerHTML = '<span>✓</span> Interest Expressed & Order Locked';
+    btn.style.background = '#2D6A4F';
+    btn.disabled = true;
+  }
+  if (window.KrishiDemo) {
+    window.KrishiDemo.setFlowState({ buyerAccepted: true, transporterAssigned: true });
+  }
+  showToast('🤝 Offer accepted! Suresh Jadhav (FPO) notified. Transporter Vijay More scheduled for pickup.');
+}
+window.handleBuyerAcceptLot = handleBuyerAcceptLot;
 
 function handleRouteUpdate() {
   const hash = window.location.hash.replace('#', '') || '/buyer/dashboard';
@@ -98,12 +114,14 @@ function handleRouteUpdate() {
     if (
       (currentRoute === 'dashboard' && r.includes('dashboard')) ||
       (currentRoute === 'marketplace' && r.includes('marketplace')) ||
-      (currentRoute === 'inquiries' && (r.includes('inquiries') || r.includes('offers'))) ||
+      (currentRoute === 'inquiries' && r.includes('inquiries')) ||
       (currentRoute === 'orders' && r.includes('orders')) ||
       (currentRoute === 'disputes' && r.includes('disputes')) ||
-      (currentRoute === 'directory' && (r.includes('directory') || r.includes('sellers'))) ||
-      (currentRoute === 'payments' && (r.includes('payments') || r.includes('escrow'))) ||
-      (currentRoute === 'profile' && r.includes('profile'))
+      (currentRoute === 'directory' && r.includes('directory')) ||
+      (currentRoute === 'logistics' && r.includes('logistics')) ||
+      (currentRoute === 'payments' && r.includes('payments')) ||
+      (currentRoute === 'profile' && r.includes('profile')) ||
+      (currentRoute === 'kyc' && r.includes('kyc'))
     ) {
       el.classList.add('dash-header__link--active');
     }
@@ -161,9 +179,12 @@ function renderView(route) {
 // ═══════════════════════════════════════════════════════════════════════
 async function renderDashboardView(container) {
   const user = window.Auth ? window.Auth.getUser() : null;
-  const buyerName = user?.name || 'Rajesh';
+  const isDemo = window.KrishiDemo ? window.KrishiDemo.isDevDemo() : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const defaultBuyerName = isDemo ? 'Amit' : 'Buyer';
+  const buyerName = user?.name ? user.name.split(' ')[0] : defaultBuyerName;
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  // Time-of-day greeting: 05:00–11:59 → Good morning, 12:00–16:59 → Good afternoon, 17:00–04:59 → Good evening
+  const greeting = (hour >= 5 && hour < 12) ? 'Good morning' : (hour >= 12 && hour < 17) ? 'Good afternoon' : 'Good evening';
   const dateStr = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   container.innerHTML = `
@@ -177,9 +198,9 @@ async function renderDashboardView(container) {
               <i data-lucide="calendar" style="width: 13px; height: 13px;"></i> ${dateStr}
             </span>
           </div>
-          <h1 class="buyer-hero-banner__title">${greeting}, ${buyerName}</h1>
+          <h1 class="buyer-hero-banner__title">${greeting}, ${buyerName}!</h1>
           <p class="buyer-hero-banner__desc">
-            Manage your agricultural procurement, active contracts, and escrow settlements.
+            Manage your agricultural procurement, active contracts, and Vashi APMC market-linked lots.
           </p>
         </div>
         <div class="buyer-hero-banner__actions">
@@ -192,6 +213,57 @@ async function renderDashboardView(container) {
           <a href="#/buyer/orders" class="btn btn--secondary" style="background: rgba(255,255,255,0.12); color: #FFF; border-color: rgba(255,255,255,0.25);">
             <i data-lucide="clipboard-list"></i> View Orders
           </a>
+        </div>
+      </div>
+
+      <!-- Demo Flow: Active Buyer Demand & Matched Farm Lot -->
+      <div class="buyer-demand-card" style="background: linear-gradient(135deg, #17221D, #2D6A4F); border-radius: 14px; padding: 22px 24px; color: #FFFFFF; margin-bottom: 24px; border: 1px solid rgba(143,203,155,0.3); box-shadow: 0 4px 16px rgba(18,55,42,0.15);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(214,168,79,0.25); color: #FCD34D; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 9999px; margin-bottom: 8px;">
+              ⚡ ACTIVE BUYER PROCUREMENT DEMAND
+            </div>
+            <h2 style="font-size: 20px; font-weight: 800; margin: 0 0 6px 0; color: #FFFFFF;">
+              Tomato (Grade A) · Shah Wholesale Mart, Vashi
+            </h2>
+            <div style="font-size: 13.5px; color: #D1E7DD; display: flex; gap: 16px; flex-wrap: wrap;">
+              <span><strong>Required Quantity:</strong> 800–1,000 kg</span>
+              <span><strong>Market:</strong> Vashi APMC, Navi Mumbai</span>
+              <span><strong>Status:</strong> <span style="color:#8FCB9B; font-weight:700;">Interested</span></span>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <span class="badge badge-success" style="font-size: 12px; padding: 4px 12px; background: #8FCB9B; color: #0D4435; font-weight: 700;">
+              ✓ 1 Direct Lot Matched
+            </span>
+          </div>
+        </div>
+
+        <!-- Matched Lot from Ramesh Patil -->
+        <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 8px; background: #8FCB9B; color: #0D4435; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800;">
+              🍅
+            </div>
+            <div>
+              <div style="font-size: 15px; font-weight: 700; color: #FFFFFF;">
+                Ramesh Patil · 850 kg Grade A Tomato
+              </div>
+              <div style="font-size: 12px; color: #B7E4C7;">
+                📍 Navi Mumbai Farm Cluster · FPO Verified by Suresh Jadhav (Nashik FPC)
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 18px;">
+            <div style="text-align: right;">
+              <span style="font-size: 11px; color: #D1E7DD; display: block;">Offer Rate</span>
+              <strong style="font-size: 16px; color: #FCD34D;">₹2,920 / q</strong>
+              <span style="font-size: 11px; color: #B7E4C7; display: block;">Total: ₹24,820</span>
+            </div>
+            <button class="btn btn--primary" id="btn-buyer-accept-ramesh" onclick="handleBuyerAcceptLot()" style="background: #D97706; color: #FFFFFF; font-weight: 700; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;">
+              ✓ Accept & Express Interest
+            </button>
+          </div>
         </div>
       </div>
 
