@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KrishiShetra — Product Presentation & Judge Q&A Defense Dossier</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Merriweather:ital,wght@0,400;0,700;1,300&display=swap');
+
+    @page {
+      size: A4;
+      margin: 14mm 14mm 16mm 14mm;
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 8pt;
+        color: #718096;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a202c;
+      background-color: #ffffff;
+      line-height: 1.55;
+      font-size: 9.5pt;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Cover / Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%);
+      color: #ffffff;
+      padding: 24px 28px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 14px rgba(22, 101, 52, 0.2);
+      page-break-inside: avoid;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #fef08a;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+
+    .header-title {
+      font-size: 20pt;
+      font-weight: 800;
+      margin: 0 0 4px 0;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+    }
+
+    .header-subtitle {
+      font-size: 10pt;
+      font-weight: 500;
+      color: #bbf7d0;
+      margin: 0 0 12px 0;
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 18px;
+      font-size: 8pt;
+      color: #e2e8f0;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 10px;
+      margin-top: 6px;
+    }
+
+    .header-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Section Headings */
+    h2 {
+      font-size: 13pt;
+      font-weight: 800;
+      color: #14532d;
+      border-bottom: 2px solid #86efac;
+      padding-bottom: 4px;
+      margin: 22px 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 14px 0 6px 0;
+      page-break-after: avoid;
+    }
+
+    /* Elevator Pitch Box */
+    .pitch-card {
+      background: #f0fdf4;
+      border-left: 4px solid #16a34a;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 16px;
+      page-break-inside: avoid;
+    }
+
+    .pitch-card p {
+      margin: 0;
+      font-style: italic;
+      font-family: 'Merriweather', serif;
+      font-size: 9.5pt;
+      color: #166534;
+      line-height: 1.6;
+    }
+
+    /* Grid & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+      page-break-inside: avoid;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+      page-break-inside: avoid;
+    }
+
+    .info-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .info-card strong {
+      display: block;
+      color: #0f172a;
+      font-size: 9pt;
+      margin-bottom: 3px;
+    }
+
+    .info-card p {
+      margin: 0;
+      font-size: 8pt;
+      color: #475569;
+      line-height: 1.4;
+    }
+
+    /* Q&A Block */
+    .qa-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      page-break-inside: avoid;
+      overflow: hidden;
+    }
+
+    .qa-header {
+      background: #f1f5f9;
+      padding: 8px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .qa-question {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 9.5pt;
+      margin: 0;
+    }
+
+    .qa-tag {
+      font-size: 7pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-ground { background: #fee2e2; color: #991b1b; }
+    .tag-tech { background: #dbeafe; color: #1e40af; }
+    .tag-biz { background: #fef3c7; color: #92400e; }
+    .tag-ux { background: #e0e7ff; color: #3730a3; }
+
+    .qa-body {
+      padding: 10px 14px;
+      font-size: 9pt;
+    }
+
+    .qa-intent {
+      font-size: 8pt;
+      color: #64748b;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+
+    .qa-answer {
+      color: #1e293b;
+      line-height: 1.5;
+    }
+
+    .qa-answer ul, .qa-answer ol {
+      margin: 4px 0 6px 0;
+      padding-left: 18px;
+    }
+
+    .qa-answer li {
+      margin-bottom: 3px;
+    }
+
+    /* Code / Monospace / Math Blocks */
+    .mono-box {
+      font-family: 'JetBrains Mono', monospace;
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 7.5pt;
+      line-height: 1.45;
+      margin: 8px 0;
+      overflow-x: auto;
+      page-break-inside: avoid;
+    }
+
+    .math-pill {
+      font-family: 'JetBrains Mono', monospace;
+      background: #f1f5f9;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 8pt;
+      font-weight: 600;
+    }
+
+    /* Case Study Card */
+    .case-card {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      page-break-inside: avoid;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .case-header {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 8px 14px;
+      font-weight: 700;
+      font-size: 9.5pt;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .case-body {
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      font-size: 8.5pt;
+    }
+
+    .case-col {
+      line-height: 1.45;
+    }
+
+    .case-col h4 {
+      margin: 0 0 6px 0;
+      font-size: 8.5pt;
+      color: #1e293b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 2px;
+    }
+
+    .highlight-win {
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .highlight-loss {
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+      margin: 10px 0 14px 0;
+      page-break-inside: avoid;
+    }
+
+    th {
+      background: #1e293b;
+      color: #ffffff;
+      text-align: left;
+      padding: 6px 8px;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* Callout Boxes */
+    .alert-box {
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 8.5pt;
+      margin: 8px 0;
+      page-break-inside: avoid;
+    }
+
+    .alert-success {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      color: #15803d;
+    }
+
+    .alert-warning {
+      background: #fefce8;
+      border: 1px solid #fde047;
+      color: #854d0e;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER BANNER -->
+  <div class="header-banner">
+    <div class="badge-pill">AgriTech Product Presentation &amp; Jury Defense Dossier</div>
+    <h1 class="header-title">🌾 KrishiShetra (कृषि क्षेत्र)</h1>
+    <div class="header-subtitle">"Know the Price. Choose the Market. Sell Better." — Digital Ecosystem for Indian Farmers, FPOs &amp; Transporters</div>
+    <div class="header-meta">
+      <span><strong>Stack:</strong> Node.js • Express • MongoDB • Leaflet.js • OpenStreetMap • i18n (EN/HI/MR)</span>
+      <span><strong>Target Ecosystem:</strong> 140M+ Indian Farmers • 10k+ FPOs • Institutional B2B Buyers</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1: 30-SEC ELEVATOR PITCH -->
+  <h2>⚡ 1. The 30-Second Elevator Pitch</h2>
+  <div class="pitch-card">
+    <p>"In India, 86% of farmers are smallholders who lose 25–40% of their potential income to opaque middlemen commissions, asymmetric mandi pricing, and post-harvest distress selling. <strong>KrishiShetra</strong> is an integrated full-stack AgriTech ecosystem that connects farmers, FPOs, verified institutional buyers, and rural transporters. Through our <strong>real-time APMC Mandi Arbitrage Engine</strong>, <strong>Multi-Turn Counter Negotiation Room</strong>, <strong>AI 'Sell Now vs Store & Hold' Decision Engine</strong>, and <strong>e-NWR Pledge Financing integration</strong>, we turn smallholder farmers into informed, profitable agri-entrepreneurs."</p>
+  </div>
+
+  <!-- SECTION 2: ARCHITECTURE & CORE WORKFLOW -->
+  <h2>🏗️ 2. High-Level Architecture &amp; Core Value Proposition</h2>
+  <div class="grid-3">
+    <div class="info-card">
+      <strong>👨‍🌾 1. Farmers &amp; FPOs</strong>
+      <p>Farm-gate lot creation, 45+ mandi GPS arbitrage, AI hold/sell recommendation, multi-turn counter-offer chat.</p>
+    </div>
+    <div class="info-card">
+      <strong>🏢 2. Institutional Buyers</strong>
+      <p>Direct verified crop procurement, custom quality specs, instant deal conversion, escrow-backed fulfillment.</p>
+    </div>
+    <div class="info-card">
+      <strong>🚚 3. Transporters &amp; Storage</strong>
+      <p>Return-load dispatch matching, accredited MSWC/CWC warehouse booking, and instant pledge loan unlock.</p>
+    </div>
+  </div>
+
+  <div class="mono-box">
+[Farmer / FPO Lot] ──► [Market Discovery] ──► [Multi-Turn Counter Negotiation] ──► [Deal Accepted]
+                                                                                     │
+[Delivered &amp; Paid] ◄── [In Transit (GPS)] ◄── [Ready for Pickup] ◄── [6-Stage Order KS-ORD-XXX]
+  </div>
+
+  <!-- SECTION 3: JUDGE Q&A MASTER BANK -->
+  <h2>🏛️ 3. Comprehensive Judge Q&amp;A Defense Bank</h2>
+
+  <!-- Q1 -->
+  <div class="qa-box">
+    <div class="qa-header">
+      <div class="qa-question">Q1: "Government already built e-NAM. Why do we need KrishiShetra? How are you different?"</div>
+      <span class="qa-tag tag-ground">Market &amp; Ground</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-intent">Evaluator Intent: Testing if you understand e-NAM's actual ground friction vs theoretical premise.</div>
+      <div class="qa-answer">
+        <strong>Direct Answer:</strong> e-NAM is a visionary policy tool, but on the ground it suffers from 3 major operational bottlenecks that KrishiShetra specifically solves:
+        <ol>
+          <li><strong>Pre-Transport Listing vs Mandi Yard Queue:</strong> e-NAM still requires farmers to physically transport crops to the APMC mandi yard before bidding starts, incurring locked-in transport costs. KrishiShetra enables <em>farm-gate advance listing</em> before spending a single rupee on freight.</li>
+          <li><strong>Dynamic Multi-Turn Counter Negotiation:</strong> e-NAM relies on rigid single-round closed bids. KrishiShetra features an interactive counter-offer negotiation room where terms, price, and delivery timelines are refined collaboratively.</li>
+          <li><strong>Integrated Post-Harvest Decision Intelligence:</strong> e-NAM never advises a farmer whether to sell or store. KrishiShetra calculates biological moisture loss, warehouse rent, and seasonal price trajectories to give a quantified ROI recommendation.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="qa-box">
+    <div class="qa-header">
+      <div class="qa-question">Q2: "Traditional middlemen (Arhtiyas) lend cash to farmers. How will you get farmers to switch?"</div>
+      <span class="qa-tag tag-ground">Agrifinance</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-intent">Evaluator Intent: Testing your knowledge of the informal credit trap tying farmers to commission agents.</div>
+      <div class="qa-answer">
+        <strong>Direct Answer:</strong> Middlemen retain farmers not through love, but through usurious credit (24%–36% p.a.) that forces pre-harvest crop commitments. We dismantle this loop through:
+        <ul>
+          <li><strong>e-NWR Warehouse Pledge Financing:</strong> In <code>PledgeFinancingRequest.js</code>, farmers storing produce in accredited MSWC/CWC facilities immediately access <strong>70%–75% pledge loan disbursals</strong> from partner financial institutions at 7%–9% subsidized agri-credit rates.</li>
+          <li><strong>FPO Collective Shield:</strong> Aggregating smallholders via our <code>fpo-dashboard.html</code> allows group collateral and institutional buyer advance contracts.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="qa-box">
+    <div class="qa-header">
+      <div class="qa-question">Q3: "How does your AI 'Sell Now vs Store &amp; Hold' Decision Engine calculate its recommendations?"</div>
+      <span class="qa-tag tag-tech">AI &amp; Math</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-intent">Evaluator Intent: Verifying if your AI is an actual algorithmic model or just arbitrary placeholder code.</div>
+      <div class="qa-answer">
+        <strong>Direct Answer:</strong> In <code>server/services/decision.service.js</code>, our engine evaluates:
+        <div style="margin: 6px 0;"><span class="math-pill">Net Gain = Projected Future Realization - (Current Realization + Total Holding Costs)</span></div>
+        It incorporates four physiological and economic parameters:
+        <ul>
+          <li><strong>Storage Tariff:</strong> Exact facility rates (e.g., ₹38/bag/mo dry warehouse, ₹65/bag/mo cold chain).</li>
+          <li><strong>Biological Weight &amp; Moisture Shrinkage:</strong> Crop-specific loss models (<strong>Onion = 4.5%</strong>, <strong>Tomato = 3.8%</strong>, <strong>Potato = 2.2%</strong>, <strong>Wheat = 0.8%</strong> over 30–60 days).</li>
+          <li><strong>Handling &amp; Freight Delta:</strong> Loading charges (₹14/qtl) + distance to warehouse via Haversine calculation (₹14/km).</li>
+          <li><strong>Threshold Gate:</strong> A <em>"STORE &amp; HOLD"</em> recommendation is only triggered if net ROI is <strong>&gt; +2.5%</strong>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- Q4 -->
+  <div class="qa-box">
+    <div class="qa-header">
+      <div class="qa-question">Q4: "How does the Mandi Price Arbitrage Engine compute freight and net profitability?"</div>
+      <span class="qa-tag tag-tech">Geospatial</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-intent">Evaluator Intent: Testing geodesic math and real transport cost reality.</div>
+      <div class="qa-answer">
+        <strong>Direct Answer:</strong> In <code>js/mandi-map.js</code> and <code>js/mandi-compare.js</code>:
+        <ul>
+          <li>Calculates great-circle distance between farmer coordinates and 45+ APMC mandis using the <strong>Haversine Formula</strong>.</li>
+          <li>Applies dynamic rural vehicle freight curves: <span class="math-pill">Transport Cost = Distance (km) × Qty (qtl) × ₹18–₹20/km</span>.</li>
+          <li>Computes <strong>Net Realization</strong> = <span class="math-pill">(Modal Mandi Price × Qty) - Freight Cost</span> and automatically marks the highest net-profit market with a 🏆 Gold Trophy.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="qa-box">
+    <div class="qa-header">
+      <div class="qa-question">Q5: "What is your Business Model? Who pays for KrishiShetra?"</div>
+      <span class="qa-tag tag-biz">Monetization</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-intent">Evaluator Intent: Ensuring you do not charge impoverished smallholder farmers.</div>
+      <div class="qa-answer">
+        <strong>Direct Answer:</strong> We follow a <strong>Zero-Fee for Smallholder Farmers, Monetize B2B &amp; Service Providers</strong> model:
+        <table style="margin: 6px 0;">
+          <tr>
+            <th>Revenue Stream</th>
+            <th>Fee Structure</th>
+            <th>Paid By</th>
+          </tr>
+          <tr>
+            <td><strong>Institutional B2B Procurement Fee</strong></td>
+            <td>1.0% – 1.5% of GMV</td>
+            <td>Corporate buyers (ITC, BigBasket, Millers) for verified direct sourcing</td>
+          </tr>
+          <tr>
+            <td><strong>Freight Dispatch Take-Rate</strong></td>
+            <td>3.0% – 5.0% per trip</td>
+            <td>Transporters for guaranteed return-load job matching</td>
+          </tr>
+          <tr>
+            <td><strong>Warehouse Booking Lead Fee</strong></td>
+            <td>₹15 – ₹25 per quintal</td>
+            <td>Accredited private &amp; state warehouse/cold storage operators</td>
+          </tr>
+          <tr>
+            <td><strong>FinTech Loan Origination Cut</strong></td>
+            <td>0.5% – 1.0% loan value</td>
+            <td>Partner NBFCs/Banks for qualified e-NWR pledge loan leads</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="qa-box">
+    <div class="qa-header">
+      <div class="qa-question">Q6: "How do you solve the Trust &amp; Quality Assaying problem without seeing the crop?"</div>
+      <span class="qa-tag tag-ux">Quality &amp; Trust</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-intent">Evaluator Intent: Understanding dispute mitigation and remote commodity trade risks.</div>
+      <div class="qa-answer">
+        <strong>Direct Answer:</strong> We enforce a 3-layer trust architecture:
+        <ul>
+          <li><strong>AGMARK Grade Parameters:</strong> Mandatory lot attributes (Grade A/B/C, moisture %, harvest date, seed variety, visual photos).</li>
+          <li><strong>Accredited Warehouse Assaying:</strong> When stored in partner facilities, government-certified lab assaying certificates are attached to the e-NWR lot.</li>
+          <li><strong>6-Stage Escrow Pipeline:</strong> Buyer funds are placed in escrow upon order confirmation and released to farmer/transporter only upon destination OTP delivery sign-off.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: DEEP-DIVE CASE STUDIES -->
+  <h2>📊 4. Deep-Dive Ground Case Studies</h2>
+
+  <!-- Case 1 -->
+  <div class="case-card">
+    <div class="case-header">
+      <span>CASE 1: Nashik Onion Farmer — AI "Sell vs Store" + Pledge Loan</span>
+      <span>Dindori, Maharashtra</span>
+    </div>
+    <div class="case-body">
+      <div class="case-col">
+        <h4>Baseline Distress Sale (At Harvest - March)</h4>
+        • Farmer: Ramesh Patil (100 Quintals / 200 Bags Red Onion)<br>
+        • Local Mandi Modal Rate: ₹1,200 / quintal<br>
+        • Gross Realization: ₹1,20,000<br>
+        • Middlemen Comm. &amp; Deductions: -₹8,000<br>
+        • <strong>Net Take-Home: <span class="highlight-loss">₹1,12,000</span></strong>
+      </div>
+      <div class="case-col">
+        <h4>KrishiShetra AI Recommendation (60-Day Cold Store)</h4>
+        • Projected June Price: ₹2,100 / quintal (+75%)<br>
+        • Storage Rent (Sahyadri Cold Chain @ ₹65/bag/mo): -₹26,000<br>
+        • Shrinkage / Moisture Loss (4.5% over 60d): -₹9,450<br>
+        • Handling &amp; Local Transport (12 km): -₹3,500<br>
+        • <strong>Net Realization: <span class="highlight-win">₹1,71,050 (+₹59,050 / +52.7% Extra Gain)</span></strong><br>
+        <span style="font-size: 7.5pt; color: #047857;">*Unlocked ₹80,000 instant pledge loan for seasonal working capital.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case 2 -->
+  <div class="case-card">
+    <div class="case-header">
+      <span>CASE 2: MP Soybean Farmer — Mandi Arbitrage with Freight Cost</span>
+      <span>Dewas, Madhya Pradesh</span>
+    </div>
+    <div class="case-body">
+      <div class="case-col">
+        <h4>Local Mandi (Dewas APMC - 8 km)</h4>
+        • Produce: 80 Quintals Yellow Soybean<br>
+        • Modal Rate: ₹4,400 / quintal<br>
+        • Transport: ₹160 (local tractor)<br>
+        • <strong>Net Profit: ₹3,51,840</strong>
+      </div>
+      <div class="case-col">
+        <h4>Arbitrage Mandi (Indore APMC - 38 km)</h4>
+        • Indore Modal Rate: ₹4,850 / quintal (+₹450/qtl higher)<br>
+        • Freight Cost (Mini-Truck @ ₹18/km): -₹684<br>
+        • <strong>Net Profit: <span class="highlight-win">₹3,87,316 (+₹35,476 Net Day Profit)</span></strong><br>
+        <span style="font-size: 7.5pt; color: #047857;">*Identified via KrishiShetra GPS Mandi Comparison in 10 seconds.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: ROADMAP & SCOPE OF IMPROVEMENT -->
+  <h2>🔮 5. Scope of Improvement &amp; Future Roadmap</h2>
+  <div class="grid-3">
+    <div class="info-card">
+      <strong style="color: #15803d;">Phase 1: 0–3 Months</strong>
+      <p>• Smartphone Camera AI Quality Assaying (CV-based grain grading).<br>• Vernacular Voice Bot (Whisper/Bhashini voice bidding in Hindi/Marathi).<br>• WhatsApp Business Bot for daily alerts.</p>
+    </div>
+    <div class="info-card">
+      <strong style="color: #0369a1;">Phase 2: 3–6 Months</strong>
+      <p>• Reefer Cold Truck IoT Telematics (real-time temperature logs).<br>• ONDC Agri-Network interoperable buyer protocol.<br>• Automated UPI Auto-Split escrow payouts.</p>
+    </div>
+    <div class="info-card">
+      <strong style="color: #6d28d9;">Phase 3: 6–12 Months</strong>
+      <p>• Satellite Remote Sensing &amp; NDVI Indexing for farm yield validation.<br>• Parametric Weather Insurance automatic smart contracts.<br>• Micro-warehouse franchise network.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 6: GRILLING QUESTIONS TABLE -->
+  <h2>🎯 6. Tough "Grilling" Questions Quick-Ref</h2>
+  <table>
+    <tr>
+      <th style="width: 28%;">Jury Trap Question</th>
+      <th style="width: 32%;">Underlying Concern</th>
+      <th style="width: 40%;">Winning Response</th>
+    </tr>
+    <tr>
+      <td><strong>"What if there is no internet in rural areas?"</strong></td>
+      <td>Offline usability and edge resilience.</td>
+      <td>PWA offline caching for recent mandi prices + SMS/IVR dial-in fallback protocol.</td>
+    </tr>
+    <tr>
+      <td><strong>"What if a buyer rejects produce at delivery?"</strong></td>
+      <td>Trade default and settlement risks.</td>
+      <td>Escrow hold contract + standard APMC assaying tolerance thresholds (±2% moisture variance).</td>
+    </tr>
+    <tr>
+      <td><strong>"How will you acquire remote truckers?"</strong></td>
+      <td>Two-sided logistics liquidity.</td>
+      <td>Focusing on <em>Return-Load Matching</em>—turning empty return trips into high-margin revenue.</td>
+    </tr>
+    <tr>
+      <td><strong>"Are AI forecasts accurate during weather shocks?"</strong></td>
+      <td>ML integrity and statistical honesty.</td>
+      <td>Engine outputs confidence ratings (70%–88%) and flags weather anomalies with risk alerts.</td>
+    </tr>
+  </table>
+
+  <!-- FOOTER ADVICE -->
+  <div class="alert-box alert-success" style="margin-top: 14px;">
+    <strong>🏆 Presentation Golden Rule:</strong> Lead with farmer impact (e.g. Ramesh Patil's ₹59k extra income), demonstrate the live tri-lingual UI (Hindi/Marathi), and position KrishiShetra as complete digital market &amp; financial infrastructure.
+  </div>
+
+</body>
+</html>
