@@ -20,20 +20,25 @@ function resolveApiBaseUrl() {
       let b = window.API_BASE_URL.replace(/\/+$/, '');
       return b.endsWith('/api') ? b : `${b}/api`;
     }
-    // 2. Localhost & local file:// development detection
+    // 2. Localhost & local development detection
     if (window.location) {
       if (window.location.protocol === 'file:') {
         return DEV_API_URL;
       }
-      const host = window.location.hostname;
-      if (host === 'localhost' || host === '127.0.0.1') {
-        // If served from Express backend on port 5000, use same-origin /api
-        if (window.location.port === '5000' && window.location.origin) {
-          return `${window.location.origin}/api`;
+      const host = window.location.hostname || 'localhost';
+      const port = window.location.port || '';
+
+      // If running on local development (localhost, 127.0.0.1, or local subnet)
+      if (host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.') || host.startsWith('10.') || host === '::1') {
+        // If served from Express backend directly on port 5000, use same-origin /api
+        if (port === '5000' && window.location.origin) {
+          return `${window.location.origin.replace(/\/+$/, '')}/api`;
         }
-        return DEV_API_URL;
+        // If served from Live Server (5500, 5501, 3000, 8080) or other port, connect to backend on port 5000 with matching host
+        const proto = window.location.protocol === 'https:' ? 'https:' : 'http:';
+        return `${proto}//${host}:5000/api`;
       }
-      // In production / hosted environments (Render, etc.), frontend is served by Express: use same-origin /api
+      // In production / hosted environments (Render, etc.), frontend is served by Express: use same deployed origin /api
       if (window.location.origin) {
         let org = window.location.origin.replace(/\/+$/, '');
         return `${org}/api`;

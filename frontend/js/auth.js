@@ -27,15 +27,25 @@ const Auth = {
    * Retrieve JWT from localStorage
    */
   getToken() {
-    return localStorage.getItem(this.TOKEN_KEY);
+    try {
+      const t = localStorage.getItem(this.TOKEN_KEY);
+      if (!t || t === 'null' || t === 'undefined' || !t.trim()) {
+        return null;
+      }
+      return t.trim();
+    } catch (_) {
+      return null;
+    }
   },
 
   /**
    * Save JWT token
    */
   setToken(token) {
-    if (token) {
-      localStorage.setItem(this.TOKEN_KEY, token);
+    if (token && typeof token === 'string' && token !== 'null' && token !== 'undefined') {
+      try {
+        localStorage.setItem(this.TOKEN_KEY, token.trim());
+      } catch (_) {}
     }
   },
 
@@ -114,7 +124,9 @@ const Auth = {
     if (this.isLocalEnv() && localStorage.getItem(this.DEV_SESSION_KEY)) {
       return true;
     }
-    return !!this.getToken() || localStorage.getItem(this.LOGGED_IN_KEY) === 'true';
+    const token = this.getToken();
+    if (token) return true;
+    return localStorage.getItem(this.LOGGED_IN_KEY) === 'true' && !!localStorage.getItem(this.USER_KEY);
   },
 
   /**

@@ -274,9 +274,23 @@
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
 
-      const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      let rawApiBase = (window.API_BASE_URL || (window.location && window.location.origin ? (isLocal && window.location.port !== '5000' ? 'http://localhost:5000/api' : `${window.location.origin}/api`) : 'http://localhost:5000/api')).replace(/\/+$/, '');
-      const API_BASE = rawApiBase.endsWith('/api') ? rawApiBase : `${rawApiBase}/api`;
+      const API_BASE = (window.API_BASE_URL || (function () {
+        if (typeof window !== 'undefined' && window.location) {
+          const host = window.location.hostname || 'localhost';
+          const port = window.location.port || '';
+          if (host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.') || host.startsWith('10.') || host === '::1') {
+            if (port === '5000' && window.location.origin) {
+              return `${window.location.origin.replace(/\/+$/, '')}/api`;
+            }
+            const proto = window.location.protocol === 'https:' ? 'https:' : 'http:';
+            return `${proto}//${host}:5000/api`;
+          }
+          if (window.location.origin) {
+            return `${window.location.origin.replace(/\/+$/, '')}/api`;
+          }
+        }
+        return 'http://localhost:5000/api';
+      })()).replace(/\/+$/, '');
 
       // Safe API response parser: reads text once, parses JSON, handles HTML/502/504 errors cleanly
       async function parseResponseSafely(res) {
@@ -573,7 +587,7 @@
           console.error('[Register Network Error]:', err);
           btnRegister.disabled = false;
           btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(registerAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
+          showAlert(registerAlert, 'Server connection failed. Please check your network connection or try again.');
         }
       });
 

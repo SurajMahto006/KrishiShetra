@@ -41,10 +41,15 @@ const allowedOrigins = [
   'http://localhost:5000',
   'http://localhost:3000',
   'http://localhost:5500',
+  'http://localhost:5501',
   'http://localhost:8080',
-  'http://127.0.0.1:5500',
   'http://127.0.0.1:5000',
-  'http://127.0.0.1:3000'
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5500',
+  'http://127.0.0.1:5501',
+  'http://[::1]:5000',
+  'http://[::1]:5500',
+  'http://[::1]:5501'
 ];
 
 if (process.env.FRONTEND_URL) {
@@ -62,8 +67,7 @@ const corsOptions = {
     if (!origin) return callback(null, true);
 
     const isAllowed = allowedOrigins.includes(origin) ||
-      /^http:\/\/localhost(:\d+)?$/.test(origin) ||
-      /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||
+      /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(origin) ||
       /^https?:\/\/[^/]+\.onrender\.com$/.test(origin);
 
     // Return boolean cleanly without throwing an unhandled Error that generates HTML 500 pages
@@ -71,7 +75,7 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With']
 };
 
 app.use(cors(corsOptions));

@@ -401,9 +401,23 @@
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
 
-      const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      let rawApiBase = (window.API_BASE_URL || (window.location && window.location.origin ? (isLocal && window.location.port !== '5000' ? 'http://localhost:5000/api' : `${window.location.origin}/api`) : 'http://localhost:5000/api')).replace(/\/+$/, '');
-      const API_BASE = rawApiBase.endsWith('/api') ? rawApiBase : `${rawApiBase}/api`;
+      const API_BASE = (window.API_BASE_URL || (function () {
+        if (typeof window !== 'undefined' && window.location) {
+          const host = window.location.hostname || 'localhost';
+          const port = window.location.port || '';
+          if (host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.') || host.startsWith('10.') || host === '::1') {
+            if (port === '5000' && window.location.origin) {
+              return `${window.location.origin.replace(/\/+$/, '')}/api`;
+            }
+            const proto = window.location.protocol === 'https:' ? 'https:' : 'http:';
+            return `${proto}//${host}:5000/api`;
+          }
+          if (window.location.origin) {
+            return `${window.location.origin.replace(/\/+$/, '')}/api`;
+          }
+        }
+        return 'http://localhost:5000/api';
+      })()).replace(/\/+$/, '');
 
       // Safe API response parser: reads text once, parses JSON, handles HTML/502/504 errors cleanly
       async function parseResponseSafely(res) {
@@ -775,50 +789,108 @@
           });
 
           const result = await parseResponseSafely(res);
-          const data = result.data;
+          const data = result.data || {};
+          const innerData = data.data || {};
 
-          const token = data.token || (data.data && data.data.token);
-          const user = data.user || (data.data && data.data.user);
+          // Adapt to actual backend response properties (token, accessToken, jwt, data.token)
+          const token = data.token || data.accessToken || data.jwt ||
+                        innerData.token || innerData.accessToken || innerData.jwt || null;
 
-          if (result.ok && result.success && token && user) {
-            window.Auth.setToken(token);
-            window.Auth.setUser(user);
+          // Adapt to actual backend user properties (user, userData, data.user)
+          const rawUser = data.user || data.userData ||
+                          innerData.user || innerData.userData || null;
+
+          if (result.ok && result.success) {
+            // Guard: ensure server response contained both token and user before proceeding
+            if (!token || !rawUser) {
+              btnLogin.disabled = false;
+              btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
+              showAlert(loginAlert, 'Server returned an invalid response. Please try again.');
+              return;
+            }
+
+            // Parse user object safely
+            let userObj = rawUser;
+            if (typeof rawUser === 'string') {
+              try { userObj = JSON.parse(rawUser); } catch (_) { userObj = { name: rawUser }; }
+            }
+            const userRole = (userObj && userObj.role ? String(userObj.role) : 'farmer').toLowerCase().trim();
+
+            // Synchronously write all canonical storage keys expected by protected pages & auth guard
+            try {
+              localStorage.setItem('krishi_token', String(token).trim());
+              localStorage.setItem('krishi_user', JSON.stringify(userObj));
+              localStorage.setItem('krishi_user_role', userRole);
+              localStorage.setItem('krishi_is_logged_in', 'true');
+              if (userObj.name) localStorage.setItem('krishi_user_name', userObj.name);
+              if (userObj.email) localStorage.setItem('krishi_user_email', userObj.email);
+              if (userObj.phone) localStorage.setItem('krishi_user_phone', userObj.phone);
+
+              if (window.Auth && typeof window.Auth.setToken === 'function') {
+                window.Auth.setToken(token);
+                window.Auth.setUser(userObj);
+              }
+            } catch (storageErr) {
+              console.error('[Storage Error]:', storageErr);
+            }
+
+            // Verify stored authentication state matches auth guard expectations before redirecting
+            const verifiedToken = localStorage.getItem('krishi_token');
+            if (!verifiedToken) {
+              btnLogin.disabled = false;
+              btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
+              showAlert(loginAlert, 'Unable to initialize session in browser storage. Please check browser storage settings.');
+              return;
+            }
 
             btnLogin.innerHTML = 'Login Successful! ✓';
             btnLogin.style.background = '#5B9A72';
 
+            // Determine canonical dashboard URL by authenticated user role
+            let targetUrl = 'dashboard.html';
+            if (userRole === 'buyer') {
+              targetUrl = 'buyer.html';
+            } else if (userRole === 'fpo') {
+              targetUrl = 'fpo-dashboard.html';
+            } else if (userRole === 'transporter') {
+              targetUrl = 'transporter/dashboard.html';
+            } else if (userRole === 'admin') {
+              targetUrl = 'admin/dashboard.html';
+            } else {
+              targetUrl = 'dashboard.html';
+            }
+
+            // Synchronously redirect to dashboard
             setTimeout(() => {
-              const userRole = (user && user.role) ? String(user.role).toLowerCase().trim() : 'farmer';
-              if (userRole === 'buyer') {
-                window.location.href = 'buyer.html';
-              } else if (userRole === 'fpo') {
-                window.location.href = 'fpo-dashboard.html';
-              } else if (userRole === 'transporter') {
-                window.location.href = 'transporter/dashboard.html';
-              } else if (userRole === 'admin') {
-                window.location.href = 'admin/dashboard.html';
-              } else {
-                window.location.href = 'dashboard.html';
-              }
-            }, 600);
+              window.location.href = targetUrl;
+            }, 300);
           } else {
             btnLogin.disabled = false;
             btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(loginAlert, result.message || 'Invalid email or password');
 
-            if (result.message && result.message.includes('verify your email')) {
-              activeOtpEmail = email;
-              setTimeout(() => {
-                showOtpStep(email, false);
-                showAlert(otpAlert, 'Please enter your verification OTP to activate your account.');
-              }, 1200);
+            // Specific, safe error classification
+            if (result.status === 401) {
+              showAlert(loginAlert, result.message || 'Invalid email or password.');
+            } else if (result.status === 403) {
+              showAlert(loginAlert, result.message || 'Please verify your email before logging in.');
+              if (result.message && result.message.toLowerCase().includes('verify')) {
+                activeOtpEmail = email;
+                setTimeout(() => {
+                  showOtpStep(email, false);
+                  showAlert(otpAlert, 'Please enter your verification OTP to activate your account.');
+                }, 1000);
+              }
+            } else if (result.status >= 500) {
+              showAlert(loginAlert, result.message || 'Server error. Please try again in a few moments.');
+            } else {
+              showAlert(loginAlert, result.message || 'Login failed. Please verify your credentials.');
             }
           }
         } catch (err) {
           console.error('[Login Network Error]:', err);
           btnLogin.disabled = false;
           btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
-          showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
+          showAlert(loginAlert, 'Server connection failed. Please check your network connection or try again.');
         }
       });
 

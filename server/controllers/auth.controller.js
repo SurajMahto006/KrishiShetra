@@ -379,17 +379,33 @@ const login = async (req, res) => {
     // Generate JWT token
     const token = generateToken(user._id, user.role);
 
-    // Return safe user information and token
+    // Return safe user information and token (normalized for all client variations)
     return res.status(200).json({
       success: true,
       message: 'Login successful',
       token,
+      accessToken: token,
+      jwt: token,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
+        phone: user.phone || '',
         role: user.role,
         emailVerified: user.emailVerified
+      },
+      data: {
+        token,
+        accessToken: token,
+        jwt: token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone || '',
+          role: user.role,
+          emailVerified: user.emailVerified
+        }
       }
     });
   } catch (error) {
