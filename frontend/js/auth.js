@@ -328,13 +328,13 @@ const Auth = {
           this.setUser(userData);
           return userData;
         }
-        if (res && res.status === 401) {
+        if (res && (res.status === 401 || res.status === 403)) {
           if (!this.isLocalEnv() || !localStorage.getItem(this.DEV_SESSION_KEY)) {
             this.clearSession();
           }
           return null;
         }
-        // If temporary server/network issue or non-401 status, retain existing valid cached user
+        // If temporary server/network issue or non-401/403 status, retain existing valid cached user
         const cached = this.getUser();
         if (cached) return cached;
       } else {
@@ -353,7 +353,7 @@ const Auth = {
           this.setUser(data.user);
           return data.user;
         }
-        if (res.status === 401) {
+        if (res.status === 401 || res.status === 403) {
           if (!this.isLocalEnv() || !localStorage.getItem(this.DEV_SESSION_KEY)) {
             this.clearSession();
           }

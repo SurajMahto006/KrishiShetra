@@ -391,8 +391,8 @@
   </div>
 
   <!-- Central Auth & API Configuration -->
-  <script src="js/auth.js?v=2.2"></script>
-  <script src="js/api.js?v=2.2"></script>
+  <script src="js/auth.js?v=2.3"></script>
+  <script src="js/api.js?v=2.3"></script>
 
   <!-- ════════════════════════════════════════
        JAVASCRIPT INTERACTION & API INTEGRATION
@@ -788,28 +788,43 @@
             body: JSON.stringify({ email, password })
           });
 
-          // 1. Handle HTTP error statuses
+          // 1. Read raw response text safely once (prevent stream lock / parse crash)
+          const rawText = await res.text().catch(() => '');
+          const contentType = (res.headers && res.headers.get('content-type')) || '';
+
+          // 2. Safely parse JSON only when body exists
+          let data = null;
+          if (rawText && rawText.trim()) {
+            try {
+              const cleanText = rawText.trim().replace(/^\uFEFF/, '');
+              data = JSON.parse(cleanText);
+            } catch (_) {
+              data = { text: rawText };
+            }
+          }
+          if (typeof data === 'string') {
+            try { data = JSON.parse(data); } catch (_) {}
+          }
+          data = data || {};
+
+          // 3. Handle HTTP error statuses (401, 403, 400, 500+)
           if (!res.ok) {
             btnLogin.disabled = false;
             btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
 
-            let errorMsg = '';
-            try {
-              const errData = await res.json();
-              if (errData && errData.message) errorMsg = errData.message;
-            } catch (_) {}
+            const errorMsg = data.message || (data.error && data.error.message) || '';
 
-            if (res.status === 400 || res.status === 401) {
+            if (res.status === 401 || res.status === 403) {
               showAlert(loginAlert, errorMsg || 'Invalid email or password');
-            } else if (res.status === 403) {
-              showAlert(loginAlert, errorMsg || 'Please verify your email before logging in.');
-              if (errorMsg && errorMsg.toLowerCase().includes('verify')) {
+              if (res.status === 403 && errorMsg && errorMsg.toLowerCase().includes('verify')) {
                 activeOtpEmail = email;
                 setTimeout(() => {
                   showOtpStep(email, false);
                   showAlert(otpAlert, 'Please enter your verification OTP to activate your account.');
                 }, 1000);
               }
+            } else if (res.status === 400) {
+              showAlert(loginAlert, errorMsg || 'Please provide valid email and password.');
             } else if (res.status >= 500) {
               showAlert(loginAlert, 'Server error. Please try again.');
             } else {
@@ -818,50 +833,56 @@
             return;
           }
 
-          // 2. HTTP 200/201: Parse response
-          let data = null;
-          const contentType = res.headers.get('content-type') || '';
-          try {
-            data = await res.json();
-          } catch (jsonErr) {
-            console.warn('[Login Debug] JSON parse notice. Content-type:', contentType);
-            try {
-              const text = await res.text();
-              console.warn('[Login Debug] Safe response length:', text ? text.length : 0);
-            } catch (_) {}
+          // 4. HTTP 200/201: Correctly extract the actual authentication token
+          let token = data.token ||
+                      (data.data && data.data.token) ||
+                      data.accessToken ||
+                      (data.data && data.data.accessToken) ||
+                      data.jwt ||
+                      null;
+
+          if (!token && typeof rawText === 'string' && rawText.trim().startsWith('ey')) {
+            token = rawText.trim().replace(/^"|"$/g, '');
           }
-
-          data = data || {};
-
-          // Extract token from canonical contract (or legacy data.token fallback)
-          const token = data.token || (data.data && data.data.token) || null;
 
           if (!token || typeof token !== 'string' || !token.trim()) {
             console.warn('[Login Debug] Token missing in 200 response. Content-Type:', contentType);
             btnLogin.disabled = false;
             btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(loginAlert, 'Login response could not be verified. Please try again.');
+            showAlert(loginAlert, 'Unable to authenticate. Please try again.');
             return;
           }
 
           const trimmedToken = token.trim();
 
-          // Extract user from canonical contract (or fallback constructed from email and role)
+          // 5. Extract or safely reconstruct user object without requiring duplicate fields
           let userObj = data.user || (data.data && data.data.user) || null;
           if (typeof userObj === 'string') {
             try { userObj = JSON.parse(userObj); } catch (_) { userObj = null; }
           }
           if (!userObj || typeof userObj !== 'object') {
+            let tokenRole = 'farmer';
+            let tokenId = '';
+            try {
+              const parts = trimmedToken.split('.');
+              if (parts.length === 3) {
+                const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+                if (payload.role) tokenRole = String(payload.role).toLowerCase().trim();
+                if (payload.userId || payload.id || payload._id) tokenId = payload.userId || payload.id || payload._id;
+              }
+            } catch (_) {}
+
             userObj = {
+              id: tokenId,
               email: email,
               name: email.split('@')[0],
-              role: 'farmer'
+              role: tokenRole
             };
           }
 
           const userRole = (userObj && userObj.role ? String(userObj.role) : 'farmer').toLowerCase().trim();
 
-          // 3. Synchronously write canonical storage keys
+          // 6. Synchronously persist canonical token, user, role, and logged-in state BEFORE redirect
           try {
             localStorage.setItem('krishi_token', trimmedToken);
             localStorage.setItem('krishi_user', JSON.stringify(userObj));
@@ -879,19 +900,19 @@
             console.error('[Storage Error]:', storageErr);
           }
 
-          // 4. Verify storage persistence before redirecting
+          // 7. Verify that the token was actually stored before redirect
           const verifiedToken = localStorage.getItem('krishi_token');
           if (!verifiedToken) {
             btnLogin.disabled = false;
             btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(loginAlert, 'Unable to save session to browser storage. Please check browser storage settings.');
+            showAlert(loginAlert, 'Unable to store session in browser. Please check browser storage settings.');
             return;
           }
 
           btnLogin.innerHTML = 'Login Successful! ✓';
           btnLogin.style.background = '#5B9A72';
 
-          // 5. Determine canonical dashboard URL by authenticated user role
+          // 8. Determine canonical dashboard URL by role and redirect
           let targetUrl = 'dashboard.html';
           if (userRole === 'buyer') {
             targetUrl = 'buyer.html';
@@ -907,7 +928,7 @@
 
           setTimeout(() => {
             window.location.href = targetUrl;
-          }, 250);
+          }, 200);
         } catch (err) {
           console.error('[Login Network Error]:', err);
           btnLogin.disabled = false;
