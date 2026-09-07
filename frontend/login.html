@@ -846,10 +846,23 @@
           }
 
           if (!token || typeof token !== 'string' || !token.trim()) {
-            console.warn('[Login Debug] Token missing in 200 response. Content-Type:', contentType);
             btnLogin.disabled = false;
             btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(loginAlert, 'Unable to authenticate. Please try again.');
+
+            // Distinguish between empty-body (Render cold-start / proxy timeout) and
+            // a genuine JSON response that arrived without a token field
+            const isEmptyResponse = !rawText || !rawText.trim();
+            const isNonJsonResponse = rawText && !contentType.includes('application/json') && !rawText.trim().startsWith('{');
+
+            if (isEmptyResponse || isNonJsonResponse) {
+              // Render free tier cold-start: infrastructure returned 200 with no body before Node.js was ready
+              console.warn('[Login Debug] Empty or non-JSON 200 response — server may be starting up. Raw:', rawText && rawText.slice(0, 200));
+              showAlert(loginAlert, 'Server is starting up. Please wait a moment and try again.');
+            } else {
+              // Genuine JSON response arrived but token field is absent — unexpected backend response shape
+              console.warn('[Login Debug] Token missing in 200 JSON response. Content-Type:', contentType, '| Keys received:', Object.keys(data).join(', '));
+              showAlert(loginAlert, 'Login failed: server response was missing authentication token. Please try again.');
+            }
             return;
           }
 

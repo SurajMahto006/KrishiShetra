@@ -81,6 +81,23 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Ensure all /api/* responses carry explicit JSON Content-Type and are never cached by proxies/CDNs.
+// This prevents Render's infrastructure from returning a cached/empty 200 with a stripped Content-Type.
+app.use('/api', (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  // Override Content-Type to JSON for all API responses (controllers that call res.json() will keep their value)
+  const originalJson = res.json.bind(res);
+  res.json = function (body) {
+    if (!res.getHeader('Content-Type')) {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    }
+    return originalJson(body);
+  };
+  next();
+});
+
 // Routes
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);

@@ -379,6 +379,9 @@ const login = async (req, res) => {
     // Generate JWT token
     const token = generateToken(user._id, user.role);
 
+    // Explicitly set Content-Type to ensure proxy/CDN layers do not strip the header
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+
     // Return clean canonical user information and token
     return res.status(200).json({
       success: true,
