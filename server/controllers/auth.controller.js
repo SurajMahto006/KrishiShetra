@@ -3,11 +3,13 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendVerificationEmail, sendPasswordResetEmail } = require('../services/email.service');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'krishishetra_super_secret_jwt_key_2026_dev_prod';
+
 // Helper to generate JWT
 const generateToken = (userId, role) => {
   return jwt.sign(
     { userId, role },
-    process.env.JWT_SECRET,
+    JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
   );
 };
@@ -552,7 +554,7 @@ const verifyResetOtp = async (req, res) => {
     // Valid OTP: Generate short-lived reset token (15 mins)
     const resetToken = jwt.sign(
       { userId: user._id, type: 'password_reset' },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '15m' }
     );
 
@@ -600,7 +602,7 @@ const resetPassword = async (req, res) => {
     // Verify JWT reset token
     let decoded;
     try {
-      decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
+      decoded = jwt.verify(resetToken, JWT_SECRET);
     } catch (err) {
       return res.status(400).json({
         success: false,

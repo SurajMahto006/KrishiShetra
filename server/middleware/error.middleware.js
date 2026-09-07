@@ -85,13 +85,16 @@ function apiErrorHandler(err, req, res, next) {
   }
 
   // Always return consistent, safe JSON for API requests
+  const safeMessage = status >= 500 && process.env.NODE_ENV === 'production'
+    ? 'Internal server error. Please try again later.'
+    : message;
+
   const responsePayload = {
     success: false,
+    message: safeMessage,
     error: {
       type: errorType,
-      message: status >= 500 && process.env.NODE_ENV === 'production'
-        ? 'Internal server error. Please try again later.'
-        : message,
+      message: safeMessage,
       status: status
     }
   };

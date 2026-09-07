@@ -275,7 +275,32 @@
       if (window.lucide) lucide.createIcons();
 
       const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      const API_BASE = (window.API_BASE_URL || (window.location && window.location.origin ? (isLocal && window.location.port !== '5000' ? 'http://localhost:5000/api' : `${window.location.origin}/api`) : 'http://localhost:5000/api')).replace(/\/+$/, '');
+      let rawApiBase = (window.API_BASE_URL || (window.location && window.location.origin ? (isLocal && window.location.port !== '5000' ? 'http://localhost:5000/api' : `${window.location.origin}/api`) : 'http://localhost:5000/api')).replace(/\/+$/, '');
+      const API_BASE = rawApiBase.endsWith('/api') ? rawApiBase : `${rawApiBase}/api`;
+
+      // Safe API response parser: reads text once, parses JSON, handles HTML/502/504 errors cleanly
+      async function parseResponseSafely(res) {
+        let parsed = null;
+        try {
+          const raw = await res.text();
+          parsed = JSON.parse(raw);
+        } catch (e) {
+          parsed = {
+            success: res.ok,
+            message: res.status >= 500
+              ? 'Server is starting up or temporarily busy. Please retry in a few seconds.'
+              : (res.status === 404 ? 'API service endpoint not found.' : `Server status ${res.status}`)
+          };
+        }
+        const message = (parsed && (parsed.message || (parsed.error && parsed.error.message))) || (res.ok ? 'Success' : `Request failed (${res.status})`);
+        return {
+          ok: res.ok,
+          status: res.status,
+          success: (parsed && parsed.success === true) || (res.ok && parsed && parsed.success !== false),
+          message,
+          data: parsed || {}
+        };
+      }
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');
@@ -501,20 +526,16 @@
             })
           });
 
-          let data;
-          try {
-            data = await res.json();
-          } catch (pe) {
-            data = { success: res.ok, message: 'Invalid response from server' };
-          }
+          const result = await parseResponseSafely(res);
+          const data = result.data;
 
-          if (res.ok && data.success) {
+          if (result.ok && result.success) {
             btnRegister.disabled = false;
             btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
             
             showOtpStep(email);
-            showAlert(otpAlert, data.message || 'Registration successful. Check your email for the OTP.', 'success');
-          } else if (data.message && (data.message.includes('verification email could not be sent') || data.message.includes('Resend OTP'))) {
+            showAlert(otpAlert, result.message || 'Registration successful. Check your email for the OTP.', 'success');
+          } else if (result.message && (result.message.includes('verification email could not be sent') || result.message.includes('Resend OTP'))) {
             btnRegister.disabled = false;
             btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
             
@@ -531,11 +552,11 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email })
                   });
-                  const resendData = await resendRes.json();
-                  if (resendRes.ok && resendData.success) {
-                    showAlert(otpAlert, resendData.message || 'A new verification OTP has been sent.', 'success');
+                  const resendResult = await parseResponseSafely(resendRes);
+                  if (resendResult.ok && resendResult.success) {
+                    showAlert(otpAlert, resendResult.message || 'A new verification OTP has been sent.', 'success');
                   } else {
-                    showAlert(otpAlert, resendData.message || 'Could not send OTP. Please try again in a few seconds.');
+                    showAlert(otpAlert, resendResult.message || 'Could not send OTP. Please try again in a few seconds.');
                   }
                 } catch (rErr) {
                   showAlert(otpAlert, 'Unable to connect to server to resend OTP.');
@@ -546,7 +567,7 @@
           } else {
             btnRegister.disabled = false;
             btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(registerAlert, data.message || 'Registration failed. Please try again.');
+            showAlert(registerAlert, result.message || 'Registration failed. Please try again.');
           }
         } catch (err) {
           console.error('[Register Network Error]:', err);
@@ -579,14 +600,9 @@
             })
           });
 
-          let data;
-          try {
-            data = await res.json();
-          } catch (pe) {
-            data = { success: res.ok, message: 'Invalid response from server' };
-          }
+          const result = await parseResponseSafely(res);
 
-          if (res.ok && data.success) {
+          if (result.ok && result.success) {
             btnVerifyOtp.innerHTML = 'Verified! ✓';
             btnVerifyOtp.style.background = '#5B9A72';
 
@@ -598,7 +614,7 @@
           } else {
             btnVerifyOtp.disabled = false;
             btnVerifyOtp.innerHTML = `<span id="btn-verify-text">Verify & Continue</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(otpAlert, data.message || 'Invalid or expired OTP.');
+            showAlert(otpAlert, result.message || 'Invalid or expired OTP.');
           }
         } catch (err) {
           console.error('[Verify OTP Network Error]:', err);
@@ -621,21 +637,16 @@
             body: JSON.stringify({ email: activeOtpEmail })
           });
 
-          let data;
-          try {
-            data = await res.json();
-          } catch (pe) {
-            data = { success: res.ok, message: 'Invalid response from server' };
-          }
+          const result = await parseResponseSafely(res);
 
-          if (res.ok && data.success) {
+          if (result.ok && result.success) {
             btnResendOtp.textContent = 'Resend Code';
-            showAlert(otpAlert, data.message || 'A new verification OTP has been sent.', 'success');
+            showAlert(otpAlert, result.message || 'A new verification OTP has been sent.', 'success');
             startResendTimer();
           } else {
             btnResendOtp.disabled = false;
             btnResendOtp.textContent = 'Resend Code';
-            showAlert(otpAlert, data.message || 'Failed to resend OTP.');
+            showAlert(otpAlert, result.message || 'Failed to resend OTP.');
           }
         } catch (err) {
           console.error('[Resend OTP Network Error]:', err);

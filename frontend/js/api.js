@@ -17,14 +17,10 @@ function resolveApiBaseUrl() {
   if (typeof window !== 'undefined') {
     // 1. Explicit runtime override takes highest priority
     if (window.API_BASE_URL) {
-      return window.API_BASE_URL.replace(/\/+$/, '');
+      let b = window.API_BASE_URL.replace(/\/+$/, '');
+      return b.endsWith('/api') ? b : `${b}/api`;
     }
-    // 2. Local storage override for debugging/testing
-    const stored = localStorage.getItem('krishi_api_base_url');
-    if (stored) {
-      return stored.replace(/\/+$/, '');
-    }
-    // 3. Localhost & local file:// development detection
+    // 2. Localhost & local file:// development detection
     if (window.location) {
       if (window.location.protocol === 'file:') {
         return DEV_API_URL;
@@ -39,10 +35,11 @@ function resolveApiBaseUrl() {
       }
       // In production / hosted environments (Render, etc.), frontend is served by Express: use same-origin /api
       if (window.location.origin) {
-        return `${window.location.origin}/api`;
+        let org = window.location.origin.replace(/\/+$/, '');
+        return `${org}/api`;
       }
     }
-    // 4. Default fallback
+    // 3. Default fallback
     return DEV_API_URL;
   }
   return DEV_API_URL;
@@ -425,7 +422,8 @@ class ApiClient {
         if (response.status === 401) {
           const isLocalDev = window.Auth && typeof window.Auth.isLocalEnv === 'function' && window.Auth.isLocalEnv() && (typeof localStorage !== 'undefined' && localStorage.getItem('krishishetra_dev_session'));
 
-          if (!isLocalDev) {
+          // Only clear session and redirect if token is missing or if the dedicated /auth/me check returned 401
+          if (!isLocalDev && (endpoint.includes('/auth/me') || !token)) {
             if (window.Auth && typeof window.Auth.clearSession === 'function') {
               window.Auth.clearSession();
             } else if (typeof localStorage !== 'undefined') {

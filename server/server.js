@@ -58,7 +58,7 @@ if (process.env.RENDER_EXTERNAL_URL) {
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, server-to-server, curl)
+    // Allow requests with no origin (mobile apps, server-to-server, curl, same-origin)
     if (!origin) return callback(null, true);
 
     const isAllowed = allowedOrigins.includes(origin) ||
@@ -66,11 +66,8 @@ const corsOptions = {
       /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||
       /^https?:\/\/[^/]+\.onrender\.com$/.test(origin);
 
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS blocked request from origin: ${origin}`));
-    }
+    // Return boolean cleanly without throwing an unhandled Error that generates HTML 500 pages
+    callback(null, isAllowed);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -83,6 +80,7 @@ app.use(express.json());
 // Routes
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes); // Direct route alias in case frontend calls /auth directly
 app.use('/api/farmer', farmerRoutes);
 app.use('/api/buyer/market', buyerMarketRoutes);
 app.use('/api/buyer/saved-lots', buyerSavedLotsRoutes);

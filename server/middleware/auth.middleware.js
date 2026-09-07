@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'krishishetra_super_secret_jwt_key_2026_dev_prod';
+
 const protect = async (req, res, next) => {
   let token;
   const authHeader = req.headers.authorization || req.headers.Authorization;
@@ -31,7 +33,7 @@ const protect = async (req, res, next) => {
       }
 
       // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, JWT_SECRET);
 
       // Get user from token payload (excluding sensitive fields)
       const user = await User.findById(decoded.userId).select(
@@ -70,7 +72,10 @@ const authorize = (...roles) => {
       });
     }
 
-    if (!roles.includes(req.user.role)) {
+    const userRole = (req.user.role || '').toLowerCase().trim();
+    const allowedRoles = roles.map(r => String(r).toLowerCase().trim());
+
+    if (!allowedRoles.includes(userRole) && userRole !== 'admin') {
       return res.status(403).json({
         success: false,
         message: `Forbidden: Access restricted to [${roles.join(', ')}] role only.`
