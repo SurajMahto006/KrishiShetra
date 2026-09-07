@@ -981,14 +981,22 @@
             btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
             
             showOtpStep(email, false);
-            showAlert(otpAlert, result.message || 'Registration successful. Check your email for the OTP.', 'success');
-          } else if (result.message && (result.message.includes('verification email could not be sent') || result.message.includes('Resend OTP'))) {
+            showAlert(otpAlert, 'OTP sent successfully. Check your email (Inbox or Spam folder).', 'success');
+          } else if (result.status === 400) {
+            btnRegister.disabled = false;
+            btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(registerAlert, result.message || 'Please check your registration details.');
+          } else if (result.status === 429) {
+            btnRegister.disabled = false;
+            btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
+            showAlert(registerAlert, result.message || 'Rate limit reached. Please wait a moment before trying again.');
+          } else if (result.message && (result.message.includes('verification email could not be sent') || result.message.includes('Resend OTP') || result.message.includes('Unable to send verification email'))) {
             btnRegister.disabled = false;
             btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
             
             showStructuredAlert(registerAlert, {
               title: 'Verification email not sent',
-              message: "Your account was created, but we couldn't send the verification email. You can request a new OTP.",
+              message: "Unable to send verification email. Please try again or request a new OTP.",
               actionText: 'Resend OTP ↻',
               actionCallback: async () => {
                 showOtpStep(email, false);
@@ -1001,9 +1009,9 @@
                   });
                   const resendResult = await parseResponseSafely(resendRes);
                   if (resendResult.ok && resendResult.success) {
-                    showAlert(otpAlert, resendResult.message || 'A new verification OTP has been sent.', 'success');
+                    showAlert(otpAlert, 'OTP sent successfully. Check your email (Inbox or Spam folder).', 'success');
                   } else {
-                    showAlert(otpAlert, resendResult.message || 'Could not send OTP. Please try again in a few seconds.');
+                    showAlert(otpAlert, resendResult.message || 'Unable to send verification email. Please try again.');
                   }
                 } catch (rErr) {
                   showAlert(otpAlert, 'Unable to connect to server to resend OTP.');
@@ -1014,7 +1022,7 @@
           } else {
             btnRegister.disabled = false;
             btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
-            showAlert(registerAlert, result.message || 'Registration failed. Please try again.');
+            showAlert(registerAlert, result.message || 'Unable to send verification email. Please try again.');
           }
         } catch (err) {
           console.error('[Register Network Error]:', err);
@@ -1051,9 +1059,9 @@
 
           if (result.ok && result.success) {
             showOtpStep(email, true);
-            showAlert(otpAlert, result.message || 'If an account exists, a reset OTP has been sent to your inbox.', 'success');
+            showAlert(otpAlert, 'OTP sent successfully. Check your email (Inbox or Spam folder).', 'success');
           } else {
-            showAlert(forgotAlert, result.message || 'Failed to process password reset.');
+            showAlert(forgotAlert, result.message || 'Unable to process password reset. Please try again.');
           }
         } catch (err) {
           console.error('[Forgot Password Network Error]:', err);
@@ -1201,12 +1209,12 @@
 
           if (result.ok && result.success) {
             btnResendOtp.textContent = 'Resend Code';
-            showAlert(otpAlert, result.message || 'A new verification OTP has been sent.', 'success');
+            showAlert(otpAlert, 'OTP sent successfully. Check your email (Inbox or Spam folder).', 'success');
             startResendTimer();
           } else {
             btnResendOtp.disabled = false;
             btnResendOtp.textContent = 'Resend Code';
-            showAlert(otpAlert, result.message || 'Failed to resend OTP.');
+            showAlert(otpAlert, result.message || 'Unable to send OTP. Please try again.');
           }
         } catch (err) {
           console.error('[Resend OTP Network Error]:', err);

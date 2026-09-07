@@ -143,10 +143,13 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   
   // Safe Email Service configuration check
-  if (!process.env.BREVO_API_KEY || process.env.BREVO_API_KEY.trim() === '' || process.env.BREVO_API_KEY === 'your_brevo_api_key') {
-    console.warn('⚠️ Email service configuration warning: BREVO_API_KEY is missing or unconfigured in .env');
-  } else if (!process.env.EMAIL_FROM || process.env.EMAIL_FROM.trim() === '' || process.env.EMAIL_FROM === 'your_verified_sender@example.com') {
-    console.warn('⚠️ Email service configuration warning: EMAIL_FROM is missing or unconfigured in .env');
+  const apiKey = (process.env.BREVO_API_KEY || process.env.EMAIL_API_KEY || '').trim();
+  const fromEmail = (process.env.EMAIL_FROM || process.env.FROM_EMAIL || '').trim();
+
+  if (!apiKey || apiKey === 'your_brevo_api_key') {
+    console.warn('⚠️ Email service configuration notice: BREVO_API_KEY / EMAIL_API_KEY is not configured');
+  } else if (!fromEmail || fromEmail === 'your_verified_sender@example.com') {
+    console.log('✓ Brevo Transactional Email Service configured (using verified sender)');
   } else {
     console.log('✓ Brevo Transactional Email Service configured');
   }

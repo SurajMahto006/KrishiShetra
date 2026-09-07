@@ -83,7 +83,7 @@ const register = async (req, res) => {
         console.error('[Email Delivery Error]:', emailError.message || emailError);
         return res.status(500).json({
           success: false,
-          message: 'Account created, but verification email could not be sent. Please use Resend OTP.'
+          message: emailError.message || 'Account created, but verification email could not be sent. Please use Resend OTP.'
         });
       }
 
@@ -125,7 +125,7 @@ const register = async (req, res) => {
       console.error('[Email Delivery Error]:', emailError.message || emailError);
       return res.status(500).json({
         success: false,
-        message: 'Account created, but verification email could not be sent. Please use Resend OTP.'
+        message: emailError.message || 'Account created, but verification email could not be sent. Please use Resend OTP.'
       });
     }
 
@@ -307,14 +307,14 @@ const resendVerification = async (req, res) => {
     user.emailVerificationLastSentAt = new Date();
     await user.save();
 
-    // Send real email via Resend
+    // Send real email via Brevo
     try {
       await sendVerificationEmail(normalizedEmail, otp);
     } catch (emailError) {
       console.error('[Email Delivery Error]:', emailError.message || emailError);
       return res.status(500).json({
         success: false,
-        message: 'Could not send verification email. Please try again in a moment.'
+        message: emailError.message || 'Could not send verification email. Please try again in a moment.'
       });
     }
 
@@ -456,11 +456,15 @@ const forgotPassword = async (req, res) => {
       user.passwordResetTokenHash = undefined;
       await user.save();
 
-      // Send real email via Resend
+      // Send real email via Brevo
       try {
         await sendPasswordResetEmail(normalizedEmail, otp);
       } catch (emailError) {
         console.error('[Email Delivery Error]:', emailError.message || emailError);
+        return res.status(500).json({
+          success: false,
+          message: emailError.message || 'Unable to send password reset email. Please try again.'
+        });
       }
     }
 
@@ -701,11 +705,15 @@ const resendResetOtp = async (req, res) => {
       user.passwordResetTokenHash = undefined;
       await user.save();
 
-      // Send real email via Resend
+      // Send real email via Brevo
       try {
         await sendPasswordResetEmail(normalizedEmail, otp);
       } catch (emailError) {
         console.error('[Email Delivery Error]:', emailError.message || emailError);
+        return res.status(500).json({
+          success: false,
+          message: emailError.message || 'Unable to send password reset email. Please try again.'
+        });
       }
     }
 

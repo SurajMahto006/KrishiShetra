@@ -5,47 +5,53 @@ const { BrevoClient } = require('@getbrevo/brevo');
  * Configure and get Brevo API Client instance
  */
 const getBrevoClient = () => {
-  const apiKey = process.env.BREVO_API_KEY;
-  if (!apiKey || apiKey.trim() === '' || apiKey === 'your_brevo_api_key') {
-    throw new Error('BREVO_API_KEY is not configured in environment variables');
+  const apiKey = (process.env.BREVO_API_KEY || process.env.EMAIL_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+  if (!apiKey || apiKey === 'your_brevo_api_key') {
+    throw new Error('Email service is not configured (BREVO_API_KEY / EMAIL_API_KEY missing)');
   }
 
-  return new BrevoClient({ apiKey: apiKey.trim() });
+  return new BrevoClient({ apiKey });
 };
 
 /**
- * Get validated sender object
+ * Get validated sender object matching verified Brevo sender
  */
 const getSender = () => {
-  const fromEmail = process.env.EMAIL_FROM;
-  if (!fromEmail || fromEmail.trim() === '' || fromEmail === 'your_verified_sender@example.com') {
-    throw new Error('EMAIL_FROM is not configured in environment variables');
+  let fromEmail = (process.env.EMAIL_FROM || process.env.FROM_EMAIL || '').trim().replace(/^['"]|['"]$/g, '');
+  if (!fromEmail || fromEmail === 'your_verified_sender@example.com') {
+    // Verified transactional sender for KrishiShetra Brevo account
+    fromEmail = 'surajmahto.work@gmail.com';
   }
-  const fromName = process.env.EMAIL_FROM_NAME || 'KrishiShetra';
-  return { name: fromName.trim(), email: fromEmail.trim() };
+  const fromName = (process.env.EMAIL_FROM_NAME || process.env.FROM_NAME || 'KrishiShetra').trim().replace(/^['"]|['"]$/g, '');
+  return { name: fromName, email: fromEmail };
 };
 
 /**
  * Format Brevo API error into a clean, safe message without exposing secrets
  */
 const formatBrevoError = (err) => {
-  const rawMsg = (err && err.message) ? err.message : '';
-  const rawBody = (err && err.body) ? (typeof err.body === 'string' ? err.body : JSON.stringify(err.body)) : '';
+  if (!err) return 'Unable to send verification email. Please try again.';
+
+  const rawMsg = err.message || '';
+  const rawBody = err.body ? (typeof err.body === 'string' ? err.body : JSON.stringify(err.body)) : '';
   const combined = `${rawMsg} ${rawBody}`.toLowerCase();
 
+  if (combined.includes('not configured') || combined.includes('missing')) {
+    return 'Email service is not configured. Please check server environment settings.';
+  }
   if (combined.includes('key not found') || combined.includes('unauthorized') || combined.includes('invalid api key')) {
-    return 'Invalid Brevo API key configured.';
+    return 'Invalid email provider API key configured.';
   }
   if (combined.includes('sender') || combined.includes('unverified') || combined.includes('not verified')) {
-    return 'Sender email is not verified in Brevo. Please verify your sender email in the Brevo dashboard.';
+    return 'Sender email is not verified in email provider. Please verify your sender email in the provider dashboard.';
   }
-  if (combined.includes('rate limit') || combined.includes('too many requests')) {
+  if (combined.includes('rate limit') || combined.includes('too many requests') || err.statusCode === 429) {
     return 'Email rate limit reached. Please wait a moment before requesting another OTP.';
   }
   if (err && err.body && typeof err.body === 'object' && err.body.message) {
     return err.body.message;
   }
-  return 'Failed to send transactional verification email. Please try again.';
+  return 'Unable to send verification email. Please try again.';
 };
 
 /**
@@ -120,9 +126,11 @@ If you did not create a KrishiShetra account, you can safely ignore this email.
       to: [{ email: to.toLowerCase().trim() }]
     });
 
+    console.log('[Email Service] Verification OTP email dispatched via Brevo');
     return response;
   } catch (err) {
     const safeError = formatBrevoError(err);
+    console.error('[Email Service Error]:', safeError);
     throw new Error(safeError);
   }
 };
@@ -211,9 +219,11 @@ If you did not request a password reset, please ignore this email.
       to: [{ email: to.toLowerCase().trim() }]
     });
 
+    console.log('[Email Service] Password reset OTP email dispatched via Brevo');
     return response;
   } catch (err) {
     const safeError = formatBrevoError(err);
+    console.error('[Email Service Error]:', safeError);
     throw new Error(safeError);
   }
 };
