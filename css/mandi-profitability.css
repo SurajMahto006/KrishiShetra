@@ -1,0 +1,701 @@
+/* ============================================================
+   KRISHISHETRA — AI MANDI PROFITABILITY & SELLING DECISION STYLES
+   Ivory foundation #F5F4ED, Crisp White Cards #FFFFFF, Evergreen #12372A,
+   Sage Green #5B9A72, Mint #8FCB9B, Charcoal #17221D, Gold Amber #D6A84F.
+   ============================================================ */
+
+/* ── Container Layout ── */
+.mandi-profit-container {
+  max-width: 1340px;
+  margin: 0 auto;
+  padding: calc(var(--nav-height, 72px) + 28px) 24px 60px;
+}
+
+.mandi-hero {
+  margin-bottom: 32px;
+}
+
+.mandi-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(91, 154, 114, 0.12);
+  border: 1px solid rgba(91, 154, 114, 0.3);
+  color: var(--ks-evergreen);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 12px;
+}
+
+.mandi-hero__title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ks-evergreen);
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+
+.mandi-hero__subtitle {
+  font-size: 15px;
+  color: var(--ks-text-muted);
+  max-width: 780px;
+  line-height: 1.55;
+}
+
+/* ── Grid: Inputs & Results ── */
+.mandi-layout-grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .mandi-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Cards ── */
+.mandi-card {
+  background: var(--ks-card-white);
+  border: 1px solid var(--ks-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 26px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mandi-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ks-border-subtle);
+}
+
+.mandi-card__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ks-evergreen);
+}
+
+.mandi-card__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--ks-pale-sage);
+  color: var(--ks-sage);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* ── Form Inputs ── */
+.mandi-form-group {
+  margin-bottom: 18px;
+}
+
+.mandi-form-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ks-evergreen);
+  margin-bottom: 8px;
+}
+
+.mandi-form-label .req {
+  color: var(--ks-terracotta);
+}
+
+.mandi-form-input,
+.mandi-form-select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--ks-border);
+  border-radius: var(--radius-sm);
+  background: #FAFAF7;
+  color: var(--ks-charcoal);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.mandi-form-input:focus,
+.mandi-form-select:focus {
+  outline: none;
+  border-color: var(--ks-sage);
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(91, 154, 114, 0.15);
+}
+
+.mandi-input-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.mandi-location-picker {
+  display: flex;
+  gap: 8px;
+}
+
+.mandi-btn-geo {
+  padding: 0 14px;
+  background: var(--ks-mint-light);
+  border: 1.5px solid var(--ks-border-sage);
+  color: var(--ks-sage);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.mandi-btn-geo:hover {
+  background: var(--ks-pale-sage);
+  color: var(--ks-evergreen);
+}
+
+/* ── Nearby Buyer Highlighted Input ── */
+.mandi-buyer-callout {
+  background: linear-gradient(135deg, #FDF8ED 0%, #FAF3E0 100%);
+  border: 1.5px dashed var(--ks-amber);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.mandi-buyer-callout__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #8C6212;
+  margin-bottom: 8px;
+}
+
+/* ── Collapsible Advanced Overrides ── */
+.mandi-accordion {
+  border: 1px solid var(--ks-border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 22px;
+  overflow: hidden;
+  background: #FCFCF9;
+}
+
+.mandi-accordion__toggle {
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ks-evergreen);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.mandi-accordion__toggle:hover {
+  background: var(--ks-pale-sage);
+}
+
+.mandi-accordion__content {
+  padding: 16px;
+  border-top: 1px solid var(--ks-border-subtle);
+  display: none;
+}
+
+.mandi-accordion__content.active {
+  display: block;
+}
+
+.mandi-accordion-hint {
+  font-size: 11.5px;
+  color: var(--ks-text-muted);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+/* ── Submit Action Button ── */
+.mandi-submit-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--ks-evergreen) 0%, var(--ks-evergreen-light) 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 14px rgba(18, 55, 42, 0.25);
+  transition: all 0.25s ease;
+}
+
+.mandi-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(18, 55, 42, 0.35);
+  background: linear-gradient(135deg, #164031 0%, #205c47 100%);
+}
+
+.mandi-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ════════════════════════════════════════
+   RESULTS SCREEN COMPONENTS
+   ════════════════════════════════════════ */
+
+/* ── Decision Banner ── */
+.mandi-decision-banner {
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: var(--shadow-lg);
+  animation: slideInDown 0.4s ease;
+}
+
+@keyframes slideInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mandi-decision-banner--go {
+  background: linear-gradient(135deg, #12372A 0%, #1A4D3B 100%);
+  color: #FFFFFF;
+  border: 1.5px solid #8FCB9B;
+}
+
+.mandi-decision-banner--stay {
+  background: linear-gradient(135deg, #4A3319 0%, #634522 100%);
+  color: #FFFFFF;
+  border: 1.5px solid #D6A84F;
+}
+
+.mandi-decision-banner__icon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.mandi-decision-banner__body {
+  flex: 1;
+}
+
+.mandi-decision-banner__kicker {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.mandi-decision-banner__headline {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.mandi-decision-banner__extra {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.mandi-decision-banner__badge {
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 800;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.mandi-decision-banner--go .mandi-decision-banner__badge {
+  background: #EAF6ED;
+  color: #12372A;
+}
+
+.mandi-decision-banner--stay .mandi-decision-banner__badge {
+  background: #FDF7EA;
+  color: #4A3319;
+}
+
+/* ── Recommended Highlight Card ── */
+.mandi-recom-card {
+  background: #FFFFFF;
+  border: 2px solid #5B9A72;
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 12px 30px rgba(91, 154, 114, 0.12);
+  position: relative;
+}
+
+.mandi-recom-badge {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  background: #EAF6ED;
+  color: #12372A;
+  border: 1px solid #8FCB9B;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mandi-recom-header {
+  margin-bottom: 20px;
+}
+
+.mandi-recom-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ks-evergreen);
+  margin-bottom: 4px;
+}
+
+.mandi-recom-sub {
+  font-size: 13.5px;
+  color: var(--ks-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── Primary Profit Callout ── */
+.mandi-profit-callout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  background: #F5F8F6;
+  border: 1.5px solid var(--ks-border-sage);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.mandi-profit-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.mandi-profit-stat__label {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ks-text-muted);
+  margin-bottom: 4px;
+}
+
+.mandi-profit-stat__val {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ks-evergreen);
+  line-height: 1.2;
+}
+
+.mandi-profit-stat__val--hero {
+  color: #1e7040;
+  font-size: 30px;
+}
+
+.mandi-profit-stat__sub {
+  font-size: 12px;
+  color: var(--ks-text-muted);
+  margin-top: 2px;
+}
+
+/* ── Explainable Calculation Breakdown ── */
+.mandi-calc-table-wrap {
+  margin-bottom: 24px;
+  border: 1px solid var(--ks-border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.mandi-calc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.mandi-calc-table th,
+.mandi-calc-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--ks-border-subtle);
+}
+
+.mandi-calc-table th {
+  background: #F6F5EE;
+  color: var(--ks-evergreen);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mandi-calc-table tr:last-child td {
+  border-bottom: none;
+}
+
+.mandi-calc-table tr.total-row {
+  background: #F2F7F4;
+  font-weight: 800;
+  font-size: 14.5px;
+}
+
+.mandi-calc-table tr.net-profit-row {
+  background: #E8F5EC;
+  font-weight: 900;
+  font-size: 16px;
+  color: #1e7040;
+}
+
+.mandi-calc-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.mandi-calc-table .formula-cell {
+  color: var(--ks-text-muted);
+  font-size: 12px;
+  font-family: monospace;
+}
+
+/* ── Scenario Analysis (Worst / Expected / Best) ── */
+.mandi-scenario-deck {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .mandi-scenario-deck {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mandi-scenario-card {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--ks-border-subtle);
+  background: #FFFFFF;
+}
+
+.mandi-scenario-card--expected {
+  border-color: var(--ks-sage);
+  background: #F6FAF7;
+  box-shadow: 0 4px 12px rgba(91, 154, 114, 0.1);
+}
+
+.mandi-scenario-card__title {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.mandi-scenario-card--worst .mandi-scenario-card__title { color: var(--ks-terracotta); }
+.mandi-scenario-card--expected .mandi-scenario-card__title { color: var(--ks-sage); }
+.mandi-scenario-card--best .mandi-scenario-card__title { color: #1e7040; }
+
+.mandi-scenario-card__price {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ks-charcoal);
+  margin-bottom: 4px;
+}
+
+.mandi-scenario-card__profit {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ks-evergreen);
+}
+
+/* ── Comparison Table ── */
+.mandi-matrix-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--ks-border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+}
+
+.mandi-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  white-space: nowrap;
+}
+
+.mandi-matrix-table th,
+.mandi-matrix-table td {
+  padding: 13px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--ks-border-subtle);
+}
+
+.mandi-matrix-table th {
+  background: #F6F5EE;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ks-evergreen);
+  letter-spacing: 0.04em;
+}
+
+.mandi-matrix-table tr:hover {
+  background: #FAFAF7;
+}
+
+.mandi-matrix-table tr.row-recommended {
+  background: #EAF6ED;
+  font-weight: 700;
+}
+
+.mandi-matrix-table tr.row-recommended td {
+  border-top: 1.5px solid #8FCB9B;
+  border-bottom: 1.5px solid #8FCB9B;
+}
+
+.mandi-matrix-table .rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  background: #ECEAE1;
+  color: var(--ks-charcoal);
+}
+
+.row-recommended .rank-badge {
+  background: #5B9A72;
+  color: #FFFFFF;
+}
+
+/* ── Break-Even & Explanation Cards ── */
+.mandi-info-box {
+  background: #FDFBF4;
+  border: 1.5px solid #EADBBA;
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.mandi-info-box__icon {
+  font-size: 22px;
+  line-height: 1;
+  color: #8C6212;
+}
+
+.mandi-info-box__body {
+  flex: 1;
+  font-size: 13.5px;
+  color: #4A3A1F;
+  line-height: 1.5;
+}
+
+.mandi-info-box__title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #614309;
+}
+
+.mandi-disclaimer-banner {
+  background: #FAF8F2;
+  border: 1px solid var(--ks-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--ks-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* ── Placeholder / Empty State ── */
+.mandi-placeholder {
+  text-align: center;
+  padding: 60px 24px;
+  background: var(--ks-card-white);
+  border: 2px dashed var(--ks-border);
+  border-radius: var(--radius-lg);
+  color: var(--ks-text-muted);
+}
+
+.mandi-placeholder__icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--ks-pale-sage);
+  color: var(--ks-sage);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.mandi-placeholder__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ks-evergreen);
+  margin-bottom: 6px;
+}
+
+.mandi-placeholder__text {
+  font-size: 14px;
+  max-width: 440px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
