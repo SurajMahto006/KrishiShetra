@@ -29,32 +29,45 @@
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;
       width: 100%;
-      height: 70px;
-      min-height: 70px;
+      height: 72px;
       z-index: 1000;
       background-color: var(--ks-evergreen, #12372A);
       box-shadow: 0 4px 20px rgba(18, 55, 42, 0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
     }
     .dash-header__inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 100%;
       width: 100%;
       max-width: 1440px;
       margin: 0 auto;
-      padding: 0 16px;
-      gap: 12px;
+      padding: 0 20px;
+      gap: 16px;
       box-sizing: border-box;
       flex-wrap: nowrap;
+    }
+    .dash-header__logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .dash-search {
+      flex: 0 1 200px;
+      min-width: 140px;
+      margin: 0 4px;
     }
     .dash-header__nav {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       flex: 1 1 auto;
+      justify-content: center;
       overflow-x: auto;
       scrollbar-width: none;
       white-space: nowrap;
@@ -64,12 +77,16 @@
     }
     .dash-header__link {
       flex-shrink: 0;
+      white-space: nowrap;
     }
     .dash-header__actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       flex-shrink: 0;
     }
     .dash-main {
-      padding-top: 86px !important;
+      padding-top: 88px !important;
     }
 
     .dispute-page-layout {
@@ -386,10 +403,10 @@
   <!-- HEADER / NAVBAR -->
   <header class="dash-header" id="dash-header">
     <div class="dash-header__inner">
-      <a href="index.html" class="dash-header__logo" id="dash-logo">
+      <a href="fpo-dashboard.html" class="dash-header__logo" id="dash-logo">
         <span class="dash-header__logo-icon"><i data-lucide="sprout"></i></span>
         <span class="dash-header__logo-text">KrishiShetra</span>
-        <span class="dash-header__role-badge">USER</span>
+        <span class="dash-header__role-badge">FPO</span>
       </a>
 
       <div class="dash-search" id="dash-search">
@@ -403,12 +420,37 @@
       </nav>
 
       <div class="dash-header__actions">
-        <div class="dash-header__user" id="header-user-profile">
-          <div class="dash-header__avatar" id="header-avatar">KS</div>
-          <div class="dash-header__user-info">
-            <span class="dash-header__user-name" id="header-user-name">User</span>
+        <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+          <i data-lucide="bell"></i>
+          <span class="dash-header__badge" id="notifications-badge">1</span>
+        </button>
+        <div class="dash-profile-wrap" id="dash-profile-wrap">
+          <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
+            <div class="dash-header__avatar" id="header-avatar">SJ</div>
+            <span class="dash-header__user-name" id="header-user-name">Suresh</span>
+            <i data-lucide="chevron-down" class="dash-header__chevron"></i>
+          </button>
+          <div class="dash-profile-dropdown" id="dash-profile-dropdown">
+            <div class="dash-profile-dropdown__header">
+              <div class="dash-profile-dropdown__avatar" id="dropdown-avatar">SJ</div>
+              <div class="dash-profile-dropdown__info">
+                <div class="dash-profile-dropdown__name" id="dropdown-user-name">Suresh Jadhav</div>
+                <div class="dash-profile-dropdown__phone" id="dropdown-user-phone">suresh.jadhav@vashifpo.org</div>
+              </div>
+            </div>
+            <div class="dash-profile-dropdown__divider"></div>
+            <a href="fpo-dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="layout-dashboard"></i> FPO Command Center</a>
+            <a href="fpo-dashboard.html#farmers" class="dash-profile-dropdown__item"><i data-lucide="users"></i> Member Farmers</a>
+            <a href="fpo-dashboard.html#orders" class="dash-profile-dropdown__item"><i data-lucide="clipboard-list"></i> Buyer Contracts</a>
+            <div class="dash-profile-dropdown__divider"></div>
+            <button class="dash-profile-dropdown__item dash-profile-dropdown__item--danger" id="btn-logout" onclick="window.Auth ? window.Auth.logout() : location.href='login.html'">
+              <i data-lucide="log-out"></i> Sign Out
+            </button>
           </div>
         </div>
+        <button class="dash-nav-toggle" id="dash-nav-toggle" aria-label="Toggle Navigation">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
   </header>

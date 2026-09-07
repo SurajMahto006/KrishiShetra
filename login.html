@@ -325,10 +325,10 @@
             <span class="auth-dev-testing__badge">Local Dev Only</span>
           </div>
           <div class="auth-dev-testing__grid">
-            <button type="button" class="dev-role-btn" data-dev-role="farmer">Farmer (Ramesh Patil)</button>
-            <button type="button" class="dev-role-btn" data-dev-role="fpo">FPO (Suresh Jadhav)</button>
-            <button type="button" class="dev-role-btn" data-dev-role="buyer">Buyer (Amit Shah)</button>
-            <button type="button" class="dev-role-btn" data-dev-role="transporter">Transporter (Vijay More)</button>
+            <button type="button" class="dev-role-btn" data-dev-role="farmer">Farmer</button>
+            <button type="button" class="dev-role-btn" data-dev-role="fpo">FPO</button>
+            <button type="button" class="dev-role-btn" data-dev-role="buyer">Buyer</button>
+            <button type="button" class="dev-role-btn" data-dev-role="transporter">Transporter</button>
             <button type="button" class="dev-role-btn" data-dev-role="admin">Admin</button>
           </div>
         </div>
@@ -359,8 +359,8 @@
   </div>
 
   <!-- Central Auth & API Configuration -->
-  <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
 
   <!-- ════════════════════════════════════════
        JAVASCRIPT INTERACTION & API INTEGRATION
@@ -370,7 +370,9 @@
       if (window.lucide) lucide.createIcons();
 
       const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      const API_BASE = (window.API_BASE_URL || (isLocal ? 'http://127.0.0.1:5000/api' : 'https://krishishetra-1.onrender.com/api')).replace(/\/+$/, '');
+      const API_BASE = (typeof window.resolveApiBaseUrl === 'function'
+        ? window.resolveApiBaseUrl()
+        : (window.API_BASE_URL || (isLocal ? 'http://127.0.0.1:5000/api' : 'https://krishishetra-1.onrender.com/api'))).replace(/\/+$/, '');
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');
@@ -712,7 +714,13 @@
           } else {
             btnLogin.disabled = false;
             btnLogin.innerHTML = '<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>';
-            showAlert(loginAlert, data.message || 'Invalid email or password');
+            if (res.status === 401) {
+              showAlert(loginAlert, 'Invalid email or password. Please check your credentials and try again.');
+            } else if (res.status >= 500) {
+              showAlert(loginAlert, data.message || 'Server error occurred. Please try again later.');
+            } else {
+              showAlert(loginAlert, data.message || 'Invalid email or password');
+            }
 
             if (data.message && data.message.includes('verify your email')) {
               activeOtpEmail = email;
@@ -726,7 +734,7 @@
           console.error('[Login Network Error]:', err);
           btnLogin.disabled = false;
           btnLogin.innerHTML = '<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>';
-          showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please make sure the backend server is running.');
+          showAlert(loginAlert, 'Unable to connect to KrishiShetra server (http://127.0.0.1:5000). Please make sure the backend server is running.');
         }
       });
 

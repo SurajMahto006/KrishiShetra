@@ -1605,9 +1605,9 @@ function hideModalAlert(elementId) {
 
 function getTimeBasedGreeting() {
   const hour = new Date().getHours();
-  if (hour >= 5 && hour < 12) return 'Good morning';
-  if (hour >= 12 && hour < 17) return 'Good afternoon';
-  return 'Good evening';
+  if (hour < 12) return 'Good Morning';
+  if (hour >= 12 && hour < 17) return 'Good Afternoon';
+  return 'Good Evening';
 }
 
 function updateUserUI(user) {
@@ -1634,7 +1634,7 @@ function updateUserUI(user) {
   // Welcome Hero Greeting (Dynamic Time-based)
   const greetingEl = document.getElementById('dash-greeting');
   if (greetingEl) {
-    greetingEl.textContent = firstName ? `${timeGreeting}, ${firstName}!` : `${timeGreeting}!`;
+    greetingEl.textContent = firstName ? `${timeGreeting}, ${firstName} 👋` : `${timeGreeting} 👋`;
   }
 
   // Demo Location & Context

@@ -297,10 +297,12 @@ const Auth = {
           return res.user;
         }
       } else {
-        const isLocal = typeof window !== 'undefined' && window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-        const apiBase = (typeof window !== 'undefined' && window.API_BASE_URL)
-          ? window.API_BASE_URL.replace(/\/+$/, '')
-          : (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api');
+        const isLocal = this.isLocalEnv();
+        const apiBase = (typeof window !== 'undefined' && typeof window.resolveApiBaseUrl === 'function')
+          ? window.resolveApiBaseUrl()
+          : (typeof window !== 'undefined' && window.API_BASE_URL
+              ? window.API_BASE_URL.replace(/\/+$/, '')
+              : (isLocal ? 'http://127.0.0.1:5000/api' : 'https://krishishetra-1.onrender.com/api'));
         const res = await fetch(`${apiBase}/auth/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });

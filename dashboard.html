@@ -188,41 +188,78 @@
     <!-- ── 1.2 DAILY KISAN AI ADVICE BANNER WITH AUDIO READ-ALOUD ── -->
     <section class="dash-section" style="padding-top: 14px; padding-bottom: 0;" id="section-daily-tip">
       <div class="container">
-        <div class="kisan-tip-banner" id="kisan-daily-tip-banner">
-          <div class="kisan-tip-banner__left">
-            <div class="kisan-tip-banner__icon-wrap">🌾</div>
-            <div>
-              <div class="kisan-tip-banner__title-row" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <span class="kisan-tip-banner__badge" id="kisan-tip-badge">DAILY AI ADVICE</span>
-                <span style="font-size: 12px; color: #D8C28A; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;" id="kisan-tip-date">
-                  <span style="display: inline-block; width: 7px; height: 7px; background: #5B9A72; border-radius: 50%; box-shadow: 0 0 6px #5B9A72;"></span> Live AI
-                </span>
-                <span style="font-size: 11.5px; color: rgba(245, 244, 237, 0.65); font-weight: 500;">• Updated today</span>
-              </div>
-              <p class="kisan-tip-banner__text" id="kisan-tip-text" style="font-size: 14.5px; font-weight: 600; color: #FFFFFF; margin: 4px 0 10px 0;">
-                Your tomato harvest is approaching dispatch readiness.
-              </p>
-              <div class="kisan-ai-rec-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px;">
-                <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 7px 11px; font-size: 12px; color: #F5F4ED; line-height: 1.4;">
-                  <strong style="color: #D8C28A;">🌱 Crop:</strong> Check harvested tomatoes for bruising before grading.
-                </div>
-                <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 7px 11px; font-size: 12px; color: #F5F4ED; line-height: 1.4;">
-                  <strong style="color: #D8C28A;">📦 Market:</strong> Grade A produce has a stronger buyer opportunity today.
-                </div>
-                <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 7px 11px; font-size: 12px; color: #F5F4ED; line-height: 1.4;">
-                  <strong style="color: #D8C28A;">🚚 Logistics:</strong> Coordinate pickup before the preferred market delivery window.
-                </div>
-                <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 7px 11px; font-size: 12px; color: #F5F4ED; line-height: 1.4;">
-                  <strong style="color: #D8C28A;">💰 Selling:</strong> Compare current buyer offers before confirming the lot.
-                </div>
-              </div>
+        <div class="dash-ai-advice-card" id="kisan-daily-tip-banner">
+          <div class="dash-ai-advice-header">
+            <div class="dash-ai-advice-tag-row">
+              <span class="dash-ai-advice-badge" id="kisan-tip-badge">
+                <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i>
+                Daily AI Advice
+              </span>
+              <span class="dash-ai-advice-live" id="kisan-tip-date">
+                <span class="dash-ai-live-dot"></span> Live AI
+              </span>
+              <span class="dash-ai-advice-update">• Updated today for Western Maharashtra</span>
+            </div>
+            <div class="dash-ai-advice-actions">
+              <button class="dash-ai-voice-btn" id="btn-speak-tip" onclick="speakCurrentTip()" aria-label="Listen to advice">
+                <span id="voice-icon">🔊</span> <span id="voice-btn-text">Listen</span>
+              </button>
             </div>
           </div>
-          <div class="kisan-tip-banner__right">
-            <button class="kisan-voice-btn" id="btn-speak-tip" onclick="speakCurrentTip()"
-              aria-label="Listen to advice">
-              <span id="voice-icon">🔊</span> <span id="voice-btn-text">Listen</span>
-            </button>
+
+          <div class="dash-ai-advice-body">
+            <h2 class="dash-ai-advice-headline" id="kisan-tip-text">
+              Tomato prices are showing an upward trend across nearby markets. Holding a portion of the harvest may improve returns if storage capacity is available.
+            </h2>
+            <p class="dash-ai-advice-insight">
+              <strong>Market Insight:</strong> APMC arrivals from regional belts are tapering off by 18% this week, creating an opportunity for a +₹70 to +₹120/q premium over the next 5 to 7 days for Grade A lots.
+            </p>
+          </div>
+
+          <!-- 4 Supporting Indicators -->
+          <div class="dash-ai-indicators-grid">
+            <div class="dash-ai-indicator-chip">
+              <div class="dash-ai-chip-label">
+                <i data-lucide="trending-up" style="width: 13px; height: 13px; color: #8FCB9B;"></i> Market Trend
+              </div>
+              <div class="dash-ai-chip-value">Upward (+4.2%)</div>
+              <div class="dash-ai-chip-sub">Rising across Vashi & Nashik</div>
+            </div>
+
+            <div class="dash-ai-indicator-chip">
+              <div class="dash-ai-chip-label">
+                <i data-lucide="banknote" style="width: 13px; height: 13px; color: #D6A84F;"></i> Price Movement
+              </div>
+              <div class="dash-ai-chip-value">₹2,850 → ₹2,920/q</div>
+              <div class="dash-ai-chip-sub">+₹70/q in last 48 hours</div>
+            </div>
+
+            <div class="dash-ai-indicator-chip">
+              <div class="dash-ai-chip-label">
+                <i data-lucide="warehouse" style="width: 13px; height: 13px; color: #60A5FA;"></i> Storage Opportunity
+              </div>
+              <div class="dash-ai-chip-value">35 MT Available</div>
+              <div class="dash-ai-chip-sub">Vashi Hub · ₹2.6/kg/day</div>
+            </div>
+
+            <div class="dash-ai-indicator-chip">
+              <div class="dash-ai-chip-label">
+                <i data-lucide="shield-check" style="width: 13px; height: 13px; color: #34D399;"></i> Buyer Demand
+              </div>
+              <div class="dash-ai-chip-value">High Institutional</div>
+              <div class="dash-ai-chip-sub">3 verified buyers active</div>
+            </div>
+          </div>
+
+          <div class="dash-ai-advice-footer">
+            <div class="dash-ai-footer-note">
+              Recommendation generated using live mandi price momentum, regional arrival volumes, and accredited cold storage telemetry.
+            </div>
+            <div class="dash-ai-footer-btns">
+              <a href="storage.html#tab-panel-calculator" class="dash-ai-action-link">
+                Compare Sell vs. Store <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -377,18 +414,19 @@
     </section>
 
     <!-- ── 3. SMART SELLING OPPORTUNITY (Produce & Market Opportunity) ── -->
-    <section class="das        <div class="dash-opp-card" id="opp-card">
+    <section class="dash-section dash-section--opportunity" id="dash-opportunity">
+      <div class="container">
+        <div class="dash-opp-card" id="opp-card">
           <div class="dash-opp-card__badge-row">
             <span class="dash-opp-pill"><i data-lucide="sparkles"></i> Top Buying Opportunity</span>
-            <span class="dash-opp-verified"><i data-lucide="shield-check"></i> Verified Institutional Buyer · Shah Agro Trading (Amit Shah)</span>
+            <span class="dash-opp-verified"><i data-lucide="shield-check"></i> Verified Institutional Buyer · Shah Agro Trading</span>
           </div>
           <div class="dash-opp-card__main">
             <div class="dash-opp-card__icon" aria-hidden="true">🍅</div>
             <div class="dash-opp-card__content">
               <div class="dash-opp-card__crop-row">
-                <h3 class="dash-opp-card__title">Tomato <span class="dash-opp-card__qty-pill">850 kg · Grade A</span>
-                </h3>
-                <span class="dash-opp-card__tag">Navi Mumbai Farm Harvest</span>
+                <h3 class="dash-opp-card__title">Tomato <span class="dash-opp-card__qty-pill">850 kg · Grade A</span></h3>
+                <span class="dash-opp-card__tag">Navi Mumbai Farm</span>
               </div>
               <p class="dash-opp-card__desc">Your tomato harvest is approaching dispatch readiness. Verified Vashi buyer demand is matched and ready for FPO consolidation:</p>
 
@@ -403,8 +441,7 @@
                 </div>
                 <div class="dash-opp-metric dash-opp-metric--featured">
                   <span class="dash-opp-metric__lbl">Best Buyer Offer</span>
-                  <strong class="dash-opp-metric__val dash-opp-metric__val--green" id="opp-rec-price">₹2,920
-                    <small>/q</small></strong>
+                  <strong class="dash-opp-metric__val dash-opp-metric__val--green" id="opp-rec-price">₹2,920 <small>/q</small></strong>
                   <span class="dash-opp-metric__premium">+₹70/q market-linked</span>
                 </div>
                 <div class="dash-opp-metric-divider" aria-hidden="true">
@@ -425,9 +462,6 @@
                 <span class="btn-arrow">→</span>
               </button>
               <span class="dash-opp-action-hint" id="send-fpo-status-hint">Direct FPO consolidation</span>
-            </div>
-          </div>
-        </div>-opp-action-hint">Fast 1-click order flow</span>
             </div>
           </div>
         </div>
@@ -453,12 +487,18 @@
                 Hold your harvest safely when mandi prices are low and sell when rates rebound.
               </p>
             </div>
-            <button class="btn btn--secondary btn--sm" onclick="openStorageModal()"><i data-lucide="search"></i> View
-              All Warehouses</button>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <a href="storage.html#tab-panel-calculator" class="btn btn--outline btn--sm" style="font-size:12px; font-weight:700;">
+                <i data-lucide="calculator"></i> Compare Sell vs. Store
+              </a>
+              <button class="btn btn--secondary btn--sm" onclick="openStorageModal()">
+                <i data-lucide="search"></i> View All Warehouses
+              </button>
+            </div>
           </div>
 
           <div class="storage-grid" id="storage-quick-grid">
-            <!-- Storage Card 1 -->
+            <!-- Storage Card 1: Nashik Agro Cold Storage -->
             <div class="storage-card">
               <div>
                 <div class="storage-card__header">
@@ -470,23 +510,27 @@
                 </div>
                 <div class="storage-card__specs">
                   <div class="storage-spec-row"><span>Available Capacity:</span><strong>12 Tonnes</strong></div>
-                  <div class="storage-spec-row"><span>Storage Cost:</span><strong>₹2.5/kg/day</strong></div>
+                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹2.5/kg/day</strong></div>
                   <div class="storage-spec-row"><span>Suitable Crops:</span><span>Tomato, Onion, Grapes</span></div>
-                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢
-                      Available</span></div>
+                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
                 </div>
                 <div class="distress-savings-box">
                   <span>💡</span>
                   <span><strong>Save ₹3,400:</strong> Storing for 7 days avoids current mandi glut drop.</span>
                 </div>
               </div>
-              <button class="btn btn--primary btn--sm" style="width:100%;"
-                onclick="bookStorageDirect('Nashik Agro Cold Storage', 'Cold Chain', 2.5)">
-                <i data-lucide="bookmark-check"></i> Book Storage Space
-              </button>
+              <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;" onclick="openStorageModal()">
+                  <i data-lucide="eye"></i> View Details
+                </button>
+                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
+                  onclick="bookStorageDirect('Nashik Agro Cold Storage', 'Cold Chain', 2.5)">
+                  <i data-lucide="bookmark-check"></i> Book Space
+                </button>
+              </div>
             </div>
 
-            <!-- Storage Card 2 -->
+            <!-- Storage Card 2: Pune Krishi Dry Warehouse -->
             <div class="storage-card">
               <div>
                 <div class="storage-card__header">
@@ -498,24 +542,27 @@
                 </div>
                 <div class="storage-card__specs">
                   <div class="storage-spec-row"><span>Available Capacity:</span><strong>45 Tonnes</strong></div>
-                  <div class="storage-spec-row"><span>Storage Cost:</span><strong>₹45/quintal/month</strong></div>
-                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Wheat, Rice, Soybean, Pulses</span>
-                  </div>
-                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢
-                      Available</span></div>
+                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹45/quintal/month</strong></div>
+                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Wheat, Rice, Soybean, Pulses</span></div>
+                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
                 </div>
                 <div class="distress-savings-box">
                   <span>💡</span>
                   <span><strong>Govt Subsidy:</strong> WDRA registered negotiable warehouse receipt eligible.</span>
                 </div>
               </div>
-              <button class="btn btn--primary btn--sm" style="width:100%;"
-                onclick="bookStorageDirect('Pune Krishi Dry Warehouse', 'Dry Storage', 1.5)">
-                <i data-lucide="bookmark-check"></i> Book Storage Space
-              </button>
+              <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;" onclick="openStorageModal()">
+                  <i data-lucide="eye"></i> View Details
+                </button>
+                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
+                  onclick="bookStorageDirect('Pune Krishi Dry Warehouse', 'Dry Storage', 1.5)">
+                  <i data-lucide="bookmark-check"></i> Book Space
+                </button>
+              </div>
             </div>
 
-            <!-- Storage Card 3 -->
+            <!-- Storage Card 3: Solapur Central Cold Chain -->
             <div class="storage-card">
               <div>
                 <div class="storage-card__header">
@@ -527,21 +574,120 @@
                 </div>
                 <div class="storage-card__specs">
                   <div class="storage-spec-row"><span>Available Capacity:</span><strong>18 Tonnes</strong></div>
-                  <div class="storage-spec-row"><span>Storage Cost:</span><strong>₹2.8/kg/day</strong></div>
-                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Chilli, Onion, Pomegranate</span>
-                  </div>
-                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢
-                      Available</span></div>
+                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹2.8/kg/day</strong></div>
+                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Chilli, Onion, Pomegranate</span></div>
+                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
                 </div>
                 <div class="distress-savings-box">
                   <span>💡</span>
                   <span><strong>Zero Loss:</strong> Multi-chamber dehumidifier preservation.</span>
                 </div>
               </div>
-              <button class="btn btn--primary btn--sm" style="width:100%;"
-                onclick="bookStorageDirect('Solapur Central Cold Chain', 'Controlled Temp', 2.8)">
-                <i data-lucide="bookmark-check"></i> Book Storage Space
-              </button>
+              <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;" onclick="openStorageModal()">
+                  <i data-lucide="eye"></i> View Details
+                </button>
+                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
+                  onclick="bookStorageDirect('Solapur Central Cold Chain', 'Controlled Temp', 2.8)">
+                  <i data-lucide="bookmark-check"></i> Book Space
+                </button>
+              </div>
+            </div>
+
+            <!-- Storage Card 4: Vashi Agri Storage Hub -->
+            <div class="storage-card">
+              <div>
+                <div class="storage-card__header">
+                  <div>
+                    <h4 class="storage-card__title">Vashi Agri Storage Hub</h4>
+                    <span class="storage-card__loc">📍 4.5 km · Sector 19, Vashi APMC</span>
+                  </div>
+                  <span class="storage-type-badge" style="background:#E0F2FE; color:#0369A1;">Cold Chain</span>
+                </div>
+                <div class="storage-card__specs">
+                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>35 Tonnes</strong></div>
+                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹2.6/kg/day</strong></div>
+                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Tomato, Capsicum, Green Veg</span></div>
+                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
+                </div>
+                <div class="distress-savings-box">
+                  <span>💡</span>
+                  <span><strong>Mandi Linked:</strong> Direct 15-minute dock transfer to Vashi trading floor.</span>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;" onclick="openStorageModal()">
+                  <i data-lucide="eye"></i> View Details
+                </button>
+                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
+                  onclick="bookStorageDirect('Vashi Agri Storage Hub', 'Cold Chain', 2.6)">
+                  <i data-lucide="bookmark-check"></i> Book Space
+                </button>
+              </div>
+            </div>
+
+            <!-- Storage Card 5: Mumbai Fresh Produce Warehouse -->
+            <div class="storage-card">
+              <div>
+                <div class="storage-card__header">
+                  <div>
+                    <h4 class="storage-card__title">Mumbai Fresh Produce Warehouse</h4>
+                    <span class="storage-card__loc">📍 18.5 km · Turbhe MIDC, Mumbai Region</span>
+                  </div>
+                  <span class="storage-type-badge">Controlled Temp</span>
+                </div>
+                <div class="storage-card__specs">
+                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>50 Tonnes</strong></div>
+                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹3.0/kg/day</strong></div>
+                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Fruits, Vegetables, Exotics</span></div>
+                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
+                </div>
+                <div class="distress-savings-box">
+                  <span>💡</span>
+                  <span><strong>Export Ready:</strong> Ethylene filtration and humidity management.</span>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;" onclick="openStorageModal()">
+                  <i data-lucide="eye"></i> View Details
+                </button>
+                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
+                  onclick="bookStorageDirect('Mumbai Fresh Produce Warehouse', 'Controlled Temp', 3.0)">
+                  <i data-lucide="bookmark-check"></i> Book Space
+                </button>
+              </div>
+            </div>
+
+            <!-- Storage Card 6: Navi Mumbai Distribution Storage -->
+            <div class="storage-card">
+              <div>
+                <div class="storage-card__header">
+                  <div>
+                    <h4 class="storage-card__title">Navi Mumbai Distribution Storage</h4>
+                    <span class="storage-card__loc">📍 11.0 km · Kopar Khairane Industrial Belt</span>
+                  </div>
+                  <span class="storage-type-badge" style="background:#FEF3C7; color:#92400E;">Dry Storage</span>
+                </div>
+                <div class="storage-card__specs">
+                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>80 Tonnes</strong></div>
+                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹35/quintal/month</strong></div>
+                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Onion, Potato, Grains, Pulses</span></div>
+                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
+                </div>
+                <div class="distress-savings-box">
+                  <span>💡</span>
+                  <span><strong>Transit Buffer:</strong> 24/7 round-the-clock loading bays for logistics dispatch.</span>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;" onclick="openStorageModal()">
+                  <i data-lucide="eye"></i> View Details
+                </button>
+                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
+                  onclick="bookStorageDirect('Navi Mumbai Distribution Storage', 'Dry Storage', 1.2)">
+                  <i data-lucide="bookmark-check"></i> Book Space
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -629,7 +775,7 @@
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 20px;">🚛</span>
                 <h3 style="font-size: 17px; font-weight: 800; color: #12372A; margin: 0;">Produce Movement Lifecycle: Farmer → FPO → Buyer → Delivery</h3>
-                <span style="font-size: 11.5px; font-weight: 700; background: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9; padding: 2px 8px; border-radius: 6px;">Presentation Demo Flow</span>
+                <span style="font-size: 11.5px; font-weight: 700; background: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9; padding: 2px 8px; border-radius: 6px;">Active Trade Lifecycle</span>
               </div>
               <p style="font-size: 13px; color: #6F7F75; margin: 4px 0 0 0;">
                 Traceable end-to-end journey of Ramesh Patil's 850 kg Grade A Tomato lot from harvest to Vashi APMC settlement.
@@ -637,7 +783,7 @@
             </div>
             <div id="demo-reset-btn-wrap" style="display: none;">
               <button type="button" class="btn btn--secondary btn--sm" onclick="if(window.KrishiDemo) { window.KrishiDemo.resetDemo(); location.reload(); }" style="font-size: 12px; font-weight: 700; border-color: #D6A84F; color: #92400E; background: #FEF7E6;">
-                <i data-lucide="rotate-ccw"></i> Reset Demo Flow
+                <i data-lucide="rotate-ccw"></i> Reset Trade Flow
               </button>
             </div>
           </div>

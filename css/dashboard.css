@@ -6409,3 +6409,205 @@ body.dashboard-body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ═════════════════════════════════════════════════════════════════════
+   MODERN PROFESSIONAL DAILY AI ADVICE CARD (Decision Support)
+   ═════════════════════════════════════════════════════════════════════ */
+.dash-ai-advice-card {
+  background: linear-gradient(135deg, #12372A 0%, #164233 55%, #1A4D3B 100%);
+  border: 1px solid rgba(216, 194, 138, 0.35);
+  border-radius: var(--radius-md, 14px);
+  padding: 20px 24px;
+  box-shadow: 0 8px 24px rgba(18, 55, 42, 0.12);
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dash-ai-advice-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #D6A84F, #5B9A72, #8FCB9B);
+}
+
+.dash-ai-advice-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dash-ai-advice-tag-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dash-ai-advice-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(216, 194, 138, 0.2);
+  color: #F3E5C8;
+  border: 1px solid rgba(216, 194, 138, 0.4);
+}
+
+.dash-ai-advice-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #8FCB9B;
+}
+
+.dash-ai-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5B9A72;
+  box-shadow: 0 0 6px #5B9A72;
+}
+
+.dash-ai-advice-update {
+  font-size: 11.5px;
+  color: rgba(245, 244, 237, 0.7);
+  font-weight: 500;
+}
+
+.dash-ai-voice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  padding: 6px 14px;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dash-ai-voice-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.dash-ai-advice-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dash-ai-advice-headline {
+  font-size: 15.5px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.dash-ai-advice-insight {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(245, 244, 237, 0.85);
+  margin: 0;
+}
+
+.dash-ai-advice-insight strong {
+  color: #D8C28A;
+}
+
+.dash-ai-indicators-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.dash-ai-indicator-chip {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.dash-ai-indicator-chip:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(216, 194, 138, 0.4);
+}
+
+.dash-ai-chip-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(245, 244, 237, 0.75);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dash-ai-chip-value {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.dash-ai-chip-sub {
+  font-size: 11px;
+  color: rgba(245, 244, 237, 0.65);
+}
+
+.dash-ai-advice-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dash-ai-footer-note {
+  font-size: 11.5px;
+  color: rgba(245, 244, 237, 0.65);
+  line-height: 1.4;
+  flex: 1 1 280px;
+}
+
+.dash-ai-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #D8C28A;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.dash-ai-action-link:hover {
+  color: #FFFFFF;
+}

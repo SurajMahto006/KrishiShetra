@@ -266,7 +266,9 @@
       if (window.lucide) lucide.createIcons();
 
       const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      const API_BASE = (window.API_BASE_URL || (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api')).replace(/\/+$/, '');
+      const API_BASE = (typeof window.resolveApiBaseUrl === 'function'
+        ? window.resolveApiBaseUrl()
+        : (window.API_BASE_URL || (isLocal ? 'http://127.0.0.1:5000/api' : 'https://krishishetra-1.onrender.com/api'))).replace(/\/+$/, '');
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');

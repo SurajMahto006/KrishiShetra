@@ -104,15 +104,22 @@ const FarmerFlow = {
       banner.className = 'container';
       banner.innerHTML = `
         <div class="dash-onboarding-card" style="margin-top: 20px; background: linear-gradient(135deg, #12372A 0%, #1A4D3B 100%); border: 1px solid rgba(232, 185, 106, 0.4); border-radius: 16px; padding: 22px 28px; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 10px 25px rgba(18, 55, 42, 0.15); flex-wrap: wrap;">
-          <div style="display: flex; align-items: center; gap: 18px; max-width: 680px;">
+          <div style="display: flex; align-items: center; gap: 18px; max-width: 720px;">
             <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(232, 185, 106, 0.2); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">
               🌾
             </div>
             <div>
-              <h3 style="font-size: 18px; font-weight: 700; color: #F5F4ED; margin: 0 0 6px 0;">Complete your farm profile</h3>
-              <p style="font-size: 13px; color: rgba(245, 244, 237, 0.82); margin: 0; line-height: 1.45;">
-                Add your farm details to receive better crop recommendations, market opportunities and buyer matches.
+              <h3 style="font-size: 18px; font-weight: 700; color: #F5F4ED; margin: 0 0 6px 0;">Complete Your Farm Profile</h3>
+              <p style="font-size: 13px; color: rgba(245, 244, 237, 0.85); margin: 0 0 8px 0; line-height: 1.45;">
+                Add your farm profile details to unlock verified buyer matching, real-time APMC price alerts, and warehouse credit linkages:
               </p>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; font-size: 11.5px; color: #E8B96A;">
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">🏡 Farm details</span>
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">📍 Location</span>
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">🌾 Crops</span>
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">🏦 Bank / Payment information</span>
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">📞 Contact details</span>
+              </div>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">

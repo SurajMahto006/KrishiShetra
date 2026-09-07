@@ -11,27 +11,44 @@ const PROD_API_URL = 'https://krishishetra-1.onrender.com/api';
 const DEV_API_URL = 'http://127.0.0.1:5000/api';
 
 /**
- * Resolves API Base URL dynamically from window.API_BASE_URL, local storage override, or environment
+ * Resolves API Base URL dynamically from window.API_BASE_URL, local storage override, or environment.
+ * In local development, always resolves to 127.0.0.1:5000/api to avoid IPv6 (::1) localhost issues.
  */
 function resolveApiBaseUrl() {
   if (typeof window !== 'undefined') {
+    const hostname = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : '';
+    const protocol = (window.location && window.location.protocol) ? window.location.protocol : '';
+    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.') || hostname.startsWith('10.') || protocol === 'file:' || hostname === '';
+
     // 1. Explicit runtime override takes highest priority
     if (window.API_BASE_URL) {
-      return window.API_BASE_URL.replace(/\/+$/, '');
+      let url = window.API_BASE_URL.replace(/\/+$/, '');
+      if (isLocal && url.includes('localhost:5000')) {
+        url = url.replace('localhost:5000', '127.0.0.1:5000');
+      }
+      return url;
     }
+
     // 2. Local storage override for debugging/testing
     const stored = localStorage.getItem('krishi_api_base_url');
     if (stored) {
-      return stored.replace(/\/+$/, '');
-    }
-    // 3. Localhost development detection
-    if (window.location && window.location.hostname) {
-      const host = window.location.hostname;
-      if (host === 'localhost' || host === '127.0.0.1') {
-        return DEV_API_URL;
+      let url = stored.replace(/\/+$/, '');
+      if (isLocal && url.includes('localhost:5000')) {
+        url = url.replace('localhost:5000', '127.0.0.1:5000');
+        try { localStorage.setItem('krishi_api_base_url', url); } catch (e) {}
       }
+      return url;
     }
+
+    // 3. Localhost / Local development detection
+    if (isLocal) {
+      return DEV_API_URL;
+    }
+
     // 4. Default for production / hosted deployments (Render static site, Vercel, etc.)
+    if (window.location && window.location.origin && window.location.origin.includes('onrender.com')) {
+      return window.location.origin.endsWith('krishishetra-1.onrender.com') ? `${window.location.origin}/api` : PROD_API_URL;
+    }
     return PROD_API_URL;
   }
   return DEV_API_URL;
@@ -39,6 +56,7 @@ function resolveApiBaseUrl() {
 
 const API_BASE_URL = resolveApiBaseUrl();
 if (typeof window !== 'undefined') {
+  window.resolveApiBaseUrl = resolveApiBaseUrl;
   window.API_BASE_URL = API_BASE_URL;
 }
 
