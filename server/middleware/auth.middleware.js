@@ -3,14 +3,12 @@ const User = require('../models/User');
 
 const protect = async (req, res, next) => {
   let token;
+  const authHeader = req.headers.authorization || req.headers.Authorization;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
+  if (authHeader && /^Bearer\s+/i.test(authHeader)) {
     try {
-      // Extract token from 'Bearer <token>'
-      token = req.headers.authorization.split(' ')[1];
+      // Extract token from 'Bearer <token>' case-insensitively
+      token = authHeader.replace(/^Bearer\s+/i, '').trim();
 
       if (!token) {
         return res.status(401).json({

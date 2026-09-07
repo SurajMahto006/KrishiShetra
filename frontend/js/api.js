@@ -7,7 +7,7 @@
 /**
  * Production and Development API Endpoints
  */
-const PROD_API_URL = 'https://krishishetra-1.onrender.com/api';
+const PROD_API_URL = (typeof window !== 'undefined' && window.location && window.location.origin) ? `${window.location.origin}/api` : 'https://krishishetra-1.onrender.com/api';
 const DEV_API_URL = 'http://localhost:5000/api';
 
 /**
@@ -31,15 +31,19 @@ function resolveApiBaseUrl() {
       }
       const host = window.location.hostname;
       if (host === 'localhost' || host === '127.0.0.1') {
+        // If served from Express backend on port 5000, use same-origin /api
+        if (window.location.port === '5000' && window.location.origin) {
+          return `${window.location.origin}/api`;
+        }
         return DEV_API_URL;
       }
-      // If served directly from the backend server (Render / hosted web service)
-      if (window.location.origin && (host.endsWith('.onrender.com') || host.includes('onrender.com'))) {
+      // In production / hosted environments (Render, etc.), frontend is served by Express: use same-origin /api
+      if (window.location.origin) {
         return `${window.location.origin}/api`;
       }
     }
-    // 4. Default for production / hosted deployments (Render static site, Vercel, etc.)
-    return PROD_API_URL;
+    // 4. Default fallback
+    return DEV_API_URL;
   }
   return DEV_API_URL;
 }

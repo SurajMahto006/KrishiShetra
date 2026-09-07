@@ -287,27 +287,45 @@ const Auth = {
           this.setUser(res.user);
           return res.user;
         }
+        if (res.status === 401) {
+          if (!this.isLocalEnv() || !localStorage.getItem(this.DEV_SESSION_KEY)) {
+            this.clearSession();
+          }
+          return null;
+        }
+        // If temporary server/network issue, retain existing valid cached user
+        const cached = this.getUser();
+        if (cached) return cached;
       } else {
         const isLocal = typeof window !== 'undefined' && window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
         const apiBase = (typeof window !== 'undefined' && window.API_BASE_URL)
           ? window.API_BASE_URL.replace(/\/+$/, '')
-          : (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api');
+          : (typeof window !== 'undefined' && window.location && window.location.origin
+              ? (isLocal && window.location.port !== '5000' ? 'http://localhost:5000/api' : `${window.location.origin}/api`)
+              : 'http://localhost:5000/api');
+
         const res = await fetch(`${apiBase}/auth/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        const data = await res.json();
-        if (res.ok && data.success && data.user) {
+        const data = await res.json().catch(() => null);
+        if (res.ok && data && data.success && data.user) {
           this.setUser(data.user);
           return data.user;
         }
+        if (res.status === 401) {
+          if (!this.isLocalEnv() || !localStorage.getItem(this.DEV_SESSION_KEY)) {
+            this.clearSession();
+          }
+          return null;
+        }
+        const cached = this.getUser();
+        if (cached) return cached;
       }
-      if (!this.isLocalEnv() || !localStorage.getItem(this.DEV_SESSION_KEY)) {
-        this.clearSession();
-      }
-      return null;
+      return this.getUser();
     } catch (err) {
-      console.error('[Auth Verification Failed]:', err.message);
-      return null;
+      console.warn('[Auth Verification Network Notice]:', err.message);
+      // Return cached user so temporary network/cold-start latency does not log the user out
+      return this.getUser();
     }
   },
 

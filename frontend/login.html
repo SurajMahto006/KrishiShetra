@@ -402,7 +402,7 @@
       if (window.lucide) lucide.createIcons();
 
       const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      const API_BASE = (window.API_BASE_URL || (isLocal ? 'http://localhost:5000/api' : 'https://krishishetra-1.onrender.com/api')).replace(/\/+$/, '');
+      const API_BASE = (window.API_BASE_URL || (window.location && window.location.origin ? (isLocal && window.location.port !== '5000' ? 'http://localhost:5000/api' : `${window.location.origin}/api`) : 'http://localhost:5000/api')).replace(/\/+$/, '');
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');
@@ -636,6 +636,42 @@
         e.target.value = val;
       });
 
+      // ── Process URL Search Parameters ──
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlRole = urlParams.get('role');
+        const urlEmail = urlParams.get('email');
+        const urlTab = urlParams.get('tab');
+        const urlVerified = urlParams.get('verified');
+        const urlReset = urlParams.get('reset');
+
+        if (urlRole) {
+          const matchedCard = Array.from(roleCards).find(c => c.dataset.role === urlRole.toLowerCase());
+          if (matchedCard) {
+            matchedCard.click();
+          }
+        }
+
+        if (urlEmail) {
+          if (loginEmail) loginEmail.value = urlEmail;
+          if (forgotEmail) forgotEmail.value = urlEmail;
+          activeOtpEmail = urlEmail;
+        }
+
+        if (urlTab === 'register') {
+          showRegisterTab();
+        } else if (urlReset === 'true') {
+          showForgotTab();
+          if (urlEmail && forgotEmail) forgotEmail.value = urlEmail;
+        } else if (urlVerified === 'true') {
+          showLoginTab();
+          if (urlEmail && loginEmail) loginEmail.value = urlEmail;
+          showAlert(loginAlert, 'Email verified successfully! Please sign in with your credentials.', 'success');
+        }
+      } catch (paramErr) {
+        console.warn('URL parameter handling notice:', paramErr);
+      }
+
       // ── Timer Handler (60s Cooldown) ──
       function startResendTimer() {
         countdown = 60;
@@ -743,7 +779,7 @@
             }, 600);
           } else {
             btnLogin.disabled = false;
-            btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
+            btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
             showAlert(loginAlert, data.message || 'Invalid email or password');
 
             if (data.message && data.message.includes('verify your email')) {
@@ -757,7 +793,7 @@
         } catch (err) {
           console.error('[Login Network Error]:', err);
           btnLogin.disabled = false;
-          btnLogin.innerHTML = `<span id="btn-login-text">${translations[currentLang].btnLogin}</span> <span class="auth-btn-arrow">→</span>`;
+          btnLogin.innerHTML = `<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>`;
           showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
@@ -807,13 +843,13 @@
 
           if (res.ok && data.success) {
             btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
             
             showOtpStep(email, false);
             showAlert(otpAlert, data.message || 'Registration successful. Check your email for the OTP.', 'success');
           } else if (data.message && (data.message.includes('verification email could not be sent') || data.message.includes('Resend OTP'))) {
             btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
             
             showStructuredAlert(registerAlert, {
               title: 'Verification email not sent',
@@ -842,13 +878,13 @@
             });
           } else {
             btnRegister.disabled = false;
-            btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+            btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
             showAlert(registerAlert, data.message || 'Registration failed. Please try again.');
           }
         } catch (err) {
           console.error('[Register Network Error]:', err);
           btnRegister.disabled = false;
-          btnRegister.innerHTML = `<span id="btn-register-text">${translations[currentLang].btnRegister}</span> <span class="auth-btn-arrow">→</span>`;
+          btnRegister.innerHTML = `<span id="btn-register-text">Register & Send OTP</span> <span class="auth-btn-arrow">→</span>`;
           showAlert(registerAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
@@ -939,7 +975,7 @@
               setTimeout(() => {
                 btnVerifyOtp.disabled = false;
                 btnVerifyOtp.style.background = '';
-                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">Verify & Continue</span> <span class="auth-btn-arrow">→</span>`;
                 showResetPassStep();
               }, 800);
             } else {
@@ -948,7 +984,7 @@
               setTimeout(() => {
                 btnVerifyOtp.disabled = false;
                 btnVerifyOtp.style.background = '';
-                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+                btnVerifyOtp.innerHTML = `<span id="btn-verify-text">Verify & Continue</span> <span class="auth-btn-arrow">→</span>`;
                 
                 showLoginTab();
                 loginEmail.value = activeOtpEmail;
@@ -957,13 +993,13 @@
             }
           } else {
             btnVerifyOtp.disabled = false;
-            btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+            btnVerifyOtp.innerHTML = `<span id="btn-verify-text">Verify & Continue</span> <span class="auth-btn-arrow">→</span>`;
             showAlert(otpAlert, data.message || 'Invalid or expired OTP.');
           }
         } catch (err) {
           console.error('[Verify OTP Network Error]:', err);
           btnVerifyOtp.disabled = false;
-          btnVerifyOtp.innerHTML = `<span id="btn-verify-text">${translations[currentLang].btnVerify}</span> <span class="auth-btn-arrow">→</span>`;
+          btnVerifyOtp.innerHTML = `<span id="btn-verify-text">Verify & Continue</span> <span class="auth-btn-arrow">→</span>`;
           showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });
@@ -1044,18 +1080,18 @@
           }
 
           if (res.ok && data.success) {
-            btnResendOtp.textContent = translations[currentLang].btnResend;
+            btnResendOtp.textContent = 'Resend Code';
             showAlert(otpAlert, data.message || 'A new verification OTP has been sent.', 'success');
             startResendTimer();
           } else {
             btnResendOtp.disabled = false;
-            btnResendOtp.textContent = translations[currentLang].btnResend;
+            btnResendOtp.textContent = 'Resend Code';
             showAlert(otpAlert, data.message || 'Failed to resend OTP.');
           }
         } catch (err) {
           console.error('[Resend OTP Network Error]:', err);
           btnResendOtp.disabled = false;
-          btnResendOtp.textContent = translations[currentLang].btnResend;
+          btnResendOtp.textContent = 'Resend Code';
           showAlert(otpAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or try again.');
         }
       });

@@ -139,6 +139,9 @@ const sendPasswordResetEmail = async (to, otp) => {
   const client = getBrevoClient();
   const sender = getSender();
 
+  const appOrigin = (process.env.RENDER_EXTERNAL_URL || process.env.FRONTEND_URL || 'http://localhost:5000').split(',')[0].trim().replace(/\/+$/, '');
+  const resetUrl = `${appOrigin}/login.html?reset=true&email=${encodeURIComponent(to.toLowerCase().trim())}`;
+
   const textContent = `KrishiShetra
 ────────────────────
 
@@ -149,6 +152,9 @@ Your password reset OTP is:
 ${otp}
 
 This OTP expires in 10 minutes.
+
+You can also reset your password directly by visiting:
+${resetUrl}
 
 If you did not request a password reset, please ignore this email.
 
@@ -164,15 +170,21 @@ If you did not request a password reset, please ignore this email.
       <div style="border-top: 1px solid #f1f5f9; padding-top: 24px;">
         <h2 style="color: #0f172a; font-size: 20px; font-weight: 600; margin: 0 0 12px 0;">Password Reset Request</h2>
         <p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">
-          We received a request to reset your password. Use the OTP code below to verify your identity and set a new password:
+          We received a request to reset your password. Use the OTP code below or click the reset button to verify your identity and set a new password:
         </p>
 
         <div style="background-color: #f1f5f9; border: 1px solid #cbd5e1; padding: 20px; border-radius: 10px; text-align: center; margin: 24px 0;">
           <span style="font-family: 'Courier New', Courier, monospace; font-size: 36px; font-weight: 700; letter-spacing: 8px; color: #12372A; display: inline-block;">${otp}</span>
         </div>
 
+        <div style="text-align: center; margin: 24px 0;">
+          <a href="${resetUrl}" style="display: inline-block; background-color: #16a34a; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;">
+            Reset Password Directly →
+          </a>
+        </div>
+
         <p style="color: #64748b; font-size: 13px; line-height: 1.5; margin: 0 0 24px 0;">
-          ⏳ This OTP expires in <strong>10 minutes</strong>.
+          ⏳ This OTP and link expire in <strong>10 minutes</strong>.
         </p>
 
         <div style="background-color: #fef2f2; border-left: 3px solid #ef4444; padding: 12px 16px; border-radius: 4px; margin-bottom: 24px;">
