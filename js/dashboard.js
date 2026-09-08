@@ -2029,7 +2029,9 @@ function initMarketComparison() {
         if (bestBadgeName) bestBadgeName.textContent = `${best.market} APMC`;
         if (bestBadgePrice) bestBadgePrice.textContent = `₹${best.modalPrice?.toLocaleString('en-IN')}/q`;
 
-        const updateLabel = res.updatedAt ? new Date(res.updatedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Latest';
+        const isLive = res.sourceStatus === 'live' || (!res.stale && !res.cached);
+        const updateDate = res.fetchedAt || res.updatedAt;
+        const updateLabel = updateDate ? new Date(updateDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Latest';
 
         // Update Compare Mandi Prices entry card summary (Farmer quick glance)
         const govCropNameEl = document.getElementById('dash-gov-crop-name');
@@ -2050,7 +2052,9 @@ function initMarketComparison() {
           govNetRealEl.textContent = `₹${net.toLocaleString('en-IN')}/qtl`;
         }
         if (govFreshnessText) {
-          govFreshnessText.textContent = best && best.arrivalDate ? `· Updated ${best.arrivalDate}` : `· Updated ${updateLabel}`;
+          govFreshnessText.textContent = isLive
+            ? `· Live data from data.gov.in · Last updated: ${updateLabel}`
+            : `· Showing latest retrieved data · Last updated: ${updateLabel}`;
         }
 
         if (tableBody) {
@@ -2072,7 +2076,7 @@ function initMarketComparison() {
                 </td>
                 <td>
                   <div style="font-size: 11.5px; color: #555;">Updated ${arrivalDateStr}</div>
-                  <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; background: #E5F0E7; color: #12372A; font-size: 10px; font-weight: 700; margin-top: 2px;">✓ Gov Data</span>
+                  <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; background: ${isLive ? '#E5F0E7' : '#FEF3C7'}; color: ${isLive ? '#12372A' : '#92400E'}; font-size: 10px; font-weight: 700; margin-top: 2px;">${isLive ? '✓ Live data.gov.in' : 'Cached data.gov.in'}</span>
                 </td>
                 <td class="td-btn">
                   <a href="mandi-compare.html" style="font-weight: 700; color: var(--ks-sage); text-decoration: none;">Compare →</a>
@@ -2093,7 +2097,7 @@ function initMarketComparison() {
                 <div style="font-size: 11.5px; color: #666; margin-bottom: 8px;">${m.district ? m.district + ', ' : ''}${m.state}</div>
                 <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Modal Price</span><span class="dash-compare-mobile-card__val" style="font-weight: 800; color: var(--ks-evergreen);">₹${m.modalPrice?.toLocaleString('en-IN')}/q</span></div>
                 <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Price Range</span><span class="dash-compare-mobile-card__val">₹${m.minPrice?.toLocaleString('en-IN')} – ₹${m.maxPrice?.toLocaleString('en-IN')}/q</span></div>
-                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Source</span><span class="dash-compare-mobile-card__val" style="color: #065F46; font-weight: 700;">✓ data.gov.in</span></div>
+                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Source</span><span class="dash-compare-mobile-card__val" style="color: ${isLive ? '#065F46' : '#92400E'}; font-weight: 700;">${isLive ? '✓ Live data.gov.in' : 'Cached data.gov.in'}</span></div>
               </div>
             `;
           }).join('');
@@ -2105,15 +2109,15 @@ function initMarketComparison() {
         const govFreshnessText = document.getElementById('dash-gov-freshness-text');
         if (govBestPriceEl) govBestPriceEl.textContent = 'Unavailable';
         if (govNetRealEl) govNetRealEl.textContent = 'Unavailable';
-        if (govFreshnessText) govFreshnessText.textContent = '· Please try again';
+        if (govFreshnessText) govFreshnessText.textContent = '· Current government data is temporarily unavailable.';
 
         if (tableBody) {
           tableBody.innerHTML = `
             <tr>
               <td colspan="5" style="text-align: center; padding: 28px; color: #78350F; background: #FFFBEB; border-radius: 8px;">
                 <div style="font-size: 24px; margin-bottom: 6px;">🏛️</div>
-                <strong style="display: block; font-size: 14px; margin-bottom: 4px;">Government mandi prices are temporarily unavailable. Please try again.</strong>
-                <span style="font-size: 12px; color: #92400E;">Source: Government of India (data.gov.in Agmarknet)</span>
+                <strong style="display: block; font-size: 14px; margin-bottom: 4px;">Government Mandi Data</strong>
+                <span style="font-size: 12px; color: #92400E;">Current government data is temporarily unavailable.</span>
                 <div style="margin-top: 10px;">
                   <button class="btn btn--sm btn--secondary" onclick="initMarketComparison()">Retry Fetch</button>
                 </div>
@@ -2124,7 +2128,7 @@ function initMarketComparison() {
         if (cardsWrap) {
           cardsWrap.innerHTML = `
             <div style="text-align: center; padding: 20px; color: #78350F; background: #FFFBEB; border-radius: 8px; font-size: 13px;">
-              ⚠️ Government mandi prices are temporarily unavailable. Please try again.
+              🏛️ <strong>Government Mandi Data</strong>: Current government data is temporarily unavailable.
             </div>
           `;
         }
@@ -2135,15 +2139,15 @@ function initMarketComparison() {
       const govFreshnessText = document.getElementById('dash-gov-freshness-text');
       if (govBestPriceEl) govBestPriceEl.textContent = 'Unavailable';
       if (govNetRealEl) govNetRealEl.textContent = 'Unavailable';
-      if (govFreshnessText) govFreshnessText.textContent = '· Please try again';
+      if (govFreshnessText) govFreshnessText.textContent = '· Current government data is temporarily unavailable.';
 
       if (tableBody) {
         tableBody.innerHTML = `
           <tr>
             <td colspan="5" style="text-align: center; padding: 28px; color: #78350F; background: #FFFBEB; border-radius: 8px;">
               <div style="font-size: 24px; margin-bottom: 6px;">🏛️</div>
-              <strong style="display: block; font-size: 14px; margin-bottom: 4px;">Government mandi prices are temporarily unavailable. Please try again.</strong>
-              <span style="font-size: 12px; color: #92400E;">Source: Government of India (data.gov.in Agmarknet)</span>
+              <strong style="display: block; font-size: 14px; margin-bottom: 4px;">Government Mandi Data</strong>
+                <span style="font-size: 12px; color: #92400E;">Current government data is temporarily unavailable.</span>
               <div style="margin-top: 10px;">
                 <button class="btn btn--sm btn--secondary" onclick="initMarketComparison()">Retry Fetch</button>
               </div>

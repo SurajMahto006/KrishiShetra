@@ -620,18 +620,23 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
       }
 
       if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-        self.govDataStatus = res.stale ? 'stale' : 'success';
-        self.govUpdatedAt = res.updatedAt || '';
-        var updateLabel = res.updatedAt ? new Date(res.updatedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Latest';
+        var isLive = res.sourceStatus === 'live' || (!res.stale && !res.cached);
+        self.govDataStatus = isLive ? 'success' : 'stale';
+        self.govUpdatedAt = res.fetchedAt || res.updatedAt || '';
+        var updateLabel = self.govUpdatedAt ? new Date(self.govUpdatedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Latest';
 
-        if (statusTitle) statusTitle.textContent = res.stale ? 'Latest Available Government Data (data.gov.in)' : 'Government of India Mandi Data (Agmarknet)';
-        if (statusDesc) statusDesc.textContent = 'Verified daily commodity price records from official data.gov.in repository';
+        if (statusTitle) statusTitle.textContent = 'Government Mandi Data';
+        if (statusDesc) {
+          statusDesc.textContent = isLive
+            ? 'Live data from data.gov.in'
+            : 'Government source temporarily unavailable. Showing the latest successfully retrieved data.';
+        }
         if (statusBadge) {
-          statusBadge.textContent = res.stale ? 'Latest Available Gov Data' : '✓ Live Gov Data';
-          statusBadge.className = res.stale ? 'ks-badge ks-badge-dispute' : 'ks-badge ks-badge-protected';
+          statusBadge.textContent = isLive ? '✓ Live data from data.gov.in' : 'Latest Cached Gov Data';
+          statusBadge.className = isLive ? 'ks-badge ks-badge-protected' : 'ks-badge ks-badge-dispute';
         }
         if (tsEl) {
-          tsEl.textContent = 'Government data · Updated ' + updateLabel;
+          tsEl.textContent = 'Last updated: ' + updateLabel;
         }
 
         // Match records against MPC_DATA
@@ -660,7 +665,7 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
                 market: rec.market,
                 state: rec.state,
                 isGov: true,
-                stale: res.stale
+                stale: !isLive
               };
               m.lastUpdated = rec.arrivalDate ? 'Gov Data · ' + rec.arrivalDate : 'Gov Data · ' + updateLabel;
             }
@@ -671,13 +676,13 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
       } else {
         self.govDataStatus = 'unavailable';
         if (statusTitle) statusTitle.textContent = 'Government Mandi Data';
-        if (statusDesc) statusDesc.textContent = 'Government mandi prices are temporarily unavailable. Please try again.';
+        if (statusDesc) statusDesc.textContent = 'Current government data is temporarily unavailable.';
         if (statusBadge) {
-          statusBadge.textContent = 'Government Data Unavailable';
+          statusBadge.textContent = 'Temporarily Unavailable';
           statusBadge.className = 'ks-badge ks-badge-dispute';
         }
         if (tsEl) {
-          tsEl.textContent = 'Government mandi data temporarily unavailable';
+          tsEl.textContent = 'Current government data is temporarily unavailable.';
         }
         MPC_DATA.forEach(function (m) {
           delete m._govData;
@@ -692,13 +697,13 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
       }
       self.govDataStatus = 'unavailable';
       if (statusTitle) statusTitle.textContent = 'Government Mandi Data';
-      if (statusDesc) statusDesc.textContent = 'Government mandi prices are temporarily unavailable. Please try again.';
+      if (statusDesc) statusDesc.textContent = 'Current government data is temporarily unavailable.';
       if (statusBadge) {
-        statusBadge.textContent = 'Government Data Unavailable';
+        statusBadge.textContent = 'Temporarily Unavailable';
         statusBadge.className = 'ks-badge ks-badge-dispute';
       }
       if (tsEl) {
-        tsEl.textContent = 'Government mandi data temporarily unavailable';
+        tsEl.textContent = 'Current government data is temporarily unavailable.';
       }
       MPC_DATA.forEach(function (m) {
         delete m._govData;
