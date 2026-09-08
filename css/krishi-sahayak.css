@@ -1,0 +1,1228 @@
+/* ============================================================
+   KRISHI SAHAYAK — AI MARKET ASSISTANT STYLES
+   Integrated with KrishiShetra Design System
+   Tokens: --ks-evergreen, --ks-sage, --ks-mint, --ks-amber, --ks-bg-ivory
+   Fully responsive: Desktop (400px panel), Tablet, Mobile (fullscreen)
+   ============================================================ */
+
+/* ── Floating Trigger Button ── */
+.ks-fab-wrap {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.ks-fab {
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px 12px 14px;
+  background: linear-gradient(135deg, #12372A 0%, #1A4D3B 60%, #2D6A4F 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(18, 55, 42, 0.38), 0 2px 8px rgba(18, 55, 42, 0.18);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
+  position: relative;
+  outline: none;
+}
+
+.ks-fab:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 12px 32px rgba(18, 55, 42, 0.44), 0 4px 12px rgba(18, 55, 42, 0.22);
+}
+
+.ks-fab:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.ks-fab__icon {
+  font-size: 22px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+.ks-fab__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.ks-fab__name {
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.ks-fab__subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* Pulse glow animation when chat is closed */
+.ks-fab--idle::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 54px;
+  background: linear-gradient(135deg, #12372A, #5B9A72);
+  opacity: 0;
+  animation: ks-fab-pulse 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes ks-fab-pulse {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 0.28; transform: scale(1.08); }
+}
+
+/* Online indicator dot on FAB */
+.ks-fab__dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 9px;
+  height: 9px;
+  background: #52D98B;
+  border: 2px solid #12372A;
+  border-radius: 50%;
+  animation: ks-dot-blink 2s ease-in-out infinite;
+}
+
+@keyframes ks-dot-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Hide text on very small screens, show only icon */
+@media (max-width: 420px) {
+  .ks-fab {
+    padding: 14px;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    justify-content: center;
+  }
+  .ks-fab__text { display: none; }
+  .ks-fab__dot { top: 6px; right: 6px; }
+}
+
+/* ── Chat Panel ── */
+.ks-chat {
+  position: fixed;
+  bottom: 92px;
+  right: 24px;
+  width: 400px;
+  height: 580px;
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 24px 64px rgba(18, 55, 42, 0.18), 0 8px 24px rgba(18, 55, 42, 0.1);
+  border: 1px solid rgba(18, 55, 42, 0.1);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform-origin: bottom right;
+
+  /* Hidden state */
+  opacity: 0;
+  transform: scale(0.88) translateY(16px);
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+              transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ks-chat.ks-chat--open {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: all;
+}
+
+/* Mobile: full-screen bottom sheet */
+@media (max-width: 480px) {
+  .ks-chat {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 88vh;
+    border-radius: 20px 20px 0 0;
+    transform-origin: bottom center;
+  }
+  .ks-fab-wrap {
+    bottom: 20px;
+    right: 16px;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 481px) and (max-width: 768px) {
+  .ks-chat {
+    width: 360px;
+    height: 540px;
+    bottom: 88px;
+    right: 16px;
+  }
+  .ks-fab-wrap {
+    bottom: 20px;
+    right: 16px;
+  }
+}
+
+/* ── Chat Header ── */
+.ks-chat__header {
+  background: linear-gradient(135deg, #12372A 0%, #1A4D3B 60%, #2D6A4F 100%);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.ks-chat__header-icon {
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  backdrop-filter: blur(4px);
+}
+
+.ks-chat__header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ks-chat__header-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.ks-chat__header-sub {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.ks-chat__online-dot {
+  width: 7px;
+  height: 7px;
+  background: #52D98B;
+  border-radius: 50%;
+  display: inline-block;
+  animation: ks-dot-blink 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.ks-chat__header-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.ks-chat__header-btn {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 16px;
+  transition: background 0.15s ease;
+  backdrop-filter: blur(4px);
+}
+
+.ks-chat__header-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* ── Chat Context Badge ── */
+.ks-chat__context-bar {
+  background: #EAF6ED;
+  border-bottom: 1px solid #D2E4D6;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ks-chat__context-bar:empty {
+  display: none;
+}
+
+.ks-chat__context-label {
+  font-size: 11px;
+  color: #5B9A72;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ks-chat__context-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #FFFFFF;
+  border: 1px solid #D2E4D6;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #12372A;
+}
+
+/* ── Messages Area ── */
+.ks-chat__messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+  background: #FAFAF8;
+}
+
+.ks-chat__messages::-webkit-scrollbar {
+  width: 4px;
+}
+.ks-chat__messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ks-chat__messages::-webkit-scrollbar-thumb {
+  background: #D2E4D6;
+  border-radius: 4px;
+}
+
+/* ── Message Bubbles ── */
+.ks-msg {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  animation: ks-msg-in 0.25s ease-out both;
+}
+
+@keyframes ks-msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ks-msg--bot {
+  flex-direction: row;
+}
+
+.ks-msg--user {
+  flex-direction: row-reverse;
+}
+
+.ks-msg__avatar {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #12372A, #5B9A72);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.ks-msg__bubble {
+  max-width: 82%;
+  padding: 10px 13px;
+  border-radius: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.ks-msg--bot .ks-msg__bubble {
+  background: #FFFFFF;
+  color: #17221D;
+  border: 1px solid #E2E0D5;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 4px rgba(18, 55, 42, 0.06);
+}
+
+.ks-msg--user .ks-msg__bubble {
+  background: linear-gradient(135deg, #12372A, #1A4D3B);
+  color: #FFFFFF;
+  border-bottom-right-radius: 4px;
+}
+
+/* Welcome message specific */
+.ks-msg--welcome .ks-msg__bubble {
+  background: linear-gradient(135deg, #EAF6ED, #F5F4ED);
+  border-color: #D2E4D6;
+}
+
+/* Typing indicator */
+.ks-typing {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  animation: ks-msg-in 0.25s ease-out both;
+}
+
+.ks-typing__bubble {
+  background: #FFFFFF;
+  border: 1px solid #E2E0D5;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  padding: 12px 16px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(18, 55, 42, 0.06);
+}
+
+.ks-typing__dot {
+  width: 7px;
+  height: 7px;
+  background: #8FCB9B;
+  border-radius: 50%;
+  animation: ks-typing-bounce 1.2s ease-in-out infinite;
+}
+.ks-typing__dot:nth-child(2) { animation-delay: 0.2s; }
+.ks-typing__dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes ks-typing-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ── Quick Actions (initial pills) ── */
+.ks-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 4px;
+}
+
+.ks-quick-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 13px;
+  background: #FFFFFF;
+  border: 1.5px solid #D2E4D6;
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #12372A;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.ks-quick-btn:hover {
+  background: #EAF6ED;
+  border-color: #5B9A72;
+  transform: translateY(-1px);
+}
+
+.ks-quick-btn:active {
+  transform: translateY(0);
+}
+
+/* ── In-Message Action Cards ── */
+
+/* Market Recommendation Card */
+.ks-market-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E0D5;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(18, 55, 42, 0.07);
+}
+
+.ks-market-card--gold {
+  border-top: 3px solid #D6A84F;
+}
+.ks-market-card--silver {
+  border-top: 3px solid #8B9A9E;
+}
+.ks-market-card--bronze {
+  border-top: 3px solid #B87333;
+}
+
+.ks-market-card__header {
+  padding: 10px 13px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #F0EEE8;
+}
+
+.ks-market-card__rank {
+  font-size: 13px;
+  font-weight: 700;
+  color: #17221D;
+}
+
+.ks-market-card__badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #EAF6ED;
+  color: #2D6A4F;
+}
+
+.ks-market-card__body {
+  padding: 10px 13px;
+}
+
+.ks-market-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 12.5px;
+}
+
+.ks-market-card__row-label {
+  color: #6F7F75;
+  font-weight: 500;
+}
+
+.ks-market-card__row-val {
+  font-weight: 700;
+  color: #17221D;
+}
+
+.ks-market-card__net {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #EAF6ED;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ks-market-card__net-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #5B9A72;
+}
+
+.ks-market-card__net-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: #12372A;
+}
+
+.ks-market-card__footer {
+  padding: 8px 13px;
+  border-top: 1px solid #F0EEE8;
+  display: flex;
+  gap: 6px;
+}
+
+/* Buyer Recommendation Card */
+.ks-buyer-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E0D5;
+  border-radius: 12px;
+  padding: 11px 13px;
+  margin-top: 6px;
+  box-shadow: 0 1px 6px rgba(18, 55, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ks-buyer-card__top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.ks-buyer-card__avatar {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.ks-buyer-card__name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #12372A;
+}
+
+.ks-buyer-card__verified {
+  font-size: 11px;
+  color: #5B9A72;
+  font-weight: 600;
+}
+
+.ks-buyer-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ks-buyer-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  color: #6F7F75;
+  background: #F5F4ED;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.ks-buyer-card__price {
+  font-size: 15px;
+  font-weight: 800;
+  color: #12372A;
+  padding-top: 2px;
+}
+
+/* Net Return Card */
+.ks-net-card {
+  background: linear-gradient(135deg, #12372A, #1A4D3B);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 8px;
+  color: #FFFFFF;
+}
+
+.ks-net-card__title {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ks-net-card__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ks-net-card__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.ks-net-card__row-label {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.ks-net-card__row-val {
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.ks-net-card__divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 8px 0;
+}
+
+.ks-net-card__total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ks-net-card__total-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #8FCB9B;
+}
+
+.ks-net-card__total-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.ks-net-card__disclaimer {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+/* Trend Card */
+.ks-trend-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E0D5;
+  border-radius: 12px;
+  padding: 13px;
+  margin-top: 8px;
+  box-shadow: 0 1px 6px rgba(18, 55, 42, 0.06);
+}
+
+.ks-trend-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ks-trend-card__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #12372A;
+}
+
+.ks-trend-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 10px;
+}
+
+.ks-trend-tag--up {
+  background: #EAF6ED;
+  color: #2D6A4F;
+}
+
+.ks-trend-tag--down {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.ks-trend-tag--neutral {
+  background: #FDF7EA;
+  color: #92400E;
+}
+
+.ks-trend-card__price-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ks-trend-price-item {
+  flex: 1;
+  min-width: 80px;
+}
+
+.ks-trend-price-item__label {
+  font-size: 11px;
+  color: #6F7F75;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.ks-trend-price-item__val {
+  font-size: 16px;
+  font-weight: 800;
+  color: #12372A;
+}
+
+/* ── In-message action buttons ── */
+.ks-msg-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 13px;
+  background: #EAF6ED;
+  border: 1.5px solid #5B9A72;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #12372A;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.ks-msg-action-btn:hover {
+  background: #D2E4D6;
+  transform: translateY(-1px);
+}
+
+.ks-msg-action-btn--primary {
+  background: #12372A;
+  border-color: #12372A;
+  color: #FFFFFF;
+}
+
+.ks-msg-action-btn--primary:hover {
+  background: #1A4D3B;
+  color: #FFFFFF;
+}
+
+.ks-msg-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* ── Disclaimer/tip text inside messages ── */
+.ks-msg-note {
+  font-size: 11px;
+  color: #94A39A;
+  margin-top: 8px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.ks-msg-heading {
+  font-size: 13px;
+  font-weight: 700;
+  color: #12372A;
+  margin-bottom: 6px;
+}
+
+/* ── Input Area ── */
+.ks-chat__input-area {
+  padding: 12px 14px;
+  border-top: 1px solid #E2E0D5;
+  background: #FFFFFF;
+  flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ks-chat__input-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ks-chat__input {
+  width: 100%;
+  padding: 10px 88px 10px 14px;
+  background: #F5F4ED;
+  border: 1.5px solid #E2E0D5;
+  border-radius: 22px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  color: #17221D;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  resize: none;
+  line-height: 1.4;
+}
+
+.ks-chat__input::placeholder {
+  color: #94A39A;
+}
+
+.ks-chat__input:focus {
+  border-color: #5B9A72;
+  background: #FFFFFF;
+}
+
+.ks-chat__input-controls {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ks-voice-lang-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #EAF6ED;
+  border: 1px solid #D2E4D6;
+  color: #12372A;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 18px 3px 7px;
+  border-radius: 12px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath fill='%2312372A' d='M0 0l4 5 4-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 7px 4px;
+  outline: none;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.ks-voice-lang-select:hover,
+.ks-voice-lang-select:focus {
+  border-color: #5B9A72;
+  background-color: #FFFFFF;
+}
+
+.ks-chat__voice-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.85;
+  color: #12372A;
+  font-size: 16px;
+  border-radius: 50%;
+  transition: opacity 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  flex-shrink: 0;
+}
+
+.ks-chat__voice-btn:hover {
+  opacity: 1;
+  background: #EAF6ED;
+  transform: scale(1.08);
+}
+
+.ks-chat__voice-btn:active {
+  transform: scale(0.95);
+}
+
+.ks-chat__voice-btn--listening {
+  background: #FEF2F2 !important;
+  color: #DC2626 !important;
+  opacity: 1 !important;
+  border: 1.5px solid #FCA5A5 !important;
+  animation: ks-voice-pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes ks-voice-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  50% {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+}
+
+.ks-voice-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-align: center;
+  padding: 5px 14px 4px;
+  background: #FAFAF8;
+  border-top: 1px solid #EAE8E0;
+  color: #6F7F75;
+  min-height: 26px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ks-voice-status--listening {
+  color: #DC2626;
+  background: #FEF2F2;
+  font-weight: 700;
+  animation: ks-msg-in 0.2s ease-out;
+}
+
+.ks-voice-status--processing {
+  color: #B45309;
+  background: #FFFBEB;
+  font-weight: 700;
+}
+
+.ks-voice-status--speaking {
+  color: #15803D;
+  background: #F0FDF4;
+  font-weight: 700;
+}
+
+.ks-voice-status--ready {
+  color: #166534;
+  background: #F0FDF4;
+  font-weight: 600;
+}
+
+.ks-msg__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 6px;
+  padding-top: 2px;
+}
+
+.ks-msg__speak-btn {
+  background: #F0EEE8;
+  border: 1px solid #E2E0D5;
+  cursor: pointer;
+  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  opacity: 0.7;
+  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+  color: #12372A;
+}
+
+.ks-msg__speak-btn:hover {
+  opacity: 1;
+  background: #EAF6ED;
+  border-color: #5B9A72;
+  transform: scale(1.12);
+}
+
+.ks-msg__speak-btn:active {
+  transform: scale(0.95);
+}
+
+.ks-msg__speak-btn--speaking {
+  opacity: 1;
+  background: #EAF6ED;
+  border-color: #5B9A72;
+  color: #2D6A4F;
+  animation: ks-speaker-pulse 0.8s infinite alternate;
+}
+
+@keyframes ks-speaker-pulse {
+  from { transform: scale(1); filter: drop-shadow(0 0 2px rgba(45, 106, 79, 0.4)); }
+  to { transform: scale(1.18); filter: drop-shadow(0 0 5px rgba(45, 106, 79, 0.7)); }
+}
+
+.ks-voice-reply-btn {
+  font-size: 14px;
+}
+
+
+.ks-chat__send-btn {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #12372A, #1A4D3B);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 3px 10px rgba(18, 55, 42, 0.25);
+}
+
+.ks-chat__send-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 5px 14px rgba(18, 55, 42, 0.35);
+}
+
+.ks-chat__send-btn:active {
+  transform: scale(0.95);
+}
+
+.ks-chat__send-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Input hint below ── */
+.ks-chat__input-hint {
+  padding: 0 14px 10px;
+  font-size: 10.5px;
+  color: #94A39A;
+  text-align: center;
+  background: #FFFFFF;
+}
+
+/* ── Contextual "Ask Krishi Sahayak" inline button (mandi-compare.html) ── */
+.ks-contextual-btn-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(18, 55, 42, 0.1);
+}
+
+.ks-contextual-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  background: linear-gradient(135deg, #12372A, #1A4D3B);
+  border: none;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 3px 12px rgba(18, 55, 42, 0.22);
+}
+
+.ks-contextual-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(18, 55, 42, 0.32);
+}
+
+.ks-contextual-btn__icon {
+  font-size: 16px;
+}
+
+.ks-contextual-btn__sub {
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.8;
+  display: block;
+}
+
+/* ── Section divider inside messages ── */
+.ks-msg-divider {
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+  color: #94A39A;
+  font-weight: 600;
+  position: relative;
+  margin: 4px 0;
+}
+
+.ks-msg-divider::before,
+.ks-msg-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: #E2E0D5;
+}
+
+.ks-msg-divider::before { left: 0; }
+.ks-msg-divider::after { right: 0; }
+
+/* Empty / error state */
+.ks-chat__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  text-align: center;
+  color: #6F7F75;
+  gap: 8px;
+  font-size: 13px;
+}
+
+/* ── Transport Card ── */
+.ks-transport-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E0D5;
+  border-radius: 12px;
+  padding: 12px 13px;
+  margin-top: 6px;
+  box-shadow: 0 1px 6px rgba(18, 55, 42, 0.05);
+}
+
+.ks-transport-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.ks-transport-card__icon {
+  font-size: 20px;
+}
+
+.ks-transport-card__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #12372A;
+}
+
+.ks-transport-card__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ks-transport-card__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+}
+
+.ks-transport-card__row-label {
+  color: #6F7F75;
+}
+
+.ks-transport-card__row-val {
+  font-weight: 700;
+  color: #17221D;
+}
+
+/* ── Minimized indicator when chat is open ── */
+.ks-fab--open .ks-fab__subtitle {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Accessibility: focus ring ── */
+.ks-fab:focus-visible {
+  outline: 3px solid #5B9A72;
+  outline-offset: 3px;
+}
+
+.ks-chat__send-btn:focus-visible {
+  outline: 3px solid #8FCB9B;
+  outline-offset: 2px;
+}
+
+.ks-quick-btn:focus-visible {
+  outline: 2px solid #5B9A72;
+  outline-offset: 2px;
+}
