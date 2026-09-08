@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KrishiShetra — FPO Dashboard | Farmer Producer Organization</title>
-  <meta name="description" content="Manage farmers, aggregate produce, track mandi prices, negotiate with verified institutional buyers, and track logistics with KrishiShetra FPO Dashboard.">
-  
+  <meta name="description"
+    content="Manage farmers, aggregate produce, track mandi prices, negotiate with verified institutional buyers, and track logistics with KrishiShetra FPO Dashboard.">
+
   <!-- Google Fonts: Playfair Display + Plus Jakarta Sans + Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Chart.js -->
@@ -18,6 +22,7 @@
 
   <link rel="stylesheet" href="css/fpo-dashboard.css">
 </head>
+
 <body data-require-role="fpo">
 
   <!-- =========================================================================
@@ -37,15 +42,25 @@
       <!-- Desktop Nav Menu -->
       <nav>
         <ul class="nav-menu" id="navMenu">
-          <li><a href="#dashboard" class="nav-link active"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> <span data-i18n="nav_dashboard">Dashboard</span></a></li>
-          <li><a href="#farmers" class="nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> <span data-i18n="nav_farmers">Farmers</span></a></li>
-          <li><a href="#lots" class="nav-link"><i data-lucide="boxes" style="width:16px;height:16px;"></i> <span data-i18n="nav_lots">Lots</span></a></li>
-          <li><a href="#market" class="nav-link"><i data-lucide="trending-up" style="width:16px;height:16px;"></i> <span data-i18n="nav_market">Market</span></a></li>
-          <li><a href="#buyers" class="nav-link"><i data-lucide="briefcase" style="width:16px;height:16px;"></i> <span data-i18n="nav_buyers">Buyers</span></a></li>
-          <li><a href="#orders" class="nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> <span data-i18n="nav_orders">Orders</span></a></li>
-          <li><a href="#analytics" class="nav-link"><i data-lucide="bar-chart-3" style="width:16px;height:16px;"></i> <span data-i18n="nav_analytics">Analytics</span></a></li>
-          <li><a href="disputes.html" class="nav-link"><i data-lucide="shield-alert" style="width:16px;height:16px;"></i> <span>Disputes</span></a></li>
-          <li class="mobile-logout-item"><a href="javascript:void(0)" onclick="handleFpoLogout()" class="nav-link nav-link--danger"><i data-lucide="log-out" style="width:16px;height:16px;"></i> <span>Log Out</span></a></li>
+          <li><a href="#dashboard" class="nav-link active"><i data-lucide="layout-dashboard"
+                style="width:16px;height:16px;"></i> <span data-i18n="nav_dashboard">Dashboard</span></a></li>
+          <li><a href="#farmers" class="nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> <span
+                data-i18n="nav_farmers">Farmers</span></a></li>
+          <li><a href="#lots" class="nav-link"><i data-lucide="boxes" style="width:16px;height:16px;"></i> <span
+                data-i18n="nav_lots">Lots</span></a></li>
+          <li><a href="#market" class="nav-link"><i data-lucide="trending-up" style="width:16px;height:16px;"></i> <span
+                data-i18n="nav_market">Market</span></a></li>
+          <li><a href="#buyers" class="nav-link"><i data-lucide="briefcase" style="width:16px;height:16px;"></i> <span
+                data-i18n="nav_buyers">Buyers</span></a></li>
+          <li><a href="#orders" class="nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> <span
+                data-i18n="nav_orders">Orders</span></a></li>
+          <li><a href="#analytics" class="nav-link"><i data-lucide="bar-chart-3" style="width:16px;height:16px;"></i>
+              <span data-i18n="nav_analytics">Analytics</span></a></li>
+          <li><a href="disputes.html" class="nav-link"><i data-lucide="shield-alert"
+                style="width:16px;height:16px;"></i> <span>Disputes</span></a></li>
+          <li class="mobile-logout-item"><a href="javascript:void(0)" onclick="handleFpoLogout()"
+              class="nav-link nav-link--danger"><i data-lucide="log-out" style="width:16px;height:16px;"></i> <span>Log
+                Out</span></a></li>
         </ul>
       </nav>
 
@@ -78,7 +93,8 @@
               </div>
             </div>
             <div class="profile-dropdown-sep"></div>
-            <a href="javascript:void(0)" onclick="openProfileModal(); closeFpoProfileDropdown();" class="profile-dropdown-item">
+            <a href="javascript:void(0)" onclick="openProfileModal(); closeFpoProfileDropdown();"
+              class="profile-dropdown-item">
               <i data-lucide="building-2"></i> FPO Organization Profile
             </a>
             <a href="#farmers" class="profile-dropdown-item" onclick="closeFpoProfileDropdown()">
@@ -91,7 +107,8 @@
               <i data-lucide="clipboard-list"></i> Buyer Contracts & Orders
             </a>
             <div class="profile-dropdown-sep"></div>
-            <a href="javascript:void(0)" onclick="handleFpoLogout()" class="profile-dropdown-item profile-dropdown-item--danger" id="fpoLogoutBtn">
+            <a href="javascript:void(0)" onclick="handleFpoLogout()"
+              class="profile-dropdown-item profile-dropdown-item--danger" id="fpoLogoutBtn">
               <i data-lucide="log-out"></i> Log Out
             </a>
           </div>
@@ -124,7 +141,8 @@
             </div>
             <h1 class="hero-title" data-i18n="hero_title">Welcome, <span>Suresh Jadhav</span> 👋</h1>
             <p class="hero-subtitle" data-i18n="hero_sub">
-              Manage incoming member farmer lots, aggregate produce and connect with institutional buyers like Amit Shah.
+              Manage incoming member farmer lots, aggregate produce and connect with institutional buyers like Amit
+              Shah.
             </p>
 
             <!-- FPO Profile Strip -->
@@ -173,7 +191,8 @@
 
           <!-- Hero Media Card (Documentary Photography) -->
           <div class="hero-media-card">
-            <img src="assets/images/fpo_group.jpg" alt="Nashik Farmers FPO Members" loading="eager" onerror="this.src='https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=800&q=80'">
+            <img src="assets/images/fpo_group.jpg" alt="Nashik Farmers FPO Members" loading="eager"
+              onerror="this.src='https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=800&q=80'">
             <div class="hero-media-overlay">
               <div class="hero-media-caption">
                 <div>
@@ -213,7 +232,8 @@
         </div>
         <div class="kpi-data">
           <span class="kpi-label" data-i18n="kpi_produce">Aggregated Produce</span>
-          <span class="kpi-value">128.5 <span style="font-size:1.1rem;font-weight:600;color:var(--text-muted-sage);">Tons</span></span>
+          <span class="kpi-value">128.5 <span
+              style="font-size:1.1rem;font-weight:600;color:var(--text-muted-sage);">Tons</span></span>
           <span class="kpi-trend">
             <i data-lucide="check-circle" style="width:14px;height:14px;"></i> 100% Quality Inspected
           </span>
@@ -262,17 +282,18 @@
                 <span class="badge badge-success">● Incoming Produce</span>
                 <span style="font-size: 11.5px; color: var(--text-muted-sage);">Direct Farm Submission</span>
               </div>
-              <h3 style="font-size: 1.25rem; font-weight: 700; color: #FFFFFF; margin: 4px 0 0 0;">Ramesh Patil</h3>
+              <h3 style="font-size: 1.25rem; font-weight: 700; margin: 4px 0 0 0;">Ramesh Patil</h3>
               <span style="font-size: 0.8rem; color: var(--text-muted-sage);">Navi Mumbai / Nearby Farm Cluster</span>
             </div>
             <span class="badge badge-warning" id="fpo-lot-status-badge">Ready for buyer matching</span>
           </div>
 
-          <div style="background: rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.1);">
+          <div
+            style="background: rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.1);">
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
               <div>
                 <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Commodity:</span>
-                <strong style="color: #FFFFFF; font-size: 14px;">🍅 Tomato</strong>
+                <strong style="font-size: 14px;">🍅 Tomato</strong>
               </div>
               <div>
                 <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Grade:</span>
@@ -283,16 +304,19 @@
                 <strong style="color: var(--warm-amber, #D6A84F); font-size: 14px;">850 kg</strong>
               </div>
             </div>
-            <div style="margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.8); border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 8px;">
+            <div
+              style="margin-top: 10px; font-size: 12px; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 8px;">
               📍 <strong>Target Market:</strong> Vashi APMC / Vashi Market Corridor · Lot verified by FPO Suresh Jadhav
             </div>
           </div>
 
           <div style="display: flex; gap: 10px;">
-            <button class="btn btn-gold btn-sm" id="btn-fpo-accept-lot" onclick="handleFpoConsolidateLot()" style="flex: 1;">
+            <button class="btn btn-gold btn-sm" id="btn-fpo-accept-lot" onclick="handleFpoConsolidateLot()"
+              style="flex: 1;">
               <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Consolidate Lot
             </button>
-            <button class="btn btn-secondary btn-sm" onclick="showToast('Verified: 850 kg Tomato Grade A from Ramesh Patil.')">
+            <button class="btn btn-secondary btn-sm"
+              onclick="showToast('Verified: 850 kg Tomato Grade A from Ramesh Patil.')">
               <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> View Quality Slip
             </button>
           </div>
@@ -306,34 +330,37 @@
                 <span class="badge badge-gold">⚡ Buyer Demand Matched</span>
                 <span style="font-size: 11.5px; color: var(--text-muted-sage);">High Institutional Interest</span>
               </div>
-              <h3 style="font-size: 1.25rem; font-weight: 700; color: #FFFFFF; margin: 4px 0 0 0;">Amit Shah</h3>
+              <h3 style="font-size: 1.25rem; font-weight: 700; margin: 4px 0 0 0;">Amit Shah</h3>
               <span style="font-size: 0.8rem; color: var(--text-muted-sage);">Shah Wholesale Mart · Vashi Market</span>
             </div>
             <span class="badge badge-success">Status: Interested</span>
           </div>
 
-          <div style="background: rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.1);">
+          <div
+            style="background: rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.1);">
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
               <div>
                 <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Buyer Demand:</span>
-                <strong style="color: #FFFFFF; font-size: 14px;">Tomato (Grade A)</strong>
+                <strong style="font-size: 14px;">Tomato (Grade A)</strong>
               </div>
               <div>
                 <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Required Volume:</span>
-                <strong style="color: var(--fresh-mint, #8FCB9B); font-size: 14px;">800–1,000 kg</strong>
+                <strong style="font-size: 14px;">800–1,000 kg</strong>
               </div>
               <div>
                 <span style="font-size: 11px; color: var(--text-muted-sage); display: block;">Delivery Point:</span>
-                <strong style="color: #FFFFFF; font-size: 14px;">Vashi APMC Dock</strong>
+                <strong style="font-size: 14px;">Vashi APMC Dock</strong>
               </div>
             </div>
-            <div style="margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.8); border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 8px;">
+            <div
+              style="margin-top: 10px; font-size: 12px; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 8px;">
               💬 <em>“I can accept the Grade A tomato lot at the agreed Vashi market-linked price.”</em>
             </div>
           </div>
 
           <div style="display: flex; gap: 10px;">
-            <button class="btn btn-primary btn-sm" onclick="showToast('Connected: Contract sent to Amit Shah for Ramesh Patil\\'s lot.');" style="flex: 1;">
+            <button class="btn btn-primary btn-sm"
+              onclick="showToast('Connected: Contract sent to Amit Shah for Ramesh Patil\'s lot.');" style="flex: 1;">
               <i data-lucide="handshake" style="width: 14px; height: 14px;"></i> Confirm Buyer Match
             </button>
             <button class="btn btn-secondary btn-sm" onclick="location.href='disputes.html'">
@@ -352,7 +379,8 @@
         <div class="section-header">
           <div class="section-title-wrap">
             <h2 data-i18n="sec_farmers"><span>👨‍🌾</span> Farmer Members</h2>
-            <p data-i18n="sec_farmers_sub">Registered individual member contributions and crop lot aggregation status.</p>
+            <p data-i18n="sec_farmers_sub">Registered individual member contributions and crop lot aggregation status.
+            </p>
           </div>
           <div style="display:flex;gap:0.75rem;">
             <button class="btn btn-primary" onclick="openAddFarmerModal()">
@@ -370,7 +398,8 @@
         <div class="table-toolbar">
           <div class="search-box">
             <i data-lucide="search" class="search-icon"></i>
-            <input type="text" id="farmerSearchInput" placeholder="Search farmer by name, village or crop..." onkeyup="filterFarmerTable()">
+            <input type="text" id="farmerSearchInput" placeholder="Search farmer by name, village or crop..."
+              onkeyup="filterFarmerTable()">
           </div>
 
           <div class="filter-pills">
@@ -414,7 +443,8 @@
                 <td><span class="grade-badge grade-a">Grade A</span></td>
                 <td><span class="badge badge-success">✓ Verified & Weighed</span></td>
                 <td style="text-align:right;">
-                  <button class="btn btn-secondary btn-sm" onclick="showFarmerDetails('Rameshwar Patil', 'Wheat', '3.5 Tons', 'Grade A', '₹93,800')">Details</button>
+                  <button class="btn btn-secondary btn-sm"
+                    onclick="showFarmerDetails('Rameshwar Patil', 'Wheat', '3.5 Tons', 'Grade A', '₹93,800')">Details</button>
                 </td>
               </tr>
 
@@ -435,7 +465,8 @@
                 <td><span class="grade-badge grade-a">Grade A</span></td>
                 <td><span class="badge badge-success">✓ In Cold Store</span></td>
                 <td style="text-align:right;">
-                  <button class="btn btn-secondary btn-sm" onclick="showFarmerDetails('Sunita Deshmukh', 'Onion', '4.2 Tons', 'Grade A', '₹1,19,700')">Details</button>
+                  <button class="btn btn-secondary btn-sm"
+                    onclick="showFarmerDetails('Sunita Deshmukh', 'Onion', '4.2 Tons', 'Grade A', '₹1,19,700')">Details</button>
                 </td>
               </tr>
 
@@ -456,7 +487,8 @@
                 <td><span class="grade-badge grade-a">Grade A</span></td>
                 <td><span class="badge badge-success">✓ Ready for Sale</span></td>
                 <td style="text-align:right;">
-                  <button class="btn btn-secondary btn-sm" onclick="showFarmerDetails('Bhausaheb Shinde', 'Wheat', '2.8 Tons', 'Grade A', '₹75,040')">Details</button>
+                  <button class="btn btn-secondary btn-sm"
+                    onclick="showFarmerDetails('Bhausaheb Shinde', 'Wheat', '2.8 Tons', 'Grade A', '₹75,040')">Details</button>
                 </td>
               </tr>
 
@@ -477,7 +509,8 @@
                 <td><span class="grade-badge grade-a">Grade A</span></td>
                 <td><span class="badge badge-success">✓ Ready for Sale</span></td>
                 <td style="text-align:right;">
-                  <button class="btn btn-secondary btn-sm" onclick="showFarmerDetails('Ananda Gholap', 'Onion', '3.0 Tons', 'Grade A', '₹85,500')">Details</button>
+                  <button class="btn btn-secondary btn-sm"
+                    onclick="showFarmerDetails('Ananda Gholap', 'Onion', '3.0 Tons', 'Grade A', '₹85,500')">Details</button>
                 </td>
               </tr>
 
@@ -498,7 +531,8 @@
                 <td><span class="grade-badge grade-a">Grade A+</span></td>
                 <td><span class="badge badge-warning">○ Aggregation in Progress</span></td>
                 <td style="text-align:right;">
-                  <button class="btn btn-secondary btn-sm" onclick="showFarmerDetails('Kalpana Jadhav', 'Tomato', '1.8 Tons', 'Grade A+', '₹55,800')">Details</button>
+                  <button class="btn btn-secondary btn-sm"
+                    onclick="showFarmerDetails('Kalpana Jadhav', 'Tomato', '1.8 Tons', 'Grade A+', '₹55,800')">Details</button>
                 </td>
               </tr>
 
@@ -519,7 +553,8 @@
                 <td><span class="grade-badge grade-a">Grade A</span></td>
                 <td><span class="badge badge-success">✓ Stored & Sealed</span></td>
                 <td style="text-align:right;">
-                  <button class="btn btn-secondary btn-sm" onclick="showFarmerDetails('Vitthal Shirsat', 'Rice', '5.0 Tons', 'Grade A', '₹1,97,500')">Details</button>
+                  <button class="btn btn-secondary btn-sm"
+                    onclick="showFarmerDetails('Vitthal Shirsat', 'Rice', '5.0 Tons', 'Grade A', '₹1,97,500')">Details</button>
                 </td>
               </tr>
             </tbody>
@@ -535,7 +570,8 @@
       <div class="section-header">
         <div class="section-title-wrap">
           <h2 data-i18n="sec_lots"><span>📦</span> Aggregated Lots</h2>
-          <p data-i18n="sec_lots_sub">Unified bulk commodity lots created from multi-farmer pooling for institutional buyer negotiation.</p>
+          <p data-i18n="sec_lots_sub">Unified bulk commodity lots created from multi-farmer pooling for institutional
+            buyer negotiation.</p>
         </div>
         <div>
           <button class="btn btn-gold btn-sm" onclick="openCreateLotModal()">
@@ -548,7 +584,8 @@
         <!-- Lot Card 1: Wheat -->
         <div class="lot-card">
           <div class="lot-img-wrap">
-            <img src="assets/images/wheat_lot.jpg" alt="Aggregated Wheat Lot" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=800&q=80'">
+            <img src="assets/images/wheat_lot.jpg" alt="Aggregated Wheat Lot" loading="lazy"
+              onerror="this.src='https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=800&q=80'">
             <div class="lot-badge-overlay">
               <span class="badge badge-success">✓ Ready for Sale</span>
             </div>
@@ -569,25 +606,31 @@
             <div class="lot-metrics-grid">
               <div class="lot-metric-item">
                 <span class="lot-metric-label">Total Volume</span>
-                <span class="lot-metric-value">25 <span style="font-size:0.85rem;color:var(--text-muted-sage);">Tons</span></span>
+                <span class="lot-metric-value">25 <span
+                    style="font-size:0.85rem;color:var(--text-muted-sage);">Tons</span></span>
               </div>
               <div class="lot-metric-item">
                 <span class="lot-metric-label">Contributors</span>
-                <span class="lot-metric-value">12 <span style="font-size:0.85rem;color:var(--text-muted-sage);">Farmers</span></span>
+                <span class="lot-metric-value">12 <span
+                    style="font-size:0.85rem;color:var(--text-muted-sage);">Farmers</span></span>
               </div>
               <div class="lot-metric-item">
                 <span class="lot-metric-label">Base Price</span>
-                <span class="lot-metric-value lot-price-highlight">₹2,680<span style="font-size:0.75rem;font-weight:500;color:var(--text-muted-sage);">/q</span></span>
+                <span class="lot-metric-value lot-price-highlight">₹2,680<span
+                    style="font-size:0.75rem;font-weight:500;color:var(--text-muted-sage);">/q</span></span>
               </div>
             </div>
 
             <div class="lot-status-row">
-              <span><i data-lucide="shield-check" style="width:15px;height:15px;color:var(--sage-green);vertical-align:middle;"></i> Moisture: 11.2% | Purity: 99.4%</span>
+              <span><i data-lucide="shield-check"
+                  style="width:15px;height:15px;color:var(--sage-green);vertical-align:middle;"></i> Moisture: 11.2% |
+                Purity: 99.4%</span>
               <span style="color:var(--text-evergreen);font-weight:700;">Est. Val: ₹6.70 Lakh</span>
             </div>
 
             <div class="lot-actions">
-              <button class="btn btn-secondary" onclick="openLotDetailModal('Wheat', '25 Tons', '12 Farmers', '₹2,680/q', '#WHT-04')">
+              <button class="btn btn-secondary"
+                onclick="openLotDetailModal('Wheat', '25 Tons', '12 Farmers', '₹2,680/q', '#WHT-04')">
                 <i data-lucide="eye" style="width:16px;height:16px;"></i> View Lot
               </button>
               <button class="btn btn-primary" onclick="openFindBuyersModal('Wheat', '25 Tons', '₹2,680/q')">
@@ -600,7 +643,8 @@
         <!-- Lot Card 2: Onion -->
         <div class="lot-card">
           <div class="lot-img-wrap">
-            <img src="assets/images/onion_lot.jpg" alt="Aggregated Onion Lot" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=800&q=80'">
+            <img src="assets/images/onion_lot.jpg" alt="Aggregated Onion Lot" loading="lazy"
+              onerror="this.src='https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=800&q=80'">
             <div class="lot-badge-overlay">
               <span class="badge badge-success">✓ Ready for Sale</span>
             </div>
@@ -621,25 +665,31 @@
             <div class="lot-metrics-grid">
               <div class="lot-metric-item">
                 <span class="lot-metric-label">Total Volume</span>
-                <span class="lot-metric-value">18 <span style="font-size:0.85rem;color:var(--text-muted-sage);">Tons</span></span>
+                <span class="lot-metric-value">18 <span
+                    style="font-size:0.85rem;color:var(--text-muted-sage);">Tons</span></span>
               </div>
               <div class="lot-metric-item">
                 <span class="lot-metric-label">Contributors</span>
-                <span class="lot-metric-value">8 <span style="font-size:0.85rem;color:var(--text-muted-sage);">Farmers</span></span>
+                <span class="lot-metric-value">8 <span
+                    style="font-size:0.85rem;color:var(--text-muted-sage);">Farmers</span></span>
               </div>
               <div class="lot-metric-item">
                 <span class="lot-metric-label">Base Price</span>
-                <span class="lot-metric-value lot-price-highlight">₹2,850<span style="font-size:0.75rem;font-weight:500;color:var(--text-muted-sage);">/q</span></span>
+                <span class="lot-metric-value lot-price-highlight">₹2,850<span
+                    style="font-size:0.75rem;font-weight:500;color:var(--text-muted-sage);">/q</span></span>
               </div>
             </div>
 
             <div class="lot-status-row">
-              <span><i data-lucide="shield-check" style="width:15px;height:15px;color:var(--sage-green);vertical-align:middle;"></i> Bulb Size: 55-65mm | Double Cured</span>
+              <span><i data-lucide="shield-check"
+                  style="width:15px;height:15px;color:var(--sage-green);vertical-align:middle;"></i> Bulb Size: 55-65mm
+                | Double Cured</span>
               <span style="color:var(--text-evergreen);font-weight:700;">Est. Val: ₹5.13 Lakh</span>
             </div>
 
             <div class="lot-actions">
-              <button class="btn btn-secondary" onclick="openLotDetailModal('Onion', '18 Tons', '8 Farmers', '₹2,850/q', '#ONN-08')">
+              <button class="btn btn-secondary"
+                onclick="openLotDetailModal('Onion', '18 Tons', '8 Farmers', '₹2,850/q', '#ONN-08')">
                 <i data-lucide="eye" style="width:16px;height:16px;"></i> View Lot
               </button>
               <button class="btn btn-primary" onclick="openFindBuyersModal('Onion', '18 Tons', '₹2,850/q')">
@@ -658,7 +708,8 @@
       <div class="section-header">
         <div class="section-title-wrap">
           <h2 data-i18n="sec_market"><span>📈</span> Market Intelligence & AI Insights</h2>
-          <p data-i18n="sec_market_sub">Real-time APMC price benchmarks, spatial price trends, and predictive aggregation intelligence.</p>
+          <p data-i18n="sec_market_sub">Real-time APMC price benchmarks, spatial price trends, and predictive
+            aggregation intelligence.</p>
         </div>
         <div class="lang-selector-light">
           <i data-lucide="sliders-horizontal" style="width:14px;height:14px;color:var(--sage-green);"></i>
@@ -675,7 +726,8 @@
         <div class="glass-card chart-card">
           <div class="card-header-row">
             <div>
-              <h3 class="card-title"><i data-lucide="line-chart" style="width:18px;height:18px;color:var(--sage-green);"></i> 7-Day APMC Price Trends (₹/Quintal)</h3>
+              <h3 class="card-title"><i data-lucide="line-chart"
+                  style="width:18px;height:18px;color:var(--sage-green);"></i> 7-Day APMC Price Trends (₹/Quintal)</h3>
               <p class="card-subtitle">Comparing Local Nashik Mandi vs Institutional Direct FPO Price</p>
             </div>
             <span class="badge badge-success">+5.8% FPO Premium</span>
@@ -688,19 +740,23 @@
           <!-- Nearby Mandi Benchmarks -->
           <div class="nearby-mandi-list">
             <div class="mandi-item">
-              <span class="mandi-name"><i data-lucide="map-pin" style="width:14px;height:14px;color:var(--sage-green);"></i> Nashik APMC (Local)</span>
+              <span class="mandi-name"><i data-lucide="map-pin"
+                  style="width:14px;height:14px;color:var(--sage-green);"></i> Nashik APMC (Local)</span>
               <span><span class="mandi-price">₹2,620/q</span> <span class="mandi-diff-pos">(Base)</span></span>
             </div>
             <div class="mandi-item">
-              <span class="mandi-name"><i data-lucide="map-pin" style="width:14px;height:14px;color:var(--warm-amber);"></i> Pune APMC (180 km)</span>
+              <span class="mandi-name"><i data-lucide="map-pin"
+                  style="width:14px;height:14px;color:var(--warm-amber);"></i> Pune APMC (180 km)</span>
               <span><span class="mandi-price">₹2,820/q</span> <span class="mandi-diff-pos">+₹200/q premium</span></span>
             </div>
             <div class="mandi-item">
-              <span class="mandi-name"><i data-lucide="map-pin" style="width:14px;height:14px;color:#1E5C99;"></i> Vashi Mumbai APMC (165 km)</span>
+              <span class="mandi-name"><i data-lucide="map-pin" style="width:14px;height:14px;color:#1E5C99;"></i> Vashi
+                Mumbai APMC (165 km)</span>
               <span><span class="mandi-price">₹2,890/q</span> <span class="mandi-diff-pos">+₹270/q premium</span></span>
             </div>
             <div class="mandi-item">
-              <span class="mandi-name"><i data-lucide="map-pin" style="width:14px;height:14px;color:var(--text-muted-sage);"></i> Pimpalgaon APMC (25 km)</span>
+              <span class="mandi-name"><i data-lucide="map-pin"
+                  style="width:14px;height:14px;color:var(--text-muted-sage);"></i> Pimpalgaon APMC (25 km)</span>
               <span><span class="mandi-price">₹2,645/q</span> <span class="mandi-diff-pos">+₹25/q</span></span>
             </div>
           </div>
@@ -722,7 +778,8 @@
           <div class="ai-metrics-box">
             <div>
               <span class="ai-metric-label">Expected Price Range</span>
-              <div class="ai-metric-val">₹2,750 – ₹2,850<span style="font-size:0.9rem;font-weight:500;color:var(--text-muted-sage);">/q</span></div>
+              <div class="ai-metric-val">₹2,750 – ₹2,850<span
+                  style="font-size:0.9rem;font-weight:500;color:var(--text-muted-sage);">/q</span></div>
             </div>
             <div style="text-align:right;">
               <span class="ai-metric-label">Confidence Score</span>
@@ -730,7 +787,8 @@
             </div>
           </div>
 
-          <div style="margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-charcoal);display:flex;flex-direction:column;gap:0.4rem;">
+          <div
+            style="margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-charcoal);display:flex;flex-direction:column;gap:0.4rem;">
             <div style="display:flex;align-items:center;gap:0.45rem;">
               <i data-lucide="check-circle-2" style="width:14px;height:14px;color:var(--sage-green);"></i>
               <span>3 Verified Flour Mills in Pune seeking 20+ Ton lots</span>
@@ -758,7 +816,8 @@
       <div class="section-header">
         <div class="section-title-wrap">
           <h2 data-i18n="sec_buyers"><span>🤝</span> Verified Institutional Buyer Offers</h2>
-          <p data-i18n="sec_buyers_sub">Direct contracts and live bidding from KYC-verified food processors and exporters.</p>
+          <p data-i18n="sec_buyers_sub">Direct contracts and live bidding from KYC-verified food processors and
+            exporters.</p>
         </div>
         <div style="display:flex;gap:0.75rem;">
           <button class="btn btn-secondary btn-sm" onclick="openCompareOffersModal()">
@@ -775,7 +834,8 @@
               <div class="buyer-avatar">ABC</div>
               <div class="buyer-name-block">
                 <span class="buyer-title">ABC Foods <i data-lucide="badge-check" class="verified-icon"></i></span>
-                <span class="buyer-location"><i data-lucide="map-pin" style="width:12px;height:12px;display:inline;"></i> Pune, Maharashtra</span>
+                <span class="buyer-location"><i data-lucide="map-pin"
+                    style="width:12px;height:12px;display:inline;"></i> Pune, Maharashtra</span>
               </div>
             </div>
             <span class="badge badge-success">Active Offer</span>
@@ -801,10 +861,12 @@
           </div>
 
           <div class="buyer-actions">
-            <button class="btn btn-secondary btn-sm" onclick="openOfferModal('ABC Foods', 'Wheat', '20 Tons', '₹2,800/q', 'Pune')">
+            <button class="btn btn-secondary btn-sm"
+              onclick="openOfferModal('ABC Foods', 'Wheat', '20 Tons', '₹2,800/q', 'Pune')">
               View Offer
             </button>
-            <button class="btn btn-primary btn-sm" onclick="openAcceptModal('ABC Foods', 'Wheat', '20 Tons', '₹2,800/q')">
+            <button class="btn btn-primary btn-sm"
+              onclick="openAcceptModal('ABC Foods', 'Wheat', '20 Tons', '₹2,800/q')">
               Accept Offer
             </button>
           </div>
@@ -816,8 +878,10 @@
             <div class="buyer-company-info">
               <div class="buyer-avatar">FA</div>
               <div class="buyer-name-block">
-                <span class="buyer-title">FreshAgro Pvt Ltd <i data-lucide="badge-check" class="verified-icon"></i></span>
-                <span class="buyer-location"><i data-lucide="map-pin" style="width:12px;height:12px;display:inline;"></i> Mumbai, Maharashtra</span>
+                <span class="buyer-title">FreshAgro Pvt Ltd <i data-lucide="badge-check"
+                    class="verified-icon"></i></span>
+                <span class="buyer-location"><i data-lucide="map-pin"
+                    style="width:12px;height:12px;display:inline;"></i> Mumbai, Maharashtra</span>
               </div>
             </div>
             <span class="badge badge-success">Top Bidder</span>
@@ -843,10 +907,12 @@
           </div>
 
           <div class="buyer-actions">
-            <button class="btn btn-secondary btn-sm" onclick="openOfferModal('FreshAgro Pvt Ltd', 'Onion', '15 Tons', '₹2,900/q', 'Mumbai')">
+            <button class="btn btn-secondary btn-sm"
+              onclick="openOfferModal('FreshAgro Pvt Ltd', 'Onion', '15 Tons', '₹2,900/q', 'Mumbai')">
               View Offer
             </button>
-            <button class="btn btn-primary btn-sm" onclick="openAcceptModal('FreshAgro Pvt Ltd', 'Onion', '15 Tons', '₹2,900/q')">
+            <button class="btn btn-primary btn-sm"
+              onclick="openAcceptModal('FreshAgro Pvt Ltd', 'Onion', '15 Tons', '₹2,900/q')">
               Accept Offer
             </button>
           </div>
@@ -858,8 +924,10 @@
             <div class="buyer-company-info">
               <div class="buyer-avatar">MA</div>
               <div class="buyer-name-block">
-                <span class="buyer-title">MahaAgri Exports <i data-lucide="badge-check" class="verified-icon"></i></span>
-                <span class="buyer-location"><i data-lucide="map-pin" style="width:12px;height:12px;display:inline;"></i> Navi Mumbai (Port Terminal)</span>
+                <span class="buyer-title">MahaAgri Exports <i data-lucide="badge-check"
+                    class="verified-icon"></i></span>
+                <span class="buyer-location"><i data-lucide="map-pin"
+                    style="width:12px;height:12px;display:inline;"></i> Navi Mumbai (Port Terminal)</span>
               </div>
             </div>
             <span class="badge badge-gold">Export Grade</span>
@@ -885,10 +953,12 @@
           </div>
 
           <div class="buyer-actions">
-            <button class="btn btn-secondary btn-sm" onclick="openOfferModal('MahaAgri Exports', 'Onion', '25 Tons', '₹2,950/q', 'Navi Mumbai')">
+            <button class="btn btn-secondary btn-sm"
+              onclick="openOfferModal('MahaAgri Exports', 'Onion', '25 Tons', '₹2,950/q', 'Navi Mumbai')">
               View Offer
             </button>
-            <button class="btn btn-gold btn-sm" onclick="openAcceptModal('MahaAgri Exports', 'Onion', '25 Tons', '₹2,950/q')">
+            <button class="btn btn-gold btn-sm"
+              onclick="openAcceptModal('MahaAgri Exports', 'Onion', '25 Tons', '₹2,950/q')">
               Counter Offer
             </button>
           </div>
@@ -903,7 +973,8 @@
       <div class="section-header">
         <div class="section-title-wrap">
           <h2 data-i18n="sec_orders"><span>🚚</span> Orders & Logistics Fulfillment</h2>
-          <p data-i18n="sec_orders_sub">Live dispatch tracking, transporter assignment, and digital proof-of-delivery.</p>
+          <p data-i18n="sec_orders_sub">Live dispatch tracking, transporter assignment, and digital proof-of-delivery.
+          </p>
         </div>
         <div>
           <span class="badge badge-info">1 Active Shipment in Transit</span>
@@ -972,7 +1043,8 @@
               </div>
             </div>
             <div style="display:flex;gap:0.5rem;">
-              <button class="btn btn-secondary btn-sm" onclick="showToast('Calling driver Santosh Gaikwad (+91 98224 XXXXX)...')">
+              <button class="btn btn-secondary btn-sm"
+                onclick="showToast('Calling driver Santosh Gaikwad (+91 98224 XXXXX)...')">
                 <i data-lucide="phone" style="width:14px;height:14px;"></i> Call Driver
               </button>
               <button class="btn btn-primary btn-sm" onclick="showToast('Opening live GPS telemetry feed...')">
@@ -984,27 +1056,32 @@
 
         <!-- Dispatch Stats / Logistics Telemetry -->
         <div class="dispatch-side-card">
-          <h3 class="card-title" style="font-size:1.15rem;"><i data-lucide="shield-check" style="width:18px;height:18px;color:var(--sage-green);"></i> Dispatch Telemetry</h3>
+          <h3 class="card-title" style="font-size:1.15rem;"><i data-lucide="shield-check"
+              style="width:18px;height:18px;color:var(--sage-green);"></i> Dispatch Telemetry</h3>
           <p class="card-subtitle">Aggregated metrics for current dispatch batch</p>
 
           <div class="dispatch-stats-list">
             <div class="dispatch-stat-item">
-              <span class="dispatch-stat-label"><i data-lucide="weight" style="width:14px;height:14px;color:var(--warm-amber);"></i> Net Weighbridge Weight</span>
+              <span class="dispatch-stat-label"><i data-lucide="weight"
+                  style="width:14px;height:14px;color:var(--warm-amber);"></i> Net Weighbridge Weight</span>
               <span class="dispatch-stat-val">20,140 kg (20.14 T)</span>
             </div>
 
             <div class="dispatch-stat-item">
-              <span class="dispatch-stat-label"><i data-lucide="file-check" style="width:14px;height:14px;color:var(--sage-green);"></i> e-Way Bill Status</span>
+              <span class="dispatch-stat-label"><i data-lucide="file-check"
+                  style="width:14px;height:14px;color:var(--sage-green);"></i> e-Way Bill Status</span>
               <span class="dispatch-stat-val" style="color:var(--sage-green-dark);">Generated (#EWB-9912)</span>
             </div>
 
             <div class="dispatch-stat-item">
-              <span class="dispatch-stat-label"><i data-lucide="clock" style="width:14px;height:14px;color:#1E5C99;"></i> Estimated Transit Time</span>
+              <span class="dispatch-stat-label"><i data-lucide="clock"
+                  style="width:14px;height:14px;color:#1E5C99;"></i> Estimated Transit Time</span>
               <span class="dispatch-stat-val">4 hrs 15 mins (Pune Hub)</span>
             </div>
 
             <div class="dispatch-stat-item">
-              <span class="dispatch-stat-label"><i data-lucide="wallet" style="width:14px;height:14px;color:var(--text-evergreen);"></i> Escrow Payout upon Delivery</span>
+              <span class="dispatch-stat-label"><i data-lucide="wallet"
+                  style="width:14px;height:14px;color:var(--text-evergreen);"></i> Escrow Payout upon Delivery</span>
               <span class="dispatch-stat-val" style="color:var(--text-evergreen);font-weight:800;">₹5,60,000</span>
             </div>
           </div>
@@ -1020,7 +1097,8 @@
         <div class="section-header">
           <div class="section-title-wrap">
             <h2 data-i18n="sec_analytics"><span>📊</span> FPO Performance Analytics</h2>
-            <p data-i18n="sec_analytics_sub">Financial overview, member impact metrics, and aggregation volume trends.</p>
+            <p data-i18n="sec_analytics_sub">Financial overview, member impact metrics, and aggregation volume trends.
+            </p>
           </div>
           <div>
             <button class="btn btn-secondary btn-sm" onclick="showToast('Downloading FPO Performance Report (PDF)...')">
@@ -1035,35 +1113,44 @@
           <div class="metric-mini-card">
             <span class="metric-mini-label" data-i18n="metric_onboarded">Total Farmers Onboarded</span>
             <span class="metric-mini-value">248</span>
-            <span class="metric-mini-sub"><i data-lucide="arrow-up-right" style="width:13px;height:13px;display:inline;"></i> +24% YoY Growth</span>
+            <span class="metric-mini-sub"><i data-lucide="arrow-up-right"
+                style="width:13px;height:13px;display:inline;"></i> +24% YoY Growth</span>
           </div>
 
           <!-- Metric 2: Total Produce Sold -->
           <div class="metric-mini-card">
             <span class="metric-mini-label" data-i18n="metric_sold">Total Produce Sold</span>
-            <span class="metric-mini-value">89.2 <span style="font-size:0.95rem;color:var(--text-muted-sage);">Tons</span></span>
-            <span class="metric-mini-sub"><i data-lucide="arrow-up-right" style="width:13px;height:13px;display:inline;"></i> 92% Clearance Rate</span>
+            <span class="metric-mini-value">89.2 <span
+                style="font-size:0.95rem;color:var(--text-muted-sage);">Tons</span></span>
+            <span class="metric-mini-sub"><i data-lucide="arrow-up-right"
+                style="width:13px;height:13px;display:inline;"></i> 92% Clearance Rate</span>
           </div>
 
           <!-- Metric 3: Average Selling Price -->
           <div class="metric-mini-card">
             <span class="metric-mini-label" data-i18n="metric_avg_price">Average Selling Price</span>
-            <span class="metric-mini-value" style="color:var(--text-evergreen);">₹2,740<span style="font-size:0.85rem;color:var(--text-muted-sage);">/q</span></span>
-            <span class="metric-mini-sub"><i data-lucide="arrow-up-right" style="width:13px;height:13px;display:inline;"></i> +₹185/q vs Mandi</span>
+            <span class="metric-mini-value" style="color:var(--text-evergreen);">₹2,740<span
+                style="font-size:0.85rem;color:var(--text-muted-sage);">/q</span></span>
+            <span class="metric-mini-sub"><i data-lucide="arrow-up-right"
+                style="width:13px;height:13px;display:inline;"></i> +₹185/q vs Mandi</span>
           </div>
 
           <!-- Metric 4: Revenue Generated -->
           <div class="metric-mini-card">
             <span class="metric-mini-label" data-i18n="metric_revenue">Revenue Generated</span>
-            <span class="metric-mini-value">₹24.5 <span style="font-size:0.95rem;color:var(--text-muted-sage);">Lakh</span></span>
-            <span class="metric-mini-sub"><i data-lucide="check-circle" style="width:13px;height:13px;display:inline;"></i> 100% Disbursed</span>
+            <span class="metric-mini-value">₹24.5 <span
+                style="font-size:0.95rem;color:var(--text-muted-sage);">Lakh</span></span>
+            <span class="metric-mini-sub"><i data-lucide="check-circle"
+                style="width:13px;height:13px;display:inline;"></i> 100% Disbursed</span>
           </div>
 
           <!-- Metric 5: Farmers' Price Improvement -->
           <div class="metric-mini-card" style="border-color:var(--border-sage);background:var(--bg-pale-sage);">
-            <span class="metric-mini-label" data-i18n="metric_improvement" style="color:var(--text-evergreen);">Price Improvement</span>
+            <span class="metric-mini-label" data-i18n="metric_improvement" style="color:var(--text-evergreen);">Price
+              Improvement</span>
             <span class="metric-mini-value" style="color:var(--sage-green-dark);">+14.2%</span>
-            <span class="metric-mini-sub" style="color:var(--text-charcoal);font-weight:700;">Higher Net Realization</span>
+            <span class="metric-mini-sub" style="color:var(--text-charcoal);font-weight:700;">Higher Net
+              Realization</span>
           </div>
         </div>
 
@@ -1072,7 +1159,8 @@
           <!-- Revenue & Volume Chart -->
           <div class="glass-card chart-card-tall" style="background:#FAFAF6;border:1px solid var(--border-card);">
             <h3 class="card-title" style="font-size:1.1rem;margin-bottom:0.25rem;">
-              <i data-lucide="trending-up" style="width:16px;height:16px;color:var(--sage-green);"></i> Monthly Aggregation Volume & Revenue (2026)
+              <i data-lucide="trending-up" style="width:16px;height:16px;color:var(--sage-green);"></i> Monthly
+              Aggregation Volume & Revenue (2026)
             </h3>
             <p class="card-subtitle" style="margin-bottom:1rem;">Tons aggregated vs Total realization in Lakhs</p>
             <div style="height:220px;position:relative;">
@@ -1083,7 +1171,8 @@
           <!-- Crop Distribution Doughnut -->
           <div class="glass-card chart-card-tall" style="background:#FAFAF6;border:1px solid var(--border-card);">
             <h3 class="card-title" style="font-size:1.1rem;margin-bottom:0.25rem;">
-              <i data-lucide="pie-chart" style="width:16px;height:16px;color:var(--warm-amber);"></i> Commodity Share Breakdown
+              <i data-lucide="pie-chart" style="width:16px;height:16px;color:var(--warm-amber);"></i> Commodity Share
+              Breakdown
             </h3>
             <p class="card-subtitle" style="margin-bottom:1rem;">Share of 128.5 Tons aggregated</p>
             <div style="height:220px;position:relative;">
@@ -1183,7 +1272,8 @@
         </div>
 
         <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
-          <button type="button" class="btn btn-secondary" style="flex:1;" onclick="closeModal('addFarmerModal')">Cancel</button>
+          <button type="button" class="btn btn-secondary" style="flex:1;"
+            onclick="closeModal('addFarmerModal')">Cancel</button>
           <button type="submit" class="btn btn-primary" style="flex:1;">Save Farmer Record</button>
         </div>
       </form>
@@ -1211,31 +1301,42 @@
         <button class="close-btn" onclick="closeModal('aiForecastModal')"><i data-lucide="x"></i></button>
       </div>
       <div>
-        <div style="background:var(--bg-amber-light);border:1px solid var(--border-amber);border-radius:var(--radius-md);padding:1.25rem;margin-bottom:1.25rem;">
-          <div style="display:flex;align-items:center;gap:0.5rem;color:var(--text-evergreen);font-weight:700;font-size:0.9rem;margin-bottom:0.35rem;">
-            <i data-lucide="trending-up" style="width:16px;height:16px;color:var(--warm-amber);"></i> High Demand Window: Next 14 Days
+        <div
+          style="background:var(--bg-amber-light);border:1px solid var(--border-amber);border-radius:var(--radius-md);padding:1.25rem;margin-bottom:1.25rem;">
+          <div
+            style="display:flex;align-items:center;gap:0.5rem;color:var(--text-evergreen);font-weight:700;font-size:0.9rem;margin-bottom:0.35rem;">
+            <i data-lucide="trending-up" style="width:16px;height:16px;color:var(--warm-amber);"></i> High Demand
+            Window: Next 14 Days
           </div>
           <p style="font-size:0.88rem;color:var(--text-charcoal);line-height:1.5;">
-            Our neural market model projects a <strong>+7.2% surge</strong> in Wheat demand across Pune and Mumbai wholesale hubs due to festive milling stockups.
+            Our neural market model projects a <strong>+7.2% surge</strong> in Wheat demand across Pune and Mumbai
+            wholesale hubs due to festive milling stockups.
           </p>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
-          <div style="background:var(--bg-card-alt);border:1px solid var(--border-light);padding:1rem;border-radius:var(--radius-sm);">
-            <div style="font-size:0.75rem;color:var(--text-muted-sage);text-transform:uppercase;font-weight:600;">Optimal Selling Hub</div>
-            <div style="font-size:1.15rem;font-weight:700;color:var(--text-charcoal);margin-top:0.25rem;">Pune Mega Food Park</div>
+          <div
+            style="background:var(--bg-card-alt);border:1px solid var(--border-light);padding:1rem;border-radius:var(--radius-sm);">
+            <div style="font-size:0.75rem;color:var(--text-muted-sage);text-transform:uppercase;font-weight:600;">
+              Optimal Selling Hub</div>
+            <div style="font-size:1.15rem;font-weight:700;color:var(--text-charcoal);margin-top:0.25rem;">Pune Mega Food
+              Park</div>
             <div style="font-size:0.8rem;color:var(--sage-green-dark);">Distance: 185 km • Fast NH-60</div>
           </div>
-          <div style="background:var(--bg-card-alt);border:1px solid var(--border-light);padding:1rem;border-radius:var(--radius-sm);">
-            <div style="font-size:0.75rem;color:var(--text-muted-sage);text-transform:uppercase;font-weight:600;">Predicted Price Band</div>
-            <div style="font-size:1.15rem;font-weight:700;color:var(--text-evergreen);margin-top:0.25rem;">₹2,750 – ₹2,850/q</div>
+          <div
+            style="background:var(--bg-card-alt);border:1px solid var(--border-light);padding:1rem;border-radius:var(--radius-sm);">
+            <div style="font-size:0.75rem;color:var(--text-muted-sage);text-transform:uppercase;font-weight:600;">
+              Predicted Price Band</div>
+            <div style="font-size:1.15rem;font-weight:700;color:var(--text-evergreen);margin-top:0.25rem;">₹2,750 –
+              ₹2,850/q</div>
             <div style="font-size:0.8rem;color:var(--text-muted-sage);">Baseline: ₹2,620/q</div>
           </div>
         </div>
 
         <div style="display:flex;gap:0.75rem;">
           <button class="btn btn-secondary" style="flex:1;" onclick="closeModal('aiForecastModal')">Close</button>
-          <button class="btn btn-gold" style="flex:1;" onclick="closeModal('aiForecastModal'); openFindBuyersModal('Wheat', '25 Tons', '₹2,800/q');">
+          <button class="btn btn-gold" style="flex:1;"
+            onclick="closeModal('aiForecastModal'); openFindBuyersModal('Wheat', '25 Tons', '₹2,800/q');">
             Match Buyers for this Forecast
           </button>
         </div>
@@ -1259,4 +1360,5 @@
     }
   </script>
 </body>
+
 </html>

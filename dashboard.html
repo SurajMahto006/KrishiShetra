@@ -185,18 +185,17 @@
       </div>
     </section>
 
-    <!-- ── 1.2 DAILY KISAN AI ADVICE BANNER WITH AUDIO READ-ALOUD ── -->
+    <!-- ── 1.2 DAILY KISAN AI ADVICE (Decision Support) ── -->
     <section class="dash-section" style="padding-top: 14px; padding-bottom: 0;" id="section-daily-tip">
       <div class="container">
         <div class="dash-ai-advice-card" id="kisan-daily-tip-banner">
           <div class="dash-ai-advice-header">
             <div class="dash-ai-advice-tag-row">
               <span class="dash-ai-advice-badge" id="kisan-tip-badge">
-                <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i>
-                Daily AI Advice
+                <span class="dash-ai-badge-icon">🌾</span> Daily AI Advice
               </span>
               <span class="dash-ai-advice-live" id="kisan-tip-date">
-                <span class="dash-ai-live-dot"></span> Live AI
+                <span class="dash-ai-live-dot"></span> LIVE AI
               </span>
               <span class="dash-ai-advice-update">• Updated today for Western Maharashtra</span>
             </div>
@@ -209,53 +208,36 @@
 
           <div class="dash-ai-advice-body">
             <h2 class="dash-ai-advice-headline" id="kisan-tip-text">
-              Tomato prices are showing an upward trend across nearby markets. Holding a portion of the harvest may improve returns if storage capacity is available.
+              Your tomato harvest is approaching dispatch readiness. Mandi prices are showing a positive trend across nearby hubs.
             </h2>
-            <p class="dash-ai-advice-insight">
-              <strong>Market Insight:</strong> APMC arrivals from regional belts are tapering off by 18% this week, creating an opportunity for a +₹70 to +₹120/q premium over the next 5 to 7 days for Grade A lots.
-            </p>
           </div>
 
-          <!-- 4 Supporting Indicators -->
-          <div class="dash-ai-indicators-grid">
-            <div class="dash-ai-indicator-chip">
-              <div class="dash-ai-chip-label">
-                <i data-lucide="trending-up" style="width: 13px; height: 13px; color: #8FCB9B;"></i> Market Trend
+          <!-- Structured Decision Support: Market vs Recommendation -->
+          <div class="dash-ai-decision-row">
+            <div class="dash-ai-decision-box dash-ai-decision-box--market">
+              <div class="dash-ai-decision-label">
+                <i data-lucide="trending-up" style="width: 14px; height: 14px;"></i> MARKET
               </div>
-              <div class="dash-ai-chip-value">Upward (+4.2%)</div>
-              <div class="dash-ai-chip-sub">Rising across Vashi & Nashik</div>
+              <div class="dash-ai-decision-desc">
+                Mandi prices are showing an upward trend (+4.2%). Regional arrivals are tapering off by 18%, offering a +₹70 to +₹120/q premium for Grade A lots.
+              </div>
             </div>
 
-            <div class="dash-ai-indicator-chip">
-              <div class="dash-ai-chip-label">
-                <i data-lucide="banknote" style="width: 13px; height: 13px; color: #D6A84F;"></i> Price Movement
+            <div class="dash-ai-decision-box dash-ai-decision-box--rec">
+              <div class="dash-ai-decision-label">
+                <i data-lucide="lightbulb" style="width: 14px; height: 14px;"></i> RECOMMENDATION
               </div>
-              <div class="dash-ai-chip-value">₹2,850 → ₹2,920/q</div>
-              <div class="dash-ai-chip-sub">+₹70/q in last 48 hours</div>
-            </div>
-
-            <div class="dash-ai-indicator-chip">
-              <div class="dash-ai-chip-label">
-                <i data-lucide="warehouse" style="width: 13px; height: 13px; color: #60A5FA;"></i> Storage Opportunity
+              <div class="dash-ai-decision-desc">
+                Consider checking nearby buyer offers before dispatching, or hold in accredited cold storage (35 MT available at Vashi Hub · ₹2.6/kg/day).
               </div>
-              <div class="dash-ai-chip-value">35 MT Available</div>
-              <div class="dash-ai-chip-sub">Vashi Hub · ₹2.6/kg/day</div>
-            </div>
-
-            <div class="dash-ai-indicator-chip">
-              <div class="dash-ai-chip-label">
-                <i data-lucide="shield-check" style="width: 13px; height: 13px; color: #34D399;"></i> Buyer Demand
-              </div>
-              <div class="dash-ai-chip-value">High Institutional</div>
-              <div class="dash-ai-chip-sub">3 verified buyers active</div>
             </div>
           </div>
 
           <div class="dash-ai-advice-footer">
-            <div class="dash-ai-footer-note">
-              Recommendation generated using live mandi price momentum, regional arrival volumes, and accredited cold storage telemetry.
-            </div>
             <div class="dash-ai-footer-btns">
+              <a href="ai-forecast.html" class="btn btn--sm dash-ai-btn-view" id="btn-view-ai-advice">
+                <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> View AI Advice
+              </a>
               <a href="storage.html#tab-panel-calculator" class="dash-ai-action-link">
                 Compare Sell vs. Store <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
               </a>
@@ -1276,164 +1258,249 @@
   <!-- MODALS -->
   <!-- 1. MULTI-STEP CROP LOT CREATION WIZARD (8-Step Flow) -->
   <div class="dash-modal-overlay" id="create-lot-modal-overlay">
-    <div class="dash-modal dash-modal--lg" id="create-lot-modal" style="max-width: 680px;">
-      <div class="dash-modal__header">
-        <h3>+ Create New Crop Lot</h3>
-        <button class="dash-modal__close" id="create-lot-modal-close" aria-label="Close"><i
-            data-lucide="x"></i></button>
+    <div class="dash-modal dash-modal--lg lot-wizard-modal" id="create-lot-modal">
+      <div class="dash-modal__header lot-wizard-header">
+        <div>
+          <h3 class="lot-wizard-title">+ Create New Crop Lot</h3>
+          <p class="lot-wizard-subtitle">Add your crop details to find the right buyer.</p>
+        </div>
+        <button type="button" class="dash-modal__close" id="create-lot-modal-close" aria-label="Close"><i data-lucide="x"></i></button>
       </div>
 
-      <!-- 8-Step Stepper Progress Bar -->
-      <div class="lot-wizard-stepper" id="lot-wizard-stepper">
-        <div class="lot-wizard-step active" data-step="1">
-          <div class="lot-wizard-step-node">1</div>
-          <div class="lot-wizard-step-label">Crop</div>
-        </div>
-        <div class="lot-wizard-step" data-step="2">
-          <div class="lot-wizard-step-node">2</div>
-          <div class="lot-wizard-step-label">Qty</div>
-        </div>
-        <div class="lot-wizard-step" data-step="3">
-          <div class="lot-wizard-step-node">3</div>
-          <div class="lot-wizard-step-label">Grade</div>
-        </div>
-        <div class="lot-wizard-step" data-step="4">
-          <div class="lot-wizard-step-node">4</div>
-          <div class="lot-wizard-step-label">Farm</div>
-        </div>
-        <div class="lot-wizard-step" data-step="5">
-          <div class="lot-wizard-step-node">5</div>
-          <div class="lot-wizard-step-label">Price</div>
-        </div>
-        <div class="lot-wizard-step" data-step="6">
-          <div class="lot-wizard-step-node">6</div>
-          <div class="lot-wizard-step-label">Dates</div>
-        </div>
-        <div class="lot-wizard-step" data-step="7">
-          <div class="lot-wizard-step-node">7</div>
-          <div class="lot-wizard-step-label">Specs</div>
-        </div>
-        <div class="lot-wizard-step" data-step="8">
-          <div class="lot-wizard-step-node">8</div>
-          <div class="lot-wizard-step-label">Publish</div>
+      <!-- Compact Horizontal Progress Indicator -->
+      <div class="lot-wizard-stepper-container">
+        <div class="lot-wizard-stepper" id="lot-wizard-stepper">
+          <div class="lot-wizard-step active" data-step="1">
+            <span class="lot-wizard-step-node">1</span>
+            <span class="lot-wizard-step-label">Crop</span>
+          </div>
+          <span class="lot-wizard-step-arrow">→</span>
+          <div class="lot-wizard-step" data-step="2">
+            <span class="lot-wizard-step-node">2</span>
+            <span class="lot-wizard-step-label">Quantity</span>
+          </div>
+          <span class="lot-wizard-step-arrow">→</span>
+          <div class="lot-wizard-step" data-step="3">
+            <span class="lot-wizard-step-node">3</span>
+            <span class="lot-wizard-step-label">Quality</span>
+          </div>
+          <span class="lot-wizard-step-arrow">→</span>
+          <div class="lot-wizard-step" data-step="4">
+            <span class="lot-wizard-step-node">4</span>
+            <span class="lot-wizard-step-label">Farm</span>
+          </div>
+          <span class="lot-wizard-step-arrow">→</span>
+          <div class="lot-wizard-step" data-step="5">
+            <span class="lot-wizard-step-node">5</span>
+            <span class="lot-wizard-step-label">Price</span>
+          </div>
+          <span class="lot-wizard-step-arrow">→</span>
+          <div class="lot-wizard-step" data-step="6">
+            <span class="lot-wizard-step-node">6</span>
+            <span class="lot-wizard-step-label">Dates</span>
+          </div>
+          <span class="lot-wizard-step-arrow">→</span>
+          <div class="lot-wizard-step" data-step="7">
+            <span class="lot-wizard-step-node">7</span>
+            <span class="lot-wizard-step-label">Details</span>
+          </div>
+          <span class="lot-wizard-step-arrow">→</span>
+          <div class="lot-wizard-step" data-step="8">
+            <span class="lot-wizard-step-node">8</span>
+            <span class="lot-wizard-step-label">Publish</span>
+          </div>
         </div>
       </div>
 
-      <form id="create-lot-form">
-        <!-- Step 1: Crop Selection -->
-        <div class="lot-wizard-pane active" id="wizard-pane-1">
-          <label
-            style="font-weight:700; color:var(--ks-evergreen); font-size:14px; display:block; margin-bottom:6px;">Choose
-            Your Crop:</label>
-          <div class="lot-crop-chips-grid">
-            <div class="lot-crop-chip selected" data-crop="tomato">
-              <div class="lot-crop-chip-icon">🍅</div>
-              <div class="lot-crop-chip-name">Tomato</div>
-              <div class="lot-crop-chip-price">₹2,400/q</div>
+      <form id="create-lot-form" class="lot-wizard-form">
+        <div class="lot-wizard-body">
+          <!-- Step 1: Crop Selection -->
+          <div class="lot-wizard-pane active" id="wizard-pane-1">
+            <div class="lot-step-prompt">Choose Your Crop</div>
+            <div class="lot-step-hint">Select the agricultural commodity you want to sell:</div>
+            <div class="lot-crop-chips-grid">
+              <div class="lot-crop-chip selected" data-crop="tomato">
+                <div class="lot-crop-chip-icon">🍅</div>
+                <div class="lot-crop-chip-name">Tomato</div>
+                <div class="lot-crop-chip-price">₹2,400/q</div>
+              </div>
+              <div class="lot-crop-chip" data-crop="rice">
+                <div class="lot-crop-chip-icon">🌾</div>
+                <div class="lot-crop-chip-name">Rice</div>
+                <div class="lot-crop-chip-price">₹2,850/q</div>
+              </div>
+              <div class="lot-crop-chip" data-crop="wheat">
+                <div class="lot-crop-chip-icon">🌾</div>
+                <div class="lot-crop-chip-name">Wheat</div>
+                <div class="lot-crop-chip-price">₹2,650/q</div>
+              </div>
+              <div class="lot-crop-chip" data-crop="onion">
+                <div class="lot-crop-chip-icon">🧅</div>
+                <div class="lot-crop-chip-name">Onion</div>
+                <div class="lot-crop-chip-price">₹2,850/q</div>
+              </div>
+              <div class="lot-crop-chip" data-crop="soybean">
+                <div class="lot-crop-chip-icon">🫘</div>
+                <div class="lot-crop-chip-name">Soybean</div>
+                <div class="lot-crop-chip-price">₹4,650/q</div>
+              </div>
+              <div class="lot-crop-chip" data-crop="potato">
+                <div class="lot-crop-chip-icon">🥔</div>
+                <div class="lot-crop-chip-name">Potato</div>
+                <div class="lot-crop-chip-price">₹1,800/q</div>
+              </div>
+              <div class="lot-crop-chip" data-crop="chilli">
+                <div class="lot-crop-chip-icon">🌶️</div>
+                <div class="lot-crop-chip-name">Chilli</div>
+                <div class="lot-crop-chip-price">₹8,500/q</div>
+              </div>
+              <div class="lot-crop-chip" data-crop="cotton">
+                <div class="lot-crop-chip-icon">☁️</div>
+                <div class="lot-crop-chip-name">Cotton</div>
+                <div class="lot-crop-chip-price">₹6,800/q</div>
+              </div>
+              <div class="lot-crop-chip" data-crop="maize">
+                <div class="lot-crop-chip-icon">🌽</div>
+                <div class="lot-crop-chip-name">Maize</div>
+                <div class="lot-crop-chip-price">₹2,300/q</div>
+              </div>
+              <div class="lot-crop-chip" data-crop="pulses">
+                <div class="lot-crop-chip-icon">🥣</div>
+                <div class="lot-crop-chip-name">Pulses</div>
+                <div class="lot-crop-chip-price">₹5,200/q</div>
+              </div>
             </div>
-            <div class="lot-crop-chip" data-crop="rice">
-              <div class="lot-crop-chip-icon">🌾</div>
-              <div class="lot-crop-chip-name">Rice</div>
-              <div class="lot-crop-chip-price">₹2,850/q</div>
+            <input type="hidden" id="wiz-crop-val" value="tomato">
+            <input type="hidden" id="lot-crop-select" value="tomato">
+          </div>
+
+          <!-- Step 2: Available Quantity -->
+          <div class="lot-wizard-pane" id="wizard-pane-2">
+            <div class="lot-step-prompt">Quantity & Crop Variety</div>
+            <div class="lot-step-hint">Specify your harvest volume for bulk or lot aggregation:</div>
+            <div class="dash-modal__field">
+              <label for="wiz-qty-input" class="dash-field-label">Available Harvest Quantity <span style="color:#C62828;">*</span></label>
+              <div class="dash-input-group">
+                <input type="number" id="wiz-qty-input" class="dash-form-input dash-form-input--lg" placeholder="e.g. 25" min="1" max="10000" value="25" required>
+                <span class="dash-input-addon">Quintals</span>
+              </div>
+              <input type="hidden" id="lot-qty-input" value="25">
+              <div class="dash-field-sub">1 Quintal = 100 kg · 10 Quintals = 1 Metric Tonne</div>
             </div>
-            <div class="lot-crop-chip" data-crop="wheat">
-              <div class="lot-crop-chip-icon">🌾</div>
-              <div class="lot-crop-chip-name">Wheat</div>
-              <div class="lot-crop-chip-price">₹2,650/q</div>
-            </div>
-            <div class="lot-crop-chip" data-crop="onion">
-              <div class="lot-crop-chip-icon">🧅</div>
-              <div class="lot-crop-chip-name">Onion</div>
-              <div class="lot-crop-chip-price">₹2,850/q</div>
-            </div>
-            <div class="lot-crop-chip" data-crop="soybean">
-              <div class="lot-crop-chip-icon">🫘</div>
-              <div class="lot-crop-chip-name">Soybean</div>
-              <div class="lot-crop-chip-price">₹4,650/q</div>
-            </div>
-            <div class="lot-crop-chip" data-crop="potato">
-              <div class="lot-crop-chip-icon">🥔</div>
-              <div class="lot-crop-chip-name">Potato</div>
-              <div class="lot-crop-chip-price">₹1,800/q</div>
-            </div>
-            <div class="lot-crop-chip" data-crop="chilli">
-              <div class="lot-crop-chip-icon">🌶️</div>
-              <div class="lot-crop-chip-name">Chilli</div>
-              <div class="lot-crop-chip-price">₹8,500/q</div>
-            </div>
-            <div class="lot-crop-chip" data-crop="cotton">
-              <div class="lot-crop-chip-icon">☁️</div>
-              <div class="lot-crop-chip-name">Cotton</div>
-              <div class="lot-crop-chip-price">₹6,800/q</div>
-            </div>
-            <div class="lot-crop-chip" data-crop="maize">
-              <div class="lot-crop-chip-icon">🌽</div>
-              <div class="lot-crop-chip-name">Maize</div>
-              <div class="lot-crop-chip-price">₹2,300/q</div>
-            </div>
-            <div class="lot-crop-chip" data-crop="pulses">
-              <div class="lot-crop-chip-icon">🥣</div>
-              <div class="lot-crop-chip-name">Pulses</div>
-              <div class="lot-crop-chip-price">₹5,200/q</div>
+            <div class="dash-modal__field" style="margin-top: 14px;">
+              <label for="wiz-variety-input" class="dash-field-label">Crop Variety (Optional)</label>
+              <input type="text" id="wiz-variety-input" class="dash-form-input" placeholder="e.g. Lokwan / Sharbati / Desi / Hybrid" value="Tomato (Grade A Premium)">
             </div>
           </div>
-          <input type="hidden" id="wiz-crop-val" value="tomato">
+
+          <!-- Step 3: Quality / Grade & Certification -->
+          <div class="lot-wizard-pane" id="wizard-pane-3">
+            <div class="lot-step-prompt">Quality Grade & Sorting</div>
+            <div class="lot-step-hint">Select the quality classification for institutional buyers:</div>
+            <div class="dash-modal__field">
+              <label for="wiz-grade-select" class="dash-field-label">Quality Grade <span style="color:#C62828;">*</span></label>
+              <select id="wiz-grade-select" class="dash-filter-select dash-form-input--lg">
+                <option value="Grade A" selected>Grade A (Premium / Clean / High Sortex)</option>
+                <option value="Grade B">Grade B (FAQ Commercial Standard)</option>
+                <option value="Export Quality">Export Quality (Global GAP / MRL Tested)</option>
+                <option value="Organic Certified">Organic Certified (NPOP / Jaivik Bharat)</option>
+              </select>
+              <input type="hidden" id="lot-grade-select" value="Grade A">
+            </div>
+            <div class="dash-modal__field" style="margin-top: 14px;">
+              <label for="wiz-cert-input" class="dash-field-label">Certification or Lab Test (Optional)</label>
+              <input type="text" id="wiz-cert-input" class="dash-form-input" placeholder="e.g. AGMARK A-Grade / Spices Board Verified / Organic NPOP">
+            </div>
+          </div>
+
+          <!-- Step 4: Farm Location & Dispatch Hub -->
+          <div class="lot-wizard-pane" id="wizard-pane-4">
+            <div class="lot-step-prompt">Farm Origin & Dispatch Hub</div>
+            <div class="lot-step-hint">Where should the buyer or transporter pick up your lot?</div>
+            <div class="dash-modal__field">
+              <label for="wiz-location-input" class="dash-field-label">Farm Village / Dispatch Hub <span style="color:#C62828;">*</span></label>
+              <input type="text" id="wiz-location-input" class="dash-form-input dash-form-input--lg" value="Nashik, Maharashtra" placeholder="Village, Taluka, District, State" required>
+              <input type="hidden" id="lot-location-input" value="Nashik, Maharashtra">
+            </div>
+            <div class="dash-modal__field" style="margin-top: 14px;">
+              <label for="wiz-pincode-input" class="dash-field-label">Pincode (6 Digits)</label>
+              <input type="text" id="wiz-pincode-input" class="dash-form-input" value="422003" maxlength="6" placeholder="e.g. 422003">
+              <div class="dash-field-sub">Enables automatic distance calculation to mandis and verified buyers</div>
+            </div>
+          </div>
+
+          <!-- Step 5: Expected Price -->
+          <div class="lot-wizard-pane" id="wizard-pane-5">
+            <div class="lot-step-prompt">Expected Base Price</div>
+            <div class="lot-step-hint">Set your expected price. Buyers can bid or accept your rate:</div>
+            <div class="dash-modal__field">
+              <label for="wiz-price-input" class="dash-field-label">Expected Base Price (₹/Quintal) <span style="color:#C62828;">*</span></label>
+              <div class="dash-input-group">
+                <span class="dash-input-prefix">₹</span>
+                <input type="number" id="wiz-price-input" class="dash-form-input dash-form-input--lg" placeholder="e.g. 2850" min="100" value="2850" required>
+                <span class="dash-input-addon">/ quintal</span>
+              </div>
+              <input type="hidden" id="lot-price-input" value="2850">
+              <div class="dash-field-sub">KrishiShetra guarantees 100% Escrow deposit before truck dispatch</div>
+            </div>
+          </div>
+
+          <!-- Step 6: Dates & Dispatch Window -->
+          <div class="lot-wizard-pane" id="wizard-pane-6">
+            <div class="lot-step-prompt">Harvest & Dispatch Window</div>
+            <div class="lot-step-hint">When is this crop available for pickup or delivery?</div>
+            <div class="dash-form-row">
+              <div class="dash-modal__field">
+                <label for="wiz-harvest-date" class="dash-field-label">Harvest Date</label>
+                <input type="date" id="wiz-harvest-date" class="dash-form-input">
+                <input type="hidden" id="lot-harvest-input">
+              </div>
+              <div class="dash-modal__field">
+                <label for="wiz-available-until" class="dash-field-label">Available Until (Deadline)</label>
+                <input type="date" id="wiz-available-until" class="dash-form-input">
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 7: Crop Details & Specifications -->
+          <div class="lot-wizard-pane" id="wizard-pane-7">
+            <div class="lot-step-prompt">Produce Specifications</div>
+            <div class="lot-step-hint">Add any details about cleaning, moisture, sorting, or packaging:</div>
+            <div class="dash-modal__field">
+              <label for="wiz-desc-input" class="dash-field-label">Description / Moisture / Packaging Notes</label>
+              <textarea id="wiz-desc-input" class="dash-form-textarea" rows="3" placeholder="e.g. Machine cleaned and sorted, packed in 50 kg gunny bags, moisture under 11%, pesticide-free farm produce.">Fresh harvest, machine cleaned and sorted Grade A lot.</textarea>
+              <input type="hidden" id="lot-desc-input" value="Fresh harvest, machine cleaned and sorted Grade A lot.">
+            </div>
+          </div>
+
+          <!-- Step 8: Review & Publish -->
+          <div class="lot-wizard-pane" id="wizard-pane-8">
+            <div class="lot-step-prompt">Review Your Crop Lot</div>
+            <div class="lot-step-hint">Confirm all details before publishing to verified institutional buyers:</div>
+            <div class="lot-wizard-preview-card" id="wiz-summary-preview">
+              <!-- Rendered dynamically by renderWizardSummary() -->
+            </div>
+            <div class="lot-publish-guarantee">
+              <i data-lucide="shield-check" style="width: 16px; height: 16px; color: #2E7D32; flex-shrink: 0;"></i>
+              <span><strong>Kisan Protection:</strong> 100% Escrow deposit required by buyer before loading. Verified weight and prompt settlement.</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Step 2: Available Quantity -->
-        <div class="lot-wizard-pane" id="wizard-pane-2">
-          <div class="dash-modal__field">
-            <label for="lot-qty-input">Quantity (Quintals)</label>
-            <input type="number" id="lot-qty-input" class="dash-form-input" placeholder="e.g. 25" min="1" max="10000"
-              required>
-          </div>
-          <div class="dash-modal__field">
-            <label for="lot-price-input">Expected Price (₹/q)</label>
-            <input type="number" id="lot-price-input" class="dash-form-input" placeholder="e.g. 3000" min="100"
-              required>
-          </div>
-        </div>
-
-        <!-- Step 3: Quality / Grade & Certification -->
-        <div class="lot-wizard-pane" id="wizard-pane-3">
-          <div class="dash-modal__field">
-            <label for="wiz-grade-select">Quality Grade</label>
-            <select id="wiz-grade-select" class="dash-filter-select">
-              <option value="Grade A" selected>Grade A (Premium / Clean / High Sortex)</option>
-              <option value="Grade B">Grade B (FAQ Commercial Standard)</option>
-              <option value="Export Quality">Export Quality (Global GAP / MRL Tested)</option>
-              <option value="Organic Certified">Organic Certified (NPOP / Jaivik Bharat)</option>
-            </select>
-          </div>
-          <div class="dash-modal__field">
-            <label for="wiz-cert-input">Certification or Lab Test (Optional)</label>
-            <input type="text" id="wiz-cert-input" class="dash-form-input"
-              placeholder="e.g. AGMARK A-Grade / Spices Board Verified / Organic NPOP-2026">
+        <!-- Fixed Footer Actions -->
+        <div class="lot-wizard-footer">
+          <button type="button" class="btn btn--secondary" id="wiz-btn-prev" style="visibility: hidden;">
+            <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> Back
+          </button>
+          <div class="lot-wizard-footer-right">
+            <button type="button" class="btn btn--primary" id="wiz-btn-next">
+              Continue <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </button>
+            <button type="submit" class="btn btn--gold" id="wiz-btn-publish" style="display: none;">
+              <i data-lucide="check-circle-2" style="width: 16px; height: 16px;"></i> Publish Crop Lot
+            </button>
           </div>
         </div>
-        <div class="dash-modal__field">
-          <label for="lot-location-input">Farm Location / Mandi</label>
-          <input type="text" id="lot-location-input" class="dash-form-input" value="Pune, Maharashtra"
-            placeholder="Village, Taluka, District" required>
-        </div>
-        <div class="dash-form-row">
-          <div class="dash-modal__field">
-            <label for="wiz-location-input">Farm Village / Dispatch Hub</label>
-            <input type="text" id="wiz-location-input" class="dash-form-input" value="Nashik, Maharashtra"
-              placeholder="Village, Taluka, District, State" required>
-          </div>
-          <div class="dash-modal__field">
-            <label for="wiz-pincode-input">Pincode (For automatic buyer & transporter distance calculation)</label>
-            <input type="text" id="wiz-pincode-input" class="dash-form-input" value="422003" maxlength="6">
-          </div>
-        </div>
-        <div class="dash-modal__field">
-          <label for="lot-desc-input">Description / Moisture / Variety</label>
-          <textarea id="lot-desc-input" class="dash-form-textarea" rows="2"
-            placeholder="e.g. Basmati variety, moisture below 10%, clean machine cleaned grain."></textarea>
-        </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-submit-lot"><i
-            data-lucide="check"></i> Create & List Lot</button>
       </form>
     </div>
   </div>

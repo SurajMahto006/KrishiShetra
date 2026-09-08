@@ -1226,6 +1226,13 @@ function openCreateLotModal(cropId = 'rice') {
   if (select && cropId) select.value = cropId;
   const dateInput = document.getElementById('lot-harvest-input');
   if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+  if (typeof goToWizardStep === 'function') {
+    goToWizardStep(1);
+    if (cropId) {
+      const chip = document.querySelector(`.lot-crop-chip[data-crop="${cropId}"]`);
+      if (chip) chip.click();
+    }
+  }
   openModal('create-lot-modal-overlay');
 }
 
