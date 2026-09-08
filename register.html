@@ -268,7 +268,7 @@
       const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
       const API_BASE = (typeof window.resolveApiBaseUrl === 'function'
         ? window.resolveApiBaseUrl()
-        : (window.API_BASE_URL || (isLocal ? 'http://127.0.0.1:5000/api' : 'https://krishishetra-1.onrender.com/api'))).replace(/\/+$/, '');
+        : (window.API_BASE_URL || (window.location && window.location.origin && !isLocal ? `${window.location.origin}/api` : 'http://127.0.0.1:5000/api'))).replace(/\/+$/, '');
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');

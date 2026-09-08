@@ -302,7 +302,7 @@ const Auth = {
           ? window.resolveApiBaseUrl()
           : (typeof window !== 'undefined' && window.API_BASE_URL
               ? window.API_BASE_URL.replace(/\/+$/, '')
-              : (isLocal ? 'http://127.0.0.1:5000/api' : 'https://krishishetra-1.onrender.com/api'));
+              : (typeof window !== 'undefined' && window.location && window.location.origin && !isLocal ? `${window.location.origin}/api` : 'http://127.0.0.1:5000/api'));
         const res = await fetch(`${apiBase}/auth/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });

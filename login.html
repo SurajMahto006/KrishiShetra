@@ -372,7 +372,7 @@
       const isLocal = window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
       const API_BASE = (typeof window.resolveApiBaseUrl === 'function'
         ? window.resolveApiBaseUrl()
-        : (window.API_BASE_URL || (isLocal ? 'http://127.0.0.1:5000/api' : 'https://krishishetra-1.onrender.com/api'))).replace(/\/+$/, '');
+        : (window.API_BASE_URL || (window.location && window.location.origin && !isLocal ? `${window.location.origin}/api` : 'http://127.0.0.1:5000/api'))).replace(/\/+$/, '');
 
       // Elements
       const tabsContainer = document.getElementById('auth-tabs-container');
@@ -734,7 +734,7 @@
           console.error('[Login Network Error]:', err);
           btnLogin.disabled = false;
           btnLogin.innerHTML = '<span id="btn-login-text">Log In</span> <span class="auth-btn-arrow">→</span>';
-          showAlert(loginAlert, 'Unable to connect to KrishiShetra server (http://127.0.0.1:5000). Please make sure the backend server is running.');
+          showAlert(loginAlert, 'Unable to connect to KrishiShetra server. Please check your network connection or make sure the backend is reachable.');
         }
       });
 

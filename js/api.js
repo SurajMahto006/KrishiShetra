@@ -7,23 +7,28 @@
 /**
  * Production and Development API Endpoints
  */
-const PROD_API_URL = 'https://krishishetra-1.onrender.com/api';
+const PROD_API_URL = typeof window !== 'undefined' && window.location && window.location.origin && !window.location.origin.includes('127.0.0.1') && !window.location.origin.includes('localhost')
+  ? `${window.location.origin}/api`
+  : 'https://krishishetra-1.onrender.com/api';
 const DEV_API_URL = 'http://127.0.0.1:5000/api';
 
 /**
- * Resolves API Base URL dynamically from window.API_BASE_URL, local storage override, or environment.
- * In local development, always resolves to 127.0.0.1:5000/api to avoid IPv6 (::1) localhost issues.
+ * Resolves API Base URL dynamically from window.API_BASE_URL, current origin, or environment.
+ * In local development (port 5500, file:, etc.), targets 127.0.0.1:5000/api.
+ * In production/Render/hosted environments, automatically targets current origin /api.
  */
 function resolveApiBaseUrl() {
   if (typeof window !== 'undefined') {
     const hostname = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : '';
     const protocol = (window.location && window.location.protocol) ? window.location.protocol : '';
-    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.') || hostname.startsWith('10.') || protocol === 'file:' || hostname === '';
+    const port = (window.location && window.location.port) ? window.location.port : '';
+    const isFile = protocol === 'file:' || hostname === '';
+    const isLocalDevServer = (hostname === 'localhost' || hostname === '127.0.0.1') && (port === '5500' || port === '3000' || port === '8080');
 
     // 1. Explicit runtime override takes highest priority
     if (window.API_BASE_URL) {
       let url = window.API_BASE_URL.replace(/\/+$/, '');
-      if (isLocal && url.includes('localhost:5000')) {
+      if ((isFile || isLocalDevServer) && url.includes('localhost:5000')) {
         url = url.replace('localhost:5000', '127.0.0.1:5000');
       }
       return url;
@@ -33,23 +38,25 @@ function resolveApiBaseUrl() {
     const stored = localStorage.getItem('krishi_api_base_url');
     if (stored) {
       let url = stored.replace(/\/+$/, '');
-      if (isLocal && url.includes('localhost:5000')) {
-        url = url.replace('localhost:5000', '127.0.0.1:5000');
-        try { localStorage.setItem('krishi_api_base_url', url); } catch (e) {}
+      // Clear legacy dead URLs
+      if (url.includes('krishishetra-1.onrender.com') && window.location && window.location.origin && !window.location.origin.includes('krishishetra-1.onrender.com')) {
+        try { localStorage.removeItem('krishi_api_base_url'); } catch (e) {}
+      } else {
+        return url;
       }
-      return url;
     }
 
-    // 3. Localhost / Local development detection
-    if (isLocal) {
+    // 3. Local standalone frontend servers (Live Server 5500, file:, etc.)
+    if (isFile || isLocalDevServer) {
       return DEV_API_URL;
     }
 
-    // 4. Default for production / hosted deployments (Render static site, Vercel, etc.)
-    if (window.location && window.location.origin && window.location.origin.includes('onrender.com')) {
-      return window.location.origin.endsWith('krishishetra-1.onrender.com') ? `${window.location.origin}/api` : PROD_API_URL;
+    // 4. Default for production / hosted deployments (Render, Vercel, or fullstack server on port 5000)
+    if (window.location && window.location.origin && window.location.origin !== 'null') {
+      return `${window.location.origin.replace(/\/+$/, '')}/api`;
     }
-    return PROD_API_URL;
+
+    return DEV_API_URL;
   }
   return DEV_API_URL;
 }
