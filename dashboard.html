@@ -58,7 +58,7 @@
       <div class="dash-search" id="dash-search">
         <i data-lucide="search" class="dash-search__icon"></i>
         <input type="text" id="dash-search-input" class="dash-search__input"
-          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
+          data-i18n-placeholder="common.searchPlaceholder" placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="dash-search__results" id="dash-search-results"></div>
       </div>
@@ -66,22 +66,22 @@
       <!-- Navigation Links -->
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link dash-header__link--active" id="nav-dashboard">
-          <i data-lucide="home" class="dash-header__link-icon"></i> Home
+          <i data-lucide="home" class="dash-header__link-icon"></i> <span data-i18n="common.home">Home</span>
         </a>
         <a href="javascript:void(0)" onclick="FarmerFlow.openCreateLotModal()" class="dash-header__link" id="nav-sell">
-          <i data-lucide="plus-circle" class="dash-header__link-icon"></i> Sell Crop
+          <i data-lucide="plus-circle" class="dash-header__link-icon"></i> <span data-i18n="farmer.sellYourCrop">Sell Crop</span>
         </a>
         <a href="mandi-compare.html" class="dash-header__link" id="nav-compare">
-          <i data-lucide="trending-up" class="dash-header__link-icon"></i> Best Prices
+          <i data-lucide="trending-up" class="dash-header__link-icon"></i> <span data-i18n="navigation.compare">Best Prices</span>
         </a>
         <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
+          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyers">Buyers</span>
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> My Sales
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">My Sales</span>
         </a>
         <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
         </a>
       </nav>
 
@@ -165,16 +165,16 @@
       </div>
       <div class="dash-welcome__content container">
         <div class="dash-welcome__text">
-          <p class="dash-welcome__greeting" id="dash-greeting">Good Morning 👋</p>
+          <p class="dash-welcome__greeting" id="dash-greeting" data-i18n="common.goodMorning">Good Morning 👋</p>
           <h1 class="dash-welcome__headline" id="dash-headline">Make smarter selling decisions with
             <em>KrishiShetra.</em></h1>
           <p class="dash-welcome__sub" id="dash-sub">Track live mandi prices, get AI forecasts, and sell directly to
             verified institutional buyers.</p>
           <div class="dash-welcome__ctas">
             <button class="btn btn--primary dash-welcome__btn" id="btn-sell-crop"
-              onclick="FarmerFlow.openCreateLotModal()"><i data-lucide="plus-circle"></i> + Sell Your Crop</button>
+              onclick="FarmerFlow.openCreateLotModal()"><i data-lucide="plus-circle"></i> <span data-i18n="farmer.sellYourCrop">+ Sell Your Crop</span></button>
             <a href="market.html" class="btn btn--secondary dash-welcome__btn" id="btn-view-prices"><i
-                data-lucide="trending-up"></i> View Market Prices →</a>
+                data-lucide="trending-up"></i> <span data-i18n="farmer.viewMarketPrices">View Market Prices →</span></a>
           </div>
         </div>
         <div class="dash-welcome__meta">
@@ -1868,6 +1868,8 @@
   </div>
 
   <!-- SCRIPTS -->
+  <script src="js/i18n.js"></script>
+  <script>window.I18n.init();</script>
   <script src="js/auth.js"></script>
   <script src="js/demo-data.js"></script>
   <script src="js/api.js"></script>

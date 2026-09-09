@@ -42,6 +42,20 @@ const CROP_BENCHMARK_PROJECTIONS = {
   tomato: { rate: -1.5, trend: 'bearish', confidence: 72 }
 };
 
+const CROP_LOCAL_NAMES = {
+  wheat: { en: 'Wheat', hi: 'गेहूं', mr: 'गहू' },
+  rice: { en: 'Rice', hi: 'चावल', mr: 'तांदूळ' },
+  onion: { en: 'Onion', hi: 'प्याज', mr: 'कांदा' },
+  potato: { en: 'Potato', hi: 'आलू', mr: 'बटाटा' },
+  soybean: { en: 'Soybean', hi: 'सोयाबीन', mr: 'सोयाबीन' },
+  maize: { en: 'Maize', hi: 'मक्का', mr: 'मका' },
+  chilli: { en: 'Chilli', hi: 'मिर्च', mr: 'मिरची' },
+  groundnut: { en: 'Groundnut', hi: 'मूंगफली', mr: 'भुईमूग' },
+  cotton: { en: 'Cotton', hi: 'कपास', mr: 'कापूस' },
+  pulses: { en: 'Pulses', hi: 'दालें', mr: 'डाळी' },
+  tomato: { en: 'Tomato', hi: 'टमाटर', mr: 'टोमॅटो' }
+};
+
 /**
  * Calculate Sell Now vs Store & Hold Decision
  * @param {Object} params
@@ -52,6 +66,7 @@ const CROP_BENCHMARK_PROJECTIONS = {
  * @param {number} [params.customProjectedPrice]
  * @param {Object} [params.storageFacility]
  * @param {number} [params.distanceKm=12]
+ * @param {string} [params.language='en']
  * @returns {Object} Comprehensive Decision Breakdown
  */
 function evaluateSellVsStore({
@@ -61,13 +76,16 @@ function evaluateSellVsStore({
   holdingDays = 45,
   customProjectedPrice = null,
   storageFacility = null,
-  distanceKm = 12
+  distanceKm = 12,
+  language = 'en'
 }) {
   const normCrop = String(cropName).trim().toLowerCase();
   const qty = Math.max(0.1, Number(quantity) || 1);
   const curPrice = Math.max(10, Number(currentPrice) || 2000);
   const days = Math.max(1, Math.min(180, Number(holdingDays) || 45));
   const dist = Math.max(1, Number(distanceKm) || 12);
+  const normLang = ['hi', 'mr'].includes(String(language).toLowerCase()) ? String(language).toLowerCase() : 'en';
+  const cropNames = CROP_LOCAL_NAMES[normCrop] || { en: cropName, hi: cropName, mr: cropName };
 
   // 1. Current Realization
   const currentRealization = Math.round(curPrice * qty);
@@ -130,13 +148,27 @@ function evaluateSellVsStore({
   // 7. Decision Recommendation
   // Store & Hold if net gain > 0 and ROI is at least 2.5% to justify holding effort
   const isHoldPreferred = projectedNetGain > 0 && netGainPercent >= 2.5 && priceDiffPerQtl > 0;
-  const recommendation = isHoldPreferred ? 'STORE & HOLD' : 'SELL NOW';
+  const recommendationCode = isHoldPreferred ? 'STORE_HOLD' : 'SELL_NOW';
   const confidence = bench.confidence;
 
-  // 8. Plain Language Explanation
-  const explanation = isHoldPreferred
-    ? `Store & Hold is recommended. Based on projected market demand and arrival trends, storing your ${qty} quintals of ${cropName} for ${days} days at ${facilityName} is estimated to yield an extra ₹${projectedNetGain.toLocaleString('en-IN')} net gain (+${netGainPercent}%) after covering all storage, handling, and weight loss costs.`
-    : `Sell Now is recommended. Current market price of ₹${curPrice.toLocaleString('en-IN')}/q provides the best immediate return. Holding costs (₹${totalHoldingCost.toLocaleString('en-IN')}) would outweigh the estimated future price gains.`;
+  // 8. Plain Language Explanations in EN, HI, MR
+  const formattedGain = Math.abs(projectedNetGain).toLocaleString('en-IN');
+  const formattedPrice = curPrice.toLocaleString('en-IN');
+  const formattedHoldingCost = totalHoldingCost.toLocaleString('en-IN');
+
+  const explanations = {
+    en: isHoldPreferred
+      ? `Store & Hold is recommended. Based on projected market demand and arrival trends, storing your ${qty} quintals of ${cropNames.en} for ${days} days at ${facilityName} is estimated to yield an extra ₹${formattedGain} net gain (+${netGainPercent}%) after covering all storage, handling, and weight loss costs.`
+      : `Sell Now is recommended. Current market price of ₹${formattedPrice}/q provides the best immediate return for your ${qty} quintals of ${cropNames.en}. Holding costs (₹${formattedHoldingCost}) would outweigh the estimated future price gains.`,
+    hi: isHoldPreferred
+      ? `भंडारण की सलाह (अनुशंसा) दी जाती है। बाजार मांग और आवक के अनुमान के अनुसार, ${facilityName} में अपनी ${qty} क्विंटल ${cropNames.hi} को ${days} दिनों के लिए भंडारित करने पर सभी खर्च काटकर लगभग ₹${formattedGain} का शुद्ध अतिरिक्त लाभ (+${netGainPercent}%) प्राप्त होने का अनुमान है।`
+      : `तुरंत बिक्री की सलाह (अनुशंसा) दी जाती है। वर्तमान ₹${formattedPrice}/क्विंटल का मंडी भाव ${qty} क्विंटल ${cropNames.hi} के लिए सर्वोत्तम तत्काल लाभ देता है। आगे भंडारण का खर्च (₹${formattedHoldingCost}) अनुमानित मूल्य वृद्धि से अधिक रहेगा।`,
+    mr: isHoldPreferred
+      ? `साठवणुकीचा सल्ला (शिफारस) दिला जातो. बाजारपेठेतील मागणी आणि आवक ट्रेंडनुसार, ${facilityName} येथे आपले ${qty} क्विंटल ${cropNames.mr} ${days} दिवसांसाठी साठवल्यास सर्व खर्च वजा जाता सुमारे ₹${formattedGain} चा निव्वळ अतिरिक्त नफा (+${netGainPercent}%) मिळण्याचा अंदाज आहे.`
+      : `त्वरित विक्रीचा सल्ला (शिफारस) दिला जातो. चालू बाजारभाव ₹${formattedPrice}/क्विंटल ${qty} क्विंटल ${cropNames.mr} साठी त्वरित सर्वोत्तम परतावा देतो. साठवणूक आणि इतर खर्च (₹${formattedHoldingCost}) संभाव्य भाववाढीपेक्षा जास्त होईल.`
+  };
+
+  const activeReason = explanations[normLang] || explanations.en;
 
   return {
     cropName,
@@ -148,6 +180,14 @@ function evaluateSellVsStore({
     priceDiffPerQtl,
     confidence,
     trend: bench.trend,
+    language: normLang,
+
+    storageCost: storageRent,
+    handlingCost,
+    transportCost: logisticsCost,
+    weightLossCost,
+    totalHoldingCost,
+    netBenefit: projectedNetGain,
 
     // Option A: Sell Now
     sellNow: {
@@ -176,10 +216,12 @@ function evaluateSellVsStore({
     },
 
     // Final Output
-    recommendation,
+    recommendation: recommendationCode,
+    decisionType: isHoldPreferred ? 'STORE & HOLD' : 'SELL NOW',
     isHoldPreferred,
-    explanation,
-    explanations: { en: explanation },
+    reason: activeReason,
+    explanation: activeReason,
+    explanations,
     disclaimer: 'Projections are estimated based on historical seasonality, APMC arrivals, and facility tariffs. Future market prices cannot be guaranteed.'
   };
 }
@@ -187,5 +229,6 @@ function evaluateSellVsStore({
 module.exports = {
   evaluateSellVsStore,
   CROP_WEIGHT_LOSS_RATES,
-  CROP_BENCHMARK_PROJECTIONS
+  CROP_BENCHMARK_PROJECTIONS,
+  CROP_LOCAL_NAMES
 };

@@ -711,24 +711,28 @@ const calculateSellVsStore = async (req, res) => {
       holdingDays,
       customProjectedPrice,
       storageFacility: facility,
-      distanceKm
+      distanceKm,
+      language: lang
     });
-
-    const expText = (decision.explanations && decision.explanations[lang]) || decision.explanations.en;
 
     return res.status(200).json({
       success: true,
-      recommendation: decision.recommendation === 'STORE & HOLD' ? 'STORE_AND_HOLD' : 'SELL_NOW',
-      decisionType: decision.recommendation,
+      language: decision.language,
+      recommendation: decision.recommendation,
+      decisionType: decision.decisionType,
       currentPrice: decision.currentPrice,
       projectedPrice: decision.projectedPrice,
       holdingDays: decision.holdingDays,
-      storageCost: decision.storeAndHold.storageRent,
-      handlingCost: decision.storeAndHold.handlingCost,
-      weightLossCost: decision.storeAndHold.weightLossCost,
-      logisticsCost: decision.storeAndHold.logisticsCost,
-      estimatedNetBenefit: decision.storeAndHold.projectedNetGain,
-      explanation: expText,
+      storageCost: decision.storageCost,
+      handlingCost: decision.handlingCost,
+      transportCost: decision.transportCost,
+      weightLossCost: decision.weightLossCost,
+      logisticsCost: decision.transportCost,
+      totalHoldingCost: decision.totalHoldingCost,
+      netBenefit: decision.netBenefit,
+      estimatedNetBenefit: decision.netBenefit,
+      reason: decision.reason,
+      explanation: decision.reason,
       decision
     });
   } catch (error) {

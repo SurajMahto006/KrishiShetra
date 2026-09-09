@@ -307,15 +307,15 @@
 
               <div class="svs-breakdown-list">
                 <div class="svs-breakdown-item">
-                  <span>Current Mandi Price:</span>
+                  <span data-i18n="storage.currentMandiPrice">Current Mandi Price:</span>
                   <strong id="res-cur-price-display">₹2,400 / quintal</strong>
                 </div>
                 <div class="svs-breakdown-item">
-                  <span>Storage & Handling Cost:</span>
+                  <span data-i18n="storage.handlingCharges">Storage & Handling Cost:</span>
                   <strong style="color:#2E7D32;">₹0</strong>
                 </div>
                 <div class="svs-breakdown-item">
-                  <span>Holding Shrinkage Risk:</span>
+                  <span data-i18n="storage.weightLossRisk">Holding Shrinkage Risk:</span>
                   <strong>0% (Immediate payout)</strong>
                 </div>
               </div>
@@ -382,7 +382,7 @@
                 </p>
               </div>
               <div style="display: flex; gap: 6px; align-items: center;">
-                <span style="font-size: 11px; color: #777; font-weight: 600;">SORT BY:</span>
+                <span style="font-size: 11px; color: #777; font-weight: 600;" data-i18n="buyer.sortBy">SORT BY:</span>
                 <button class="btn btn--sm btn--secondary" onclick="sortCropOptions('profit')" id="btn-sort-profit"
                   style="font-size: 11.5px; padding: 4px 10px; background: #E8F5E9; border-color: #C8E6C9; color: #2E7D32; font-weight: 700;">
                   🏆 Max Profit
@@ -478,7 +478,7 @@
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
             <div class="dash-modal__field">
-              <label for="book-crop-select" style="font-size: 12px; font-weight: 700; color: #444;">Crop</label>
+              <label for="book-crop-select" style="font-size: 12px; font-weight: 700; color: #444;" data-i18n="storage.cropCommodity">Crop</label>
               <select id="book-crop-select" class="dash-filter-select" style="width: 100%;" required>
                 <option value="wheat">Wheat</option>
                 <option value="rice">Rice</option>
@@ -521,12 +521,12 @@
           <div class="storage-cost-preview">
             <div
               style="display: flex; justify-content: space-between; font-size: 12.5px; color: #555; margin-bottom: 4px;">
-              <span>Storage Rent:</span>
+              <span data-i18n="storage.storageRent">Storage Rent:</span>
               <strong id="book-cost-rent">₹3,800</strong>
             </div>
             <div
               style="display: flex; justify-content: space-between; font-size: 12.5px; color: #555; margin-bottom: 8px;">
-              <span>Handling & Unloading:</span>
+              <span data-i18n="storage.inOutHandling">Handling & Unloading:</span>
               <strong id="book-cost-handling">₹700</strong>
             </div>
             <div class="storage-cost-preview__total">
@@ -636,7 +636,7 @@
   <div class="dash-modal-overlay" id="help-modal-overlay">
     <div class="dash-modal" id="help-modal">
       <div class="dash-modal__header">
-        <h3>Kisan Support & Warehouse Helpline</h3>
+        <h3 data-i18n="common.kisanHelpline">Kisan Support & Warehouse Helpline</h3>
         <button class="dash-modal__close" onclick="closeHelpModal()"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad">
@@ -697,6 +697,7 @@
   </script>
 
   <!-- SCRIPTS -->
+  <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>

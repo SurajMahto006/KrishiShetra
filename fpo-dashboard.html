@@ -37,7 +37,7 @@
         <div class="brand-icon-box"><i data-lucide="sprout"></i></div>
         <span class="brand-text">
           Krishi<span>Shetra</span>
-          <span class="brand-badge">FPO Hub</span>
+          <span class="brand-badge" data-i18n="fpo.fpoHub">FPO Hub</span>
         </span>
       </a>
 
@@ -45,7 +45,7 @@
       <nav>
         <ul class="nav-menu" id="navMenu">
           <li><a href="#dashboard" class="nav-link active"><i data-lucide="layout-dashboard"
-                style="width:16px;height:16px;"></i> <span data-i18n="nav_dashboard">Dashboard</span></a></li>
+                style="width:16px;height:16px;"></i> <span data-i18n="fpo.navDashboard">Dashboard</span></a></li>
           <li><a href="#farmers" class="nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> <span
                 data-i18n="nav_farmers">Farmers</span></a></li>
           <li><a href="#lots" class="nav-link"><i data-lucide="boxes" style="width:16px;height:16px;"></i> <span
@@ -57,7 +57,7 @@
           <li><a href="#orders" class="nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> <span
                 data-i18n="nav_orders">Orders</span></a></li>
           <li><a href="#analytics" class="nav-link"><i data-lucide="bar-chart-3" style="width:16px;height:16px;"></i>
-              <span data-i18n="nav_analytics">Analytics</span></a></li>
+              <span data-i18n="fpo.navAnalytics">Analytics</span></a></li>
           <li><a href="disputes.html" class="nav-link"><i data-lucide="shield-alert"
                 style="width:16px;height:16px;"></i> <span>Disputes</span></a></li>
           <li class="mobile-logout-item"><a href="javascript:void(0)" onclick="handleFpoLogout()"
@@ -97,16 +97,16 @@
             <div class="profile-dropdown-sep"></div>
             <a href="javascript:void(0)" onclick="openProfileModal(); closeFpoProfileDropdown();"
               class="profile-dropdown-item">
-              <i data-lucide="building-2"></i> FPO Organization Profile
+              <i data-lucide="building-2"></i> <span data-i18n="fpo.fpoOrganizationProfile">FPO Organization Profile</span>
             </a>
             <a href="#farmers" class="profile-dropdown-item" onclick="closeFpoProfileDropdown()">
-              <i data-lucide="users"></i> Member Farmers Directory
+              <i data-lucide="users"></i> <span data-i18n="fpo.memberFarmersDirectory">Member Farmers Directory</span>
             </a>
             <a href="#lots" class="profile-dropdown-item" onclick="closeFpoProfileDropdown()">
               <i data-lucide="package"></i> Aggregated Lots
             </a>
             <a href="#orders" class="profile-dropdown-item" onclick="closeFpoProfileDropdown()">
-              <i data-lucide="clipboard-list"></i> Buyer Contracts & Orders
+              <i data-lucide="clipboard-list"></i> <span data-i18n="fpo.buyerContractsAndOrders">Buyer Contracts & Orders</span>
             </a>
             <div class="profile-dropdown-sep"></div>
             <a href="javascript:void(0)" onclick="handleFpoLogout()"
@@ -139,10 +139,10 @@
           <div>
             <div class="hero-welcome-badge">
               <i data-lucide="sparkles" style="width:14px;height:14px;"></i>
-              <span data-i18n="hero_badge">FPO Command Center</span>
+              <span data-i18n="fpo.fpoCommandCenter">FPO Command Center</span>
             </div>
             <h1 class="hero-title" data-i18n="hero_title">Welcome, <span>Suresh Jadhav</span> 👋</h1>
-            <p class="hero-subtitle" data-i18n="hero_sub">
+            <p class="hero-subtitle" data-i18n="fpo.fpoHeroSubtitle">
               Manage incoming member farmer lots, aggregate produce and connect with institutional buyers like Amit
               Shah.
             </p>
@@ -152,7 +152,7 @@
               <div class="fpo-meta-item">
                 <div class="fpo-meta-icon"><i data-lucide="building-2" style="width:16px;height:16px;"></i></div>
                 <div class="fpo-meta-content">
-                  <span class="fpo-meta-label" data-i18n="meta_fpo">FPO Name</span>
+                  <span class="fpo-meta-label" data-i18n="fpo.fpoName">FPO Name</span>
                   <span class="fpo-meta-val">Nashik Kisan Samriddhi FPC</span>
                 </div>
               </div>
@@ -160,7 +160,7 @@
               <div class="fpo-meta-item">
                 <div class="fpo-meta-icon"><i data-lucide="map-pin" style="width:16px;height:16px;"></i></div>
                 <div class="fpo-meta-content">
-                  <span class="fpo-meta-label" data-i18n="meta_loc">Location</span>
+                  <span class="fpo-meta-label" data-i18n="fpo.location">Location</span>
                   <span class="fpo-meta-val">Nashik, Maharashtra</span>
                 </div>
               </div>
@@ -168,7 +168,7 @@
               <div class="fpo-meta-item">
                 <div class="fpo-meta-icon"><i data-lucide="users-round" style="width:16px;height:16px;"></i></div>
                 <div class="fpo-meta-content">
-                  <span class="fpo-meta-label" data-i18n="meta_farmers">Registered Farmers</span>
+                  <span class="fpo-meta-label" data-i18n="fpo.registeredFarmers">Registered Farmers</span>
                   <span class="fpo-meta-val">248 Active Members</span>
                 </div>
               </div>
@@ -176,7 +176,7 @@
               <div class="fpo-meta-item">
                 <div class="fpo-meta-icon"><i data-lucide="boxes" style="width:16px;height:16px;"></i></div>
                 <div class="fpo-meta-content">
-                  <span class="fpo-meta-label" data-i18n="meta_produce">Total Produce</span>
+                  <span class="fpo-meta-label" data-i18n="fpo.totalProduceAggregated">Total Produce</span>
                   <span class="fpo-meta-val">128.5 Tons Aggregated</span>
                 </div>
               </div>
@@ -184,7 +184,7 @@
               <div class="fpo-meta-item">
                 <div class="fpo-meta-icon"><i data-lucide="handshake" style="width:16px;height:16px;"></i></div>
                 <div class="fpo-meta-content">
-                  <span class="fpo-meta-label" data-i18n="meta_buyers">Active Buyers</span>
+                  <span class="fpo-meta-label" data-i18n="fpo.activeBuyers">Active Buyers</span>
                   <span class="fpo-meta-val">18 Verified Partners</span>
                 </div>
               </div>
@@ -201,7 +201,7 @@
                   <div class="hero-caption-text">Nashik District Farmer Cluster</div>
                   <div class="hero-caption-sub">Dindori & Niphad Taluka Hub</div>
                 </div>
-                <span class="badge badge-success">● Live Sync</span>
+                <span class="badge badge-success" data-i18n="fpo.liveSync">● Live Sync</span>
               </div>
             </div>
           </div>
@@ -219,7 +219,7 @@
           <i data-lucide="users"></i>
         </div>
         <div class="kpi-data">
-          <span class="kpi-label" data-i18n="kpi_farmers">Farmers</span>
+          <span class="kpi-label" data-i18n="fpo.farmersCountLabel">Farmers</span>
           <span class="kpi-value">248</span>
           <span class="kpi-trend">
             <i data-lucide="trending-up" style="width:14px;height:14px;"></i> +12 this month
@@ -233,7 +233,7 @@
           <i data-lucide="scale"></i>
         </div>
         <div class="kpi-data">
-          <span class="kpi-label" data-i18n="kpi_produce">Aggregated Produce</span>
+          <span class="kpi-label" data-i18n="fpo.aggregatedProduceLabel">Aggregated Produce</span>
           <span class="kpi-value">128.5 <span
               style="font-size:1.1rem;font-weight:600;color:var(--text-muted-sage);">Tons</span></span>
           <span class="kpi-trend">
@@ -248,7 +248,7 @@
           <i data-lucide="layers"></i>
         </div>
         <div class="kpi-data">
-          <span class="kpi-label" data-i18n="kpi_lots">Active Lots</span>
+          <span class="kpi-label" data-i18n="fpo.activeLotsCountLabel">Active Lots</span>
           <span class="kpi-value">36</span>
           <span class="kpi-trend neutral">
             <i data-lucide="clock" style="width:14px;height:14px;"></i> 8 Ready for Dispatch
@@ -262,7 +262,7 @@
           <i data-lucide="badge-percent"></i>
         </div>
         <div class="kpi-data">
-          <span class="kpi-label" data-i18n="kpi_offers">Buyer Offers</span>
+          <span class="kpi-label" data-i18n="fpo.buyerOffersCountLabel">Buyer Offers</span>
           <span class="kpi-value">18</span>
           <span class="kpi-trend">
             <i data-lucide="sparkles" style="width:14px;height:14px;"></i> 4 High Value Matches
@@ -380,17 +380,17 @@
       <div class="glass-card">
         <div class="section-header">
           <div class="section-title-wrap">
-            <h2 data-i18n="sec_farmers"><span>👨‍🌾</span> Farmer Members</h2>
+            <h2><span>👨‍🌾</span> <span data-i18n="fpo.farmerMembersTitle">Farmer Members</span></h2>
             <p data-i18n="sec_farmers_sub">Registered individual member contributions and crop lot aggregation status.
             </p>
           </div>
           <div style="display:flex;gap:0.75rem;">
             <button class="btn btn-primary" onclick="openAddFarmerModal()">
               <i data-lucide="user-plus" style="width:16px;height:16px;"></i>
-              <span data-i18n="btn_add_farmer">+ Add Farmer</span>
+              <span data-i18n="fpo.addFarmerBtn">+ Add Farmer</span>
             </button>
             <button class="btn btn-secondary btn-sm" onclick="showToast('Loading full roster of 248 farmers...')">
-              <span data-i18n="btn_view_all_farmers">View All Farmers</span>
+              <span data-i18n="fpo.viewAllFarmersBtn">View All Farmers</span>
               <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
             </button>
           </div>
@@ -400,12 +400,12 @@
         <div class="table-toolbar">
           <div class="search-box">
             <i data-lucide="search" class="search-icon"></i>
-            <input type="text" id="farmerSearchInput" placeholder="Search farmer by name, village or crop..."
+            <input type="text" id="farmerSearchInput" placeholder="Search farmer by name, village or crop..." data-i18n-placeholder="fpo.searchFarmerPlaceholder"
               onkeyup="filterFarmerTable()">
           </div>
 
           <div class="filter-pills">
-            <button class="filter-pill active" onclick="setFarmerFilter('all', this)">All Crops</button>
+            <button class="filter-pill active" onclick="setFarmerFilter('all', this)" data-i18n="fpo.allCropsFilter">All Crops</button>
             <button class="filter-pill" onclick="setFarmerFilter('Wheat', this)">🌾 Wheat</button>
             <button class="filter-pill" onclick="setFarmerFilter('Onion', this)">🧅 Onion</button>
             <button class="filter-pill" onclick="setFarmerFilter('Tomato', this)">🍅 Tomato</button>
@@ -418,13 +418,13 @@
           <table class="custom-table" id="farmerTable">
             <thead>
               <tr>
-                <th data-i18n="th_name">Farmer Name</th>
-                <th data-i18n="th_crop">Crop</th>
-                <th data-i18n="th_quantity">Quantity</th>
-                <th data-i18n="th_lot_status">Lot Status</th>
-                <th data-i18n="th_quality">Quality</th>
-                <th data-i18n="th_status">Status</th>
-                <th style="text-align:right;">Actions</th>
+                <th data-i18n="fpo.farmerNameTh">Farmer Name</th>
+                <th data-i18n="fpo.cropTh">Crop</th>
+                <th data-i18n="fpo.quantityTh">Quantity</th>
+                <th data-i18n="fpo.lotStatusTh">Lot Status</th>
+                <th data-i18n="fpo.qualityTh">Quality</th>
+                <th data-i18n="fpo.statusTh">Status</th>
+                <th style="text-align:right;" data-i18n="fpo.actionsTh">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -571,13 +571,13 @@
     <section class="section-wrapper" id="lots">
       <div class="section-header">
         <div class="section-title-wrap">
-          <h2 data-i18n="sec_lots"><span>📦</span> Aggregated Lots</h2>
+          <h2><span>📦</span> <span data-i18n="fpo.aggregatedLotsTitle">Aggregated Lots</span></h2>
           <p data-i18n="sec_lots_sub">Unified bulk commodity lots created from multi-farmer pooling for institutional
             buyer negotiation.</p>
         </div>
         <div>
           <button class="btn btn-gold btn-sm" onclick="openCreateLotModal()">
-            <i data-lucide="plus-circle" style="width:16px;height:16px;"></i> + Create New Lot
+            <i data-lucide="plus-circle" style="width:16px;height:16px;"></i> <span data-i18n="fpo.createNewLotBtn">+ Create New Lot</span>
           </button>
         </div>
       </div>
@@ -709,7 +709,7 @@
     <section class="section-wrapper" id="market">
       <div class="section-header">
         <div class="section-title-wrap">
-          <h2 data-i18n="sec_market"><span>📈</span> Market Intelligence & AI Insights</h2>
+          <h2><span>📈</span> <span data-i18n="fpo.marketIntelligenceTitle">Market Intelligence & AI Insights</span></h2>
           <p data-i18n="sec_market_sub">Real-time APMC price benchmarks, spatial price trends, and predictive
             aggregation intelligence.</p>
         </div>
@@ -771,9 +771,9 @@
             <span>AI AGRI-INTELLIGENCE</span>
           </div>
 
-          <h3 class="ai-headline" data-i18n="ai_headline">Collective Selling Opportunity</h3>
+          <h3 class="ai-headline" data-i18n="fpo.collectiveSellingOpportunity">Collective Selling Opportunity</h3>
 
-          <p class="ai-quote" data-i18n="ai_quote">
+          <p class="ai-quote" data-i18n="fpo.aiQuoteText">
             “Demand for Wheat is high in Pune. Aggregating 25 tons can improve buyer interest and negotiation power.”
           </p>
 
@@ -804,7 +804,7 @@
           <div style="margin-top:auto;">
             <button class="btn btn-gold" style="width:100%;" onclick="openAIForecastModal()">
               <i data-lucide="sparkles" style="width:16px;height:16px;"></i>
-              <span data-i18n="btn_ai_forecast">View AI Forecast</span>
+              <span data-i18n="fpo.viewAiForecastBtn">View AI Forecast</span>
             </button>
           </div>
         </div>
@@ -817,13 +817,13 @@
     <section class="section-wrapper" id="buyers">
       <div class="section-header">
         <div class="section-title-wrap">
-          <h2 data-i18n="sec_buyers"><span>🤝</span> Verified Institutional Buyer Offers</h2>
+          <h2><span>🤝</span> <span data-i18n="fpo.verifiedBuyerOffersTitle">Verified Institutional Buyer Offers</span></h2>
           <p data-i18n="sec_buyers_sub">Direct contracts and live bidding from KYC-verified food processors and
             exporters.</p>
         </div>
         <div style="display:flex;gap:0.75rem;">
           <button class="btn btn-secondary btn-sm" onclick="openCompareOffersModal()">
-            <i data-lucide="git-compare" style="width:15px;height:15px;"></i> Compare Offers
+            <i data-lucide="git-compare" style="width:15px;height:15px;"></i> <span data-i18n="fpo.compareOffersBtn">Compare Offers</span>
           </button>
         </div>
       </div>
@@ -974,12 +974,12 @@
     <section class="section-wrapper" id="orders">
       <div class="section-header">
         <div class="section-title-wrap">
-          <h2 data-i18n="sec_orders"><span>🚚</span> Orders & Logistics Fulfillment</h2>
+          <h2><span>🚚</span> <span data-i18n="fpo.ordersAndLogisticsTitle">Orders & Logistics Fulfillment</span></h2>
           <p data-i18n="sec_orders_sub">Live dispatch tracking, transporter assignment, and digital proof-of-delivery.
           </p>
         </div>
         <div>
-          <span class="badge badge-info">1 Active Shipment in Transit</span>
+          <span class="badge badge-info"><span data-i18n="fpo.activeShipmentBadge">1 Active Shipment in Transit</span></span>
         </div>
       </div>
 
@@ -1098,13 +1098,13 @@
       <div class="glass-card">
         <div class="section-header">
           <div class="section-title-wrap">
-            <h2 data-i18n="sec_analytics"><span>📊</span> FPO Performance Analytics</h2>
+            <h2><span>📊</span> <span data-i18n="fpo.performanceAnalyticsTitle">FPO Performance Analytics</span></h2>
             <p data-i18n="sec_analytics_sub">Financial overview, member impact metrics, and aggregation volume trends.
             </p>
           </div>
           <div>
             <button class="btn btn-secondary btn-sm" onclick="showToast('Downloading FPO Performance Report (PDF)...')">
-              <i data-lucide="download" style="width:14px;height:14px;"></i> Export PDF Report
+              <i data-lucide="download" style="width:14px;height:14px;"></i> <span data-i18n="fpo.exportPdfReportBtn">Export PDF Report</span>
             </button>
           </div>
         </div>
@@ -1113,7 +1113,7 @@
         <div class="analytics-top-grid">
           <!-- Metric 1: Total Farmers Onboarded -->
           <div class="metric-mini-card">
-            <span class="metric-mini-label" data-i18n="metric_onboarded">Total Farmers Onboarded</span>
+            <span class="metric-mini-label" data-i18n="fpo.totalFarmersOnboardedLabel">Total Farmers Onboarded</span>
             <span class="metric-mini-value">248</span>
             <span class="metric-mini-sub"><i data-lucide="arrow-up-right"
                 style="width:13px;height:13px;display:inline;"></i> +24% YoY Growth</span>
@@ -1121,7 +1121,7 @@
 
           <!-- Metric 2: Total Produce Sold -->
           <div class="metric-mini-card">
-            <span class="metric-mini-label" data-i18n="metric_sold">Total Produce Sold</span>
+            <span class="metric-mini-label" data-i18n="fpo.totalProduceSoldLabel">Total Produce Sold</span>
             <span class="metric-mini-value">89.2 <span
                 style="font-size:0.95rem;color:var(--text-muted-sage);">Tons</span></span>
             <span class="metric-mini-sub"><i data-lucide="arrow-up-right"
@@ -1130,7 +1130,7 @@
 
           <!-- Metric 3: Average Selling Price -->
           <div class="metric-mini-card">
-            <span class="metric-mini-label" data-i18n="metric_avg_price">Average Selling Price</span>
+            <span class="metric-mini-label" data-i18n="fpo.averageSellingPriceLabel">Average Selling Price</span>
             <span class="metric-mini-value" style="color:var(--text-evergreen);">₹2,740<span
                 style="font-size:0.85rem;color:var(--text-muted-sage);">/q</span></span>
             <span class="metric-mini-sub"><i data-lucide="arrow-up-right"
@@ -1139,7 +1139,7 @@
 
           <!-- Metric 4: Revenue Generated -->
           <div class="metric-mini-card">
-            <span class="metric-mini-label" data-i18n="metric_revenue">Revenue Generated</span>
+            <span class="metric-mini-label" data-i18n="fpo.revenueGeneratedLabel">Revenue Generated</span>
             <span class="metric-mini-value">₹24.5 <span
                 style="font-size:0.95rem;color:var(--text-muted-sage);">Lakh</span></span>
             <span class="metric-mini-sub"><i data-lucide="check-circle"
@@ -1218,29 +1218,29 @@
   <div class="modal-backdrop" id="addFarmerModal">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 class="modal-title">👨‍🌾 Add Farmer Member</h3>
+        <h3 class="modal-title" data-i18n="fpo.addFarmerModalTitle">👨‍🌾 Add Farmer Member</h3>
         <button class="close-btn" onclick="closeModal('addFarmerModal')"><i data-lucide="x"></i></button>
       </div>
       <form id="addFarmerForm" onsubmit="handleAddFarmer(event)">
         <div class="form-group">
-          <label class="form-label">Farmer Full Name *</label>
+          <label class="form-label" data-i18n="fpo.farmerFullNameLabel">Farmer Full Name *</label>
           <input type="text" id="farmerNameInput" class="form-input" placeholder="e.g. Dnyaneshwar Bhor" required>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Village / Taluka *</label>
+            <label class="form-label" data-i18n="fpo.villageTalukaLabel">Village / Taluka *</label>
             <input type="text" id="farmerVillageInput" class="form-input" placeholder="e.g. Niphad, Nashik" required>
           </div>
           <div class="form-group">
-            <label class="form-label">Phone Number *</label>
+            <label class="form-label" data-i18n="fpo.phoneNumberLabel">Phone Number *</label>
             <input type="tel" id="farmerPhoneInput" class="form-input" placeholder="e.g. 9823100000" required>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Crop Contribution *</label>
+            <label class="form-label" data-i18n="fpo.cropContributionLabel">Crop Contribution *</label>
             <select id="farmerCropInput" class="form-select" required>
               <option value="Wheat">🌾 Wheat (Sharbati/Lokwan)</option>
               <option value="Onion">🧅 Onion (Red Garwa)</option>
@@ -1249,14 +1249,14 @@
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Quantity (Quintals/Tons) *</label>
+            <label class="form-label" data-i18n="fpo.quantityInputLabel">Quantity (Quintals/Tons) *</label>
             <input type="text" id="farmerQtyInput" class="form-input" placeholder="e.g. 3.0 Tons" required>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Quality Grade</label>
+            <label class="form-label" data-i18n="fpo.qualityGradeLabel">Quality Grade</label>
             <select id="farmerGradeInput" class="form-select">
               <option value="Grade A">Grade A (Export / High Purity)</option>
               <option value="Grade A+">Grade A+ (Premium / Certified)</option>
@@ -1264,7 +1264,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Assign to Lot</label>
+            <label class="form-label" data-i18n="fpo.assignToLotLabel">Assign to Lot</label>
             <select id="farmerLotSelect" class="form-select">
               <option value="Lot #WHT-04">Lot #WHT-04 (Wheat - 25T)</option>
               <option value="Lot #ONN-08">Lot #ONN-08 (Onion - 18T)</option>
@@ -1276,7 +1276,7 @@
         <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
           <button type="button" class="btn btn-secondary" style="flex:1;"
             onclick="closeModal('addFarmerModal')">Cancel</button>
-          <button type="submit" class="btn btn-primary" style="flex:1;">Save Farmer Record</button>
+          <button type="submit" class="btn btn-primary" style="flex:1;" data-i18n="fpo.saveFarmerRecordBtn">Save Farmer Record</button>
         </div>
       </form>
     </div>
@@ -1350,6 +1350,7 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- Script Execution -->
+  <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/page-guard.js"></script>
