@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/mandi-compare.css">
+  <!-- Krishi Sahayak AI Market Assistant -->
+  <link rel="stylesheet" href="css/krishi-sahayak.css">
 
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -48,19 +50,18 @@
 
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link"><i data-lucide="layout-dashboard"
-            class="dash-header__link-icon"></i> Dashboard</a>
-        <a href="lots.html" class="dash-header__link"><i data-lucide="package" class="dash-header__link-icon"></i> My
-          Lots</a>
+            class="dash-header__link-icon"></i> <span data-i18n="navigation.dashboard">Dashboard</span></a>
+        <a href="lots.html" class="dash-header__link"><i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span></a>
         <a href="market.html" class="dash-header__link"><i data-lucide="bar-chart-3" class="dash-header__link-icon"></i>
-          Market</a>
+          <span data-i18n="navigation.market">Market</span></a>
         <a href="ai-forecast.html" class="dash-header__link"><i data-lucide="brain" class="dash-header__link-icon"></i>
-          AI Forecast</a>
+          <span data-i18n="navigation.aiForecast">AI Forecast</span></a>
         <a href="buyers.html" class="dash-header__link"><i data-lucide="users" class="dash-header__link-icon"></i>
-          Buyers</a>
+          <span data-i18n="navigation.buyers">Buyers</span></a>
         <a href="orders.html" class="dash-header__link"><i data-lucide="clipboard-list"
-            class="dash-header__link-icon"></i> Orders</a>
+            class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span></a>
         <a href="mandi-compare.html" class="dash-header__link dash-header__link--active"><i data-lucide="bar-chart-2"
-            class="dash-header__link-icon"></i> Compare</a>
+            class="dash-header__link-icon"></i> <span data-i18n="navigation.compare">Compare</span></a>
       </nav>
 
       <div class="dash-header__actions">
@@ -508,7 +509,9 @@
     </div>
   </footer>
 
-  <!-- SCRIPTS -->
+  <!-- Multilingual Support (Farmer) -->
+  <script src="js/translations.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>
   <!-- Dev: auto-create a farmer session on localhost -->
   <script>
@@ -524,6 +527,8 @@
   <script src="js/page-guard.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/mandi-compare.js"></script>
+  <!-- Krishi Sahayak AI Market Assistant -->
+  <script src="js/krishi-sahayak.js"></script>
 </body>
 
 </html>

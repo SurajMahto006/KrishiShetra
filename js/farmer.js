@@ -465,7 +465,7 @@ const FarmerFlow = {
     const submitBtn = form.querySelector('#btn-submit-lot') || form.querySelector('button[type="submit"]');
 
     const cropSelect = document.getElementById('lot-crop-select');
-    const cropName = cropSelect ? cropSelect.options[cropSelect.selectedIndex].text : 'Wheat';
+    const cropName = cropSelect ? (cropSelect.value || cropSelect.options[cropSelect.selectedIndex]?.value || 'Wheat') : 'Wheat';
     const qty = parseFloat(document.getElementById('lot-qty-input')?.value);
     const price = parseFloat(document.getElementById('lot-price-input')?.value);
     const harvestDate = document.getElementById('lot-harvest-input')?.value;
@@ -603,7 +603,7 @@ const FarmerFlow = {
     if (cropSelect && !cropSelect.dataset.gradingBound) {
       cropSelect.dataset.gradingBound = 'true';
       cropSelect.addEventListener('change', () => {
-        const cropText = cropSelect.options[cropSelect.selectedIndex]?.text || '';
+        const cropText = cropSelect.value || cropSelect.options[cropSelect.selectedIndex]?.value || '';
         const cat = window.GradingEngine ? window.GradingEngine.getCropCategory(cropText) : 'cereals_grains';
         const grainGroup = document.getElementById('grain-params-form-group');
         const hortiGroup = document.getElementById('horti-params-form-group');
@@ -682,7 +682,7 @@ const FarmerFlow = {
 
   updateAgmarkScorecardPreview() {
     const cropSelect = document.getElementById('lot-crop-select');
-    const cropName = cropSelect ? cropSelect.options[cropSelect.selectedIndex]?.text || 'Wheat' : 'Wheat';
+    const cropName = cropSelect ? (cropSelect.value || cropSelect.options[cropSelect.selectedIndex]?.value || 'Wheat') : 'Wheat';
     const cat = window.GradingEngine ? window.GradingEngine.getCropCategory(cropName) : 'cereals_grains';
 
     let params = {};
@@ -730,7 +730,7 @@ const FarmerFlow = {
    */
   openAiScannerModal() {
     const cropSelect = document.getElementById('lot-crop-select');
-    const cropName = cropSelect ? cropSelect.options[cropSelect.selectedIndex]?.text || 'Wheat' : 'Wheat';
+    const cropName = cropSelect ? (cropSelect.value || cropSelect.options[cropSelect.selectedIndex]?.value || 'Wheat') : 'Wheat';
     this.selectAiSample(cropName, 'premium');
     document.getElementById('ai-scanner-modal-overlay')?.classList.add('active');
     if (window.lucide) window.lucide.createIcons();

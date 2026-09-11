@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/mandi-map.css">
+  <!-- Krishi Sahayak AI Market Assistant -->
+  <link rel="stylesheet" href="css/krishi-sahayak.css">
 
   <!-- Leaflet Map (Free, Zero Token Required) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -56,7 +58,8 @@
       <div class="dash-search" id="dash-search">
         <i data-lucide="search" class="dash-search__icon"></i>
         <input type="text" id="dash-search-input" class="dash-search__input"
-          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search">
+          placeholder="Search crops, markets, buyers..." autocomplete="off" aria-label="Global search"
+          data-i18n-placeholder="common.searchPlaceholder">
         <kbd class="dash-search__kbd">Ctrl K</kbd>
         <div class="dash-search__results" id="dash-search-results"></div>
       </div>
@@ -64,22 +67,22 @@
       <!-- Navigation Links -->
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link dash-header__link--active" id="nav-dashboard">
-          <i data-lucide="home" class="dash-header__link-icon"></i> Home
+          <i data-lucide="home" class="dash-header__link-icon"></i> <span data-i18n="navigation.home">Home</span>
         </a>
         <a href="javascript:void(0)" onclick="FarmerFlow.openCreateLotModal()" class="dash-header__link" id="nav-sell">
-          <i data-lucide="plus-circle" class="dash-header__link-icon"></i> Sell Crop
+          <i data-lucide="plus-circle" class="dash-header__link-icon"></i> <span data-i18n="navigation.sellCrop">Sell Crop</span>
         </a>
         <a href="mandi-compare.html" class="dash-header__link" id="nav-compare">
-          <i data-lucide="trending-up" class="dash-header__link-icon"></i> Best Prices
+          <i data-lucide="trending-up" class="dash-header__link-icon"></i> <span data-i18n="navigation.bestPrices">Best Prices</span>
         </a>
         <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> Buyers
+          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyers">Buyers</span>
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> My Sales
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.mySales">My Sales</span>
         </a>
         <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> My Lots
+          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
         </a>
       </nav>
 
@@ -164,15 +167,15 @@
       <div class="dash-welcome__content container">
         <div class="dash-welcome__text">
           <p class="dash-welcome__greeting" id="dash-greeting">Good Morning 👋</p>
-          <h1 class="dash-welcome__headline" id="dash-headline">Make smarter selling decisions with
+          <h1 class="dash-welcome__headline" id="dash-headline" data-i18n="farmer.makeSmarterDecisions">Make smarter selling decisions with
             <em>KrishiShetra.</em></h1>
-          <p class="dash-welcome__sub" id="dash-sub">Track live mandi prices, get AI forecasts, and sell directly to
+          <p class="dash-welcome__sub" id="dash-sub" data-i18n="farmer.dashboardSubtitle">Track live mandi prices, get AI forecasts, and sell directly to
             verified institutional buyers.</p>
           <div class="dash-welcome__ctas">
             <button class="btn btn--primary dash-welcome__btn" id="btn-sell-crop"
-              onclick="FarmerFlow.openCreateLotModal()"><i data-lucide="plus-circle"></i> + Sell Your Crop</button>
+              onclick="FarmerFlow.openCreateLotModal()"><i data-lucide="plus-circle"></i> <span data-i18n="farmer.sellYourCrop">+ Sell Your Crop</span></button>
             <a href="market.html" class="btn btn--secondary dash-welcome__btn" id="btn-view-prices"><i
-                data-lucide="trending-up"></i> View Market Prices →</a>
+                data-lucide="trending-up"></i> <span data-i18n="farmer.viewMarketPrices">View Market Prices →</span></a>
           </div>
         </div>
         <div class="dash-welcome__meta">
@@ -258,18 +261,18 @@
               <div class="kisan-action-card__icon">💰</div>
               <div class="kisan-action-card__info">
                 <h3 class="kisan-action-card__title" id="lbl-action-card1-title">
-                  <span>Today's Mandi Prices</span>
+                  <span data-i18n="farmer.todayMandiPrices">Today's Mandi Prices</span>
                   <span class="kisan-action-card__badge kisan-action-card__badge--price">Live APMC</span>
                 </h3>
-                <p class="kisan-action-card__subtitle" id="lbl-action-card1-desc">
+                <p class="kisan-action-card__subtitle" id="lbl-action-card1-desc" data-i18n="farmer.todayMandiDesc">
                   Check live mandi prices, daily commodity arrivals, and price trends across major APMCs.
                 </p>
               </div>
             </div>
             <div class="kisan-action-card__footer">
-              <span class="kisan-action-card__stat" id="lbl-action-card1-stat">Best Price: <strong id="lbl-best-mandi-price-val">₹2,920/q</strong></span>
+              <span class="kisan-action-card__stat" id="lbl-action-card1-stat"><span data-i18n="farmer.bestPriceLabel">Best Price</span>: <strong id="lbl-best-mandi-price-val">₹2,920/q</strong></span>
               <button class="kisan-action-card__btn" type="button">
-                <span id="btn-text-card1">View Prices</span> <i data-lucide="arrow-right"></i>
+                <span id="btn-text-card1" data-i18n="farmer.viewMarketPrices">View Prices</span> <i data-lucide="arrow-right"></i>
               </button>
             </div>
           </div>
@@ -281,18 +284,18 @@
               <div class="kisan-action-card__icon">🌾</div>
               <div class="kisan-action-card__info">
                 <h3 class="kisan-action-card__title" id="lbl-action-card2-title">
-                  <span>List Crop for Sale</span>
-                  <span class="kisan-action-card__badge kisan-action-card__badge--sell">+ New Lot</span>
+                  <span data-i18n="farmer.listCropForSale">List Crop for Sale</span>
+                  <span class="kisan-action-card__badge kisan-action-card__badge--sell" data-i18n="farmer.newLotBadge">+ New Lot</span>
                 </h3>
-                <p class="kisan-action-card__subtitle" id="lbl-action-card2-desc">
+                <p class="kisan-action-card__subtitle" id="lbl-action-card2-desc" data-i18n="farmer.listCropDesc">
                   List your harvested produce and receive direct, verified offers from corporate buyers.
                 </p>
               </div>
             </div>
             <div class="kisan-action-card__footer">
-              <span class="kisan-action-card__stat" id="lbl-action-card2-stat">My Crops: <strong id="kisan-active-lots-count">3 Lots</strong></span>
+              <span class="kisan-action-card__stat" id="lbl-action-card2-stat"><span data-i18n="farmer.myCropsLabel">My Crops</span>: <strong id="kisan-active-lots-count">3 Lots</strong></span>
               <button class="kisan-action-card__btn" type="button">
-                <span id="btn-text-card2">List Crop</span> <i data-lucide="plus"></i>
+                <span id="btn-text-card2" data-i18n="farmer.listCropForSale">List Crop</span> <i data-lucide="plus"></i>
               </button>
             </div>
           </div>
@@ -304,10 +307,10 @@
               <div class="kisan-action-card__icon">🏬</div>
               <div class="kisan-action-card__info">
                 <h3 class="kisan-action-card__title" id="lbl-action-card3-title">
-                  <span>Find & Compare Warehouses</span>
-                  <span class="kisan-action-card__badge kisan-action-card__badge--storage">Nearby</span>
+                  <span data-i18n="farmer.findGodowns">Find & Compare Warehouses</span>
+                  <span class="kisan-action-card__badge kisan-action-card__badge--storage" data-i18n="farmer.nearbyBadge">Nearby</span>
                 </h3>
-                <p class="kisan-action-card__subtitle" id="lbl-action-card3-desc">
+                <p class="kisan-action-card__subtitle" id="lbl-action-card3-desc" data-i18n="farmer.findGodownsDesc">
                   Locate WDRA/MSWC accredited warehouses, compare monthly tariffs, and book space.
                 </p>
               </div>
@@ -315,7 +318,7 @@
             <div class="kisan-action-card__footer">
               <span class="kisan-action-card__stat" id="lbl-action-card3-stat">Nearest: <strong id="kisan-nearest-warehouse-val">8.5 km (₹38/bag)</strong></span>
               <button class="kisan-action-card__btn" type="button">
-                <span id="btn-text-card3">Find Godowns</span> <i data-lucide="warehouse"></i>
+                <span id="btn-text-card3" data-i18n="farmer.findGodowns">Find Godowns</span> <i data-lucide="warehouse"></i>
               </button>
             </div>
           </div>
@@ -327,19 +330,19 @@
               <div class="kisan-action-card__icon">🤖</div>
               <div class="kisan-action-card__info">
                 <h3 class="kisan-action-card__title" id="lbl-action-card4-title">
-                  <span>Sell Now vs. Store & Hold</span>
-                  <span class="kisan-action-card__badge kisan-action-card__badge--decision">AI Advisor</span>
+                  <span data-i18n="farmer.sellNowVsStore">Sell Now vs. Store & Hold</span>
+                  <span class="kisan-action-card__badge kisan-action-card__badge--decision" data-i18n="farmer.aiAdvisorBadge">AI Advisor</span>
                 </h3>
-                <p class="kisan-action-card__subtitle" id="lbl-action-card4-desc">
+                <p class="kisan-action-card__subtitle" id="lbl-action-card4-desc" data-i18n="farmer.sellNowVsStoreDesc">
                   Calculate if storing your harvest yields higher profit vs selling immediately at today's mandi price.
                 </p>
               </div>
             </div>
             <div class="kisan-action-card__footer">
-              <span class="kisan-action-card__stat" id="lbl-action-card4-stat">Estimated Gain: <strong id="kisan-calc-gain-val"
+              <span class="kisan-action-card__stat" id="lbl-action-card4-stat"><span data-i18n="farmer.estimatedGain">Estimated Gain</span>: <strong id="kisan-calc-gain-val"
                   style="color:#2E7D32;">+₹7,450</strong></span>
               <button class="kisan-action-card__btn" type="button">
-                <span id="btn-text-card4">View AI Advice</span> <i data-lucide="sparkles"></i>
+                <span id="btn-text-card4" data-i18n="farmer.viewAiAdvice">View AI Advice</span> <i data-lucide="sparkles"></i>
               </button>
             </div>
           </div>
@@ -355,7 +358,7 @@
             aria-label="View Active Lots">
             <div class="dash-stat__icon dash-stat__icon--green"><i data-lucide="package"></i></div>
             <div class="dash-stat__body">
-              <div class="dash-stat__label" id="lbl-stat-active-lots">Active Lots</div>
+              <div class="dash-stat__label" id="lbl-stat-active-lots" data-i18n="farmer.activeLotsLabel">Active Lots</div>
               <div class="dash-stat__value" id="stat-lots-val" data-count="3">3</div>
               <div class="dash-stat__sub" id="stat-lots-sub">2 crops currently listed</div>
             </div>
@@ -365,7 +368,7 @@
             aria-label="Check Best Market Price">
             <div class="dash-stat__icon dash-stat__icon--gold"><i data-lucide="trending-up"></i></div>
             <div class="dash-stat__body">
-              <div class="dash-stat__label">Best Mandi Price</div>
+              <div class="dash-stat__label" data-i18n="farmer.bestMarketPriceLabel">Best Mandi Price</div>
               <div class="dash-stat__value" id="stat-best-val">₹2,920/q</div>
               <div class="dash-stat__sub">Nashik APMC · Net ₹2,780/q</div>
             </div>
@@ -375,7 +378,7 @@
             aria-label="View Buyer Offers">
             <div class="dash-stat__icon dash-stat__icon--blue"><i data-lucide="handshake"></i></div>
             <div class="dash-stat__body">
-              <div class="dash-stat__label" id="lbl-stat-buyer-offers">Buyer Offers</div>
+              <div class="dash-stat__label" id="lbl-stat-buyer-offers" data-i18n="farmer.buyerOffersLabel">Buyer Offers</div>
               <div class="dash-stat__value" id="stat-offers-val" data-count="4">4</div>
               <div class="dash-stat__sub">₹2,17,700 total offered</div>
             </div>
@@ -385,7 +388,7 @@
             role="button" aria-label="Track Pending Orders">
             <div class="dash-stat__icon dash-stat__icon--orange"><i data-lucide="clock"></i></div>
             <div class="dash-stat__body">
-              <div class="dash-stat__label">Order & Payment Status</div>
+              <div class="dash-stat__label" data-i18n="farmer.pendingOrdersLabel">Order & Payment Status</div>
               <div class="dash-stat__value" id="stat-orders-val" data-count="3">3</div>
               <div class="dash-stat__sub">₹31,000 pending settlement</div>
             </div>
@@ -1865,7 +1868,9 @@
     </div>
   </div>
 
-  <!-- SCRIPTS -->
+  <!-- Multilingual Support (Farmer) -->
+  <script src="js/translations.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/demo-data.js"></script>
   <script src="js/api.js"></script>
@@ -1875,6 +1880,8 @@
   <script src="js/grading-engine.js"></script>
   <script src="js/farmer.js"></script>
   <script src="js/dashboard.js"></script>
+  <!-- Krishi Sahayak AI Market Assistant -->
+  <script src="js/krishi-sahayak.js"></script>
 </body>
 
 </html>
