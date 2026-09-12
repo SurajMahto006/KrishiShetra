@@ -537,11 +537,17 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
   const emptyState = document.getElementById('market-empty');
   if (!grid) return;
 
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
+  const getCropName = (id, fb) => (window.KrishiI18n ? window.KrishiI18n.getCropName(id) : (fb || id));
+
   let crops = CROPS_DATA;
 
   if (filterText) {
     const q = filterText.toLowerCase();
-    crops = crops.filter(c => c.name.toLowerCase().includes(q) || c.market.toLowerCase().includes(q));
+    crops = crops.filter(c => {
+      const dispName = getCropName(c.id, c.name).toLowerCase();
+      return c.name.toLowerCase().includes(q) || dispName.includes(q) || c.market.toLowerCase().includes(q);
+    });
   }
   if (cropFilter !== 'all') {
     crops = crops.filter(c => c.id === cropFilter);
@@ -560,36 +566,50 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
   }
   if (emptyState) emptyState.style.display = 'none';
 
-  grid.innerHTML = crops.map(c => `
-    <div class="dash-crop-card" onclick="openCropDetails('${c.id}')" data-crop-id="${c.id}">
-      <div class="dash-crop-card__image-wrap">
-        <img src="${c.image}" alt="${c.name}" class="dash-crop-card__img" loading="lazy" onerror="this.style.display='none';">
-        <span class="dash-crop-card__demand-badge dash-crop-card__demand-badge--${c.demand}">
-          ${c.demand === 'high' ? '<i data-lucide="trending-up" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> High Demand' : (c.demand === 'medium' ? '<i data-lucide="activity" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> Medium' : 'Low Demand')}
-        </span>
-      </div>
-      <div class="dash-crop-card__body">
-        <div class="dash-crop-card__header">
-          <div class="dash-crop-card__title-row">
-            <span class="dash-crop-card__name">${c.name}</span>
-          </div>
-          <span class="dash-crop-card__market">${c.market}</span>
+  grid.innerHTML = crops.map(c => {
+    const cropDisp = getCropName(c.id, c.name);
+    let badgeHtml = '';
+    if (c.demand === 'high') {
+      badgeHtml = `<i data-lucide="trending-up" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ${t('market.highDemand', 'High Demand')}`;
+    } else if (c.demand === 'medium') {
+      badgeHtml = `<i data-lucide="activity" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i> ${t('market.mediumDemand', 'Medium Demand')}`;
+    } else {
+      badgeHtml = t('market.lowDemand', 'Low Demand');
+    }
+
+    return `
+      <div class="dash-crop-card" onclick="openCropDetails('${c.id}')" data-crop-id="${c.id}">
+        <div class="dash-crop-card__image-wrap">
+          <img src="${c.image}" alt="${cropDisp}" class="dash-crop-card__img" loading="lazy" onerror="this.style.display='none';">
+          <span class="dash-crop-card__demand-badge dash-crop-card__demand-badge--${c.demand}">
+            ${badgeHtml}
+          </span>
         </div>
-        <div class="dash-crop-card__price-row">
-          <div class="dash-crop-card__price">
-            <span class="dash-crop-card__price-value">₹${c.price.toLocaleString('en-IN')}</span>
-            <span class="dash-crop-card__price-unit">${c.unit}</span>
+        <div class="dash-crop-card__body">
+          <div class="dash-crop-card__header">
+            <div class="dash-crop-card__title-row">
+              <span class="dash-crop-card__name">${cropDisp}</span>
+            </div>
+            <span class="dash-crop-card__market">${c.market}</span>
           </div>
-          <div class="dash-crop-card__change dash-crop-card__change--${c.dir}">
-            ${c.dir === 'up' ? '↑' : '↓'} ${c.change}%
+          <div class="dash-crop-card__price-row">
+            <div class="dash-crop-card__price">
+              <span class="dash-crop-card__price-value">₹${c.price.toLocaleString('en-IN')}</span>
+              <span class="dash-crop-card__price-unit">${c.unit}</span>
+            </div>
+            <div class="dash-crop-card__change dash-crop-card__change--${c.dir}">
+              ${c.dir === 'up' ? '↑' : '↓'} ${c.change}%
+            </div>
           </div>
+          <button class="btn btn--secondary dash-crop-card__btn" onclick="event.stopPropagation(); openCropDetails('${c.id}')">
+            ${t('common.viewDetails', 'View Details')}
+          </button>
         </div>
-        <button class="btn btn--secondary dash-crop-card__btn" onclick="event.stopPropagation(); openCropDetails('${c.id}')">
-          View Details
-        </button>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
+
+  if (window.lucide) lucide.createIcons();
 }
 
 // Render "What Farmers Are Selling"
@@ -597,27 +617,31 @@ function renderFarmerListings() {
   const scroll = document.getElementById('farmer-listings-scroll');
   if (!scroll) return;
 
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
+  const getCropName = (id, fb) => (window.KrishiI18n ? window.KrishiI18n.getCropName(id) : (fb || id));
+
   const popular = [
-    { id: 'rice', count: 42, demand: 'hot', demandText: 'High demand' },
-    { id: 'wheat', count: 36, demand: 'rising', demandText: 'Medium demand' },
-    { id: 'onion', count: 28, demand: 'hot', demandText: 'High demand' },
-    { id: 'tomato', count: 21, demand: 'rising', demandText: 'Rising demand' },
-    { id: 'maize', count: 18, demand: 'stable', demandText: 'Stable' },
-    { id: 'soybean', count: 24, demand: 'hot', demandText: 'High demand' },
-    { id: 'chilli', count: 15, demand: 'hot', demandText: 'Export order' }
+    { id: 'rice', count: 42, demand: 'hot', demandText: t('market.highDemand', 'High demand') },
+    { id: 'wheat', count: 36, demand: 'rising', demandText: t('market.mediumDemand', 'Medium demand') },
+    { id: 'onion', count: 28, demand: 'hot', demandText: t('market.highDemand', 'High demand') },
+    { id: 'tomato', count: 21, demand: 'rising', demandText: t('market.highDemand', 'Rising demand') },
+    { id: 'maize', count: 18, demand: 'stable', demandText: t('market.mediumDemand', 'Stable') },
+    { id: 'soybean', count: 24, demand: 'hot', demandText: t('market.highDemand', 'High demand') },
+    { id: 'chilli', count: 15, demand: 'hot', demandText: t('market.highDemand', 'Export order') }
   ];
 
   scroll.innerHTML = popular.map(item => {
     const crop = CROPS_DATA.find(c => c.id === item.id) || CROPS_DATA[0];
+    const cropDisp = getCropName(crop.id, crop.name);
     return `
       <div class="dash-farmer-listing" onclick="openCropDetails('${crop.id}')">
         <div class="dash-farmer-listing__img-wrap">
-          <img src="${crop.image}" alt="${crop.name}" class="dash-farmer-listing__img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <img src="${crop.image}" alt="${cropDisp}" class="dash-farmer-listing__img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
           <div class="dash-farmer-listing__fallback" style="display:none;">${crop.emoji}</div>
         </div>
         <div class="dash-farmer-listing__body">
-          <div class="dash-farmer-listing__crop">${crop.name}</div>
-          <div class="dash-farmer-listing__count">${item.count} farmer listings</div>
+          <div class="dash-farmer-listing__crop">${cropDisp}</div>
+          <div class="dash-farmer-listing__count">${item.count} ${t('common.farmerListings', 'farmer listings')}</div>
           <div class="dash-farmer-listing__price">₹${crop.price.toLocaleString('en-IN')}/q</div>
           <span class="dash-farmer-listing__demand dash-farmer-listing__demand--${item.demand}">${item.demandText}</span>
         </div>
@@ -631,13 +655,19 @@ function renderLotsPanel(filter = 'all') {
   const container = document.getElementById('lots-panel-body');
   if (!container) return;
 
+  // On lots.html, FarmerFlow owns lots-panel-body with real API data
+  if (window.FarmerFlow && (document.getElementById('tab-lot-all') || document.querySelector('.dash-lots-tabs'))) {
+    return;
+  }
+
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
   const lots = krishiStore.getLots(filter);
 
   if (lots.length === 0) {
     container.innerHTML = `
       <div style="text-align:center; padding:32px 16px; color:var(--ks-text-muted);">
-        <p style="font-size:14px; font-weight:600; margin-bottom:8px;">No ${filter !== 'all' ? filter : ''} crop listings.</p>
-        <button class="btn btn--secondary btn--sm" onclick="openCreateLotModal()">+ Add Your First Lot</button>
+        <p style="font-size:14px; font-weight:600; margin-bottom:8px;">${t('farmer.noLotsFound', 'No crop listings found.')}</p>
+        <button class="btn btn--secondary btn--sm" onclick="openCreateLotModal()">+ ${t('farmer.addNewLot', 'Add Your First Lot')}</button>
       </div>
     `;
     return;
@@ -646,13 +676,15 @@ function renderLotsPanel(filter = 'all') {
   container.innerHTML = lots.map(lot => {
     const totalVal = lot.quantity * lot.expectedPrice;
     const isPaused = lot.status === 'paused';
+    const cropDisplay = window.KrishiI18n ? window.KrishiI18n.getCropName(lot.crop || lot.cropId) : lot.crop;
+
     return `
       <div class="dash-lot-row" id="lot-row-${lot.id}">
         <div class="dash-lot-row__thumb">
-          <img src="${lot.image}" alt="${lot.crop}" onerror="this.src='assets/images/crop-wheat.jpg'">
+          <img src="${lot.image}" alt="${cropDisplay}" onerror="this.src='assets/images/crop-wheat.jpg'">
         </div>
         <div class="dash-lot-row__info">
-          <div class="dash-lot-row__crop">${lot.crop}</div>
+          <div class="dash-lot-row__crop">${cropDisplay}</div>
           <div class="dash-lot-row__details">
             <span><strong>${lot.quantity}</strong> quintals</span>
             <span class="dash-lot-row__sep">·</span>
@@ -666,16 +698,17 @@ function renderLotsPanel(filter = 'all') {
         </div>
         <div class="dash-lot-row__right">
           <span class="dash-status-badge dash-status-badge--${lot.status}">
-            <span class="dash-status-badge__dot"></span> ${lot.status === 'listed' ? 'Listed' : (lot.status === 'paused' ? 'Paused' : 'Sold')}
+            <span class="dash-status-badge__dot"></span> ${lot.status === 'listed' ? t('farmer.activeForSale', 'Listed') : (lot.status === 'paused' ? 'Paused' : t('farmer.soldStatus', 'Sold'))}
           </span>
           <div class="dash-lot-row__actions">
             <button class="dash-lot-btn" title="View Details" onclick="openCropDetails('${lot.cropId}')"><i data-lucide="eye"></i></button>
             <button class="dash-lot-btn" title="Edit Lot" onclick="openEditLotModal('${lot.id}')"><i data-lucide="pencil"></i></button>
-            <button class="dash-lot-btn" title="${isPaused ? 'Resume' : 'Pause'}" onclick="openPauseLotModal('${lot.id}')">
+            <button class="dash-lot-btn ${isPaused ? 'dash-lot-btn--resume' : 'dash-lot-btn--pause'}"
+              title="${isPaused ? 'Resume Listing' : 'Pause Listing'}"
+              onclick="togglePauseLot('${lot.id}')">
               <i data-lucide="${isPaused ? 'play' : 'pause'}"></i>
             </button>
-            <button class="dash-lot-btn dash-lot-btn--danger" title="Delete Lot" onclick="openDeleteLotModal('${lot.id}')"><i data-lucide="trash-2"></i></button>
-            <button class="dash-lot-btn" title="View Offers" onclick="openOffersForLot('${lot.id}')" style="background:var(--ks-pale-sage); color:var(--ks-evergreen);"><i data-lucide="handshake"></i></button>
+            <button class="dash-lot-btn dash-lot-btn--delete" title="Delete Lot" onclick="handleDeleteLot('${lot.id}')"><i data-lucide="trash-2"></i></button>
           </div>
         </div>
       </div>
@@ -691,39 +724,43 @@ function renderOffersPanel() {
   const container = document.getElementById('offers-panel-body');
   if (!container) return;
 
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
   const offers = krishiStore.getOffers();
 
   if (offers.length === 0) {
     container.innerHTML = `
       <div style="text-align:center; padding:32px 16px; color:var(--ks-text-muted);">
-        <p style="font-size:14px;">No active buyer offers currently.</p>
+        <p style="font-size:14px;">${t('buyers.noActiveOffers', 'No active buyer offers currently.')}</p>
       </div>
     `;
     return;
   }
 
-  container.innerHTML = offers.map(off => `
+  container.innerHTML = offers.map(off => {
+    const cropDisplay = window.KrishiI18n ? window.KrishiI18n.getCropName(off.crop) : off.crop;
+    return `
     <div class="dash-offer-row" id="offer-row-${off.id}">
       <div class="dash-offer-row__avatar">${off.buyerName.charAt(0)}</div>
       <div class="dash-offer-row__info">
         <div class="dash-offer-row__name">
           ${off.buyerName}
-          ${off.verified ? '<span class="dash-offer-row__verified"><i data-lucide="badge-check"></i> Verified</span>' : ''}
+          ${off.verified ? `<span class="dash-offer-row__verified"><i data-lucide="badge-check"></i> ${t('buyers.verifiedBuyer', 'Verified')}</span>` : ''}
         </div>
-        <div class="dash-offer-row__details">${off.crop} · ${off.quantity} quintals · ₹${off.pricePerQ.toLocaleString('en-IN')}/q</div>
-        <div class="dash-offer-row__total">Total: ₹${off.totalAmount.toLocaleString('en-IN')}</div>
+        <div class="dash-offer-row__details">${cropDisplay} · ${off.quantity} ${t('common.quintals', 'quintals')} · ₹${off.pricePerQ.toLocaleString('en-IN')}/q</div>
+        <div class="dash-offer-row__total">${t('common.total', 'Total')}: ₹${off.totalAmount.toLocaleString('en-IN')}</div>
       </div>
       <div class="dash-offer-row__btns">
         ${off.status === 'accepted'
-      ? '<span class="dash-status-badge dash-status-badge--live">Accepted</span>'
+      ? `<span class="dash-status-badge dash-status-badge--live">${t('buyers.accepted', 'Accepted')}</span>`
       : `
-            <button class="btn btn--primary btn--sm" onclick="handleAcceptOffer('${off.id}')">Accept</button>
-            <button class="btn btn--secondary btn--sm" onclick="openNegotiateModal('${off.id}')">Negotiate</button>
+            <button class="btn btn--primary btn--sm" onclick="handleAcceptOffer('${off.id}')">${t('buyers.accept', 'Accept')}</button>
+            <button class="btn btn--secondary btn--sm" onclick="openNegotiateModal('${off.id}')">${t('buyers.negotiate', 'Negotiate')}</button>
           `
     }
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   if (window.lucide) lucide.createIcons();
 }
@@ -734,29 +771,33 @@ function renderBuyersDirectory() {
   const modalContainer = document.getElementById('buyers-directory-list-modal');
   if (!container && !modalContainer) return;
 
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
+
   const html = `
     <div style="margin-bottom:18px; background:var(--ks-bg-ivory); border-radius:12px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
       <div>
-        <strong style="color:var(--ks-evergreen); font-size:14px;">🎯 Best Institutional Matches for Your Harvest</strong>
-        <p style="font-size:12px; color:var(--ks-text-muted); margin:2px 0 0 0;">Pre-verified buyers with direct APMC escrow and 24h bank settlement guarantee.</p>
+        <strong style="color:var(--ks-evergreen); font-size:14px;">${t('buyers.bestInstitutionalMatches', '🎯 Best Institutional Matches for Your Harvest')}</strong>
+        <p style="font-size:12px; color:var(--ks-text-muted); margin:2px 0 0 0;">${t('buyers.bestMatchesSubtitle', 'Pre-verified buyers with direct APMC escrow and 24h bank settlement guarantee.')}</p>
       </div>
       <div style="display:flex; gap:6px;">
-        <span style="font-size:11px; font-weight:700; background:#EAF6ED; color:#2D6A4F; padding:4px 8px; border-radius:4px;">✓ 100% Verified</span>
-        <span style="font-size:11px; font-weight:700; background:#E0F2FE; color:#0369A1; padding:4px 8px; border-radius:4px;">🛡️ Escrow Payouts</span>
+        <span style="font-size:11px; font-weight:700; background:#EAF6ED; color:#2D6A4F; padding:4px 8px; border-radius:4px;">${t('buyers.hundredVerified', '✓ 100% Verified')}</span>
+        <span style="font-size:11px; font-weight:700; background:#E0F2FE; color:#0369A1; padding:4px 8px; border-radius:4px;">${t('buyers.escrowPayouts', '🛡️ Escrow Payouts')}</span>
       </div>
     </div>
 
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(310px, 1fr)); gap:16px;">
-      ${CORPORATE_BUYERS.map(b => `
+      ${CORPORATE_BUYERS.map(b => {
+        const cropsDisplay = b.crops.map(c => window.KrishiI18n ? window.KrishiI18n.getCropName(c) : c).join(', ');
+        return `
         <div class="dash-card" style="background:#FFFFFF; border:1px solid var(--ks-border); border-radius:14px; padding:18px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:var(--shadow-sm);">
           <div>
             <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
               <div>
                 <h4 style="font-size:16px; font-weight:800; color:var(--ks-evergreen); margin:0 0 2px 0;">${b.name}</h4>
                 <div style="font-size:12px; color:var(--ks-text-muted); display:flex; align-items:center; gap:6px;">
-                  <span style="color:#2D6A4F; font-weight:700;">✓ Verified Buyer</span>
+                  <span style="color:#2D6A4F; font-weight:700;">✓ ${t('buyers.verifiedBuyer', 'Verified Buyer')}</span>
                   <span>•</span>
-                  <span>📍 ${b.distance} away</span>
+                  <span>📍 ${b.distance} ${t('buyers.distanceAway', 'away')}</span>
                 </div>
               </div>
               <span style="background:#FDF7EA; color:#92400E; font-size:11px; font-weight:800; padding:3px 8px; border-radius:6px; border:1px solid #EED7A1;">
@@ -766,15 +807,15 @@ function renderBuyersDirectory() {
 
             <div style="background:var(--ks-bg-ivory); border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:12.5px;">
               <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                <span style="color:#666;">Needs / Demand:</span>
+                <span style="color:#666;">${t('buyers.needsDemand', 'Needs / Demand:')}</span>
                 <strong>${b.demand}</strong>
               </div>
               <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                <span style="color:#666;">Procuring Crops:</span>
-                <span style="font-weight:600; color:var(--ks-charcoal);">${b.crops.join(', ')}</span>
+                <span style="color:#666;">${t('buyers.procuringCrops', 'Procuring Crops:')}</span>
+                <span style="font-weight:600; color:var(--ks-charcoal);">${cropsDisplay}</span>
               </div>
               <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                <span style="color:#666;">Indicative Rate:</span>
+                <span style="color:#666;">${t('buyers.indicativeRate', 'Indicative Rate:')}</span>
                 <strong style="color:var(--ks-evergreen); font-size:13.5px;">${b.offerPrice}</strong>
               </div>
               <div style="display:flex; justify-content:space-between;">
@@ -793,7 +834,8 @@ function renderBuyersDirectory() {
             </button>
           </div>
         </div>
-      `).join('')}
+        `;
+      }).join('')}
     </div>
   `;
 
@@ -994,17 +1036,21 @@ function applyForecastResults(res) {
   const alertBtn = document.getElementById('btn-set-alert-ai');
   const trendLabel = document.getElementById('forecast-trend-label');
 
-  if (headline) headline.textContent = `${res.cropName} — ${res.mandi} Forecast`;
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
+  const localizedCrop = window.KrishiI18n ? window.KrishiI18n.getCropName(res.cropId || res.cropName) : res.cropName;
+
+  if (headline) headline.textContent = `${localizedCrop} — ${res.mandi} ${t('navigation.forecast', 'Forecast')}`;
   if (insight) {
-    insight.innerHTML = `"${res.cropName} prices are projected to <em>${res.isUp ? 'rise by ' + res.changePct : 'soften by ' + res.changePct}</em> over the next ${res.days} days."`;
+    const riseText = res.isUp ? `${t('ai.priceRising', 'rise by')} ${res.changePct}` : `${t('ai.priceFalling', 'soften by')} ${res.changePct}`;
+    insight.innerHTML = `"${localizedCrop} prices projected to <em>${riseText}</em> over next ${res.days} days."`;
   }
   if (trendLabel) {
-    trendLabel.textContent = res.isUp ? '📈 Price Rising' : '📉 Price Falling';
+    trendLabel.textContent = res.isUp ? ('📈 ' + t('ai.priceRising', 'Price Rising')) : ('📉 ' + t('ai.priceFalling', 'Price Falling'));
     trendLabel.parentElement.style.background = res.isUp ? '#E8F5E9' : '#FFEBEE';
     trendLabel.parentElement.style.color = res.isUp ? '#2E7D32' : '#C62828';
   }
   if (recBadge) {
-    const verdictText = res.isUp ? '⏳ WAIT 3 DAYS' : '⚡ SELL NOW';
+    const verdictText = res.isUp ? ('⏳ ' + t('ai.waitDays', 'WAIT 3 DAYS')) : ('⚡ ' + t('ai.sellNowVerdict', 'SELL NOW'));
     recBadge.textContent = verdictText;
     recBadge.style.background = res.isUp ? 'var(--ks-amber)' : 'var(--ks-terracotta)';
     recBadge.style.color = res.isUp ? 'var(--ks-evergreen)' : '#FFFFFF';
@@ -1021,7 +1067,7 @@ function applyForecastResults(res) {
   if (miniToday) miniToday.textContent = `₹${res.currentPrice.toLocaleString('en-IN')}`;
   if (miniTarget) miniTarget.textContent = `₹${res.expectedPrice.toLocaleString('en-IN')}`;
   if (miniLabel) miniLabel.textContent = `In ${res.days} Days`;
-  if (alertBtn) alertBtn.innerHTML = `<i data-lucide="bell-ring"></i> Set Target Alert (₹${res.expectedPrice.toLocaleString('en-IN')})`;
+  if (alertBtn) alertBtn.innerHTML = `<i data-lucide="bell-ring"></i> ${t('ai.setTargetAlert', 'Set Target Alert')} (₹${res.expectedPrice.toLocaleString('en-IN')})`;
 
   // Animate ring
   const circle = document.getElementById('forecast-ring-circle');
@@ -1142,9 +1188,14 @@ function openCropDetails(cropId) {
   const overlay = document.getElementById('crop-modal-overlay');
   if (!overlay) return;
 
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
+  const cropDisp = window.KrishiI18n ? window.KrishiI18n.getCropName(crop.id) : crop.name;
+  const detailsWord = t('market.marketDetails', 'Market Details');
+  const liveDataWord = t('market.liveDataGov', 'Live Market Data');
+
   document.getElementById('crop-modal-emoji').textContent = crop.emoji;
-  document.getElementById('crop-modal-name').textContent = `${crop.name} Market Details`;
-  document.getElementById('crop-modal-market').textContent = `${crop.market} · Live Market Data`;
+  document.getElementById('crop-modal-name').textContent = `${cropDisp} ${detailsWord}`;
+  document.getElementById('crop-modal-market').textContent = `${crop.market} · ${liveDataWord}`;
   document.getElementById('crop-modal-img').src = crop.image;
   document.getElementById('crop-modal-price').textContent = `₹${crop.price.toLocaleString('en-IN')}/q`;
   document.getElementById('crop-modal-change').textContent = `${crop.dir === 'up' ? '↑' : '↓'} ${crop.change}% from last week`;
@@ -1237,6 +1288,10 @@ function openCreateLotModal(cropId = 'rice') {
 }
 
 function initCreateLotForm() {
+  // If FarmerFlow is present and active on lots.html, let FarmerFlow manage lot creation and API sync
+  if (window.FarmerFlow && (document.getElementById('tab-lot-all') || document.querySelector('.dash-lots-tabs'))) {
+    return;
+  }
   const form = document.getElementById('create-lot-form');
   const closeBtn = document.getElementById('create-lot-modal-close');
   if (closeBtn) closeBtn.onclick = () => closeModal('create-lot-modal-overlay');
@@ -1610,44 +1665,72 @@ function hideModalAlert(elementId) {
   el.textContent = '';
 }
 
+let currentFarmerUser = null;
+
 function getTimeBasedGreeting() {
   const hour = new Date().getHours();
-  if (hour < 12) return 'Good Morning';
-  if (hour >= 12 && hour < 17) return 'Good Afternoon';
-  return 'Good Evening';
+  let key = 'farmer.greetingEvening';
+  let defaultText = 'Good Evening';
+
+  if (hour >= 4 && hour < 12) {
+    key = 'farmer.greetingMorning';
+    defaultText = 'Good Morning';
+  } else if (hour >= 12 && hour < 17) {
+    key = 'farmer.greetingAfternoon';
+    defaultText = 'Good Afternoon';
+  } else if (hour >= 17 && hour < 21) {
+    key = 'farmer.greetingEvening';
+    defaultText = 'Good Evening';
+  } else {
+    key = 'farmer.greetingNight';
+    defaultText = 'Good Night';
+  }
+
+  if (window.KrishiI18n && typeof window.KrishiI18n.t === 'function') {
+    return window.KrishiI18n.t(key, defaultText);
+  }
+  return defaultText;
 }
 
 function updateUserUI(user) {
+  if (user) {
+    currentFarmerUser = user;
+  }
+  const activeUser = currentFarmerUser || user || (window.Auth && window.Auth.getUser()) || JSON.parse(localStorage.getItem('krishi_user') || 'null');
+
   const timeGreeting = getTimeBasedGreeting();
-  const isDemo = window.KrishiDemo && typeof window.KrishiDemo.isDevDemo === 'function' && window.KrishiDemo.isDevDemo();
-  const rawName = (user && user.name) ? user.name.trim() : (isDemo ? 'Ramesh Patil' : '');
+  const t = (k, fb) => (window.KrishiI18n && typeof window.KrishiI18n.t === 'function' ? window.KrishiI18n.t(k, fb) : fb);
+  const fallbackFarmer = t('farmer.farmer', 'Farmer');
+
+  const rawName = (activeUser && activeUser.name) ? activeUser.name.trim() : '';
   const firstName = rawName ? rawName.split(' ')[0] : '';
-  const initial = rawName ? rawName.charAt(0).toUpperCase() : (isDemo ? 'R' : 'F');
+  const displayName = firstName || fallbackFarmer;
+  const initial = (rawName || fallbackFarmer).charAt(0).toUpperCase();
 
   // Header Avatar & Name
   const headerAvatar = document.getElementById('header-avatar');
   const headerName = document.getElementById('header-user-name');
   if (headerAvatar) headerAvatar.textContent = initial;
-  if (headerName) headerName.textContent = firstName || (isDemo ? 'Ramesh' : 'Farmer');
+  if (headerName) headerName.textContent = firstName || fallbackFarmer;
 
   // Dropdown Avatar, Name, Phone
   const dropdownAvatar = document.getElementById('dropdown-avatar');
   const dropdownName = document.getElementById('dropdown-user-name');
   const dropdownPhone = document.getElementById('dropdown-user-phone');
   if (dropdownAvatar) dropdownAvatar.textContent = initial;
-  if (dropdownName) dropdownName.textContent = rawName || (isDemo ? 'Ramesh Patil' : 'Farmer');
-  if (dropdownPhone) dropdownPhone.textContent = (user && user.phone) ? `+91 ${user.phone}` : (isDemo ? '+91 98201 44521' : ((user && user.email) || ''));
+  if (dropdownName) dropdownName.textContent = rawName || fallbackFarmer;
+  if (dropdownPhone) dropdownPhone.textContent = (activeUser && activeUser.phone) ? `+91 ${activeUser.phone}` : ((activeUser && activeUser.email) || '');
 
-  // Welcome Hero Greeting (Dynamic Time-based)
+  // Welcome Hero Greeting (Dynamic Time-based & Multilingual)
   const greetingEl = document.getElementById('dash-greeting');
   if (greetingEl) {
-    greetingEl.textContent = firstName ? `${timeGreeting}, ${firstName} 👋` : `${timeGreeting} 👋`;
+    greetingEl.textContent = `${timeGreeting}, ${displayName} 👋`;
   }
 
-  // Demo Location & Context
-  if (isDemo) {
-    const locEl = document.getElementById('dash-location');
-    if (locEl) locEl.innerHTML = '<i data-lucide="map-pin"></i> Navi Mumbai (Vashi APMC Hub)';
+  // Context & Location
+  const locEl = document.getElementById('dash-location');
+  if (locEl && activeUser && activeUser.location) {
+    locEl.innerHTML = `<i data-lucide="map-pin"></i> ${activeUser.location}`;
   }
 }
 
@@ -2001,16 +2084,21 @@ function initMarketComparison() {
   const bestBadgeName = document.getElementById('best-market-name');
   const bestBadgePrice = document.getElementById('best-market-price');
 
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
+  const getCropName = (id, fb) => (window.KrishiI18n ? window.KrishiI18n.getCropName(id) : (fb || id));
+
   async function renderComparison() {
     const cropId = cropSelect ? cropSelect.value : 'rice';
     const locId = locSelect ? locSelect.value : 'maharashtra';
+    const cropDisplay = getCropName(cropId, cropSelect ? cropSelect.options[cropSelect.selectedIndex]?.text : cropId);
+    const locDisplay = locSelect ? locSelect.options[locSelect.selectedIndex]?.text || locId : locId;
 
     if (tableBody) {
       tableBody.innerHTML = `
         <tr>
           <td colspan="5" style="text-align: center; padding: 24px; color: var(--ks-text-muted);">
             <div class="spinner" style="margin: 0 auto 8px auto; width: 22px; height: 22px; border: 2px solid #E5E4DD; border-top-color: var(--ks-evergreen); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-            Fetching live Government of India (data.gov.in) mandi prices...
+            ${t('market.fetchingGovData', 'Fetching live Government of India (data.gov.in) mandi prices...')}
           </td>
         </tr>
       `;
@@ -2040,7 +2128,6 @@ function initMarketComparison() {
         const govFreshnessText = document.getElementById('dash-gov-freshness-text');
 
         if (govCropNameEl) {
-          const cropDisplay = cropSelect ? cropSelect.options[cropSelect.selectedIndex]?.text || cropId : 'Rice';
           govCropNameEl.textContent = cropDisplay;
         }
         if (govBestPriceEl && best) {
@@ -2053,9 +2140,13 @@ function initMarketComparison() {
         }
         if (govFreshnessText) {
           govFreshnessText.textContent = isLive
-            ? `· Live data from data.gov.in · Last updated: ${updateLabel}`
-            : `· Showing latest retrieved data · Last updated: ${updateLabel}`;
+            ? `· ${t('market.liveDataGov', 'Live data from data.gov.in')} · ${updateLabel}`
+            : `· ${t('market.staleDataGov', 'Showing latest retrieved data')} · ${updateLabel}`;
         }
+
+        const sourceBadgeLabel = isLive
+          ? `✓ ${t('market.liveDataGov', 'Live data.gov.in')}`
+          : t('market.cachedDataGov', 'Cached data.gov.in');
 
         if (tableBody) {
           tableBody.innerHTML = mandis.map((m, idx) => {
@@ -2066,7 +2157,7 @@ function initMarketComparison() {
                 <td>
                   <strong>${m.market} APMC</strong>
                   <span style="font-size: 11px; color: #666; display: block;">${m.district ? m.district + ', ' : ''}${m.state}</span>
-                  ${isBest ? '<span class="ks-badge ks-badge-protected" style="margin-top: 2px; font-size: 10px;">⭐ HIGHEST MODAL PRICE</span>' : ''}
+                  ${isBest ? `<span class="ks-badge ks-badge-protected" style="margin-top: 2px; font-size: 10px;">⭐ ${t('market.highest', 'HIGHEST MODAL PRICE')}</span>` : ''}
                 </td>
                 <td class="td-price" style="font-weight: 800; color: var(--ks-evergreen);">
                   ₹${m.modalPrice?.toLocaleString('en-IN')}/q
@@ -2075,11 +2166,11 @@ function initMarketComparison() {
                   ₹${m.minPrice?.toLocaleString('en-IN')} – ₹${m.maxPrice?.toLocaleString('en-IN')}/q
                 </td>
                 <td>
-                  <div style="font-size: 11.5px; color: #555;">Updated ${arrivalDateStr}</div>
-                  <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; background: ${isLive ? '#E5F0E7' : '#FEF3C7'}; color: ${isLive ? '#12372A' : '#92400E'}; font-size: 10px; font-weight: 700; margin-top: 2px;">${isLive ? '✓ Live data.gov.in' : 'Cached data.gov.in'}</span>
+                  <div style="font-size: 11.5px; color: #555;">${arrivalDateStr}</div>
+                  <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; background: ${isLive ? '#E5F0E7' : '#FEF3C7'}; color: ${isLive ? '#12372A' : '#92400E'}; font-size: 10px; font-weight: 700; margin-top: 2px;">${sourceBadgeLabel}</span>
                 </td>
                 <td class="td-btn">
-                  <a href="mandi-compare.html" style="font-weight: 700; color: var(--ks-sage); text-decoration: none;">Compare →</a>
+                  <a href="mandi-compare.html" style="font-weight: 700; color: var(--ks-sage); text-decoration: none;">${t('common.viewDetails', 'Compare →')}</a>
                 </td>
               </tr>
             `;
@@ -2092,34 +2183,36 @@ function initMarketComparison() {
             return `
               <div class="dash-compare-mobile-card" style="border: ${isBest ? '2px solid var(--ks-sage)' : '1px solid #E5E4DD'}; border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #FFF;">
                 <div class="dash-compare-mobile-card__name" style="font-weight: 800; color: var(--ks-evergreen); font-size: 15px;">
-                  ${m.market} APMC ${isBest ? '⭐ (Top Price)' : ''}
+                  ${m.market} APMC ${isBest ? '⭐ (' + t('market.highest', 'Top Price') + ')' : ''}
                 </div>
                 <div style="font-size: 11.5px; color: #666; margin-bottom: 8px;">${m.district ? m.district + ', ' : ''}${m.state}</div>
-                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Modal Price</span><span class="dash-compare-mobile-card__val" style="font-weight: 800; color: var(--ks-evergreen);">₹${m.modalPrice?.toLocaleString('en-IN')}/q</span></div>
-                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Price Range</span><span class="dash-compare-mobile-card__val">₹${m.minPrice?.toLocaleString('en-IN')} – ₹${m.maxPrice?.toLocaleString('en-IN')}/q</span></div>
-                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Source</span><span class="dash-compare-mobile-card__val" style="color: ${isLive ? '#065F46' : '#92400E'}; font-weight: 700;">${isLive ? '✓ Live data.gov.in' : 'Cached data.gov.in'}</span></div>
+                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">${t('market.currentMandiPrice', 'Modal Price')}</span><span class="dash-compare-mobile-card__val" style="font-weight: 800; color: var(--ks-evergreen);">₹${m.modalPrice?.toLocaleString('en-IN')}/q</span></div>
+                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">${t('common.price', 'Price Range')}</span><span class="dash-compare-mobile-card__val">₹${m.minPrice?.toLocaleString('en-IN')} – ₹${m.maxPrice?.toLocaleString('en-IN')}/q</span></div>
+                <div class="dash-compare-mobile-card__row"><span class="dash-compare-mobile-card__label">Source</span><span class="dash-compare-mobile-card__val" style="color: ${isLive ? '#065F46' : '#92400E'}; font-weight: 700;">${sourceBadgeLabel}</span></div>
               </div>
             `;
           }).join('');
         }
       } else {
-        // Government data temporarily unavailable (Never fake numbers!)
+        // Truthful Empty Data state: No arrival records for this crop in this region today
+        const emptyMsg = t('market.noArrivalsState', `No market arrival records found for ${cropDisplay} in ${locDisplay} today.`);
+        const unavail = t('common.noData', 'No Data');
         const govBestPriceEl = document.getElementById('dash-gov-best-price');
         const govNetRealEl = document.getElementById('dash-gov-net-realization');
         const govFreshnessText = document.getElementById('dash-gov-freshness-text');
-        if (govBestPriceEl) govBestPriceEl.textContent = 'Unavailable';
-        if (govNetRealEl) govNetRealEl.textContent = 'Unavailable';
-        if (govFreshnessText) govFreshnessText.textContent = '· Current government data is temporarily unavailable.';
+        if (govBestPriceEl) govBestPriceEl.textContent = unavail;
+        if (govNetRealEl) govNetRealEl.textContent = unavail;
+        if (govFreshnessText) govFreshnessText.textContent = `· ${emptyMsg}`;
 
         if (tableBody) {
           tableBody.innerHTML = `
             <tr>
               <td colspan="5" style="text-align: center; padding: 28px; color: #78350F; background: #FFFBEB; border-radius: 8px;">
                 <div style="font-size: 24px; margin-bottom: 6px;">🏛️</div>
-                <strong style="display: block; font-size: 14px; margin-bottom: 4px;">Government Mandi Data</strong>
-                <span style="font-size: 12px; color: #92400E;">Current government data is temporarily unavailable.</span>
+                <strong style="display: block; font-size: 14px; margin-bottom: 4px;">${t('market.marketMandi', 'Government Mandi Arrivals')}</strong>
+                <span style="font-size: 12px; color: #92400E;">${emptyMsg}</span>
                 <div style="margin-top: 10px;">
-                  <button class="btn btn--sm btn--secondary" onclick="initMarketComparison()">Retry Fetch</button>
+                  <button class="btn btn--sm btn--secondary" onclick="initMarketComparison()">${t('common.refresh', 'Retry Fetch')}</button>
                 </div>
               </td>
             </tr>
@@ -2128,31 +2221,41 @@ function initMarketComparison() {
         if (cardsWrap) {
           cardsWrap.innerHTML = `
             <div style="text-align: center; padding: 20px; color: #78350F; background: #FFFBEB; border-radius: 8px; font-size: 13px;">
-              🏛️ <strong>Government Mandi Data</strong>: Current government data is temporarily unavailable.
+              🏛️ <strong>${t('market.marketMandi', 'Government Mandi Data')}</strong>: ${emptyMsg}
             </div>
           `;
         }
       }
     } catch (err) {
+      // Localized Network / Server Connection error
+      const errMsg = t('market.connectionError', 'Unable to connect to live market price server. Please check your connection.');
+      const unavail = t('common.noData', 'No Data');
       const govBestPriceEl = document.getElementById('dash-gov-best-price');
       const govNetRealEl = document.getElementById('dash-gov-net-realization');
       const govFreshnessText = document.getElementById('dash-gov-freshness-text');
-      if (govBestPriceEl) govBestPriceEl.textContent = 'Unavailable';
-      if (govNetRealEl) govNetRealEl.textContent = 'Unavailable';
-      if (govFreshnessText) govFreshnessText.textContent = '· Current government data is temporarily unavailable.';
+      if (govBestPriceEl) govBestPriceEl.textContent = unavail;
+      if (govNetRealEl) govNetRealEl.textContent = unavail;
+      if (govFreshnessText) govFreshnessText.textContent = `· ${errMsg}`;
 
       if (tableBody) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="5" style="text-align: center; padding: 28px; color: #78350F; background: #FFFBEB; border-radius: 8px;">
-              <div style="font-size: 24px; margin-bottom: 6px;">🏛️</div>
-              <strong style="display: block; font-size: 14px; margin-bottom: 4px;">Government Mandi Data</strong>
-                <span style="font-size: 12px; color: #92400E;">Current government data is temporarily unavailable.</span>
+            <td colspan="5" style="text-align: center; padding: 28px; color: #991B1B; background: #FEF2F2; border-radius: 8px;">
+              <div style="font-size: 24px; margin-bottom: 6px;">⚠️</div>
+              <strong style="display: block; font-size: 14px; margin-bottom: 4px;">${t('market.marketInsights', 'Live Market Connection')}</strong>
+              <span style="font-size: 12px; color: #B91C1C;">${errMsg}</span>
               <div style="margin-top: 10px;">
-                <button class="btn btn--sm btn--secondary" onclick="initMarketComparison()">Retry Fetch</button>
+                <button class="btn btn--sm btn--secondary" onclick="initMarketComparison()">${t('common.refresh', 'Retry Fetch')}</button>
               </div>
             </td>
           </tr>
+        `;
+      }
+      if (cardsWrap) {
+        cardsWrap.innerHTML = `
+          <div style="text-align: center; padding: 20px; color: #991B1B; background: #FEF2F2; border-radius: 8px; font-size: 13px;">
+            ⚠️ <strong>${t('market.marketInsights', 'Live Market Connection')}</strong>: ${errMsg}
+          </div>
         `;
       }
     }
@@ -2161,6 +2264,10 @@ function initMarketComparison() {
   if (cropSelect) cropSelect.addEventListener('change', renderComparison);
   if (locSelect) locSelect.addEventListener('change', renderComparison);
   renderComparison();
+
+  window.addEventListener('languageChanged', () => {
+    renderComparison();
+  });
 }
 
 function initPriceTrendChart() {
@@ -2169,8 +2276,12 @@ function initPriceTrendChart() {
   const linePath = document.getElementById('chart-line');
   const areaPath = document.getElementById('chart-area');
 
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
+  const getCropName = (id, fb) => (window.KrishiI18n ? window.KrishiI18n.getCropName(id) : (fb || id));
+
   function updateChart(cropId, range) {
     const crop = CROPS_DATA.find(c => c.id === cropId) || CROPS_DATA[0];
+    const cropDisp = getCropName(crop.id, crop.name);
     const base = crop.price;
 
     const elCurrent = document.getElementById('chart-stat-current');
@@ -2183,7 +2294,7 @@ function initPriceTrendChart() {
     if (elHigh) elHigh.textContent = `₹${(base + 80).toLocaleString('en-IN')}`;
     if (elLow) elLow.textContent = `₹${(base - 180).toLocaleString('en-IN')}`;
     if (elAvg) elAvg.textContent = `₹${(base - 40).toLocaleString('en-IN')}`;
-    if (elTitle) elTitle.textContent = `${crop.name} Price Trend (${range}D)`;
+    if (elTitle) elTitle.textContent = `${cropDisp} ${t('market.historicalModalPrice', 'Price Trend')} (${range}D)`;
 
     // Simple smooth curve coordinates
     const points = [
@@ -2218,6 +2329,13 @@ function initPriceTrendChart() {
   }
 
   updateChart('rice', '30');
+
+  window.addEventListener('languageChanged', () => {
+    const activeTab = document.querySelector('.dash-chart-tab--active');
+    const range = activeTab ? activeTab.getAttribute('data-range') : '30';
+    const cropId = cropSelect ? cropSelect.value : 'rice';
+    updateChart(cropId, range);
+  });
 }
 
 // ═════════════════════════════════════════════════════════════════════
@@ -2508,7 +2626,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   initLotWizard();
   initStorageModule();
   initTransportModule();
-  initDisputesModule();
+  // Re-render dynamic marketplace cards, listings, lots, and buyers on language change
+  window.addEventListener('languageChanged', () => {
+    if (typeof updateUserUI === 'function') updateUserUI(currentFarmerUser);
+    if (typeof renderMarketGrid === 'function') renderMarketGrid();
+    if (typeof renderFarmerListings === 'function') renderFarmerListings();
+    if (typeof renderLotsPanel === 'function') renderLotsPanel();
+    if (typeof renderOffersPanel === 'function') renderOffersPanel();
+    if (typeof renderBuyersDirectory === 'function') renderBuyersDirectory();
+  });
 
   // Initialize Lucide icons
   if (window.lucide) lucide.createIcons();

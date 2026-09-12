@@ -27,6 +27,10 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <!-- i18n -->
+  <script src="js/translations.js"></script>
+  <script src="js/i18n.js"></script>
 </head>
 
 <body class="dashboard-body" data-require-role="farmer">
@@ -42,29 +46,30 @@
   <!-- FIXED TOP HEADER / NAVBAR -->
   <header class="dash-header" id="dash-header">
     <div class="dash-header__inner">
+      <!-- Brand Logo -->
       <a href="index.html" class="dash-header__logo" id="dash-logo">
         <span class="dash-header__logo-icon"><i data-lucide="sprout"></i></span>
         <span class="dash-header__logo-text">KrishiShetra</span>
         <span class="dash-header__role-badge">FARMER</span>
       </a>
 
-      <nav class="dash-header__nav" id="dash-nav">
-        <a href="dashboard.html" class="dash-header__link"><i data-lucide="layout-dashboard"
-            class="dash-header__link-icon"></i> <span data-i18n="navigation.dashboard">Dashboard</span></a>
-        <a href="lots.html" class="dash-header__link"><i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span></a>
-        <a href="market.html" class="dash-header__link"><i data-lucide="bar-chart-3" class="dash-header__link-icon"></i>
-          <span data-i18n="navigation.market">Market</span></a>
-        <a href="ai-forecast.html" class="dash-header__link"><i data-lucide="brain" class="dash-header__link-icon"></i>
-          <span data-i18n="navigation.aiForecast">AI Forecast</span></a>
-        <a href="buyers.html" class="dash-header__link"><i data-lucide="users" class="dash-header__link-icon"></i>
-          <span data-i18n="navigation.buyers">Buyers</span></a>
-        <a href="orders.html" class="dash-header__link"><i data-lucide="clipboard-list"
-            class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span></a>
-        <a href="mandi-compare.html" class="dash-header__link dash-header__link--active"><i data-lucide="bar-chart-2"
-            class="dash-header__link-icon"></i> <span data-i18n="navigation.compare">Compare</span></a>
-      </nav>
+      <!-- Global Search -->
+      <div class="dash-search" id="dash-search">
+        <i data-lucide="search" class="dash-search__icon"></i>
+        <input type="text" id="dash-search-input" class="dash-search__input"
+          placeholder="Search mandis, crops, prices..." autocomplete="off" aria-label="Mandi search"
+          data-i18n-placeholder="common.searchPlaceholder">
+        <kbd class="dash-search__kbd">Ctrl K</kbd>
+      </div>
 
+      <!-- Navigation Links (populated by navbar.js) -->
+      <nav class="dash-header__nav" id="dash-nav"></nav>
+
+      <!-- Right Actions -->
       <div class="dash-header__actions">
+        <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+          <i data-lucide="bell"></i>
+        </button>
         <div class="dash-profile-wrap" id="dash-profile-wrap">
           <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
             <div class="dash-header__avatar" id="header-avatar">R</div>
@@ -83,6 +88,8 @@
             <a href="dashboard.html" class="dash-profile-dropdown__item"><i data-lucide="layout-dashboard"></i>
               Dashboard</a>
             <a href="lots.html" class="dash-profile-dropdown__item"><i data-lucide="package"></i> My Lots</a>
+            <a href="disputes.html" class="dash-profile-dropdown__item"><i data-lucide="shield-alert"></i>
+              <span data-i18n="navigation.disputes">Trade Disputes</span></a>
             <div class="dash-profile-dropdown__sep"></div>
             <a href="index.html" class="dash-profile-dropdown__item dash-profile-dropdown__item--danger"><i
                 data-lucide="log-out"></i> Logout</a>
@@ -90,6 +97,7 @@
         </div>
       </div>
 
+      <!-- Mobile Toggle -->
       <button class="dash-header__toggle" id="dash-nav-toggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
@@ -98,14 +106,8 @@
 
   <!-- MOBILE NAV -->
   <div class="dash-mobile-nav" id="dash-mobile-nav">
-    <div class="dash-mobile-nav__links">
-      <a href="dashboard.html" class="dash-mobile-nav__link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-      <a href="lots.html" class="dash-mobile-nav__link"><i data-lucide="package"></i> My Lots</a>
-      <a href="market.html" class="dash-mobile-nav__link"><i data-lucide="bar-chart-3"></i> Market Prices</a>
-      <a href="mandi-compare.html" class="dash-mobile-nav__link dash-mobile-nav__link--active"><i
-          data-lucide="bar-chart-2"></i> Compare Prices</a>
-      <a href="buyers.html" class="dash-mobile-nav__link"><i data-lucide="users"></i> Buyers</a>
-      <a href="orders.html" class="dash-mobile-nav__link"><i data-lucide="clipboard-list"></i> Orders</a>
+    <div class="dash-mobile-nav__links" id="mnav-links">
+      <!-- Populated by navbar.js -->
     </div>
   </div>
 
@@ -122,8 +124,8 @@
             <span>Mandi Price Comparison</span>
           </div>
           <div class="mpc-page-hero__title-row">
-            <h1 class="mpc-page-hero__title">Mandi Price Comparison</h1>
-            <span class="mpc-live-badge"><span class="mpc-live-dot"></span> Live Intelligence</span>
+            <h1 class="mpc-page-hero__title" data-i18n="mandiCompare.compareTitle">Mandi Price Comparison</h1>
+            <span class="mpc-live-badge"><span class="mpc-live-dot"></span> <span data-i18n="mandiCompare.liveIntelligence">Live Intelligence</span></span>
           </div>
           <p class="mpc-page-hero__sub">Compare prices, logistics costs, distance and market conditions to find the most
             profitable mandi.</p>
@@ -135,7 +137,7 @@
             <span id="mpc-last-updated-text">Live · Today, 08:30 AM IST</span>
           </div>
           <button class="mpc-refresh-btn" id="mpc-refresh-btn">
-            <i data-lucide="refresh-cw"></i> Refresh Prices
+            <i data-lucide="refresh-cw"></i> <span data-i18n="mandiCompare.refreshPrices">Refresh Prices</span>
           </button>
         </div>
       </div>
@@ -167,7 +169,7 @@
       <section class="mpc-control-panel" id="mpc-controls-section">
         <!-- Quick-select from farmer listed crops -->
         <div class="mpc-your-crops-bar">
-          <span class="mpc-your-crops-label"><i data-lucide="sprout"></i> Your Listed Lots:</span>
+          <span class="mpc-your-crops-label"><i data-lucide="sprout"></i> <span data-i18n="mandiCompare.yourListedLots">Your Listed Lots:</span></span>
           <div class="mpc-your-crops-list" id="mpc-your-crops">
             <!-- Rendered by JS -->
           </div>
@@ -338,7 +340,7 @@
           <!-- Card 1: Best Net Realization -->
           <div class="mpc-kpi-card mpc-kpi-card--green">
             <div class="mpc-kpi-header">
-              <span class="mpc-kpi-label">Best Net Realization</span>
+              <span class="mpc-kpi-label" data-i18n="mandiCompare.bestNetRealization">Best Net Realization</span>
               <div class="mpc-kpi-icon"><i data-lucide="trending-up"></i></div>
             </div>
             <div class="mpc-kpi-val" id="kpi-best-net-val">—</div>
@@ -349,7 +351,7 @@
           <!-- Card 2: Lowest Transport Cost -->
           <div class="mpc-kpi-card mpc-kpi-card--gold">
             <div class="mpc-kpi-header">
-              <span class="mpc-kpi-label">Lowest Transport Cost</span>
+              <span class="mpc-kpi-label" data-i18n="mandiCompare.lowestTransportCost">Lowest Transport Cost</span>
               <div class="mpc-kpi-icon"><i data-lucide="truck"></i></div>
             </div>
             <div class="mpc-kpi-val" id="kpi-lowest-tr-val">—</div>
@@ -360,7 +362,7 @@
           <!-- Card 3: Closest Mandi -->
           <div class="mpc-kpi-card mpc-kpi-card--blue">
             <div class="mpc-kpi-header">
-              <span class="mpc-kpi-label">Closest Mandi</span>
+              <span class="mpc-kpi-label" data-i18n="mandiCompare.closestMandi">Closest Mandi</span>
               <div class="mpc-kpi-icon"><i data-lucide="map-pin"></i></div>
             </div>
             <div class="mpc-kpi-val" id="kpi-closest-val">—</div>
@@ -371,7 +373,7 @@
           <!-- Card 4: Best Overall Option -->
           <div class="mpc-kpi-card mpc-kpi-card--purple">
             <div class="mpc-kpi-header">
-              <span class="mpc-kpi-label">Best Overall Option</span>
+              <span class="mpc-kpi-label" data-i18n="mandiCompare.bestOverallOption">Best Overall Option</span>
               <div class="mpc-kpi-icon"><i data-lucide="award"></i></div>
             </div>
             <div class="mpc-kpi-val" id="kpi-best-overall-val" style="font-size:18px;">—</div>
@@ -395,7 +397,7 @@
       <section class="mpc-section" id="mpc-table-section">
         <div class="mpc-section-header">
           <div>
-            <h2 class="mpc-section-title"><i data-lucide="table"></i> Multi-Mandi Decision Matrix</h2>
+            <h2 class="mpc-section-title"><i data-lucide="table"></i> <span data-i18n="mandiCompare.multiMandiMatrix">Multi-Mandi Decision Matrix</span></h2>
             <p class="mpc-section-subtitle">Real-time comparison across prices, logistics deductions, net realization,
               and weather</p>
           </div>
@@ -434,7 +436,7 @@
         <div class="mpc-chart-card">
           <div class="mpc-chart-header">
             <div>
-              <h2 class="mpc-section-title"><i data-lucide="bar-chart-3"></i> Visual Profitability Analysis</h2>
+              <h2 class="mpc-section-title"><i data-lucide="bar-chart-3"></i> <span data-i18n="mandiCompare.visualAnalysisTitle">Visual Profitability Analysis</span></h2>
               <p class="mpc-section-subtitle">Evaluate net returns and distance trade-offs visually</p>
             </div>
             <div class="mpc-chart-tabs">
@@ -462,7 +464,7 @@
       <section class="mpc-section" id="mpc-weather-section">
         <div class="mpc-section-header">
           <div>
-            <h2 class="mpc-section-title"><i data-lucide="cloud-sun"></i> Market Conditions & Weather</h2>
+            <h2 class="mpc-section-title"><i data-lucide="cloud-sun"></i> <span data-i18n="mandiCompare.marketConditionsWeather">Market Conditions & Weather</span></h2>
             <p class="mpc-section-subtitle">Live weather forecast, arrival pressures, and buyer liquidity in key mandis
             </p>
           </div>
@@ -476,7 +478,7 @@
       <section class="mpc-section" id="mpc-cards-section">
         <div class="mpc-section-header">
           <div>
-            <h2 class="mpc-section-title"><i data-lucide="grid"></i> Individual Mandi Profiles</h2>
+            <h2 class="mpc-section-title"><i data-lucide="grid"></i> <span data-i18n="mandiCompare.individualProfiles">Individual Mandi Profiles</span></h2>
             <p class="mpc-section-subtitle">Click "+ Compare" to pin mandis into the decision matrix</p>
           </div>
           <span class="mpc-badge mpc-badge--neutral" id="mpc-cards-count">Loading mandis...</span>

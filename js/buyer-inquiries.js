@@ -6,8 +6,48 @@
 let currentFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.Auth && !window.Auth.requireRole('buyer')) {
+  const role = window.Auth ? window.Auth.getRole() : 'buyer';
+  if (window.Auth && role !== 'farmer' && !window.Auth.requireRole('buyer')) {
     return;
+  }
+  if (window.Auth && role === 'farmer' && !window.Auth.requireAuth()) {
+    return;
+  }
+
+  // Role-aware header adjustments
+  if (role === 'farmer') {
+    const roleBadge = document.querySelector('.dash-header__role-badge');
+    if (roleBadge) roleBadge.textContent = 'FARMER';
+    const nav = document.getElementById('dash-nav');
+    if (nav) {
+      nav.innerHTML = `
+        <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> <span data-i18n="navigation.dashboard">Dashboard</span>
+        </a>
+        <a href="lots.html" class="dash-header__link" id="nav-lots">
+          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
+        </a>
+        <a href="buyer-inquiries.html" class="dash-header__link dash-header__link--active" id="nav-inquiries">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyerInquiries">Buyer Inquiries</span>
+        </a>
+        <a href="storage.html" class="dash-header__link" id="nav-storage">
+          <i data-lucide="warehouse" class="dash-header__link-icon"></i> <span data-i18n="navigation.storage">Storage Options</span>
+        </a>
+        <a href="market.html" class="dash-header__link" id="nav-market">
+          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="navigation.market">Market</span>
+        </a>
+        <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
+          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span>
+        </a>
+        <a href="orders.html" class="dash-header__link" id="nav-orders">
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span>
+        </a>
+      `;
+      if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+      if (window.KrishiI18n && typeof window.KrishiI18n.applyTranslations === 'function') window.KrishiI18n.applyTranslations();
+    }
+    const breadcrumbDash = document.querySelector('.dash-breadcrumb a');
+    if (breadcrumbDash) breadcrumbDash.href = 'dashboard.html';
   }
 
   initFilterTabs();
@@ -42,11 +82,14 @@ async function loadInquiries() {
   if (currentFilter !== 'all') params.status = currentFilter;
 
   try {
-    const res = await window.api.inquiries.getMine(params);
+    const role = window.Auth ? window.Auth.getRole() : 'buyer';
+    const res = role === 'farmer' ? await window.api.inquiries.getFarmer(params) : await window.api.inquiries.getMine(params);
     if (res.success && Array.isArray(res.inquiries) && res.inquiries.length > 0) {
       list.innerHTML = res.inquiries.map(inq => {
         const s = getStatusBadge(inq.status);
         const dateStr = inq.createdAt ? new Date(inq.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+        const counterparty = role === 'farmer' ? `Buyer: <strong>${inq.buyerName || 'Verified Buyer'}</strong>` : `Farmer: <strong>${inq.farmerName || 'Verified Farm'}</strong>`;
+        const cropDisplay = window.KrishiI18n ? window.KrishiI18n.getCropName(inq.crop) : inq.crop;
         return `
           <div class="dash-lot-card" style="background: #FFFFFF; border: 1px solid var(--border-light, #E5E4DD); border-radius: 12px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
             <div>
@@ -55,9 +98,9 @@ async function loadInquiries() {
                 <span style="padding: 3px 8px; border-radius: 6px; background: ${s.bg}; color: ${s.color}; font-size: 11px; font-weight: 700; text-transform: uppercase;">${s.text}</span>
                 <span style="font-size: 12px; color: #888;">• ${dateStr}</span>
               </div>
-              <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">${inq.crop} <span style="font-size: 13px; font-weight: 400; color: #666;">(${inq.variety || 'Standard'})</span></h3>
+              <h3 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">${cropDisplay} <span style="font-size: 13px; font-weight: 400; color: #666;">(${inq.variety || 'Standard'})</span></h3>
               <div style="font-size: 13px; color: #555;">
-                Offered: <strong>₹${inq.offeredPrice?.toLocaleString('en-IN')}/q</strong> for <strong>${inq.quantityRequired} quintals</strong> • Farmer: <strong>${inq.farmerName || 'Verified Farm'}</strong>
+                Offered: <strong>₹${inq.offeredPrice?.toLocaleString('en-IN')}/q</strong> for <strong>${inq.quantityRequired} quintals</strong> • ${counterparty}
               </div>
             </div>
 

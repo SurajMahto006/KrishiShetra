@@ -1,38 +1,38 @@
 const fs = require('fs');
-const path = require('path');
+const vm = require('vm');
 
-const farmerPages = [
+const transCode = fs.readFileSync('js/translations.js', 'utf8');
+const sandbox = { window: {} };
+vm.createContext(sandbox);
+vm.runInContext(transCode, sandbox);
+const T = sandbox.window.KrishiTranslations;
+
+function getVal(obj, path) {
+  return path.split('.').reduce((p, c) => (p && p[c] !== undefined ? p[c] : undefined), obj);
+}
+
+const pages = [
   'dashboard.html',
   'lots.html',
   'market.html',
   'mandi-compare.html',
-  'ai-forecast.html',
-  'buyer-inquiries.html',
   'buyers.html',
   'orders.html',
-  'storage.html'
+  'storage.html',
+  'ai-forecast.html',
+  'disputes.html'
 ];
 
-farmerPages.forEach(file => {
-  const filePath = path.join(__dirname, '..', file);
-  if (!fs.existsSync(filePath)) {
-    console.log(`Missing file: ${file}`);
-    return;
-  }
-  const content = fs.readFileSync(filePath, 'utf8');
-  
-  // Find all elements with fixed text that lack data-i18n
-  const regex = /<([a-zA-Z0-9]+)(?![^>]*data-i18n)[^>]*>([^<>{}\n\r\t]+)<\/\1>/g;
-  let match;
-  const untranslated = [];
-  while ((match = regex.exec(content)) !== null) {
-    const tag = match[1].toLowerCase();
-    const text = match[2].trim();
-    if (text && !['script', 'style', 'title', 'meta', 'link', 'svg'].includes(tag) && !text.match(/^[\s\d+•✓→⏳🇮🇳\-–—₹/]*$/)) {
-      untranslated.push({ tag, text });
-    }
-  }
-  console.log(`\n=== ${file}: ${untranslated.length} untranslated text elements ===`);
-  untranslated.slice(0, 15).forEach(item => console.log(`  <${item.tag}>: "${item.text}"`));
-  if (untranslated.length > 15) console.log(`  ... and ${untranslated.length - 15} more`);
+pages.forEach(file => {
+  const html = fs.readFileSync(file, 'utf8');
+  const matches = [...html.matchAll(/data-i18n="([^"]+)"/g)].map(m => m[1]);
+  const missingEn = [...new Set(matches.filter(k => getVal(T.en, k) === undefined))];
+  const missingHi = [...new Set(matches.filter(k => getVal(T.hi, k) === undefined))];
+  const missingMr = [...new Set(matches.filter(k => getVal(T.mr, k) === undefined))];
+
+  console.log(`\n=== ${file} ===`);
+  console.log(`Tagged keys: ${matches.length} (Unique: ${new Set(matches).size})`);
+  console.log(`Missing in EN: ${missingEn.length}`, missingEn);
+  console.log(`Missing in HI: ${missingHi.length}`, missingHi);
+  console.log(`Missing in MR: ${missingMr.length}`, missingMr);
 });

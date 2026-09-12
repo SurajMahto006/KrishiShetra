@@ -963,7 +963,7 @@ async function loadMyStorageBookings() {
                 <span style="padding: 2px 8px; border-radius: 6px; background: ${statusBg}; color: ${statusColor}; font-size: 11px; font-weight: 700; text-transform: uppercase;">${req.status}</span>
                 ${req.warehouseReceiptNumber ? `<span style="padding: 2px 8px; border-radius: 6px; background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: 700;">Receipt: ${req.warehouseReceiptNumber}</span>` : ''}
               </div>
-              <h4 style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen); margin: 0 0 2px 0;">${req.cropName} (${req.quantity} ${req.quantityUnit || 'quintal'})</h4>
+              <h4 style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen); margin: 0 0 2px 0;">${window.KrishiI18n ? window.KrishiI18n.getCropName(req.cropName) : req.cropName} (${req.quantity} ${req.quantityUnit || 'quintal'})</h4>
               <div style="font-size: 12px; color: #666;">
                 Facility: <strong>${facility.name || 'Accredited Facility'}</strong> • Duration: <strong>${req.durationDays || 30} Days</strong>
               </div>
@@ -1028,7 +1028,7 @@ async function loadMyPledgeRequests() {
             <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #1565C0;">${p.financingId || p.loanRequestId || p._id}</span>
             <span style="padding: 2px 8px; border-radius: 6px; background: #E3F2FD; color: #0D47A1; font-size: 11px; font-weight: 700; text-transform: uppercase;">${p.status || 'Applied'}</span>
           </div>
-          <h4 style="font-size: 15px; font-weight: 800; color: #1A3320; margin: 0 0 2px 0;">${p.cropName} • Stored: ${p.storedQuantity} ${p.quantityUnit || 'q'}</h4>
+          <h4 style="font-size: 15px; font-weight: 800; color: #1A3320; margin: 0 0 2px 0;">${window.KrishiI18n ? window.KrishiI18n.getCropName(p.cropName) : p.cropName} • Stored: ${p.storedQuantity} ${p.quantityUnit || 'q'}</h4>
           <div style="font-size: 12px; color: #666;">
             Lender: <strong>${p.partnerInstitution || 'NABARD Linked Credit'}</strong> • Est. Value: <strong>₹${(p.estimatedProduceValue || 0).toLocaleString('en-IN')}</strong>
           </div>

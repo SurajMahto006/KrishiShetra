@@ -21,6 +21,9 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
+  <!-- i18n -->
+  <script src="js/translations.js"></script>
+  <script src="js/i18n.js"></script>
 </head>
 
 <body>
@@ -49,11 +52,11 @@
       <!-- Bottom Headline & Value Proposition -->
       <div class="auth-hero__bottom">
         <h1 class="auth-hero__headline" id="hero-headline">
-          Sell smarter.<br>
-          Discover better<br>
-          <em>markets.</em>
+          <span data-i18n="auth.heroHeadline1">Sell smarter.</span><br>
+          <span data-i18n="auth.heroHeadline2">Discover better</span><br>
+          <em data-i18n="auth.heroHeadline3">markets.</em>
         </h1>
-        <p class="auth-hero__subtitle" id="hero-subtitle">
+        <p class="auth-hero__subtitle" id="hero-subtitle" data-i18n="auth.heroSubtitle">
           Join India's leading agricultural intelligence network connecting farmers directly with verified buyers and
           AI-powered mandi insights.
         </p>
@@ -61,15 +64,15 @@
         <div class="auth-hero__badges">
           <div class="auth-hero__badge-item">
             <span class="auth-hero__badge-dot"></span>
-            <span id="badge-farmers">50,000+ Active Farmers</span>
+            <span id="badge-farmers" data-i18n="auth.badgeFarmers">50,000+ Active Farmers</span>
           </div>
           <div class="auth-hero__badge-item">
             <span class="auth-hero__badge-dot"></span>
-            <span id="badge-mandis">120+ APMC Mandis</span>
+            <span id="badge-mandis" data-i18n="auth.badgeMandis">120+ APMC Mandis</span>
           </div>
           <div class="auth-hero__badge-item">
             <span class="auth-hero__badge-dot"></span>
-            <span id="badge-verified">100% Verified Buyers</span>
+            <span id="badge-verified" data-i18n="auth.badgeVerified">100% Verified Buyers</span>
           </div>
         </div>
       </div>
@@ -81,14 +84,14 @@
 
         <!-- Header Text -->
         <header class="auth-header">
-          <h2 class="auth-header__title" id="auth-title">Create Account</h2>
-          <p class="auth-header__subtitle" id="auth-subtitle">Join KrishiShetra and discover better market rates</p>
+          <h2 class="auth-header__title" id="auth-title" data-i18n="auth.createAccount">Create Account</h2>
+          <p class="auth-header__subtitle" id="auth-subtitle" data-i18n="auth.joinKrishi">Join KrishiShetra and discover better market rates</p>
         </header>
 
         <!-- Mode Toggle Tabs (Login / Register) -->
         <div class="auth-tabs" id="auth-tabs-container">
-          <a href="login.html" class="auth-tab-btn" id="tab-btn-login">Log In</a>
-          <button type="button" class="auth-tab-btn active" id="tab-btn-register">Register</button>
+          <a href="login.html" class="auth-tab-btn" id="tab-btn-login" data-i18n="auth.tabLogin">Log In</a>
+          <button type="button" class="auth-tab-btn active" id="tab-btn-register" data-i18n="auth.tabRegister">Register</button>
         </div>
 
         <!-- ── REGISTRATION FORM ── -->
@@ -97,30 +100,30 @@
 
           <!-- Role Selector -->
           <div class="auth-roles-group">
-            <label class="auth-roles-label" id="label-role">I AM A...</label>
+            <label class="auth-roles-label" id="label-role" data-i18n="auth.iAmA">I AM A...</label>
             <div class="auth-roles" role="radiogroup" aria-labelledby="label-role">
 
               <div class="auth-role-card active" data-role="farmer" tabindex="0" role="radio" aria-checked="true">
                 <span class="auth-role-card__icon"><i data-lucide="tractor"></i></span>
-                <span class="auth-role-card__name" id="role-name-farmer">Farmer</span>
+                <span class="auth-role-card__name" id="role-name-farmer" data-i18n="auth.roleFarmer">Farmer</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
               <div class="auth-role-card" data-role="fpo" tabindex="0" role="radio" aria-checked="false">
                 <span class="auth-role-card__icon"><i data-lucide="users"></i></span>
-                <span class="auth-role-card__name" id="role-name-fpo">FPO</span>
+                <span class="auth-role-card__name" id="role-name-fpo" data-i18n="auth.roleFPO">FPO</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
               <div class="auth-role-card" data-role="buyer" tabindex="0" role="radio" aria-checked="false">
                 <span class="auth-role-card__icon"><i data-lucide="store"></i></span>
-                <span class="auth-role-card__name" id="role-name-buyer">Buyer</span>
+                <span class="auth-role-card__name" id="role-name-buyer" data-i18n="auth.roleBuyer">Buyer</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
               <div class="auth-role-card" data-role="transporter" tabindex="0" role="radio" aria-checked="false">
                 <span class="auth-role-card__icon"><i data-lucide="truck"></i></span>
-                <span class="auth-role-card__name" id="role-name-transporter">Transporter</span>
+                <span class="auth-role-card__name" id="role-name-transporter" data-i18n="auth.roleTransporter">Transporter</span>
                 <span class="auth-role-card__check">✓</span>
               </div>
 
@@ -129,38 +132,38 @@
 
           <!-- Full Name Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="register-name" id="label-register-name">FULL NAME</label>
+            <label class="auth-input-label" for="register-name" id="label-register-name" data-i18n="auth.labelFullName">FULL NAME</label>
             <div class="auth-text-box">
-              <input type="text" id="register-name" class="auth-text-box__input" placeholder="e.g. Rajesh Patil"
+              <input type="text" id="register-name" class="auth-text-box__input" placeholder="e.g. Rajesh Patil" data-i18n-placeholder="auth.placeholderName"
                 autocomplete="name" required>
             </div>
           </div>
 
           <!-- Email Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="register-email" id="label-register-email">EMAIL ADDRESS</label>
+            <label class="auth-input-label" for="register-email" id="label-register-email" data-i18n="auth.labelEmailAddress">EMAIL ADDRESS</label>
             <div class="auth-text-box">
-              <input type="email" id="register-email" class="auth-text-box__input" placeholder="farmer@example.com"
+              <input type="email" id="register-email" class="auth-text-box__input" placeholder="farmer@example.com" data-i18n-placeholder="auth.placeholderEmail"
                 autocomplete="email" required>
             </div>
           </div>
 
           <!-- Mobile Number Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="register-phone" id="label-phone">MOBILE NUMBER</label>
+            <label class="auth-input-label" for="register-phone" id="label-phone" data-i18n="auth.labelPhone">MOBILE NUMBER</label>
             <div class="auth-phone-box">
               <div class="auth-phone-box__prefix">
                 <span>🇮🇳</span>
                 <span>+91</span>
               </div>
-              <input type="tel" id="register-phone" class="auth-phone-box__input" placeholder="10-digit number"
+              <input type="tel" id="register-phone" class="auth-phone-box__input" placeholder="10-digit number" data-i18n-placeholder="auth.placeholderPhone"
                 maxlength="10" inputmode="numeric" pattern="[0-9]{10}" autocomplete="tel-national">
             </div>
           </div>
 
           <!-- Password Input -->
           <div class="auth-input-group">
-            <label class="auth-input-label" for="register-password" id="label-register-password">PASSWORD</label>
+            <label class="auth-input-label" for="register-password" id="label-register-password" data-i18n="auth.labelPasswordCreate">PASSWORD</label>
             <div class="auth-text-box">
               <input type="password" id="register-password" class="auth-text-box__input"
                 placeholder="Minimum 6 characters" autocomplete="new-password" required>
@@ -173,13 +176,13 @@
 
           <!-- Register Action Button -->
           <button type="submit" class="auth-btn-primary" id="btn-register">
-            <span id="btn-register-text">Register & Send OTP</span>
+            <span id="btn-register-text" data-i18n="auth.btnRegister">Register & Send OTP</span>
             <span class="auth-btn-arrow">→</span>
           </button>
 
           <p class="auth-switch-prompt">
-            <span id="text-have-account">Already have an account?</span>
-            <a href="login.html" class="auth-switch-link" id="link-to-login">Log In</a>
+            <span id="text-have-account" data-i18n="auth.alreadyHaveAccount">Already have an account?</span>
+            <a href="login.html" class="auth-switch-link" id="link-to-login" data-i18n="auth.linkLogin">Log In</a>
           </p>
         </form>
 
@@ -188,14 +191,14 @@
           <div id="otp-alert" class="auth-alert"></div>
 
           <div style="margin-bottom: 20px;">
-            <label class="auth-input-label" id="label-otp">ENTER 6-DIGIT EMAIL OTP</label>
+            <label class="auth-input-label" id="label-otp" data-i18n="auth.labelOtp">ENTER 6-DIGIT EMAIL OTP</label>
             <div style="font-size: 13.5px; color: #6F7F75; margin-bottom: 12px;">
-              <span id="otp-sent-text">Verification code sent to</span>
+              <span id="otp-sent-text" data-i18n="auth.otpSentTo">Verification code sent to</span>
               <strong id="display-user-email"
                 style="color: #12372A; margin: 0 4px; word-break: break-all;">user@example.com</strong>
               <button type="button" class="auth-otp-change-num" id="btn-change-email">
                 <i data-lucide="edit-3" style="width:12px;height:12px;vertical-align:middle;"></i>
-                <span id="btn-edit-text">Change</span>
+                <span id="btn-edit-text" data-i18n="auth.btnChange">Change</span>
               </button>
             </div>
 
@@ -213,19 +216,19 @@
 
           <!-- OTP Timer and Resend -->
           <div class="auth-otp-meta">
-            <span class="auth-otp-timer" id="otp-timer-display">Resend OTP in <strong
+            <span class="auth-otp-timer" id="otp-timer-display"><span data-i18n="auth.timerLabel">Resend OTP in</span> <strong
                 id="timer-count">60</strong>s</span>
-            <button type="button" class="auth-otp-resend-btn" id="btn-resend-otp" disabled>Resend Code</button>
+            <button type="button" class="auth-otp-resend-btn" id="btn-resend-otp" data-i18n="auth.btnResend" disabled>Resend Code</button>
           </div>
 
           <!-- Verify Button -->
           <button type="button" class="auth-btn-primary" id="btn-verify-otp">
-            <span id="btn-verify-text">Verify & Continue</span>
+            <span id="btn-verify-text" data-i18n="auth.btnVerify">Verify & Continue</span>
             <span class="auth-btn-arrow">→</span>
           </button>
 
           <p class="auth-switch-prompt" style="margin-top: 14px;">
-            <a href="login.html" class="auth-switch-link" id="link-back-to-login">← Back to Log In</a>
+            <a href="login.html" class="auth-switch-link" id="link-back-to-login" data-i18n="auth.backToLogin">← Back to Log In</a>
           </p>
         </div>
 
@@ -246,7 +249,7 @@
         </div>
         <p class="auth-secure-subtext">
           <i data-lucide="lock" style="width:13px;height:13px;color:#5B9A72;vertical-align:middle;"></i>
-          <span id="text-privacy">Your data is secure and protected under AgriStack guidelines.</span>
+          <span id="text-privacy" data-i18n="auth.privacyText">Your data is secure and protected under AgriStack guidelines.</span>
         </p>
 
       </div>

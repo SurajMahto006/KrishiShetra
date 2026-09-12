@@ -109,30 +109,31 @@ const FarmerFlow = {
               🌾
             </div>
             <div>
-              <h3 style="font-size: 18px; font-weight: 700; color: #F5F4ED; margin: 0 0 6px 0;">Complete Your Farm Profile</h3>
-              <p style="font-size: 13px; color: rgba(245, 244, 237, 0.85); margin: 0 0 8px 0; line-height: 1.45;">
-                Add your farm profile details to unlock verified buyer matching, real-time APMC price alerts, and warehouse credit linkages:
+              <h3 style="font-size: 18px; font-weight: 700; color: #F5F4ED; margin: 0 0 6px 0;" data-i18n="farmer.completeFarmProfile">Complete Your Farm Profile</h3>
+              <p style="font-size: 13px; color: rgba(245, 244, 237, 0.85); margin: 0 0 8px 0; line-height: 1.45;" data-i18n="farmer.farmProfileOnboardingDesc">
+                Add your farm location, acreage, and cultivated crops to receive verified buyer inquiries and tailored storage recommendations.
               </p>
               <div style="display: flex; gap: 8px; flex-wrap: wrap; font-size: 11.5px; color: #E8B96A;">
-                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">🏡 Farm details</span>
-                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">📍 Location</span>
-                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">🌾 Crops</span>
-                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">🏦 Bank / Payment information</span>
-                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">📞 Contact details</span>
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">🏡 <span data-i18n="farmer.farmProfile">Farm details</span></span>
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">📍 <span data-i18n="common.address">Location</span></span>
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">🌾 <span data-i18n="farmer.primaryCrops">Crops</span></span>
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">🏦 <span>Bank / Credit</span></span>
+                <span style="background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);">📞 <span data-i18n="common.contact">Contact details</span></span>
               </div>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <button class="btn btn--primary" id="btn-banner-complete-profile" style="background: #E8B96A; color: #12372A; font-weight: 700; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; white-space: nowrap;">
-              Complete Profile
+              <span data-i18n="farmer.completeProfileBtn">Complete Profile →</span>
             </button>
             <button class="btn" id="btn-banner-dismiss-profile" style="background: rgba(255,255,255,0.1); color: #F5F4ED; font-weight: 600; border: 1px solid rgba(255,255,255,0.25); padding: 10px 18px; border-radius: 8px; cursor: pointer; white-space: nowrap;">
-              Dismiss
+              <span data-i18n="common.close">Dismiss</span>
             </button>
           </div>
         </div>
       `;
       main.insertBefore(banner, main.firstChild);
+      if (window.KrishiI18n) window.KrishiI18n.translateElement(banner);
 
       document.getElementById('btn-banner-complete-profile')?.addEventListener('click', () => {
         this.openFarmProfileModal(true);
@@ -167,118 +168,138 @@ const FarmerFlow = {
         <div class="dash-modal" id="farm-profile-modal" style="max-width: 620px; max-height: 90vh; overflow-y: auto;">
           <div class="dash-modal__header">
             <div>
-              <h3 id="farm-profile-modal-title" style="margin: 0; font-size: 18px;">${isNew ? '🌱 Complete Farmer Profile' : '✏️ Edit Farm Profile'}</h3>
-              <span class="dash-crop-modal__sub" style="font-size: 12px; color: var(--ks-text-muted);">Verified information for buyer discovery & produce listings</span>
+              <h3 id="farm-profile-modal-title" style="margin: 0; font-size: 18px;" data-i18n="${isNew ? 'farmer.completeFarmProfile' : 'farmer.editFarmProfile'}">${isNew ? '🌱 Complete Farmer Profile' : '✏️ Edit Farm Profile'}</h3>
+              <span class="dash-crop-modal__sub" style="font-size: 12px; color: var(--ks-text-muted);" data-i18n="farmer.farmProfileOnboardingDesc">Verified information for buyer discovery & produce listings</span>
             </div>
-            <button class="dash-modal__close" id="farm-profile-modal-close"><i data-lucide="x"></i></button>
+            <button class="dash-modal__close" id="farm-profile-modal-close" aria-label="Close"><i data-lucide="x"></i></button>
           </div>
           <form class="dash-modal__form" id="farm-profile-form" style="padding: 20px 24px;">
             <div id="farm-profile-alert" style="display: none; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;"></div>
 
             <!-- Section 1: Basic Farm Info -->
-            <div style="font-weight: 700; font-size: 13.5px; color: var(--ks-evergreen); margin-bottom: 10px;">1. Basic Farm Information</div>
-            <div class="dash-form-row">
-              <div class="dash-modal__field" style="flex: 2;">
-                <label for="fp-farm-name">Farm / Land Name</label>
-                <input type="text" id="fp-farm-name" class="dash-form-input" placeholder="e.g. Patil Organic Farms" required>
+            <div class="fp-section-card">
+              <div class="fp-section-title">
+                <span class="fp-section-badge">1</span>
+                <span data-i18n="farmer.farmProfile">Basic Farm Information</span>
               </div>
-              <div class="dash-modal__field" style="flex: 1;">
-                <label for="fp-farmer-type">Farmer Type</label>
-                <select id="fp-farmer-type" class="dash-filter-select">
-                  <option value="individual">Individual</option>
-                  <option value="farmer_group">Farmer Group</option>
-                  <option value="fpo_member">FPO Member</option>
-                </select>
+              <div class="dash-form-row">
+                <div class="dash-modal__field" style="flex: 2;">
+                  <label for="fp-farm-name"><span data-i18n="farmer.farmName">Farm / Land Name</span> <span style="color:#dc2626;">*</span></label>
+                  <input type="text" id="fp-farm-name" class="dash-form-input" placeholder="e.g. Patil Organic Farms" required>
+                </div>
+                <div class="dash-modal__field" style="flex: 1;">
+                  <label for="fp-farmer-type" data-i18n="farmer.farmerType">Farmer Type</label>
+                  <select id="fp-farmer-type" class="dash-filter-select">
+                    <option value="individual" data-i18n="farmer.individual">Individual</option>
+                    <option value="farmer_group" data-i18n="farmer.farmerGroup">Farmer Group</option>
+                    <option value="fpo_member" data-i18n="farmer.fpoMember">FPO Member</option>
+                  </select>
+                </div>
               </div>
-            </div>
 
-            <div class="dash-form-row">
-              <div class="dash-modal__field">
-                <label for="fp-farm-size">Farm Size</label>
-                <input type="number" id="fp-farm-size" class="dash-form-input" placeholder="e.g. 5" min="0.1" step="0.1" required>
-              </div>
-              <div class="dash-modal__field">
-                <label for="fp-size-unit">Unit</label>
-                <select id="fp-size-unit" class="dash-filter-select">
-                  <option value="acre">Acre</option>
-                  <option value="hectare">Hectare</option>
-                  <option value="guntha">Guntha</option>
-                </select>
-              </div>
-              <div class="dash-modal__field">
-                <label for="fp-ownership">Ownership</label>
-                <select id="fp-ownership" class="dash-filter-select">
-                  <option value="owned">Owned</option>
-                  <option value="leased">Leased</option>
-                  <option value="shared">Shared</option>
-                </select>
+              <div class="dash-form-row" style="margin-top: 10px;">
+                <div class="dash-modal__field">
+                  <label for="fp-farm-size"><span data-i18n="farmer.farmSize">Farm Size</span> <span style="color:#dc2626;">*</span></label>
+                  <input type="number" id="fp-farm-size" class="dash-form-input" placeholder="e.g. 5" min="0.1" max="10000" step="0.1" required>
+                </div>
+                <div class="dash-modal__field">
+                  <label for="fp-size-unit" data-i18n="farmer.farmSizeUnit">Unit</label>
+                  <select id="fp-size-unit" class="dash-filter-select">
+                    <option value="acre" data-i18n="farmer.acre">Acre</option>
+                    <option value="hectare" data-i18n="farmer.hectare">Hectare</option>
+                    <option value="guntha" data-i18n="farmer.guntha">Guntha</option>
+                  </select>
+                </div>
+                <div class="dash-modal__field">
+                  <label for="fp-ownership" data-i18n="farmer.ownershipType">Ownership</label>
+                  <select id="fp-ownership" class="dash-filter-select">
+                    <option value="owned" data-i18n="farmer.owned">Owned</option>
+                    <option value="leased" data-i18n="farmer.leased">Leased</option>
+                    <option value="shared" data-i18n="farmer.shared">Shared</option>
+                  </select>
+                </div>
               </div>
             </div>
 
             <!-- Section 2: Location -->
-            <div style="font-weight: 700; font-size: 13.5px; color: var(--ks-evergreen); margin: 18px 0 10px 0;">2. Farm Location</div>
-            <div class="dash-form-row">
-              <div class="dash-modal__field">
-                <label for="fp-state">State</label>
-                <input type="text" id="fp-state" class="dash-form-input" placeholder="e.g. Maharashtra" required>
+            <div class="fp-section-card">
+              <div class="fp-section-title">
+                <span class="fp-section-badge">2</span>
+                <span data-i18n="common.address">Farm Location & Pincode</span>
               </div>
-              <div class="dash-modal__field">
-                <label for="fp-district">District</label>
-                <input type="text" id="fp-district" class="dash-form-input" placeholder="e.g. Nashik" required>
+              <div class="dash-form-row">
+                <div class="dash-modal__field">
+                  <label for="fp-state"><span data-i18n="common.state">State</span> <span style="color:#dc2626;">*</span></label>
+                  <input type="text" id="fp-state" class="dash-form-input" placeholder="e.g. Maharashtra" required>
+                </div>
+                <div class="dash-modal__field">
+                  <label for="fp-district"><span data-i18n="common.district">District</span> <span style="color:#dc2626;">*</span></label>
+                  <input type="text" id="fp-district" class="dash-form-input" placeholder="e.g. Nashik" required>
+                </div>
               </div>
-            </div>
 
-            <div class="dash-form-row">
-              <div class="dash-modal__field">
-                <label for="fp-taluka">Taluka / Tehsil</label>
-                <input type="text" id="fp-taluka" class="dash-form-input" placeholder="e.g. Niphad">
-              </div>
-              <div class="dash-modal__field">
-                <label for="fp-village">Village</label>
-                <input type="text" id="fp-village" class="dash-form-input" placeholder="e.g. Pimpalgaon">
-              </div>
-              <div class="dash-modal__field">
-                <label for="fp-pincode">Pincode (6 digits)</label>
-                <input type="text" id="fp-pincode" class="dash-form-input" placeholder="422209" maxlength="6" pattern="[1-9][0-9]{5}" required>
+              <div class="dash-form-row" style="margin-top: 10px;">
+                <div class="dash-modal__field">
+                  <label for="fp-taluka" data-i18n="common.taluka">Taluka / Tehsil</label>
+                  <input type="text" id="fp-taluka" class="dash-form-input" placeholder="e.g. Niphad">
+                </div>
+                <div class="dash-modal__field">
+                  <label for="fp-village" data-i18n="common.village">Village</label>
+                  <input type="text" id="fp-village" class="dash-form-input" placeholder="e.g. Pimpalgaon">
+                </div>
+                <div class="dash-modal__field">
+                  <label for="fp-pincode"><span data-i18n="common.pincode">Pincode (6 digits)</span> <span style="color:#dc2626;">*</span></label>
+                  <input type="text" id="fp-pincode" class="dash-form-input" placeholder="422209" maxlength="6" pattern="[1-9][0-9]{5}" required>
+                </div>
               </div>
             </div>
 
             <!-- Section 3: Crops Cultivated -->
-            <div style="font-weight: 700; font-size: 13.5px; color: var(--ks-evergreen); margin: 18px 0 10px 0; display: flex; justify-content: space-between; align-items: center;">
-              <span>3. Primary Crops Cultivated</span>
-              <button type="button" class="btn btn--sm btn--secondary" id="btn-add-crop-row" style="font-size: 12px; padding: 4px 10px;">+ Add Crop</button>
-            </div>
-            <div id="fp-crops-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
-              <!-- Dynamic crop rows inserted here -->
+            <div class="fp-section-card">
+              <div class="fp-section-title" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="fp-section-badge">3</span>
+                  <span><span data-i18n="farmer.primaryCrops">Primary Crops Cultivated</span> <span style="color:#dc2626;">*</span></span>
+                </div>
+                <button type="button" class="btn btn--sm btn--secondary" id="btn-add-crop-row" style="font-size: 12px; padding: 4px 10px;">+ Add Crop</button>
+              </div>
+              <div id="fp-crops-container" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Dynamic crop rows inserted here -->
+              </div>
             </div>
 
             <!-- Section 4: Farming Methods & Irrigation -->
-            <div style="font-weight: 700; font-size: 13.5px; color: var(--ks-evergreen); margin: 18px 0 10px 0;">4. Farming Details</div>
-            <div class="dash-form-row">
-              <div class="dash-modal__field">
-                <label for="fp-irrigation">Irrigation Type</label>
-                <select id="fp-irrigation" class="dash-filter-select">
-                  <option value="drip">Drip Irrigation</option>
-                  <option value="borewell">Borewell</option>
-                  <option value="canal">Canal</option>
-                  <option value="sprinkler">Sprinkler</option>
-                  <option value="rainfed">Rainfed</option>
-                  <option value="mixed">Mixed</option>
-                </select>
+            <div class="fp-section-card">
+              <div class="fp-section-title">
+                <span class="fp-section-badge">4</span>
+                <span data-i18n="farmer.farmingDetails">Farming Details</span>
               </div>
-              <div class="dash-modal__field">
-                <label for="fp-farming-method">Farming Method</label>
-                <select id="fp-farming-method" class="dash-filter-select">
-                  <option value="conventional">Conventional</option>
-                  <option value="organic">Organic Certified</option>
-                  <option value="natural">Natural / Zero Budget</option>
-                  <option value="mixed">Mixed</option>
-                </select>
+              <div class="dash-form-row">
+                <div class="dash-modal__field">
+                  <label for="fp-irrigation" data-i18n="farmer.irrigationType">Irrigation Type</label>
+                  <select id="fp-irrigation" class="dash-filter-select">
+                    <option value="drip" data-i18n="farmer.drip">Drip Irrigation</option>
+                    <option value="borewell" data-i18n="farmer.borewell">Borewell</option>
+                    <option value="canal" data-i18n="farmer.canal">Canal</option>
+                    <option value="sprinkler">Sprinkler</option>
+                    <option value="rainfed" data-i18n="farmer.rainfed">Rainfed</option>
+                    <option value="mixed">Mixed</option>
+                  </select>
+                </div>
+                <div class="dash-modal__field">
+                  <label for="fp-farming-method" data-i18n="farmer.farmingMethod">Farming Method</label>
+                  <select id="fp-farming-method" class="dash-filter-select">
+                    <option value="conventional">Conventional</option>
+                    <option value="organic">Organic Certified</option>
+                    <option value="natural">Natural / Zero Budget</option>
+                    <option value="mixed">Mixed</option>
+                  </select>
+                </div>
               </div>
             </div>
 
-            <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-submit-farm-profile" style="margin-top: 20px; width: 100%;">
-              <i data-lucide="check"></i> Save & Confirm Farm Profile
+            <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-submit-farm-profile" style="margin-top: 12px; width: 100%; padding: 12px; font-weight: 700;">
+              <i data-lucide="check"></i> <span data-i18n="common.save">Save & Confirm Farm Profile</span>
             </button>
           </form>
         </div>
@@ -303,6 +324,9 @@ const FarmerFlow = {
     // Populate existing profile data if editing
     this.populateFarmProfileForm(this.profile);
     overlay.classList.add('active');
+    if (window.KrishiI18n) {
+      window.KrishiI18n.translateElement(overlay);
+    }
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
     }
@@ -359,7 +383,35 @@ const FarmerFlow = {
     e.preventDefault();
     const alertBox = document.getElementById('farm-profile-alert');
     const submitBtn = document.getElementById('btn-submit-farm-profile');
-    if (alertBox) alertBox.style.display = 'none';
+    if (alertBox) {
+      alertBox.style.display = 'none';
+      alertBox.textContent = '';
+    }
+
+    const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
+
+    // Reset validation border highlights
+    ['fp-farm-name', 'fp-farm-size', 'fp-state', 'fp-district', 'fp-pincode'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.borderColor = '';
+    });
+
+    const showError = (msg, inputId) => {
+      if (alertBox) {
+        alertBox.style.display = 'block';
+        alertBox.style.background = 'rgba(220, 38, 38, 0.1)';
+        alertBox.style.color = '#dc2626';
+        alertBox.style.border = '1px solid rgba(220, 38, 38, 0.3)';
+        alertBox.textContent = msg;
+      }
+      if (inputId) {
+        const el = document.getElementById(inputId);
+        if (el) {
+          el.style.borderColor = '#dc2626';
+          el.focus();
+        }
+      }
+    };
 
     // Collect dynamic crops
     const crops = [];
@@ -369,24 +421,52 @@ const FarmerFlow = {
       if (name) crops.push({ name, season });
     });
 
+    const farmName = document.getElementById('fp-farm-name')?.value.trim() || '';
+    const farmSizeRaw = document.getElementById('fp-farm-size')?.value;
+    const farmSize = parseFloat(farmSizeRaw);
+    const state = document.getElementById('fp-state')?.value.trim() || '';
+    const district = document.getElementById('fp-district')?.value.trim() || '';
+    const pincode = document.getElementById('fp-pincode')?.value.trim() || '';
+
+    // Rigorous client-side validations
+    if (!farmName || farmName.length < 2) {
+      return showError(t('farmer.validationFarmName', 'Please enter a valid farm name (at least 2 characters).'), 'fp-farm-name');
+    }
+    if (isNaN(farmSize) || farmSize < 0.1 || farmSize > 10000) {
+      return showError(t('farmer.validationFarmSize', 'Please enter a valid farm size between 0.1 and 10,000.'), 'fp-farm-size');
+    }
+    if (!state || state.length < 2) {
+      return showError(t('farmer.validationState', 'Please enter state.'), 'fp-state');
+    }
+    if (!district || district.length < 2) {
+      return showError(t('farmer.validationDistrict', 'Please enter district.'), 'fp-district');
+    }
+    const pinRegex = /^[1-9][0-9]{5}$/;
+    if (!pinRegex.test(pincode)) {
+      return showError(t('farmer.validationPincode', 'Please enter a valid 6-digit Indian pincode.'), 'fp-pincode');
+    }
+    if (crops.length === 0) {
+      return showError(t('farmer.validationCrops', 'Please specify at least one cultivated crop.'));
+    }
+
     const payload = {
-      farmName: document.getElementById('fp-farm-name').value.trim(),
+      farmName,
       farmerType: document.getElementById('fp-farmer-type').value,
-      farmSize: parseFloat(document.getElementById('fp-farm-size').value) || 0,
+      farmSize,
       farmSizeUnit: document.getElementById('fp-size-unit').value,
       ownershipType: document.getElementById('fp-ownership').value,
-      state: document.getElementById('fp-state').value.trim(),
-      district: document.getElementById('fp-district').value.trim(),
-      taluka: document.getElementById('fp-taluka').value.trim(),
-      village: document.getElementById('fp-village').value.trim(),
-      pincode: document.getElementById('fp-pincode').value.trim(),
-      crops: crops,
+      state,
+      district,
+      taluka: document.getElementById('fp-taluka')?.value.trim() || '',
+      village: document.getElementById('fp-village')?.value.trim() || '',
+      pincode,
+      crops,
       irrigationType: document.getElementById('fp-irrigation').value,
       farmingMethod: document.getElementById('fp-farming-method').value
     };
 
     submitBtn.disabled = true;
-    submitBtn.innerHTML = 'Saving farm profile...';
+    submitBtn.innerHTML = `<span class="dash-spinner" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;"></span> ${t('farmer.savingProfile', 'Saving farm profile...')}`;
 
     try {
       let res;
@@ -396,30 +476,20 @@ const FarmerFlow = {
         res = await window.api.farmer.createProfile(payload);
       }
 
-      if (res.success && res.profile) {
+      if (res && res.success && res.profile) {
         this.profile = res.profile;
         this.updateProfileDisplay(res.profile);
         this.hideOnboardingBanner();
         document.getElementById('farm-profile-modal-overlay')?.classList.remove('active');
-        this.showToast('Farm profile saved successfully! ✓', 'success');
+        this.showToast(t('farmer.profileSaved', 'Farm profile saved successfully! ✓'), 'success');
       } else {
-        if (alertBox) {
-          alertBox.style.display = 'block';
-          alertBox.style.background = 'rgba(220, 38, 38, 0.1)';
-          alertBox.style.color = '#dc2626';
-          alertBox.textContent = res.message || 'Failed to save farm profile.';
-        }
+        showError((res && res.message) || 'Failed to save farm profile.');
       }
     } catch (err) {
-      if (alertBox) {
-        alertBox.style.display = 'block';
-        alertBox.style.background = 'rgba(220, 38, 38, 0.1)';
-        alertBox.style.color = '#dc2626';
-        alertBox.textContent = 'Server connection error. Please try again.';
-      }
+      showError('Server connection error. Please try again.');
     } finally {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i data-lucide="check"></i> Save & Confirm Farm Profile';
+      submitBtn.innerHTML = `<i data-lucide="check"></i> <span>${t('common.save', 'Save & Confirm Farm Profile')}</span>`;
       if (window.lucide) window.lucide.createIcons();
     }
   },
@@ -1308,6 +1378,7 @@ const FarmerFlow = {
   },
 
   renderLotsList(lots) {
+    const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
     const container = document.getElementById('lots-panel-body') || document.getElementById('farmer-lots-grid');
     if (!container) return;
 
@@ -1371,96 +1442,87 @@ const FarmerFlow = {
       const isAssayed = lot.assaying && (lot.assaying.isAssayed || lot.assaying.verificationStatus === 'verified');
       const gradeStr = lot.qualityGrade ? `Grade ${lot.qualityGrade}` : 'Grade A';
       const gradeClass = (lot.qualityGrade || 'A').toLowerCase();
+      const cropDisplay = window.KrishiI18n ? window.KrishiI18n.getCropName(lot.cropName) : (lot.cropName || 'Produce');
+      const storageDisplay = lot.storageFacilityName ? `· 🏬 ${lot.storageFacilityName}` : (lot.storageType === 'warehouse' ? `· 🏬 ${t('farmer.storedWarehouse', 'Warehouse Stored')}` : (lot.storageType === 'cold_storage' ? `· ❄️ ${t('farmer.coldStorage', 'Cold Storage')}` : ''));
 
       return `
-        <div class="dash-lot-card" style="background: #FFFFFF; border: 1px solid var(--border-light, #E5E4DD); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
-          <div style="display: flex; align-items: center; gap: 14px;">
-            <div style="width: 44px; height: 44px; border-radius: 10px; background: #F5F4ED; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: var(--ks-evergreen);">
-              🌾
+        <div class="farmer-lot-card">
+          <div class="farmer-lot-card__top">
+            <div class="farmer-lot-card__crop-wrap">
+              <div class="farmer-lot-card__icon">
+                ${cropIcon(lot.cropName)}
+              </div>
+              <div>
+                <div class="farmer-lot-card__title-row">
+                  <h4 class="farmer-lot-card__name">${cropDisplay}</h4>
+                  <span class="farmer-lot-card__variety">(${lot.variety || 'Standard FAQ'})</span>
+                </div>
+                <div style="font-size: 12px; color: var(--ks-text-muted); margin-top: 3px;">
+                  <span style="font-family: monospace; font-weight: 600; color: var(--ks-evergreen);">${lot.lotId}</span> ${storageDisplay}
+                </div>
+              </div>
             </div>
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <span style="font-family: monospace; font-size: 12px; color: var(--ks-text-muted); font-weight: 600;">${lot.lotId}</span>
-                ${statusBadge(lot.status)}
-                <span class="agmark-badge agmark-badge--grade-${gradeClass}">${gradeStr}</span>
-                ${isAssayed ? `<span class="agmark-badge agmark-badge--verified">✓ LAB ASSAYED</span>` : ''}
-              </div>
-              <h4 style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen); margin: 3px 0;">${lot.cropName} <span style="font-size: 13px; font-weight: 400; color: #666;">(${lot.variety || 'Standard'})</span></h4>
-              <div style="font-size: 12.5px; color: var(--ks-text-muted);">
-                <strong>${lot.quantity} ${lot.quantityUnit || 'quintal'}</strong> • ${lot.district || 'Pune'}, ${lot.state || 'Maharashtra'}
-              </div>
+
+            <div class="farmer-lot-card__badges">
+              ${statusBadge(lot.status, lot.storageType)}
+              <span class="agmark-badge agmark-badge--grade-${gradeClass}">${gradeStr}</span>
+              ${isAssayed ? `<span class="agmark-badge agmark-badge--verified">✓ ${t('farmer.labAssayed', 'LAB ASSAYED')}</span>` : ''}
             </div>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
-            <div style="text-align: right;">
-              <div style="font-size: 11px; text-transform: uppercase; color: var(--ks-text-muted); font-weight: 600;">Asking Price</div>
-              <div style="font-size: 16px; font-weight: 800; color: var(--ks-evergreen);">₹${lot.askingPrice?.toLocaleString('en-IN')} <span style="font-size: 11px; font-weight: 400;">/ ${lot.priceUnit || 'q'}</span></div>
+          <div class="farmer-lot-card__mid">
+            <div>
+              <div class="farmer-lot-stat-label">${t('cropLotModal.quantityAvailable', 'Available Quantity')}</div>
+              <div class="farmer-lot-stat-val">${lot.quantity} ${lot.quantityUnit || 'quintal'}</div>
+            </div>
+            <div>
+              <div class="farmer-lot-stat-label">${t('common.location', 'Location')}</div>
+              <div class="farmer-lot-stat-val">${lot.district || 'Nashik'}, ${lot.state || 'MH'}</div>
+            </div>
+            <div>
+              <div class="farmer-lot-stat-label">${t('market.harvestDate', 'Harvest Date')}</div>
+              <div class="farmer-lot-stat-val">${lot.harvestDate || 'Recent'}</div>
+            </div>
+          </div>
+
+          <div class="farmer-lot-card__bottom">
+            <div class="farmer-lot-card__price-box">
+              <span class="farmer-lot-card__price-lbl">${t('cropLotModal.expectedPricePerUnit', 'Expected Price')}</span>
+              <span class="farmer-lot-card__price-num">₹${lot.askingPrice?.toLocaleString('en-IN')} <small style="font-size: 12px; font-weight: 500; color: #666;">/ ${lot.priceUnit || 'q'}</small></span>
             </div>
 
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <button class="btn btn--sm btn--secondary" onclick="FarmerFlow.viewLotDetails('${lot.lotId}')" title="View details">
-                Details & Specs
+            <div class="farmer-lot-card__actions">
+              <button class="btn btn--sm btn--secondary" onclick="FarmerFlow.viewLotDetails('${lot.lotId}')" title="${t('common.viewDetails', 'View Details')}">
+                <i data-lucide="eye" style="width: 14px; height: 14px;"></i> <span>${t('common.viewDetails', 'Details')}</span>
               </button>
+              <a href="market.html?crop=${encodeURIComponent((lot.cropName || '').toLowerCase())}&lotId=${lot.lotId}" class="btn btn--sm btn--secondary" style="text-decoration: none;" title="${t('farmer.viewMarketPrices', 'Check Market Prices')}">
+                <i data-lucide="trending-up" style="width: 14px; height: 14px;"></i> <span>${t('navigation.market', 'Market')} →</span>
+              </a>
+              <a href="storage.html?crop=${encodeURIComponent(lot.cropName || '')}&qty=${lot.quantity}&price=${lot.askingPrice}" class="btn btn--sm btn--secondary" style="text-decoration: none;" title="${t('navigation.storage', 'Storage Options')}">
+                <i data-lucide="warehouse" style="width: 14px; height: 14px;"></i> <span>${t('navigation.storage', 'Storage')}</span>
+              </a>
               ${isAssayed ? `
-                <button class="btn btn--sm" style="background: #12372A; color: #E8B96A; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 700;" onclick='FarmerFlow.showCertificateModal(${JSON.stringify(lot).replace(/'/g, "&apos;")})' title="View digital test certificate">
-                  📄 Certificate
+                <button class="btn btn--sm" style="background: #12372A; color: #E8B96A; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer;" onclick='FarmerFlow.showCertificateModal(${JSON.stringify(lot).replace(/'/g, "&apos;")})' title="View digital test certificate">
+                  <i data-lucide="award" style="width: 14px; height: 14px;"></i> <span>Certificate</span>
                 </button>
               ` : `
                 <button class="btn btn--sm btn--secondary" onclick="FarmerFlow.openAssayLotModal('${lot.lotId}')" title="Certify with lab assayer">
-                  📑 Assay Lot
+                  <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i> <span>Assay</span>
                 </button>
               `}
               ${lot.status === 'active' || lot.status === 'draft' ? `
-                <button class="btn btn--sm btn--secondary" onclick="FarmerFlow.openEditLotModal('${lot.lotId}')" title="Edit lot">
-                  Edit
+                <button class="btn btn--sm btn--secondary" onclick="FarmerFlow.openEditLotModal('${lot.lotId}')" title="${t('common.edit', 'Edit Lot')}">
+                  <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
                 </button>
-                <button class="btn btn--sm" style="background: rgba(220, 38, 38, 0.08); color: #dc2626; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;" onclick="FarmerFlow.confirmCancelLot('${lot.lotId}')" title="Cancel listing">
-                  Cancel
+                <button class="btn btn--sm" style="background: #FEE2E2; color: #991B1B; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer;" onclick="FarmerFlow.confirmCancelLot('${lot.lotId}')" title="${t('common.delete', 'Cancel Lot')}">
+                  <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
                 </button>
               ` : ''}
             </div>
-            <h4>${lot.cropName} <span style="font-size: 13.5px; font-weight: 500; color: #666;">(${lot.variety || 'Standard Grade'})</span></h4>
-            <p>
-              <strong>${lot.quantity} ${lot.quantityUnit || 'quintal'}</strong> • Grade: <strong>Grade ${lot.qualityGrade || 'A'}</strong> • 📍 ${lot.district || 'Pune'}, ${lot.state || 'Maharashtra'}
-            </p>
           </div>
         </div>
-
-        <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-          <div style="text-align: right;">
-            <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Asking Price</div>
-            <div class="kisan-lot-card__price-tag">
-              ₹${lot.askingPrice?.toLocaleString('en-IN')} <span style="font-size: 12px; font-weight: 500; color: #555;">/ ${lot.priceUnit || 'quintal'}</span>
-            </div>
-          </div>
-
-          <div class="kisan-lot-card__actions">
-            <a href="market.html?crop=${encodeURIComponent(lot.cropName.toLowerCase())}&lotId=${lot.lotId}" class="btn btn--secondary kisan-lot-card__btn" style="min-height: 48px; padding: 10px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="Check market prices for ${lot.cropName}">
-              <i data-lucide="trending-up"></i> <span>Prices →</span>
-            </a>
-            ${lot.status === 'active' || lot.status === 'draft' ? `
-              <button class="btn btn--secondary" onclick="FarmerFlow.openEditLotModal('${lot.lotId}')" title="Edit Lot" style="min-height: 48px; padding: 10px 14px;">
-                <i data-lucide="edit-3"></i>
-              </button>
-              <button class="btn" style="min-height: 48px; padding: 10px 14px; background: #FEE2E2; color: #991B1B; border: none; border-radius: 10px; cursor: pointer;" onclick="FarmerFlow.confirmCancelLot('${lot.lotId}')" title="Delete Lot">
-                <i data-lucide="trash-2"></i>
-              </button>
-            ` : ''}
-            <button class="btn btn--primary kisan-lot-card__btn" onclick="FarmerFlow.viewLotOffers('${lot.lotId}')" style="background: #12372A; border-color: #12372A; min-height: 48px; padding: 10px 18px; font-weight: 800;">
-              <i data-lucide="handshake"></i> <span>Sell & View Offers</span>
-            </button>
-            <a href="storage.html?crop=${encodeURIComponent(lot.cropName)}&qty=${lot.quantity}&price=${lot.askingPrice}" class="btn btn--secondary kisan-lot-card__btn" style="min-height: 48px; padding: 10px 18px; font-weight: 700; border-color: #D8C28A; color: #12372A;">
-              <i data-lucide="warehouse"></i> <span>Storage Options</span>
-            </a>
-            <button class="btn btn--secondary" onclick="FarmerFlow.viewLotDetails('${lot.lotId}')" title="View Details" style="min-height: 48px; padding: 10px 14px;">
-              <i data-lucide="eye"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
 
     if (window.lucide) window.lucide.createIcons();
   },
@@ -2172,4 +2234,10 @@ window.filterLotTab = function (filter) {
 // Auto-initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   FarmerFlow.init();
+});
+
+window.addEventListener('languageChanged', () => {
+  if (window.FarmerFlow && Array.isArray(FarmerFlow.cachedLots) && FarmerFlow.cachedLots.length > 0 && (document.getElementById('lots-panel-body') || document.getElementById('farmer-lots-grid'))) {
+    FarmerFlow.renderLotsList(FarmerFlow.cachedLots);
+  }
 });

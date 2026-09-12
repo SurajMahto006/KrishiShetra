@@ -56,14 +56,17 @@
         <a href="lots.html" class="dash-header__link" id="nav-lots">
           <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
         </a>
+        <a href="buyers.html" class="dash-header__link" id="nav-inquiries">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyerInquiries">Buyer Inquiries</span>
+        </a>
+        <a href="storage.html" class="dash-header__link" id="nav-storage">
+          <i data-lucide="warehouse" class="dash-header__link-icon"></i> <span data-i18n="navigation.storage">Storage Options</span>
+        </a>
         <a href="market.html" class="dash-header__link" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="navigation.market">Market</span>
+          <i data-lucide="store" class="dash-header__link-icon"></i> <span data-i18n="navigation.market">Market Prices</span>
         </a>
         <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span>
-        </a>
-        <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyers">Buyers</span>
+          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Price Forecast</span>
         </a>
         <a href="orders.html" class="dash-header__link dash-header__link--active" id="nav-orders">
           <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span>
@@ -74,9 +77,6 @@
         <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
-        </button>
-        <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
-          <i data-lucide="help-circle"></i>
         </button>
         <div class="dash-profile-wrap" id="dash-profile-wrap">
           <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
@@ -118,15 +118,14 @@
   <div class="dash-mobile-nav" id="dash-mobile-nav">
     <div class="dash-mobile-nav__links">
       <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i>
-        Dashboard</a>
-      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
-      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market
-        Prices</a>
-      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI
-        Forecast</a>
-      <a href="buyers.html" class="dash-mobile-nav__link" id="mnav-buyers"><i data-lucide="users"></i> Buyers</a>
+        <span data-i18n="navigation.dashboard">Dashboard</span></a>
+      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> <span data-i18n="navigation.myLots">My Lots</span></a>
+      <a href="buyer-inquiries.html" class="dash-mobile-nav__link" id="mnav-inquiries"><i data-lucide="message-square"></i> <span data-i18n="navigation.buyerInquiries">Buyer Inquiries</span></a>
+      <a href="storage.html" class="dash-mobile-nav__link" id="mnav-storage"><i data-lucide="warehouse"></i> <span data-i18n="navigation.storage">Storage Options</span></a>
+      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> <span data-i18n="navigation.market">Market</span></a>
+      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span></a>
       <a href="orders.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-orders"><i
-          data-lucide="clipboard-list"></i> Orders</a>
+          data-lucide="clipboard-list"></i> <span data-i18n="navigation.orders">Orders</span></a>
     </div>
   </div>
 
@@ -136,15 +135,15 @@
 
       <!-- Breadcrumb -->
       <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
-        <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
-        <strong>Orders & Fulfillment</strong>
+        <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;" data-i18n="navigation.dashboard">Dashboard</a> /
+        <strong data-i18n="orders.title">Orders & Fulfillment</strong>
       </nav>
 
       <!-- Page Header Banner -->
       <div class="dash-section__header" style="margin-bottom: 24px;">
         <div>
-          <h1 class="dash-section__title" style="font-size: 26px;">📋 Confirmed Orders & Procurement Pipeline</h1>
-          <p class="dash-section__subtitle">Track fulfillment progress, mandi dispatches, delivery progress, and payment
+          <h1 class="dash-section__title" style="font-size: 26px;">📋 <span data-i18n="orders.pageTitle">Confirmed Orders & Procurement Pipeline</span></h1>
+          <p class="dash-section__subtitle" data-i18n="orders.pageSubtitle">Track fulfillment progress, mandi dispatches, delivery progress, and payment
             settlements.</p>
         </div>
       </div>
@@ -167,32 +166,32 @@
           <div class="footer__brand"><i data-lucide="sprout"
               style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
             KrishiShetra</div>
-          <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
+          <div class="footer__tagline" data-i18n="common.heroTagline">Know the Price. Choose the Market. Sell Better.</div>
         </div>
         <div class="footer__links">
-          <a href="#" class="footer__link" onclick="openHelpModal()">Kisan Support</a>
-          <a href="buyers.html" class="footer__link">For Buyers</a>
-          <a href="index.html" class="footer__link">About KrishiShetra</a>
+          <a href="#" class="footer__link" onclick="openHelpModal()" data-i18n="common.kisanSupport">Kisan Support</a>
+          <a href="buyers.html" class="footer__link" data-i18n="navigation.buyers">For Buyers</a>
+          <a href="index.html" class="footer__link" data-i18n="common.about">About KrishiShetra</a>
         </div>
       </div>
-      <div class="footer__copyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
+      <div class="footer__copyright" data-i18n="common.footerCopyright">© 2026 KrishiShetra AgriTech Platform. Built for Indian Farmers & FPOs.</div>
     </div>
   </footer>
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="dash-bottom-nav" id="dash-bottom-nav">
     <a href="dashboard.html" class="dash-bottom-nav__item" id="bnav-home"><i
-        data-lucide="home"></i><span>Home</span></a>
+        data-lucide="home"></i><span data-i18n="navigation.home">Home</span></a>
     <a href="market.html" class="dash-bottom-nav__item" id="bnav-market"><i
-        data-lucide="bar-chart-3"></i><span>Market</span></a>
-    <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span>My
+        data-lucide="bar-chart-3"></i><span data-i18n="navigation.market">Market</span></a>
+    <a href="lots.html" class="dash-bottom-nav__item" id="bnav-lots"><i data-lucide="package"></i><span data-i18n="navigation.myLots">My
         Lots</span></a>
     <a href="ai-forecast.html" class="dash-bottom-nav__item" id="bnav-forecast"><i
-        data-lucide="brain"></i><span>Forecast</span></a>
+        data-lucide="brain"></i><span data-i18n="navigation.forecast">Forecast</span></a>
     <a href="buyers.html" class="dash-bottom-nav__item" id="bnav-buyers"><i
-        data-lucide="users"></i><span>Buyers</span></a>
+        data-lucide="users"></i><span data-i18n="navigation.buyers">Buyers</span></a>
     <a href="orders.html" class="dash-bottom-nav__item dash-bottom-nav__item--active" id="bnav-orders"><i
-        data-lucide="clipboard-list"></i><span>Orders</span></a>
+        data-lucide="clipboard-list"></i><span data-i18n="navigation.orders">Orders</span></a>
   </nav>
 
   <!-- MODALS -->
@@ -201,10 +200,10 @@
     <div class="dash-modal dash-modal--lg" id="orders-modal">
       <div class="dash-modal__header">
         <div>
-          <h3>My Orders & Deliveries</h3>
-          <span class="dash-crop-modal__sub">Track logistics, pickup schedules & payouts</span>
+          <h3 data-i18n="orders.title">My Orders & Deliveries</h3>
+          <span class="dash-crop-modal__sub" data-i18n="orders.subtitle">Track logistics, pickup schedules & payouts</span>
         </div>
-        <button class="dash-modal__close" id="orders-modal-close"><i data-lucide="x"></i></button>
+        <button class="dash-modal__close" id="orders-modal-close" aria-label="Close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad" id="orders-modal-list"></div>
     </div>

@@ -23,7 +23,7 @@ function resolveApiBaseUrl() {
     const protocol = (window.location && window.location.protocol) ? window.location.protocol : '';
     const port = (window.location && window.location.port) ? window.location.port : '';
     const isFile = protocol === 'file:' || hostname === '';
-    const isLocalDevServer = (hostname === 'localhost' || hostname === '127.0.0.1') && (port === '5500' || port === '3000' || port === '8080');
+    const isLocalDevServer = (hostname === 'localhost' || hostname === '127.0.0.1') && port !== '5000' && port !== '';
 
     // 1. Explicit runtime override takes highest priority
     if (window.API_BASE_URL) {

@@ -21,6 +21,9 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- i18n -->
+  <script src="js/translations.js"></script>
+  <script src="js/i18n.js"></script>
 </head>
 <body>
   <!-- ════════════════════════════════════════
@@ -34,16 +37,17 @@
       </a>
 
       <div class="navbar__nav" id="nav-menu">
-        <a href="#solution" class="navbar__link">Product</a>
-        <a href="#scroll-transition" class="navbar__link">How It Works</a>
-        <a href="#intelligence" class="navbar__link">Market Intelligence</a>
-        <a href="buyer.html" class="navbar__link">For Buyers</a>
-        <a href="fpo-dashboard.html" class="navbar__link">For FPOs</a>
-        <a href="transporter/dashboard.html" class="navbar__link">For Transporters</a>
+        <a href="#solution" class="navbar__link" data-i18n="landing.navProduct">Product</a>
+        <a href="#scroll-transition" class="navbar__link" data-i18n="landing.navHowItWorks">How It Works</a>
+        <a href="#intelligence" class="navbar__link" data-i18n="landing.navMarketIntelligence">Market Intelligence</a>
+        <a href="buyer.html" class="navbar__link" data-i18n="landing.navForBuyers">For Buyers</a>
+        <a href="fpo-dashboard.html" class="navbar__link" data-i18n="landing.navForFPOs">For FPOs</a>
+        <a href="transporter/dashboard.html" class="navbar__link" data-i18n="landing.navForTransporters">For Transporters</a>
       </div>
 
       <div class="navbar__actions">
-        <a href="login.html" class="navbar__cta" id="btn-login-nav">Login</a>
+        <a href="login.html" class="navbar__cta" id="btn-login-nav" data-i18n="landing.navLogin">Login</a>
+        <div id="krishi-lang-switcher-landing"></div>
       </div>
 
       <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle menu">
@@ -66,22 +70,22 @@
     <div class="hero__content">
       <div class="hero__text">
         <h1 class="hero__headline" id="hero-headline">
-          <span class="line"><span class="line-inner">Your Crop.</span></span>
-          <span class="line"><span class="line-inner">Your Market.</span></span>
-          <span class="line"><span class="line-inner">Your <em class="highlight">Best Price.</em></span></span>
+          <span class="line line--phrase1"><span class="line-inner" data-i18n="landing.heroHeadline1">Your Crop.</span></span>
+          <span class="line line--phrase2"><span class="line-inner" data-i18n="landing.heroHeadline2">Your Market.</span></span>
+          <span class="line line--phrase3"><span class="line-inner"><span class="hero__headline-prefix" data-i18n="landing.heroHeadline3Prefix">Your</span> <em class="highlight" data-i18n="landing.heroHeadline3Best">Best Price.</em></span></span>
         </h1>
 
-        <p class="hero__subtitle" id="hero-subtitle">
+        <p class="hero__subtitle" id="hero-subtitle" data-i18n="landing.heroSubtitle">
           KrishiShetra connects farmers with market intelligence,
           AI-powered price insights and verified buyers.
         </p>
 
         <div class="hero__actions" id="hero-actions">
           <a href="login.html" class="btn btn--primary" id="btn-explore">
-            Login / Get Started
+            <span data-i18n="landing.heroCta1">Login / Get Started</span>
             <span class="btn-arrow">→</span>
           </a>
-          <a href="#scroll-transition" class="btn btn--secondary" id="btn-how">
+          <a href="#scroll-transition" class="btn btn--secondary" id="btn-how" data-i18n="landing.heroCta2">
             Explore Features
           </a>
         </div>
@@ -89,19 +93,19 @@
         <div class="hero__trust" id="hero-trust">
           <span class="hero__trust-item">
             <span class="hero__trust-dot"></span>
-            Market Intelligence
+            <span data-i18n="landing.trustMarketIntelligence">Market Intelligence</span>
           </span>
           <span class="hero__trust-item">
             <span class="hero__trust-dot"></span>
-            AI Insights
+            <span data-i18n="landing.trustAiInsights">AI Insights</span>
           </span>
           <span class="hero__trust-item">
             <span class="hero__trust-dot"></span>
-            Verified Buyers
+            <span data-i18n="landing.trustVerifiedBuyers">Verified Buyers</span>
           </span>
           <span class="hero__trust-item">
             <span class="hero__trust-dot"></span>
-            Transparent Transactions
+            <span data-i18n="landing.trustTransparent">Transparent Transactions</span>
           </span>
         </div>
       </div>
@@ -155,7 +159,7 @@
     </div>
 
     <div class="hero__scroll" id="hero-scroll">
-      <span class="hero__scroll-text">Scroll to explore</span>
+      <span class="hero__scroll-text" data-i18n="landing.scrollExplore">Scroll to explore</span>
       <div class="hero__scroll-line"></div>
     </div>
   </section>
@@ -210,36 +214,36 @@
   <section class="section-problem" id="problem">
     <div class="container">
       <div class="section-problem__header">
-        <p class="t-label" style="color: var(--ks-text-muted); margin-bottom: 12px;">The Challenge</p>
-        <h2 class="section-problem__title">
-          Farmers shouldn't have to<br>sell <em>blind.</em>
-        </h2>
-      </div>
+          <p class="t-label" style="color: var(--ks-text-muted); margin-bottom: 12px;" data-i18n="landing.sectionProblemLabel">The Challenge</p>
+          <h2 class="section-problem__title" data-i18n="landing.problemTitle">
+            Farmers shouldn't have to<br>sell <em>blind.</em>
+          </h2>
+        </div>
 
       <div class="problem-grid" id="problem-grid">
         <div class="problem-card">
           <span class="problem-card__number">01</span>
           <div class="problem-card__icon">❓</div>
-          <h3 class="problem-card__title">Uncertain Prices</h3>
-          <p class="problem-card__desc">"Is today's price really the best? Should I wait or sell now?"</p>
+          <h3 class="problem-card__title" data-i18n="landing.problemCard1">Uncertain Prices</h3>
+          <p class="problem-card__desc" data-i18n="landing.problemCard1Desc">"Is today's price really the best? Should I wait or sell now?"</p>
         </div>
         <div class="problem-card">
           <span class="problem-card__number">02</span>
           <div class="problem-card__icon">🔍</div>
-          <h3 class="problem-card__title">Limited Market Visibility</h3>
-          <p class="problem-card__desc">"Which nearby market will give me more for the same crop?"</p>
+          <h3 class="problem-card__title" data-i18n="landing.problemCard2">Limited Market Visibility</h3>
+          <p class="problem-card__desc" data-i18n="landing.problemCard2Desc">"Which nearby market will give me more for the same crop?"</p>
         </div>
         <div class="problem-card">
           <span class="problem-card__number">03</span>
           <div class="problem-card__icon">🤝</div>
-          <h3 class="problem-card__title">Weak Buyer Connections</h3>
-          <p class="problem-card__desc">"Who is actually willing to buy my produce at a fair price?"</p>
+          <h3 class="problem-card__title" data-i18n="landing.problemCard3">Weak Buyer Connections</h3>
+          <p class="problem-card__desc" data-i18n="landing.problemCard3Desc">"Who is actually willing to buy my produce at a fair price?"</p>
         </div>
         <div class="problem-card">
           <span class="problem-card__number">04</span>
           <div class="problem-card__icon">💸</div>
-          <h3 class="problem-card__title">Hidden Costs</h3>
-          <p class="problem-card__desc">"Will transport and storage costs reduce my actual profit?"</p>
+          <h3 class="problem-card__title" data-i18n="landing.problemCard4">Hidden Costs</h3>
+          <p class="problem-card__desc" data-i18n="landing.problemCard4Desc">"Will transport and storage costs reduce my actual profit?"</p>
         </div>
       </div>
     </div>
@@ -251,42 +255,42 @@
   <section class="section-solution" id="solution">
     <div class="container">
       <div class="section-solution__header">
-        <p class="section-solution__label">The KrishiShetra Way</p>
-        <h2 class="section-solution__title">
-          From uncertainty to<br>informed decisions.
-        </h2>
-      </div>
+          <p class="section-solution__label" data-i18n="landing.solutionLabel">The KrishiShetra Way</p>
+          <h2 class="section-solution__title" data-i18n="landing.solutionTitle">
+            From uncertainty to<br>informed decisions.
+          </h2>
+        </div>
 
       <div class="solution-journey" id="solution-journey">
         <div class="solution-step">
           <div class="solution-step__number">01</div>
           <span class="solution-step__icon">🔎</span>
-          <h3 class="solution-step__title">Discover</h3>
-          <p class="solution-step__desc">See prices across nearby markets in real time.</p>
+          <h3 class="solution-step__title" data-i18n="landing.solutionStep1">Discover</h3>
+          <p class="solution-step__desc" data-i18n="landing.solutionStep1Desc">See prices across nearby markets in real time.</p>
         </div>
         <div class="solution-step">
           <div class="solution-step__number">02</div>
           <span class="solution-step__icon">📈</span>
-          <h3 class="solution-step__title">Predict</h3>
-          <p class="solution-step__desc">Understand where prices may move with AI forecasts.</p>
+          <h3 class="solution-step__title" data-i18n="landing.solutionStep2">Predict</h3>
+          <p class="solution-step__desc" data-i18n="landing.solutionStep2Desc">Understand where prices may move with AI forecasts.</p>
         </div>
         <div class="solution-step">
           <div class="solution-step__number">03</div>
           <span class="solution-step__icon">⚖️</span>
-          <h3 class="solution-step__title">Compare</h3>
-          <p class="solution-step__desc">Calculate your actual net realization across markets.</p>
+          <h3 class="solution-step__title" data-i18n="landing.solutionStep3">Compare</h3>
+          <p class="solution-step__desc" data-i18n="landing.solutionStep3Desc">Calculate your actual net realization across markets.</p>
         </div>
         <div class="solution-step">
           <div class="solution-step__number">04</div>
           <span class="solution-step__icon">🤝</span>
-          <h3 class="solution-step__title">Match</h3>
-          <p class="solution-step__desc">Find verified buyers looking for your crop.</p>
+          <h3 class="solution-step__title" data-i18n="landing.solutionStep4">Match</h3>
+          <p class="solution-step__desc" data-i18n="landing.solutionStep4Desc">Find verified buyers looking for your crop.</p>
         </div>
         <div class="solution-step">
           <div class="solution-step__number">05</div>
           <span class="solution-step__icon">✅</span>
-          <h3 class="solution-step__title">Sell</h3>
-          <p class="solution-step__desc">Create a lot, receive offers and complete the transaction.</p>
+          <h3 class="solution-step__title" data-i18n="landing.solutionStep5">Sell</h3>
+          <p class="solution-step__desc" data-i18n="landing.solutionStep5Desc">Create a lot, receive offers and complete the transaction.</p>
         </div>
       </div>
     </div>
@@ -298,8 +302,8 @@
   <section class="section-intelligence" id="intelligence">
     <div class="container">
       <div class="section-intelligence__header">
-        <p class="section-intelligence__label">Market Intelligence</p>
-        <h2 class="section-intelligence__title">
+        <p class="section-intelligence__label" data-i18n="landing.intelligenceLabel">Market Intelligence</p>
+        <h2 class="section-intelligence__title" data-i18n="landing.intelligenceTitle">
           Information you normally don't have.
         </h2>
       </div>
@@ -376,11 +380,11 @@
     <div class="section-ai__bg-glow"></div>
     <div class="container">
       <div class="section-ai__header">
-        <p class="t-label" style="color: var(--ks-green-accent); margin-bottom: 16px;">AI-Powered Intelligence</p>
-        <h2 class="section-ai__title">
-          Don't just know the price.<br>Know <em>when</em> to sell.
-        </h2>
-      </div>
+          <p class="t-label" style="color: var(--ks-green-accent); margin-bottom: 16px;" data-i18n="landing.aiLabel">AI-Powered Intelligence</p>
+          <h2 class="section-ai__title" data-i18n="landing.aiTitle">
+            Don't just know the price.<br>Know <em>when</em> to sell.
+          </h2>
+        </div>
 
       <div class="ai-flow" id="ai-flow">
         <div class="ai-flow__step">
@@ -419,11 +423,11 @@
           <span class="ai-confidence__value">86%</span>
           <span class="ai-confidence__label">Confidence Score</span>
         </div>
-        <p class="ai-confidence__note">
+        <p class="ai-confidence__note" data-i18n="landing.aiConfidenceNote">
           Based on historical prices, market arrivals,
           buyer demand, transportation and storage costs.
         </p>
-        <p class="ai-confidence__disclaimer">
+        <p class="ai-confidence__disclaimer" data-i18n="landing.aiDisclaimer">
           *AI predictions are estimates and should be used as one input in your decision-making process.
         </p>
       </div>
@@ -436,11 +440,11 @@
   <section class="section-buyers" id="buyers">
     <div class="container">
       <div class="section-buyers__header">
-        <p class="t-label" style="color: var(--ks-green-accent); margin-bottom: 12px;">Buyer Marketplace</p>
-        <h2 class="section-buyers__title">
-          Your next buyer could already be looking for your crop.
-        </h2>
-      </div>
+          <p class="t-label" style="color: var(--ks-green-accent); margin-bottom: 12px;" data-i18n="landing.buyerMarketplaceLabel">Buyer Marketplace</p>
+          <h2 class="section-buyers__title" data-i18n="landing.buyerMarketplaceTitle">
+            Your next buyer could already be looking for your crop.
+          </h2>
+        </div>
 
       <div class="buyer-grid" id="buyer-grid">
         <div class="buyer-card">
@@ -508,7 +512,7 @@
 
       <div class="section-buyers__cta">
         <a href="#" class="btn btn--outline-dark" id="btn-marketplace">
-          View Marketplace
+          <span data-i18n="landing.viewMarketplace">View Marketplace</span>
           <span class="btn-arrow">→</span>
         </a>
       </div>
@@ -521,11 +525,11 @@
   <section class="section-transaction" id="transaction">
     <div class="container">
       <div class="section-transaction__header">
-        <p class="t-label" style="color: var(--ks-gold); margin-bottom: 16px;">End-to-End Process</p>
-        <h2 class="section-transaction__title">
+        <p class="t-label" style="color: var(--ks-gold); margin-bottom: 16px;" data-i18n="landing.transactionLabel">End-to-End Process</p>
+        <h2 class="section-transaction__title" data-i18n="landing.transactionTitle">
           From farm gate to final payment.
         </h2>
-        <p class="section-transaction__subtitle">Transparent transaction records at every step.</p>
+        <p class="section-transaction__subtitle" data-i18n="landing.transactionSubtitle">Transparent transaction records at every step.</p>
       </div>
 
       <div class="transaction-flow" id="transaction-flow">
@@ -565,7 +569,7 @@
         </div>
       </div>
 
-      <p class="section-transaction__note" id="txn-note">
+      <p class="section-transaction__note" id="txn-note" data-i18n="landing.transactionNote">
         Every step recorded. Every transaction <strong>transparent</strong>.
       </p>
     </div>
@@ -577,8 +581,8 @@
   <section class="section-fpo" id="fpo">
     <div class="container">
       <div class="section-fpo__header">
-        <p class="section-fpo__label">For Farmer Groups</p>
-        <h2 class="section-fpo__title">
+        <p class="section-fpo__label" data-i18n="landing.fpoLabel">For Farmer Groups</p>
+        <h2 class="section-fpo__title" data-i18n="landing.fpoTitle">
           Stronger together. Better prices as a collective.
         </h2>
       </div>
@@ -589,19 +593,19 @@
           <div class="fpo-card__stats">
             <div class="fpo-stat">
               <div class="fpo-stat__value" data-count="248">0</div>
-              <div class="fpo-stat__label">Farmers</div>
+              <div class="fpo-stat__label" data-i18n="landing.fpoStatFarmers">Farmers</div>
             </div>
             <div class="fpo-stat">
               <div class="fpo-stat__value" data-count="1240">0</div>
-              <div class="fpo-stat__label">Quintals</div>
+              <div class="fpo-stat__label" data-i18n="common.quintal">Quintals</div>
             </div>
             <div class="fpo-stat">
               <div class="fpo-stat__value" data-count="12">0</div>
-              <div class="fpo-stat__label">Markets</div>
+              <div class="fpo-stat__label" data-i18n="landing.fpoStatMarkets">Markets</div>
             </div>
           </div>
           <div class="fpo-card__realization">
-            <div class="fpo-card__realization-label">Potential Net Realization</div>
+            <div class="fpo-card__realization-label" data-i18n="landing.fpoRealizationLabel">Potential Net Realization</div>
             <div class="fpo-card__realization-value">₹2,610</div>
             <div class="fpo-card__realization-unit">/quintal</div>
           </div>
@@ -610,19 +614,19 @@
         <div class="fpo-workflow" id="fpo-workflow">
           <div class="fpo-workflow__step">
             <div class="fpo-workflow__number">1</div>
-            <div class="fpo-workflow__text">Aggregate</div>
+            <div class="fpo-workflow__text" data-i18n="landing.fpoWorkflowAggregate">Aggregate</div>
           </div>
           <div class="fpo-workflow__step">
             <div class="fpo-workflow__number">2</div>
-            <div class="fpo-workflow__text">Compare</div>
+            <div class="fpo-workflow__text" data-i18n="landing.fpoWorkflowCompare">Compare</div>
           </div>
           <div class="fpo-workflow__step">
             <div class="fpo-workflow__number">3</div>
-            <div class="fpo-workflow__text">Negotiate</div>
+            <div class="fpo-workflow__text" data-i18n="landing.fpoWorkflowNegotiate">Negotiate</div>
           </div>
           <div class="fpo-workflow__step">
             <div class="fpo-workflow__number">4</div>
-            <div class="fpo-workflow__text">Sell</div>
+            <div class="fpo-workflow__text" data-i18n="landing.fpoWorkflowSell">Sell</div>
           </div>
         </div>
       </div>
@@ -640,16 +644,16 @@
 
     <div class="section-final__content container">
       <h2 class="section-final__title" id="final-title">
-        Better information.<br>
-        Better decisions.<br>
-        Better farmer <em>realization.</em>
+        <span data-i18n="landing.finalTitle1">Better information.</span><br>
+        <span data-i18n="landing.finalTitle2">Better decisions.</span><br>
+        <em data-i18n="landing.finalTitle3">Better farmer realization.</em>
       </h2>
       <div class="section-final__actions">
         <a href="dashboard.html" class="btn btn--gold btn--lg" id="btn-enter-final">
-          Enter KrishiShetra
+          <span data-i18n="landing.enterKrishi">Enter KrishiShetra</span>
           <span class="btn-arrow">→</span>
         </a>
-        <a href="#buyers" class="btn btn--secondary" id="btn-marketplace-final">
+        <a href="#buyers" class="btn btn--secondary" id="btn-marketplace-final" data-i18n="landing.exploreMarketplace">
           Explore the Marketplace
         </a>
       </div>
@@ -664,18 +668,18 @@
       <div class="footer__inner">
         <div>
           <div class="footer__brand">KrishiShetra</div>
-          <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
+          <div class="footer__tagline" data-i18n="landing.footerTagline">Know the Price. Choose the Market. Sell Better.</div>
         </div>
         <div class="footer__links">
-          <a href="dashboard.html" class="footer__link">Farmer Dashboard</a>
-          <a href="fpo-dashboard.html" class="footer__link">FPO Hub</a>
-          <a href="buyer.html" class="footer__link">Buyers Portal</a>
-          <a href="transporter/dashboard.html" class="footer__link">Transporter Portal</a>
-          <a href="admin/index.html" class="footer__link">Admin</a>
-          <a href="#" class="footer__link">Privacy</a>
+          <a href="dashboard.html" class="footer__link" data-i18n="landing.footerFarmerDash">Farmer Dashboard</a>
+          <a href="fpo-dashboard.html" class="footer__link" data-i18n="landing.footerFpoHub">FPO Hub</a>
+          <a href="buyer.html" class="footer__link" data-i18n="landing.footerBuyers">Buyers Portal</a>
+          <a href="transporter/dashboard.html" class="footer__link" data-i18n="landing.footerTransporter">Transporter Portal</a>
+          <a href="admin/index.html" class="footer__link" data-i18n="landing.footerAdmin">Admin</a>
+          <a href="#" class="footer__link" data-i18n="landing.footerPrivacy">Privacy</a>
         </div>
       </div>
-      <div class="footer__copyright">
+      <div class="footer__copyright" data-i18n="landing.footerCopyright">
         © 2026 KrishiShetra. All rights reserved. Market data for reference purposes only.
       </div>
     </div>
@@ -690,7 +694,7 @@
       <button class="login-card__close" id="login-close">✕</button>
       <div class="login-card__logo">
         <div class="login-card__logo-text"><i data-lucide="sprout" style="width:20px;height:20px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> KrishiShetra</div>
-        <div class="login-card__tagline">Your market intelligence platform</div>
+        <div class="login-card__tagline" data-i18n="auth.loginModalTagline">Your market intelligence platform</div>
       </div>
 
       <form class="login-card__form" id="login-form">

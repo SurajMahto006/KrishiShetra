@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* ── Google Fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Martel:wght@400;600;700;800&family=Noto+Serif+Devanagari:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
 
 /* ── Custom Properties ── */
 :root {
@@ -36,7 +36,7 @@
   --ks-orange: #f39c12;
 
   /* Typography */
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-display: 'Playfair Display', 'Noto Serif Devanagari', 'Martel', Georgia, serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Sizing */
@@ -403,6 +403,92 @@ input, textarea { font-family: inherit; }
 }
 
 /* ============================================================
+   LANDING TOPBAR (Helpline & Language Selection)
+   ============================================================ */
+.landing-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 38px;
+  z-index: 1002;
+  background: rgba(10, 24, 18, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+}
+
+.landing-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 40px);
+}
+
+.landing-topbar__helpline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.01em;
+}
+
+.landing-topbar__helpline strong {
+  color: var(--ks-green-light, #6bc48f);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.landing-topbar__actions {
+  display: inline-flex;
+  align-items: center;
+}
+
+.landing-topbar .krishi-lang-switcher {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  padding: 2px 4px;
+  margin-right: 0;
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+}
+
+.landing-topbar .krishi-lang-btn {
+  color: rgba(255, 255, 255, 0.85);
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 14px;
+}
+
+.landing-topbar .krishi-lang-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.landing-topbar .krishi-lang-btn.active {
+  background: var(--ks-green-accent, #4a9d6e);
+  color: #ffffff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 680px) {
+  .landing-topbar__helpline {
+    display: none;
+  }
+  .landing-topbar__inner {
+    justify-content: flex-end;
+  }
+}
+
+/* ============================================================
    NAVBAR
    ============================================================ */
 .navbar {
@@ -422,10 +508,10 @@ input, textarea { font-family: inherit; }
 }
 
 .navbar--solid {
-  background: rgba(13, 26, 20, 0.92);
+  background: rgba(13, 26, 20, 0.94);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--ks-border);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
 
 .navbar__inner {
@@ -477,15 +563,16 @@ input, textarea { font-family: inherit; }
 .navbar__nav {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: clamp(14px, 1.8vw, 32px);
 }
 
 .navbar__link {
-  font-size: 15px;
+  font-size: clamp(13.5px, 0.95vw, 15px);
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.82);
   transition: color var(--duration-fast);
   position: relative;
+  white-space: nowrap;
 }
 
 .navbar__link::after {
@@ -510,7 +597,7 @@ input, textarea { font-family: inherit; }
 .navbar__actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .navbar__login {
@@ -538,6 +625,37 @@ input, textarea { font-family: inherit; }
 .navbar__cta:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(74, 157, 110, 0.35);
+}
+
+/* Language switcher inside navbar (after topbar removal) */
+.navbar .krishi-lang-switcher {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  padding: 2px 4px;
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+
+.navbar .krishi-lang-btn {
+  color: rgba(255, 255, 255, 0.82);
+  padding: 4px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 16px;
+  white-space: nowrap;
+}
+
+.navbar .krishi-lang-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.navbar .krishi-lang-btn.active {
+  background: var(--ks-green-accent, #4a9d6e);
+  color: #ffffff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
 }
 
 /* Mobile Menu Toggle */
@@ -617,65 +735,182 @@ input, textarea { font-family: inherit; }
   width: 100%;
   max-width: var(--container-width);
   margin: 0 auto;
-  padding: 0 40px;
-  padding-top: var(--nav-height);
-  padding-bottom: 80px;
+  padding: 0 clamp(20px, 3vw, 40px);
+  padding-top: calc(var(--nav-height) + 12px);
+  padding-bottom: clamp(48px, 6vw, 80px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 60px;
+  gap: clamp(28px, 4vw, 64px);
+  box-sizing: border-box;
 }
 
 .hero__text {
-  max-width: 620px;
-  flex-shrink: 0;
+  flex: 1 1 540px;
+  max-width: min(100%, 680px);
+  min-width: 0;
 }
 
 .hero__headline {
   font-family: var(--font-display);
-  font-size: clamp(44px, 5.5vw, 76px);
-  font-weight: 700;
-  line-height: 1.08;
-  color: var(--ks-white);
-  margin-bottom: 24px;
+  font-size: clamp(38px, 5.2vw, 76px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #FFFFFF;
+  margin-bottom: clamp(20px, 2.8vw, 32px);
+  max-width: 100%;
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.45);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  letter-spacing: -0.015em;
 }
 
 .hero__headline .line {
+  display: inline-block;
+  overflow: visible;
+  vertical-align: baseline;
+  white-space: normal;
+  max-width: 100%;
+}
+
+.hero__headline .line--phrase1,
+.hero__headline .line--phrase2 {
+  margin-right: 0.22em;
+}
+
+.hero__headline .line--phrase3 {
   display: block;
-  overflow: hidden;
+  margin-top: 0.12em;
 }
 
 .hero__headline .line-inner {
-  display: block;
-  transform: translateY(100%);
+  display: inline-block;
+  overflow: visible;
+  vertical-align: baseline;
+  max-width: 100%;
+  transform: translateY(20px);
   opacity: 0;
+}
+
+.hero__headline-prefix {
+  color: rgba(255, 255, 255, 0.95);
+  margin-right: 0.16em;
 }
 
 .hero__headline .highlight {
-  background: linear-gradient(90deg, var(--ks-gold-light), var(--ks-gold), #fff5d4, var(--ks-gold-light));
-  background-size: 300% 100%;
+  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 35%, #FFFFFF 65%, #D97706 100%);
+  background-size: 240% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 4s ease-in-out infinite;
+  animation: shimmer 5s ease-in-out infinite;
+  font-style: normal;
+  font-weight: 800;
+  display: inline;
+  filter: drop-shadow(0 2px 14px rgba(245, 158, 11, 0.4));
+  padding-bottom: 2px;
 }
 
 .hero__subtitle {
-  font-size: clamp(17px, 1.4vw, 20px);
+  font-size: clamp(15.5px, 1.35vw, 19px);
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.7;
-  margin-bottom: 40px;
-  max-width: 500px;
+  margin-bottom: clamp(28px, 3.5vw, 40px);
+  max-width: min(100%, 560px);
   opacity: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .hero__actions {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 48px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(32px, 4vw, 48px);
   opacity: 0;
+}
+
+.hero__actions .btn {
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+/* ── Multilingual Adaptive Typography (Hindi & Marathi) ── */
+html[lang="hi"] .hero__headline,
+html[lang="mr"] .hero__headline,
+:lang(hi) .hero__headline,
+:lang(mr) .hero__headline {
+  font-family: 'Noto Serif Devanagari', 'Martel', Georgia, serif;
+  font-size: clamp(30px, 4.3vw, 62px);
+  line-height: 1.34;
+  letter-spacing: 0;
+  font-weight: 800;
+  text-shadow: 0 3px 24px rgba(0, 0, 0, 0.5);
+}
+
+html[lang="hi"] .hero__headline .line,
+html[lang="mr"] .hero__headline .line,
+:lang(hi) .hero__headline .line,
+:lang(mr) .hero__headline .line {
+  line-height: 1.34;
+  overflow: visible;
+}
+
+html[lang="hi"] .hero__headline .line--phrase1,
+html[lang="hi"] .hero__headline .line--phrase2,
+html[lang="mr"] .hero__headline .line--phrase1,
+html[lang="mr"] .hero__headline .line--phrase2,
+:lang(hi) .hero__headline .line--phrase1,
+:lang(hi) .hero__headline .line--phrase2,
+:lang(mr) .hero__headline .line--phrase1,
+:lang(mr) .hero__headline .line--phrase2 {
+  margin-right: 0.28em;
+}
+
+html[lang="hi"] .hero__headline .line--phrase3,
+html[lang="mr"] .hero__headline .line--phrase3,
+:lang(hi) .hero__headline .line--phrase3,
+:lang(mr) .hero__headline .line--phrase3 {
+  display: block;
+  margin-top: 0.16em;
+}
+
+html[lang="hi"] .hero__headline .line-inner,
+html[lang="mr"] .hero__headline .line-inner,
+:lang(hi) .hero__headline .line-inner,
+:lang(mr) .hero__headline .line-inner {
+  line-height: 1.34;
+  overflow: visible;
+}
+
+html[lang="hi"] .hero__headline .highlight,
+html[lang="mr"] .hero__headline .highlight,
+:lang(hi) .hero__headline .highlight,
+:lang(mr) .hero__headline .highlight {
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0;
+  filter: drop-shadow(0 2px 14px rgba(245, 158, 11, 0.45));
+}
+
+html[lang="hi"] .hero__subtitle,
+html[lang="mr"] .hero__subtitle,
+:lang(hi) .hero__subtitle,
+:lang(mr) .hero__subtitle {
+  line-height: 1.82;
+  font-size: clamp(15px, 1.25vw, 18px);
+  max-width: min(100%, 600px);
+}
+
+html[lang="hi"] .hero__actions .btn,
+html[lang="mr"] .hero__actions .btn,
+:lang(hi) .hero__actions .btn,
+:lang(mr) .hero__actions .btn {
+  letter-spacing: 0;
+  padding: 14px clamp(20px, 2.5vw, 32px);
+  font-size: 15px;
 }
 
 .hero__trust {
@@ -2532,7 +2767,16 @@ input, textarea { font-family: inherit; }
   }
 
   .hero__headline {
-    font-size: clamp(36px, 9vw, 52px);
+    font-size: clamp(30px, 8vw, 48px);
+    line-height: 1.22;
+  }
+
+  html[lang="hi"] .hero__headline,
+  html[lang="mr"] .hero__headline,
+  :lang(hi) .hero__headline,
+  :lang(mr) .hero__headline {
+    font-size: clamp(26px, 7vw, 42px);
+    line-height: 1.34;
   }
 
   .problem-grid {

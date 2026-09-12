@@ -278,6 +278,11 @@ function renderDisputesList() {
     const isSelected = state.selectedDispute && (state.selectedDispute._id === d._id || state.selectedDispute.disputeId === d.disputeId);
     const badge = getStatusBadge(d.status);
     const isProtected = d.paymentProtection ? d.paymentProtection.isProtected : true;
+    const cropDisplay = window.KrishiI18n ? window.KrishiI18n.getCropName(d.cropName) : (d.cropName || 'Produce');
+    const protectedLabel = isProtected
+      ? (window.KrishiI18n ? window.KrishiI18n.t('disputes.protectedAmountLabel', 'Payment Protected') : '🔒 Payment Protected')
+      : '✓ Settled';
+    const viewLabel = window.KrishiI18n ? window.KrishiI18n.t('common.viewDetails', 'View Dispute →') : 'View Dispute →';
 
     return `
       <div class="dispute-item-card ${isSelected ? 'dispute-item-card--active' : ''}" onclick="selectDispute('${d._id || d.disputeId}')">
@@ -291,7 +296,7 @@ function renderDisputesList() {
         </div>
 
         <div style="font-size: 16px; font-weight: 700; color: var(--ks-charcoal, #17221D); margin-bottom: 4px;">
-          ${d.cropName || 'Produce'} · ${d.quantity} ${d.quantityUnit || 'Qtl'}
+          ${cropDisplay} · ${d.quantity} ${d.quantityUnit || 'Qtl'}
         </div>
 
         <div style="font-size: 13px; color: var(--ks-charcoal, #17221D); margin-bottom: 12px;">
@@ -300,10 +305,10 @@ function renderDisputesList() {
 
         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--ks-border, #E2E0D5); padding-top: 10px; font-size: 12px;">
           <span style="color: var(--ks-evergreen, #12372A); font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
-            ${isProtected ? '🔒 Payment Protected' : '✓ Settled'}
+            ${isProtected ? '🔒 ' + protectedLabel : protectedLabel}
           </span>
           <span style="color: var(--ks-sage, #5B9A72); font-weight: 700; display: inline-flex; align-items: center; gap: 2px;">
-            View Dispute →
+            ${viewLabel}
           </span>
         </div>
       </div>
@@ -381,7 +386,7 @@ function renderDisputeDetail(dispute) {
             </span>
           </div>
           <h2 style="font-size: 21px; font-weight: 800; color: var(--ks-evergreen, #12372A); margin: 0;">
-            ${dispute.cropName || 'Produce Batch'} · Order #${dispute.orderId}
+            ${window.KrishiI18n ? window.KrishiI18n.getCropName(dispute.cropName) : (dispute.cropName || 'Produce Batch')} · Order #${dispute.orderId}
           </h2>
         </div>
 
@@ -957,3 +962,14 @@ function showToastNotification(message) {
     setTimeout(() => toast.remove(), 400);
   }, 4000);
 }
+
+// Re-render dynamic dispute cards and active detail on language change
+if (typeof window !== 'undefined') {
+  window.addEventListener('languageChanged', function () {
+    renderDisputesList();
+    if (state.selectedDispute) {
+      renderDisputeDetail(state.selectedDispute);
+    }
+  });
+}
+

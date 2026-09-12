@@ -165,7 +165,13 @@
   // 3. LANGUAGE DETECTOR (English, Hindi, Marathi)
   // ══════════════════════════════════════════════════════════════════
   var LanguageDetector = {
-    currentLanguage: 'mr', // Default to Marathi for Maharashtra agricultural context
+    currentLanguage: (function () {
+      try {
+        var saved = localStorage.getItem('krishi_lang');
+        if (saved && ['en', 'hi', 'mr'].indexOf(saved) !== -1) return saved;
+      } catch (e) {}
+      return 'en';
+    })(),
 
     detect: function (text) {
       if (!text || !text.trim()) return this.currentLanguage;
@@ -1481,9 +1487,21 @@
       this._injectHTML();
       this._bindEvents();
       this._updateContextBar();
+      this._updateInputPlaceholder(LanguageDetector.currentLanguage);
       this.setVoiceState('IDLE');
       var self = this;
       setTimeout(function () { self._showWelcome(); }, 350);
+    },
+
+    _updateInputPlaceholder: function (lang) {
+      var input = document.getElementById('ks-chat-input');
+      if (!input) return;
+      var ph = {
+        en: 'Ask about prices, buyers, transport, storage…',
+        hi: 'भाव, खरीदार, परिवहन, भंडारण के बारे में पूछें…',
+        mr: 'भाव, खरेदीदार, वाहतूक, साठवणूक याबद्दल विचारा…'
+      };
+      input.placeholder = ph[lang] || ph['en'];
     },
 
     setVoiceState: function (state) {
@@ -1631,10 +1649,34 @@
       if (langSelect) {
         langSelect.value = LanguageDetector.currentLanguage;
         langSelect.addEventListener('change', function () {
-          KrishiSahayakVoice.setLanguage(this.value);
+          var newLang = this.value;
+          LanguageDetector.currentLanguage = newLang;
+          KrishiSahayakVoice.setLanguage(newLang);
           self.setVoiceState(self.voiceState);
+          self._updateInputPlaceholder(newLang);
+          if (window.KrishiI18n && typeof window.KrishiI18n.changeLanguage === 'function') {
+            window.KrishiI18n.changeLanguage(newLang, 'chatbot');
+          } else {
+            window.dispatchEvent(new CustomEvent('chatbotLanguageChanged', { detail: { lang: newLang } }));
+          }
         });
       }
+
+      // Listen for website language change events (loop-free)
+      window.addEventListener('languageChanged', function (e) {
+        if (!e || !e.detail || !e.detail.lang) return;
+        var newLang = e.detail.lang;
+        LanguageDetector.currentLanguage = newLang;
+        if (KrishiSahayakVoice && typeof KrishiSahayakVoice.setLanguage === 'function') {
+          KrishiSahayakVoice.setLanguage(newLang);
+        }
+        var ls = document.getElementById('ks-voice-lang-select');
+        if (ls && ls.value !== newLang) {
+          ls.value = newLang;
+        }
+        self.setVoiceState(self.voiceState);
+        self._updateInputPlaceholder(newLang);
+      });
       if (replyToggle) {
         var syncReplyUI = function () {
           var on = KrishiSahayakVoice.isVoiceReplyEnabled();

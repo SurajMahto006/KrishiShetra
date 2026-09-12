@@ -58,14 +58,17 @@
         <a href="lots.html" class="dash-header__link" id="nav-lots">
           <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
         </a>
+        <a href="buyers.html" class="dash-header__link" id="nav-inquiries">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyerInquiries">Buyer Inquiries</span>
+        </a>
+        <a href="storage.html" class="dash-header__link" id="nav-storage">
+          <i data-lucide="warehouse" class="dash-header__link-icon"></i> <span data-i18n="navigation.storage">Storage Options</span>
+        </a>
         <a href="market.html" class="dash-header__link dash-header__link--active" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="navigation.market">Market</span>
+          <i data-lucide="store" class="dash-header__link-icon"></i> <span data-i18n="navigation.market">Market Prices</span>
         </a>
         <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span>
-        </a>
-        <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyers">Buyers</span>
+          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Price Forecast</span>
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
           <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span>
@@ -76,9 +79,6 @@
         <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
-        </button>
-        <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
-          <i data-lucide="help-circle"></i>
         </button>
         <div class="dash-profile-wrap" id="dash-profile-wrap">
           <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
@@ -120,15 +120,15 @@
   <div class="dash-mobile-nav" id="dash-mobile-nav">
     <div class="dash-mobile-nav__links">
       <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i>
-        Dashboard</a>
-      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
+        <span data-i18n="navigation.dashboard">Dashboard</span></a>
+      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> <span data-i18n="navigation.myLots">My Lots</span></a>
+      <a href="buyer-inquiries.html" class="dash-mobile-nav__link" id="mnav-inquiries"><i data-lucide="message-square"></i> <span data-i18n="navigation.buyerInquiries">Buyer Inquiries</span></a>
+      <a href="storage.html" class="dash-mobile-nav__link" id="mnav-storage"><i data-lucide="warehouse"></i> <span data-i18n="navigation.storage">Storage Options</span></a>
       <a href="market.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-market"><i
-          data-lucide="bar-chart-3"></i> Market Prices</a>
-      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> AI
-        Forecast</a>
-      <a href="buyers.html" class="dash-mobile-nav__link" id="mnav-buyers"><i data-lucide="users"></i> Buyers</a>
+          data-lucide="bar-chart-3"></i> <span data-i18n="navigation.market">Market</span></a>
+      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span></a>
       <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i>
-        Orders</a>
+        <span data-i18n="navigation.orders">Orders</span></a>
     </div>
   </div>
 
@@ -219,10 +219,10 @@
       <div class="container">
         <div class="dash-section__header">
           <div>
-            <h2 class="dash-section__title">What Farmers Are Selling</h2>
-            <p class="dash-section__subtitle">Top traded commodities listed across regional mandis</p>
+            <h2 class="dash-section__title" data-i18n="market.whatFarmersAreSelling">What Farmers Are Selling</h2>
+            <p class="dash-section__subtitle" data-i18n="market.whatFarmersAreSellingSub">Top traded commodities listed across regional mandis</p>
           </div>
-          <a href="lots.html" class="dash-section__action">View My Listings <i data-lucide="arrow-right"></i></a>
+          <a href="lots.html" class="dash-section__action"><span data-i18n="market.viewMyListings">View My Listings</span> <i data-lucide="arrow-right"></i></a>
         </div>
         <div class="dash-farmer-scroll" id="farmer-listings-scroll"></div>
       </div>
@@ -233,13 +233,13 @@
       <div class="container">
         <div class="dash-section__header">
           <div>
-            <h2 class="dash-section__title">Compare Mandi Prices</h2>
-            <p class="dash-section__subtitle">Find the best market for your crop across states</p>
+            <h2 class="dash-section__title" data-i18n="market.compareMandiPrices">Compare Mandi Prices</h2>
+            <p class="dash-section__subtitle" data-i18n="market.compareMandiPricesSub">Find the best market for your crop across states</p>
           </div>
         </div>
         <div class="dash-compare-controls" id="compare-controls">
           <div class="dash-compare-control">
-            <label for="compare-crop">Selected Crop</label>
+            <label for="compare-crop" data-i18n="market.selectedCrop">Selected Crop</label>
             <select id="compare-crop" class="dash-filter-select">
               <option value="rice">Rice</option>
               <option value="wheat">Wheat</option>
@@ -252,7 +252,7 @@
             </select>
           </div>
           <div class="dash-compare-control">
-            <label for="compare-location">State / Region</label>
+            <label for="compare-location" data-i18n="market.stateRegion">State / Region</label>
             <select id="compare-location" class="dash-filter-select">
               <option value="maharashtra">Maharashtra</option>
               <option value="mp">Madhya Pradesh</option>
@@ -270,7 +270,7 @@
           <table class="dash-compare-table" id="compare-table">
             <thead>
               <tr>
-                <th>Market Mandi</th>
+                <th data-i18n="market.marketMandi">Market Mandi</th>
                 <th>Modal Price (₹/q)</th>
                 <th>Price Range (Min – Max)</th>
                 <th>Date & Source</th>
@@ -295,7 +295,7 @@
           <div class="dash-chart-card__header">
             <div>
               <h3 class="dash-chart-card__title" id="chart-title">Rice Price Trend</h3>
-              <p class="dash-chart-card__subtitle">Historical daily modal price analysis</p>
+              <p class="dash-chart-card__subtitle" data-i18n="market.historicalModalPrice">Historical daily modal price analysis</p>
             </div>
             <div class="dash-chart-card__controls">
               <select id="chart-crop-select" class="dash-filter-select dash-filter-select--sm"
@@ -316,13 +316,13 @@
             </div>
           </div>
           <div class="dash-chart-stats" id="chart-stats">
-            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Current</span><span
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label" data-i18n="market.current">Current</span><span
                 class="dash-chart-stats__val" id="chart-stat-current">₹2,850</span></div>
-            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Highest</span><span
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label" data-i18n="market.highest">Highest</span><span
                 class="dash-chart-stats__val dash-chart-stats__val--up" id="chart-stat-high">₹2,900</span></div>
-            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Lowest</span><span
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label" data-i18n="market.lowest">Lowest</span><span
                 class="dash-chart-stats__val dash-chart-stats__val--down" id="chart-stat-low">₹2,620</span></div>
-            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label">Average</span><span
+            <div class="dash-chart-stats__item"><span class="dash-chart-stats__label" data-i18n="market.average">Average</span><span
                 class="dash-chart-stats__val" id="chart-stat-avg">₹2,792</span></div>
           </div>
           <div class="dash-chart-card__canvas">
@@ -357,8 +357,8 @@
       <div class="container">
         <div class="dash-section__header">
           <div>
-            <h2 class="dash-section__title">Market Insights</h2>
-            <p class="dash-section__subtitle">Actionable intelligence for better selling decisions</p>
+            <h2 class="dash-section__title" data-i18n="market.marketInsights">Market Insights</h2>
+            <p class="dash-section__subtitle" data-i18n="market.actionableIntelligence">Actionable intelligence for better selling decisions</p>
           </div>
         </div>
         <div class="dash-insights__grid" id="insights-grid">
@@ -455,7 +455,7 @@
           </div>
           <div class="dash-crop-modal__hero-info">
             <div class="dash-crop-modal__price-block">
-              <span class="dash-crop-modal__price-label">Current Mandi Price</span>
+              <span class="dash-crop-modal__price-label" data-i18n="market.currentMandiPrice">Current Mandi Price</span>
               <div class="dash-crop-modal__price-val" id="crop-modal-price">₹2,850/q</div>
               <span class="dash-crop-modal__price-change" id="crop-modal-change">↑ 5.2% from last week</span>
             </div>
@@ -471,19 +471,19 @@
         <div class="dash-crop-modal__ai-box">
           <div class="dash-crop-modal__ai-header">
             <i data-lucide="brain"></i>
-            <span>AI Selling Forecast</span>
+            <span data-i18n="market.aiSellingForecast">AI Selling Forecast</span>
           </div>
           <p id="crop-modal-ai-text">"High buyer arrival expected in next 3 days. Recommended selling price ₹2,950/q."
           </p>
         </div>
 
         <div class="dash-crop-modal__section">
-          <h4>Nearby Mandi Price Comparison</h4>
+          <h4 data-i18n="market.nearbyMandiComparison">Nearby Mandi Price Comparison</h4>
           <div class="dash-crop-modal__mandis" id="crop-modal-mandis"></div>
         </div>
 
         <div class="dash-crop-modal__section">
-          <h4>Top Verified Corporate Buyers</h4>
+          <h4 data-i18n="market.topVerifiedBuyers">Top Verified Corporate Buyers</h4>
           <div class="dash-crop-modal__buyers" id="crop-modal-buyers"></div>
         </div>
 
@@ -501,12 +501,12 @@
   <div class="dash-modal-overlay" id="alert-modal-overlay">
     <div class="dash-modal" id="alert-modal">
       <div class="dash-modal__header">
-        <h3>Create Price Alert</h3>
+        <h3 data-i18n="market.createPriceAlert">Create Price Alert</h3>
         <button class="dash-modal__close" id="alert-modal-close"><i data-lucide="x"></i></button>
       </div>
       <form class="dash-modal__form" id="alert-form">
         <div class="dash-modal__field">
-          <label for="alert-crop-input">Crop</label>
+          <label for="alert-crop-input" data-i18n="cropLotModal.cropCategory">Crop</label>
           <select id="alert-crop-input" class="dash-filter-select" required>
             <option value="rice">Rice</option>
             <option value="wheat">Wheat</option>
@@ -518,11 +518,11 @@
           </select>
         </div>
         <div class="dash-modal__field">
-          <label for="alert-price-input">Target Price (₹/quintal)</label>
+          <label for="alert-price-input" data-i18n="market.targetPrice">Target Price (₹/quintal)</label>
           <input type="number" id="alert-price-input" class="dash-form-input" placeholder="e.g. 3000" required>
         </div>
         <div class="dash-modal__field">
-          <label for="alert-market-input">Market Mandi</label>
+          <label for="alert-market-input" data-i18n="market.marketMandi">Market Mandi</label>
           <select id="alert-market-input" class="dash-filter-select">
             <option value="Pune APMC">Pune APMC</option>
             <option value="Mumbai APMC">Mumbai APMC</option>
@@ -530,7 +530,7 @@
           </select>
         </div>
         <div class="dash-modal__field">
-          <label>Notify Via</label>
+          <label data-i18n="market.notifyVia">Notify Via</label>
           <div class="dash-modal__checkboxes">
             <label class="dash-checkbox"><input type="checkbox" id="alert-ch-app" checked> In-App</label>
             <label class="dash-checkbox"><input type="checkbox" id="alert-ch-sms" checked> SMS</label>

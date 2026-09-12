@@ -58,17 +58,17 @@
         <a href="lots.html" class="dash-header__link" id="nav-lots">
           <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
         </a>
-        <a href="market.html" class="dash-header__link" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="navigation.market">Market</span>
+        <a href="buyers.html" class="dash-header__link" id="nav-inquiries">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyerInquiries">Buyer Inquiries</span>
         </a>
         <a href="storage.html" class="dash-header__link" id="nav-storage">
-          <i data-lucide="warehouse" class="dash-header__link-icon"></i> <span data-i18n="navigation.storage">Storage</span>
+          <i data-lucide="warehouse" class="dash-header__link-icon"></i> <span data-i18n="navigation.storage">Storage Options</span>
+        </a>
+        <a href="market.html" class="dash-header__link" id="nav-market">
+          <i data-lucide="store" class="dash-header__link-icon"></i> <span data-i18n="navigation.market">Market Prices</span>
         </a>
         <a href="ai-forecast.html" class="dash-header__link dash-header__link--active" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span>
-        </a>
-        <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyers">Buyers</span>
+          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Price Forecast</span>
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
           <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span>
@@ -79,9 +79,6 @@
         <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
           <i data-lucide="bell"></i>
           <span class="dash-header__badge" id="notifications-badge">3</span>
-        </button>
-        <button class="dash-header__action-btn" id="btn-help" aria-label="Help" title="Kisan Support & Help">
-          <i data-lucide="help-circle"></i>
         </button>
         <div class="dash-profile-wrap" id="dash-profile-wrap">
           <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
@@ -123,15 +120,15 @@
   <div class="dash-mobile-nav" id="dash-mobile-nav">
     <div class="dash-mobile-nav__links">
       <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i>
-        Dashboard</a>
-      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> My Lots</a>
-      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> Market
-        Prices</a>
+        <span data-i18n="navigation.dashboard">Dashboard</span></a>
+      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> <span data-i18n="navigation.myLots">My Lots</span></a>
+      <a href="buyer-inquiries.html" class="dash-mobile-nav__link" id="mnav-inquiries"><i data-lucide="message-square"></i> <span data-i18n="navigation.buyerInquiries">Buyer Inquiries</span></a>
+      <a href="storage.html" class="dash-mobile-nav__link" id="mnav-storage"><i data-lucide="warehouse"></i> <span data-i18n="navigation.storage">Storage Options</span></a>
+      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> <span data-i18n="navigation.market">Market</span></a>
       <a href="ai-forecast.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-forecast"><i
-          data-lucide="brain"></i> AI Forecast</a>
-      <a href="buyers.html" class="dash-mobile-nav__link" id="mnav-buyers"><i data-lucide="users"></i> Buyers</a>
+          data-lucide="brain"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span></a>
       <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i>
-        Orders</a>
+        <span data-i18n="navigation.orders">Orders</span></a>
     </div>
   </div>
 
@@ -143,14 +140,14 @@
       <div class="container">
         <!-- Breadcrumb -->
         <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #777); margin-bottom: 14px;">
-          <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;">Dashboard</a> /
-          <strong>AI Price Forecast</strong>
+          <a href="dashboard.html" style="color: var(--ks-gold, #C9973B); text-decoration: none;" data-i18n="navigation.dashboard">Dashboard</a> /
+          <strong data-i18n="navigation.aiForecast">AI Price Forecast</strong>
         </nav>
 
         <div class="dash-section__header">
           <div>
-            <h1 class="dash-section__title" style="font-size: 28px;">🤖 AI Market Price Forecast Engine</h1>
-            <p class="dash-section__subtitle">Predict price trends across 42 mandis using historical seasonality,
+            <h1 class="dash-section__title" style="font-size: 28px;">🤖 <span data-i18n="ai.forecastEngineTitle">AI Market Price Forecast Engine</span></h1>
+            <p class="dash-section__subtitle" data-i18n="ai.forecastEngineSubtitle">Predict price trends across 42 mandis using historical seasonality,
               weather radar, and buyer demand trends.</p>
           </div>
         </div>
@@ -159,7 +156,7 @@
         <div class="dash-card dash-forecast-controls-card">
           <div class="dash-forecast-form">
             <div class="dash-forecast-field">
-              <label for="forecast-crop-select">Select Crop</label>
+              <label for="forecast-crop-select" data-i18n="ai.selectCrop">Select Crop</label>
               <select id="forecast-crop-select" class="dash-filter-select">
                 <option value="rice">Rice</option>
                 <option value="wheat">Wheat</option>
@@ -175,7 +172,7 @@
               </select>
             </div>
             <div class="dash-forecast-field">
-              <label for="forecast-market-select">Select Market Mandi</label>
+              <label for="forecast-market-select" data-i18n="ai.selectMandi">Select Market Mandi</label>
               <select id="forecast-market-select" class="dash-filter-select">
                 <option value="Pune APMC">Pune APMC (Maharashtra)</option>
                 <option value="Mumbai APMC">Mumbai APMC (Maharashtra)</option>
@@ -188,16 +185,16 @@
               </select>
             </div>
             <div class="dash-forecast-field">
-              <label>Forecast Horizon</label>
+              <label data-i18n="ai.forecastHorizon">Forecast Horizon</label>
               <div class="dash-forecast-tabs">
-                <button type="button" class="dash-forecast-tab dash-forecast-tab--active" data-days="7">7 Days</button>
-                <button type="button" class="dash-forecast-tab" data-days="14">14 Days</button>
-                <button type="button" class="dash-forecast-tab" data-days="30">30 Days</button>
+                <button type="button" class="dash-forecast-tab dash-forecast-tab--active" data-days="7"><span data-i18n="ai.sevenDays">7 Days</span></button>
+                <button type="button" class="dash-forecast-tab" data-days="14"><span data-i18n="ai.fourteenDays">14 Days</span></button>
+                <button type="button" class="dash-forecast-tab" data-days="30"><span data-i18n="ai.thirtyDays">30 Days</span></button>
               </div>
             </div>
             <div class="dash-forecast-btn-wrap">
               <button class="btn btn--primary dash-forecast-btn" id="btn-generate-forecast" style="min-height: 48px; font-weight: 700;">
-                <i data-lucide="sparkles"></i> <span>Generate Forecast</span>
+                <i data-lucide="sparkles"></i> <span data-i18n="ai.generateForecast">Generate Forecast</span>
               </button>
             </div>
           </div>
@@ -209,14 +206,14 @@
           <div class="dash-ai-card__inner">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
               <div class="dash-ai-card__badge" id="forecast-badge">
-                <i data-lucide="brain"></i> <span id="forecast-badge-text">AI Recommendation · Live</span>
+                <i data-lucide="brain"></i> <span id="forecast-badge-text" data-i18n="farmer.aiSellingRecommendation">AI Recommendation · Live</span>
               </div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="background: #E8F5E9; color: #2E7D32; font-weight: 800; font-size: 13px; padding: 6px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
-                  <span>📈</span> <span id="forecast-trend-label">Price Rising</span>
+                  <span>📈</span> <span id="forecast-trend-label" data-i18n="ai.priceRising">Price Rising</span>
                 </span>
                 <button class="kisan-voice-btn" id="btn-speak-forecast" onclick="speakForecastRecommendation()" style="min-height: 42px; padding: 6px 14px; font-size: 12.5px;" title="Listen to recommendation">
-                  <span id="forecast-voice-icon">🔊</span> <span id="forecast-voice-text">Listen</span>
+                  <span id="forecast-voice-icon">🔊</span> <span id="forecast-voice-text" data-i18n="common.listen">Listen</span>
                 </button>
               </div>
             </div>
@@ -229,23 +226,23 @@
                   strong procurement demand."
                 </p>
                 <div class="dash-ai-card__recommendation">
-                  <div class="dash-ai-card__rec-badge" id="forecast-rec-badge" style="font-size: 15px; font-weight: 800; padding: 8px 16px;">⏳ WAIT 3 DAYS</div>
+                  <div class="dash-ai-card__rec-badge" id="forecast-rec-badge" style="font-size: 15px; font-weight: 800; padding: 8px 16px;" data-i18n="ai.waitDays">⏳ WAIT 3 DAYS</div>
                   <div class="dash-ai-card__rec-details">
                     <div class="dash-ai-card__rec-detail">
-                      <span class="dash-ai-card__rec-label">Current Price</span>
+                      <span class="dash-ai-card__rec-label" data-i18n="ai.currentPrice">Current Price</span>
                       <span class="dash-ai-card__rec-value" id="forecast-current-price">₹2,850/q</span>
                     </div>
                     <div class="dash-ai-card__rec-detail">
-                      <span class="dash-ai-card__rec-label">Expected Price</span>
+                      <span class="dash-ai-card__rec-label" data-i18n="ai.expectedPrice">Expected Price</span>
                       <span class="dash-ai-card__rec-value" id="forecast-expected-price">₹2,970/q</span>
                     </div>
                     <div class="dash-ai-card__rec-detail">
-                      <span class="dash-ai-card__rec-label">Projected Change</span>
+                      <span class="dash-ai-card__rec-label" data-i18n="ai.projectedChange">Projected Change</span>
                       <span class="dash-ai-card__rec-value dash-ai-card__rec-value--highlight"
                         id="forecast-change-val">+4.2% (↑ ₹120/q)</span>
                     </div>
                     <div class="dash-ai-card__rec-detail">
-                      <span class="dash-ai-card__rec-label">Confidence</span>
+                      <span class="dash-ai-card__rec-label" data-i18n="ai.confidence">Confidence</span>
                       <span class="dash-ai-card__rec-value dash-ai-card__rec-value--highlight"
                         id="forecast-confidence-val">87%</span>
                     </div>
@@ -257,9 +254,9 @@
                 </div>
                 <div class="dash-ai-card__btns">
                   <a href="lots.html" class="btn btn--primary" id="btn-forecast-sell-action" style="min-height: 48px; font-weight: 700;"><i
-                      data-lucide="plus-circle"></i> Create Lot at Target Price</a>
+                      data-lucide="plus-circle"></i> <span data-i18n="ai.createLotTarget">Create Lot at Target Price</span></a>
                   <button class="btn btn--secondary" id="btn-set-alert-ai" onclick="openAlertModal()" style="min-height: 48px; font-weight: 700;"><i
-                      data-lucide="bell-ring"></i> Set Target Alert (₹2,970)</button>
+                      data-lucide="bell-ring"></i> <span data-i18n="ai.setTargetAlert">Set Target Alert</span></button>
                 </div>
               </div>
 
@@ -273,17 +270,17 @@
                   </svg>
                   <div class="dash-ai-card__ring-label">
                     <span class="dash-ai-card__ring-value" id="forecast-ring-text">87%</span>
-                    <span class="dash-ai-card__ring-text">Confidence</span>
+                    <span class="dash-ai-card__ring-text" data-i18n="farmer.confidenceScore">Confidence</span>
                   </div>
                 </div>
                 <div class="dash-ai-card__price-forecast">
                   <div class="dash-ai-card__forecast-row">
-                    <span class="dash-ai-card__forecast-label">Today</span>
+                    <span class="dash-ai-card__forecast-label" data-i18n="ai.today">Today</span>
                     <span class="dash-ai-card__forecast-val" id="forecast-mini-today">₹2,850</span>
                   </div>
                   <div class="dash-ai-card__forecast-arrow"><i data-lucide="arrow-down"></i></div>
                   <div class="dash-ai-card__forecast-row dash-ai-card__forecast-row--highlight">
-                    <span class="dash-ai-card__forecast-label" id="forecast-mini-target-label">In 7 Days</span>
+                    <span class="dash-ai-card__forecast-label" id="forecast-mini-target-label">In <span data-i18n="ai.sevenDays">7 Days</span></span>
                     <span class="dash-ai-card__forecast-val" id="forecast-mini-target">₹2,970</span>
                   </div>
                 </div>
@@ -293,8 +290,8 @@
             <!-- Loading State -->
             <div class="dash-forecast-loading" id="forecast-loading" style="display: none;">
               <div class="dash-spinner"></div>
-              <h4>Analyzing market data across 42 mandis...</h4>
-              <p>Evaluating buyer inquiries, weather projections, arrival volumes, and historical seasonality.</p>
+              <h4 data-i18n="ai.analyzingMarket">Analyzing market data across 42 mandis...</h4>
+              <p data-i18n="ai.evaluatingMarket">Evaluating buyer inquiries, weather projections, arrival volumes, and historical seasonality.</p>
             </div>
           </div>
         </div>
@@ -305,26 +302,26 @@
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:22px;">⚖️</span>
               <div>
-                <h3 style="font-size:17px; font-weight:800; color:var(--ks-evergreen); margin:0;">Sell Now vs. Store &amp; Hold AI Analysis</h3>
-                <span style="font-size:12px; color:#666;">Will storing your crop yield higher net profit after deducting warehouse rent &amp; weight loss?</span>
+                <h3 style="font-size:17px; font-weight:800; color:var(--ks-evergreen); margin:0;" data-i18n="ai.sellNowVsStoreAnalysis">Sell Now vs. Store &amp; Hold AI Analysis</h3>
+                <span style="font-size:12px; color:#666;" data-i18n="ai.sellNowVsStoreSubtitle">Will storing your crop yield higher net profit after deducting warehouse rent &amp; weight loss?</span>
               </div>
             </div>
             <span style="background:#E8F5E9; color:#2E7D32; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
-              <i data-lucide="check-circle" style="width:13px;height:13px;"></i> RECOMMENDATION: STORE &amp; HOLD
+              <i data-lucide="check-circle" style="width:13px;height:13px;"></i> <span data-i18n="ai.recommendationStoreHold">RECOMMENDATION: STORE &amp; HOLD</span>
             </span>
           </div>
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px;">
             <!-- Option A -->
             <div style="background:#FDFBF7; border:1.5px solid #E5E1D8; border-radius:12px; padding:14px 16px;">
-              <div style="font-size:11px; font-weight:800; color:#795548;">OPTION A — SELL NOW</div>
+              <div style="font-size:11px; font-weight:800; color:#795548;" data-i18n="ai.optionASellNow">OPTION A — SELL NOW</div>
               <div style="font-size:20px; font-weight:800; color:#222; margin:4px 0;">₹71,250 <span style="font-size:12px; font-weight:500; color:#666;">(₹2,850/q × 25q)</span></div>
               <div style="font-size:12px; color:#666;">Immediate payment · 0 storage cost · 0 shrinkage risk</div>
             </div>
 
             <!-- Option B -->
             <div style="background:#F1F8F3; border:2px solid #2E7D32; border-radius:12px; padding:14px 16px;">
-              <div style="font-size:11px; font-weight:800; color:#2E7D32;">OPTION B — STORE FOR 30 DAYS (RECOMMENDED)</div>
+              <div style="font-size:11px; font-weight:800; color:#2E7D32;" data-i18n="ai.optionBStore">OPTION B — STORE FOR 30 DAYS (RECOMMENDED)</div>
               <div style="font-size:20px; font-weight:800; color:#2E7D32; margin:4px 0;">₹74,250 <span style="font-size:12px; font-weight:700; color:#2E7D32;">(+₹3,000 net extra gain)</span></div>
               <div style="font-size:12px; color:#555;">After ₹950 warehouse rent, ₹350 handling &amp; ₹650 moisture shrinkage</div>
             </div>
@@ -336,10 +333,10 @@
             </div>
             <div style="display:flex; gap:8px;">
               <a href="storage.html" class="btn btn--primary" style="padding:7px 12px; font-size:12px;">
-                <i data-lucide="warehouse"></i> Explore Storage Options
+                <i data-lucide="warehouse"></i> <span data-i18n="ai.exploreStorageOptions">Explore Storage Options</span>
               </a>
               <a href="storage.html#storage-calculator" class="btn btn--secondary" style="padding:7px 12px; font-size:12px;">
-                <i data-lucide="calculator"></i> Custom Calculator
+                <i data-lucide="calculator"></i> <span data-i18n="ai.customCalculator">Custom Calculator</span>
               </a>
             </div>
           </div>
@@ -352,23 +349,48 @@
     <section class="dash-section" id="dash-selling-opp">
       <div class="container">
         <div class="dash-opp-card" id="opp-card">
-          <div class="dash-opp-card__icon">💡</div>
-          <div class="dash-opp-card__content">
-            <h3 class="dash-opp-card__title">Smart Selling Opportunity</h3>
-            <p class="dash-opp-card__desc">Your listed rice inventory is currently worth approximately:</p>
-            <div class="dash-opp-card__value" id="opp-total-val">₹71,250</div>
-            <div class="dash-opp-card__details">
-              <div class="dash-opp-card__detail"><span>Current Market</span><strong id="opp-cur-price">₹2,850/q</strong>
-              </div>
-              <div class="dash-opp-card__detail"><span>Recommended Target</span><strong
-                  id="opp-rec-price">₹2,950/q</strong></div>
-              <div class="dash-opp-card__detail dash-opp-card__detail--highlight"><span>Potential Extra
-                  Income</span><strong class="dash-opp-card__extra" id="opp-extra-val">+₹2,500</strong></div>
-            </div>
+          <div class="dash-opp-card__badge-row">
+            <span class="dash-opp-pill"><i data-lucide="sparkles"></i> <span data-i18n="farmer.topBuyingOpportunity">Top Buying Opportunity</span></span>
+            <span class="dash-opp-verified"><i data-lucide="shield-check"></i> <span data-i18n="farmer.verifiedBuyerTag">Verified Institutional Buyer · Shah Agro Trading</span></span>
           </div>
-          <div class="dash-opp-card__action">
-            <a href="buyers.html" class="btn btn--primary" id="btn-find-buyer"><i data-lucide="search"></i> Find Best
-              Buyer</a>
+          <div class="dash-opp-card__main">
+            <div class="dash-opp-card__icon" aria-hidden="true">🌾</div>
+            <div class="dash-opp-card__content">
+              <div class="dash-opp-card__crop-row">
+                <h3 class="dash-opp-card__title" data-i18n="ai.smartSellingOpp">Smart Selling Opportunity</h3>
+                <span class="dash-opp-rec-chip" data-i18n="farmer.recommendationFpoConsolidation">⚡ SELL TO FPO CONSOLIDATION · 92% CONFIDENCE</span>
+              </div>
+              <p class="dash-opp-card__desc" data-i18n="ai.oppInventoryDesc">Your listed crop inventory is currently worth approximately:</p>
+              <div class="dash-opp-card__metrics">
+                <div class="dash-opp-metric">
+                  <span class="dash-opp-metric__lbl" data-i18n="ai.currentMarket">Current Market</span>
+                  <strong class="dash-opp-metric__val" id="opp-cur-price">₹2,850 <small>/q</small></strong>
+                  <span class="dash-opp-metric__sub" data-i18n="farmer.vashiBenchmark">Vashi APMC Benchmark</span>
+                </div>
+                <div class="dash-opp-metric-divider" aria-hidden="true"><i data-lucide="arrow-right"></i></div>
+                <div class="dash-opp-metric dash-opp-metric--featured">
+                  <span class="dash-opp-metric__lbl" data-i18n="ai.recommendedTarget">Recommended Target</span>
+                  <strong class="dash-opp-metric__val dash-opp-metric__val--green" id="opp-rec-price">₹2,950 <small>/q</small></strong>
+                  <span class="dash-opp-metric__premium" data-i18n="farmer.marketLinked">+₹70/q market-linked</span>
+                </div>
+                <div class="dash-opp-metric-divider" aria-hidden="true">=</div>
+                <div class="dash-opp-metric dash-opp-metric--total">
+                  <span class="dash-opp-metric__lbl" data-i18n="ai.potentialExtra">Potential Extra Income</span>
+                  <strong class="dash-opp-metric__val dash-opp-metric__val--total" id="opp-extra-val">+₹2,500</strong>
+                  <span class="dash-opp-metric__sub" data-i18n="farmer.fullLotPayout">Full lot payout</span>
+                </div>
+              </div>
+              <div class="dash-opp-factors">
+                <span class="dash-opp-factor-item">📊 High institutional demand</span>
+                <span class="dash-opp-factor-item">⏱️ Peak price window in 48h</span>
+                <span class="dash-opp-factor-item">🛡️ Guaranteed escrow settlement</span>
+              </div>
+            </div>
+            <div class="dash-opp-card__action">
+              <a href="buyers.html" class="btn btn--primary dash-opp-btn" id="btn-find-buyer">
+                <i data-lucide="search"></i> <span data-i18n="ai.findBestBuyer">Find Best Buyer</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -417,12 +439,12 @@
   <div class="dash-modal-overlay" id="alert-modal-overlay">
     <div class="dash-modal" id="alert-modal">
       <div class="dash-modal__header">
-        <h3>Create Price Alert</h3>
-        <button class="dash-modal__close" id="alert-modal-close"><i data-lucide="x"></i></button>
+        <h3 data-i18n="farmer.createPriceAlert">Create Price Alert</h3>
+        <button class="dash-modal__close" id="alert-modal-close" aria-label="Close"><i data-lucide="x"></i></button>
       </div>
       <form class="dash-modal__form" id="alert-form">
         <div class="dash-modal__field">
-          <label for="alert-crop-input">Crop</label>
+          <label for="alert-crop-input" data-i18n="ai.selectCrop">Crop</label>
           <select id="alert-crop-input" class="dash-filter-select" required>
             <option value="rice">Rice</option>
             <option value="wheat">Wheat</option>
@@ -431,11 +453,10 @@
           </select>
         </div>
         <div class="dash-modal__field">
-          <label for="alert-price-input">Target Price (₹/quintal)</label>
+          <label for="alert-price-input" data-i18n="farmer.targetPrice">Target Price (₹/quintal)</label>
           <input type="number" id="alert-price-input" class="dash-form-input" placeholder="e.g. 3000" required>
         </div>
-        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="bell-ring"></i> Set Price
-          Alert</button>
+        <button type="submit" class="btn btn--primary dash-modal__submit"><i data-lucide="bell-ring"></i> <span data-i18n="ai.setTargetAlert">Set Price Alert</span></button>
       </form>
     </div>
   </div>

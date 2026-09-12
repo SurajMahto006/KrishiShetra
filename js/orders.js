@@ -319,7 +319,7 @@ async function loadOrders() {
               <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 6px;">
                 <div>
                   <h3 style="font-size: 20px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">
-                    ${isDemo ? '🍅 ' : ''}${ord.cropName} ${ord.variety ? `<span style="font-size: 14px; font-weight: 400; color: #666;">(${ord.variety})</span>` : ''}
+                    ${isDemo ? '🍅 ' : ''}${window.KrishiI18n ? window.KrishiI18n.getCropName(ord.cropName) : ord.cropName} ${ord.variety ? `<span style="font-size: 14px; font-weight: 400; color: #666;">(${ord.variety})</span>` : ''}
                   </h3>
                   <div style="font-size: 13px; color: #555;">
                     ${counterparty}
@@ -607,14 +607,15 @@ function renderActiveOrders() {
   if (!grid) return;
 
   const activeOrders = allOrdersList.filter(o => o.status !== 'delivered' && o.status !== 'cancelled');
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
 
   if (activeOrders.length === 0) {
     grid.innerHTML = `
       <div style="padding: 48px 24px; text-align: center; color: #888; grid-column: 1 / -1; background: #FAF9F5; border-radius: 14px; border: 1px dashed #DDD;">
         <div style="font-size: 38px; margin-bottom: 10px;">📦</div>
-        <h3 style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;">No Active Orders in Progress</h3>
-        <p style="font-size: 13.5px; color: #666; margin: 0 0 16px 0;">All your harvest lots are either listed or completely fulfilled.</p>
-        <button class="btn btn--primary" onclick="switchOrdersTab('payments')">View Payments →</button>
+        <h3 style="font-size: 17px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 6px 0;" data-i18n="orders.noActiveOrders">${t('orders.noActiveOrders', 'No Active Orders in Progress')}</h3>
+        <p style="font-size: 13.5px; color: #666; margin: 0 0 16px 0;" data-i18n="orders.noActiveOrdersDesc">${t('orders.noActiveOrdersDesc', 'All your harvest lots are either listed or completely fulfilled.')}</p>
+        <button class="btn btn--primary" onclick="switchOrdersTab('payments')"><span data-i18n="orders.viewPayments">${t('orders.viewPayments', 'View Payments →')}</span></button>
       </div>
     `;
   }
@@ -705,16 +706,18 @@ function openUpdateStatusModal(orderId, currentStatus) {
 }
 
 function getOrderStatusBadge(status) {
+  const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
   const map = {
-    pending: { bg: '#FEF3C7', color: '#92400E', text: 'Pending' },
-    confirmed: { bg: '#E5F0E7', color: '#12372A', text: 'Order Confirmed' },
-    transport_assigned: { bg: '#E0E7FF', color: '#3730A3', text: 'Transport Assigned' },
-    picked_up: { bg: '#FDE68A', color: '#78350F', text: 'Picked Up' },
-    in_transit: { bg: '#CFFAFE', color: '#155E75', text: 'In Transit' },
-    delivered: { bg: '#D1FAE5', color: '#065F46', text: 'Delivered' },
-    completed: { bg: '#D1FAE5', color: '#065F46', text: 'Delivered · Paid' },
-    cancelled: { bg: '#FEE2E2', color: '#991B1B', text: 'Cancelled' }
+    pending: { bg: '#FEF3C7', color: '#92400E', text: t('orders.statusPending', 'Pending') },
+    confirmed: { bg: '#E5F0E7', color: '#12372A', text: t('orders.statusConfirmed', 'Order Confirmed') },
+    transport_assigned: { bg: '#E0E7FF', color: '#3730A3', text: t('orders.statusTransportAssigned', 'Transport Assigned') },
+    picked_up: { bg: '#FDE68A', color: '#78350F', text: t('orders.statusPickedUp', 'Picked Up') },
+    in_transit: { bg: '#CFFAFE', color: '#155E75', text: t('orders.statusInTransit', 'In Transit') },
+    delivered: { bg: '#D1FAE5', color: '#065F46', text: t('orders.statusDelivered', 'Delivered') },
+    completed: { bg: '#D1FAE5', color: '#065F46', text: t('orders.statusDeliveredPaid', 'Delivered · Paid') },
+    cancelled: { bg: '#FEE2E2', color: '#991B1B', text: t('orders.statusCancelled', 'Cancelled') }
   };
+  return map[status] || { bg: '#F3F4F6', color: '#374151', text: status || '' };
 }
 
 // Global exposure for inline onclick handlers

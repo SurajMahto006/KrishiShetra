@@ -58,42 +58,76 @@
 
       <nav class="dash-header__nav" id="dash-nav">
         <a href="dashboard.html" class="dash-header__link" id="nav-dashboard">
-          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> <span data-i18n="navigation.dashboard">Dashboard</span>
+          <i data-lucide="layout-dashboard" class="dash-header__link-icon"></i> <span
+            data-i18n="navigation.dashboard">Dashboard</span>
         </a>
         <a href="lots.html" class="dash-header__link" id="nav-lots">
-          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My Lots</span>
+          <i data-lucide="package" class="dash-header__link-icon"></i> <span data-i18n="navigation.myLots">My
+            Lots</span>
         </a>
-        <a href="market.html" class="dash-header__link" id="nav-market">
-          <i data-lucide="bar-chart-3" class="dash-header__link-icon"></i> <span data-i18n="navigation.market">Market</span>
+        <a href="buyers.html" class="dash-header__link" id="nav-inquiries">
+          <i data-lucide="message-square" class="dash-header__link-icon"></i> <span
+            data-i18n="navigation.buyerInquiries">Buyer Inquiries</span>
         </a>
         <a href="storage.html" class="dash-header__link dash-header__link--active" id="nav-storage">
-          <i data-lucide="warehouse" class="dash-header__link-icon"></i> <span data-i18n="navigation.storage">Storage</span>
+          <i data-lucide="warehouse" class="dash-header__link-icon"></i> <span data-i18n="navigation.storage">Storage
+            Options</span>
+        </a>
+        <a href="market.html" class="dash-header__link" id="nav-market">
+          <i data-lucide="store" class="dash-header__link-icon"></i> <span
+            data-i18n="navigation.market">Market Prices</span>
         </a>
         <a href="ai-forecast.html" class="dash-header__link" id="nav-forecast">
-          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Forecast</span>
-        </a>
-        <a href="buyers.html" class="dash-header__link" id="nav-buyers">
-          <i data-lucide="users" class="dash-header__link-icon"></i> <span data-i18n="navigation.buyers">Buyers</span>
+          <i data-lucide="brain" class="dash-header__link-icon"></i> <span data-i18n="navigation.aiForecast">AI Price
+            Forecast</span>
         </a>
         <a href="orders.html" class="dash-header__link" id="nav-orders">
-          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span data-i18n="navigation.orders">Orders</span>
+          <i data-lucide="clipboard-list" class="dash-header__link-icon"></i> <span
+            data-i18n="navigation.orders">Orders</span>
         </a>
       </nav>
 
       <div class="dash-header__actions">
-        <button class="dash-header__action-btn" id="btn-help" onclick="openHelpModal()" aria-label="Help"
-          title="Kisan Support & Help">
-          <i data-lucide="help-circle"></i>
+        <button class="dash-header__action-btn" id="btn-notifications" aria-label="Notifications" title="Notifications">
+          <i data-lucide="bell"></i>
+          <span class="dash-header__badge" id="notifications-badge">3</span>
         </button>
-        <div class="dash-profile-wrap">
-          <button class="dash-header__profile" id="btn-profile" onclick="location.href='dashboard.html'">
-            <div class="dash-header__avatar">R</div>
-            <span class="dash-header__profile-name">Rajesh</span>
+        <div class="dash-profile-wrap" id="dash-profile-wrap">
+          <button class="dash-header__profile" id="btn-profile" aria-label="Profile menu">
+            <div class="dash-header__avatar" id="header-avatar">R</div>
+            <span class="dash-header__profile-name" id="header-user-name">Rajesh</span>
+            <i data-lucide="chevron-down" class="dash-header__profile-chevron"></i>
           </button>
         </div>
       </div>
+
+      <button class="dash-header__toggle" id="dash-nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
+
+  <!-- Mobile Slide Nav -->
+  <div class="dash-mobile-nav" id="dash-mobile-nav">
+    <div class="dash-mobile-nav__links">
+      <a href="dashboard.html" class="dash-mobile-nav__link" id="mnav-dashboard"><i data-lucide="layout-dashboard"></i>
+        <span data-i18n="navigation.dashboard">Dashboard</span></a>
+      <a href="lots.html" class="dash-mobile-nav__link" id="mnav-lots"><i data-lucide="package"></i> <span
+          data-i18n="navigation.myLots">My Lots</span></a>
+      <a href="buyer-inquiries.html" class="dash-mobile-nav__link" id="mnav-inquiries"><i
+          data-lucide="message-square"></i> <span data-i18n="navigation.buyerInquiries">Buyer Inquiries</span></a>
+      <a href="storage.html" class="dash-mobile-nav__link dash-mobile-nav__link--active" id="mnav-storage"><i
+          data-lucide="warehouse"></i> <span data-i18n="navigation.storage">Storage Options</span></a>
+      <a href="market.html" class="dash-mobile-nav__link" id="mnav-market"><i data-lucide="bar-chart-3"></i> <span
+          data-i18n="navigation.market">Market</span></a>
+      <a href="ai-forecast.html" class="dash-mobile-nav__link" id="mnav-forecast"><i data-lucide="brain"></i> <span
+          data-i18n="navigation.aiForecast">AI Forecast</span></a>
+      <a href="orders.html" class="dash-mobile-nav__link" id="mnav-orders"><i data-lucide="clipboard-list"></i> <span
+          data-i18n="navigation.orders">Orders</span></a>
+      <a href="disputes.html" class="dash-mobile-nav__link" id="mnav-disputes"><i data-lucide="shield-alert"></i> <span
+          data-i18n="navigation.disputes">Disputes</span></a>
+    </div>
+  </div>
 
   <!-- MAIN CONTENT -->
   <main class="dash-main" id="dash-main" style="padding-top: 14px;">
@@ -110,10 +144,10 @@
         <div class="container storage-hero__inner">
           <div>
             <div class="storage-hero__title">
-              <span>🏬</span> <span data-i18n="heroTitle">Warehouse & Cold Storage Discovery</span>
-              <span class="storage-hero__badge" data-i18n="heroBadge">Distress Selling Prevention</span>
+              <span>🏬</span> <span data-i18n="storage.heroTitle">Warehouse & Cold Storage Discovery</span>
+              <span class="storage-hero__badge" data-i18n="storage.heroBadge">Distress Selling Prevention</span>
             </div>
-            <p class="storage-hero__subtitle" data-i18n="heroSubtitle">
+            <p class="storage-hero__subtitle" data-i18n="storage.heroSubtitle">
               Find accredited warehouses and cold storages near you. Compare storage costs, verify available capacity,
               and get AI-powered Sell-vs-Store recommendations to maximize harvest realization.
             </p>
@@ -121,11 +155,11 @@
           <div class="storage-hero__actions">
             <a href="javascript:void(0)" onclick="switchStorageSubTab('calculator')" class="btn btn--primary"
               style="background:#C9973B; color:#1A3320; border:none; font-weight:700; min-height:48px; padding:10px 18px;">
-              <i data-lucide="calculator"></i> <span data-i18n="btnCalc">⚡ Sell vs Store Advisor</span>
+              <i data-lucide="calculator"></i> <span data-i18n="storage.btnCalc">⚡ Sell vs Store Advisor</span>
             </a>
             <button class="btn btn--secondary" onclick="openPledgeModal('WH-MH-PUN-001')"
               style=" border-color:rgba(255,255,255,0.4); min-height:48px;">
-              <i data-lucide="landmark"></i> <span data-i18n="btnPledge">Apply for Fast Pledge Loan</span>
+              <i data-lucide="landmark"></i> <span data-i18n="storage.btnPledge">Apply for Fast Pledge Loan</span>
             </button>
           </div>
         </div>
@@ -137,15 +171,18 @@
         <button class="btn storage-subtab-btn active" id="btn-subtab-discovery"
           onclick="switchStorageSubTab('discovery')"
           style="border-radius: 14px; font-weight: 700; background: var(--ks-evergreen, #12372A); color: #FFF; border: none; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 48px; font-size: 14px;">
-          <span style="font-size: 18px;">🏬</span> <span id="tab-label-discovery">Nearby Warehouses & Godowns</span>
+          <span style="font-size: 18px;">🏬</span> <span id="tab-label-discovery"
+            data-i18n="storage.nearbyWarehousesTab">Nearby Warehouses & Godowns</span>
         </button>
         <button class="btn storage-subtab-btn" id="btn-subtab-calculator" onclick="switchStorageSubTab('calculator')"
           style="border-radius: 14px; font-weight: 700; background: #FFF; color: #444; border: 1.5px solid #DDD; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 48px; font-size: 14px;">
-          <span style="font-size: 18px;">⚖️</span> <span id="tab-label-calculator">Sell Now vs. Store & Hold</span>
+          <span style="font-size: 18px;">⚖️</span> <span id="tab-label-calculator"
+            data-i18n="storage.sellVsStoreTab">Sell Now vs. Store & Hold</span>
         </button>
         <button class="btn storage-subtab-btn" id="btn-subtab-bookings" onclick="switchStorageSubTab('bookings')"
           style="border-radius: 14px; font-weight: 700; background: #FFF; color: #444; border: 1.5px solid #DDD; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; min-height: 48px; font-size: 14px;">
-          <span style="font-size: 18px;">📋</span> <span id="tab-label-bookings">My Storage & e-NWR Loans</span>
+          <span style="font-size: 18px;">📋</span> <span id="tab-label-bookings"
+            data-i18n="storage.myStorageBookingsTab">My Storage & e-NWR Loans</span>
         </button>
       </div>
 
@@ -159,14 +196,15 @@
                 Facilities</label>
               <div style="position: relative;">
                 <input type="text" id="storage-search-input" class="dash-form-input"
-                  placeholder="Search warehouses, cold storages, districts..." style="padding-left: 32px;">
+                  placeholder="Search warehouses, cold storages, districts..."
+                  data-i18n-placeholder="storage.searchFacilitiesPlaceholder" style="padding-left: 32px;">
                 <i data-lucide="search"
                   style="position: absolute; left: 10px; top: 11px; width: 15px; height: 15px; color: #999;"></i>
               </div>
             </div>
             <div>
               <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
-                data-i18n="filterType">Storage Type</label>
+                data-i18n="storage.filterType">Storage Type</label>
               <select id="filter-storage-type" class="dash-filter-select" style="width: 100%;">
                 <option value="all">All Storage Types</option>
                 <option value="warehouse">Warehouse</option>
@@ -176,7 +214,7 @@
             </div>
             <div>
               <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
-                data-i18n="filterCrop">Crop Suitability</label>
+                data-i18n="storage.filterCrop">Crop Suitability</label>
               <select id="filter-storage-crop" class="dash-filter-select" style="width: 100%;">
                 <option value="all">All Crops</option>
                 <option value="wheat">Wheat</option>
@@ -191,7 +229,7 @@
             </div>
             <div>
               <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
-                data-i18n="filterRadius">Distance Radius</label>
+                data-i18n="storage.filterRadius">Distance Radius</label>
               <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                 <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="25" style="padding: 6px 8px;">25
                   km</button>
@@ -233,15 +271,17 @@
             <div class="svs-title-wrap">
               <span style="font-size: 24px;">🤖</span>
               <div>
-                <h2 style="font-size: 19px; font-weight: 800; color: #1A3320; margin: 0;" data-i18n="svsTitle">Sell Now
+                <h2 style="font-size: 19px; font-weight: 800; color: #1A3320; margin: 0;" data-i18n="storage.svsTitle">
+                  Sell Now
                   vs. Store & Hold Decision Support</h2>
-                <p style="font-size: 12.5px; color: #666; margin: 2px 0 0;" data-i18n="svsSubtitle">Evaluate if storing
+                <p style="font-size: 12.5px; color: #666; margin: 2px 0 0;" data-i18n="storage.svsSubtitle">Evaluate if
+                  storing
                   your harvest is financially smarter than selling immediately at current mandi prices.</p>
               </div>
             </div>
             <div class="svs-badge" id="res-rec-badge">
               <i data-lucide="sparkles" style="width:14px;height:14px;"></i>
-              <span data-i18n="svsBadge">AI Recommendation Engine</span>
+              <span data-i18n="storage.svsBadge">AI Recommendation Engine</span>
             </div>
           </div>
 
@@ -251,7 +291,7 @@
               style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
               <div>
                 <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
-                  data-i18n="lblCrop">Crop</label>
+                  data-i18n="storage.lblCrop">Crop</label>
                 <select id="calc-crop-select" class="dash-filter-select" style="width:100%; background:#FFF;">
                   <option value="wheat">🌾 Wheat</option>
                   <option value="rice">🌾 Rice</option>
@@ -267,19 +307,19 @@
               </div>
               <div>
                 <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
-                  data-i18n="lblQty">Quantity (Quintals)</label>
+                  data-i18n="storage.lblQty">Quantity (Quintals)</label>
                 <input type="number" id="calc-qty-input" class="dash-form-input" value="50" min="1" max="10000"
                   style="background:#FFF;">
               </div>
               <div>
                 <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
-                  data-i18n="lblCurPrice">Current Price (₹/q)</label>
+                  data-i18n="storage.lblCurPrice">Current Price (₹/q)</label>
                 <input type="number" id="calc-price-input" class="dash-form-input" value="2400" min="100"
                   style="background:#FFF;">
               </div>
               <div>
                 <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
-                  data-i18n="lblDuration">Holding Period (Days)</label>
+                  data-i18n="storage.lblDuration">Holding Period (Days)</label>
                 <select id="calc-days-input" class="dash-filter-select" style="width:100%; background:#FFF;">
                   <option value="15">15 Days</option>
                   <option value="30">30 Days (1 Month)</option>
@@ -290,7 +330,7 @@
               </div>
               <div>
                 <button class="btn btn--primary" style="width: 100%; padding: 10px;" onclick="calculateSellVsStore()">
-                  <i data-lucide="sparkles"></i> <span data-i18n="btnEvaluate">Recalculate</span>
+                  <i data-lucide="sparkles"></i> <span data-i18n="storage.btnEvaluate">Recalculate</span>
                 </button>
               </div>
             </div>
@@ -300,8 +340,9 @@
           <div class="svs-grid">
             <!-- OPTION A: SELL NOW -->
             <div class="svs-option-card svs-option-card--sell">
-              <div class="svs-option-tag svs-option-tag--sell" data-i18n="optSell">OPTION A — SELL NOW</div>
-              <div style="font-size: 12px; color: #666;" data-i18n="lblRealization">Expected Immediate Realization:
+              <div class="svs-option-tag svs-option-tag--sell" data-i18n="storage.optSell">OPTION A — SELL NOW</div>
+              <div style="font-size: 12px; color: #666;" data-i18n="storage.lblRealization">Expected Immediate
+                Realization:
               </div>
               <div class="svs-realization" id="res-sell-realization">₹1,20,000</div>
 
@@ -323,26 +364,27 @@
 
             <!-- OPTION B: STORE & HOLD -->
             <div class="svs-option-card svs-option-card--store">
-              <div class="svs-option-tag svs-option-tag--store" data-i18n="optStore">OPTION B — STORE & HOLD
+              <div class="svs-option-tag svs-option-tag--store" data-i18n="storage.optStore">OPTION B — STORE & HOLD
                 (RECOMMENDED)</div>
-              <div style="font-size: 12px; color: #2E7D32;" data-i18n="lblRealization">Projected Net Realization:</div>
+              <div style="font-size: 12px; color: #2E7D32;" data-i18n="storage.lblRealization">Projected Net
+                Realization:</div>
               <div class="svs-realization svs-realization--highlight" id="res-store-realization">₹1,27,450</div>
 
               <div class="svs-breakdown-list">
                 <div class="svs-breakdown-item">
-                  <span data-i18n="lblStorageRent">Storage Rent (45 days):</span>
+                  <span data-i18n="storage.lblStorageRent">Storage Rent (45 days):</span>
                   <span id="res-storage-rent" style="color:#C62828;">₹3,000</span>
                 </div>
                 <div class="svs-breakdown-item">
-                  <span data-i18n="lblHandling">Handling / Loading:</span>
+                  <span data-i18n="storage.lblHandling">Handling / Loading:</span>
                   <span id="res-handling-cost" style="color:#C62828;">₹750</span>
                 </div>
                 <div class="svs-breakdown-item">
-                  <span data-i18n="lblWeightLoss">Est. Moisture Shrinkage:</span>
+                  <span data-i18n="storage.lblWeightLoss">Est. Moisture Shrinkage:</span>
                   <span id="res-weight-loss-cost" style="color:#C62828;">₹1,020 (0.8%)</span>
                 </div>
                 <div class="svs-breakdown-item" style="border-top:1px solid #C8E6C9; padding-top:6px; font-weight:700;">
-                  <span data-i18n="lblNetGain">Estimated Net Extra Gain:</span>
+                  <span data-i18n="storage.lblNetGain">Estimated Net Extra Gain:</span>
                   <span id="res-store-netgain" style="color:#2E7D32; font-size:14px;">+₹7,450 (+6.2%)</span>
                 </div>
               </div>
@@ -458,7 +500,8 @@
     <div class="storage-modal">
       <div class="storage-modal__header">
         <div>
-          <h3 style="margin: 0; font-size: 17px; color: #1A3320;" data-i18n="modalBookingTitle">Request Storage Space
+          <h3 style="margin: 0; font-size: 17px; color: #1A3320;" data-i18n="storage.modalBookingTitle">Request Storage
+            Space
           </h3>
           <span id="book-facility-name" style="font-size: 12px; color: #666;">Warehouse Name</span>
         </div>
@@ -559,7 +602,7 @@
     <div class="storage-modal">
       <div class="storage-modal__header">
         <div>
-          <h3 style="margin: 0; font-size: 17px; color: #1565C0;" data-i18n="modalPledgeTitle">Apply for Pledge
+          <h3 style="margin: 0; font-size: 17px; color: #1565C0;" data-i18n="storage.modalPledgeTitle">Apply for Pledge
             Financing (e-NWR)</h3>
           <span id="pledge-facility-name" style="font-size: 12px; color: #666;">Warehouse</span>
         </div>

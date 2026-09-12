@@ -581,6 +581,12 @@ MandiCompare.prototype.bindControls = function () {
       mobileNav.classList.toggle('active');
     });
   }
+
+  // Language changed synchronization
+  window.addEventListener('languageChanged', function () {
+    self.loadUserCrops();
+    self.render();
+  });
 };
 
 // ── Government Mandi Data Integration (data.gov.in) ────────────────────────
@@ -600,8 +606,13 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
   var statusBadge = document.getElementById('mpc-gov-status-badge');
   var tsEl = document.getElementById('mpc-last-updated-text');
 
+  var t = function (k, fb) { return window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb; };
+  var getCropName = function (id) { return window.KrishiI18n ? window.KrishiI18n.getCropName(id) : id; };
+  var cropDisplay = getCropName(crop);
+  var stateDisplay = state ? (state.charAt(0).toUpperCase() + state.slice(1)) : '';
+
   if (statusBadge) {
-    statusBadge.textContent = 'Fetching Gov Data...';
+    statusBadge.textContent = t('market.fetchingGovData', 'Fetching live Government of India (data.gov.in) mandi prices...');
     statusBadge.className = 'ks-badge';
   }
 
@@ -625,14 +636,14 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
         self.govUpdatedAt = res.fetchedAt || res.updatedAt || '';
         var updateLabel = self.govUpdatedAt ? new Date(self.govUpdatedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Latest';
 
-        if (statusTitle) statusTitle.textContent = 'Government Mandi Data';
+        if (statusTitle) statusTitle.textContent = t('market.marketMandi', 'Government Mandi Data');
         if (statusDesc) {
           statusDesc.textContent = isLive
-            ? 'Live data from data.gov.in'
-            : 'Government source temporarily unavailable. Showing the latest successfully retrieved data.';
+            ? ('· ' + t('market.liveDataGov', 'Live data from data.gov.in'))
+            : ('· ' + t('market.staleDataGov', 'Showing latest retrieved data from data.gov.in.'));
         }
         if (statusBadge) {
-          statusBadge.textContent = isLive ? '✓ Live data from data.gov.in' : 'Latest Cached Gov Data';
+          statusBadge.textContent = isLive ? ('✓ ' + t('market.liveDataGov', 'Live data from data.gov.in')) : t('market.cachedDataGov', 'Cached data.gov.in');
           statusBadge.className = isLive ? 'ks-badge ks-badge-protected' : 'ks-badge ks-badge-dispute';
         }
         if (tsEl) {
@@ -674,15 +685,18 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
 
         self.render();
       } else {
-        self.govDataStatus = 'unavailable';
-        if (statusTitle) statusTitle.textContent = 'Government Mandi Data';
-        if (statusDesc) statusDesc.textContent = 'Current government data is temporarily unavailable.';
+        self.govDataStatus = 'empty';
+        var emptyMsg = stateDisplay
+          ? t('market.noArrivalsState', 'No market arrival records found for ' + cropDisplay + ' in ' + stateDisplay + ' today.')
+          : t('market.noArrivalsToday', 'No market arrival records found for ' + cropDisplay + ' today.');
+        if (statusTitle) statusTitle.textContent = t('market.marketMandi', 'Government Mandi Data');
+        if (statusDesc) statusDesc.textContent = emptyMsg;
         if (statusBadge) {
-          statusBadge.textContent = 'Temporarily Unavailable';
+          statusBadge.textContent = t('common.noData', 'No Data Available');
           statusBadge.className = 'ks-badge ks-badge-dispute';
         }
         if (tsEl) {
-          tsEl.textContent = 'Current government data is temporarily unavailable.';
+          tsEl.textContent = emptyMsg;
         }
         MPC_DATA.forEach(function (m) {
           delete m._govData;
@@ -695,15 +709,16 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
         btn.classList.remove('loading');
         btn.disabled = false;
       }
-      self.govDataStatus = 'unavailable';
-      if (statusTitle) statusTitle.textContent = 'Government Mandi Data';
-      if (statusDesc) statusDesc.textContent = 'Current government data is temporarily unavailable.';
+      self.govDataStatus = 'error';
+      var errMsg = t('market.connectionError', 'Unable to connect to live market price server. Please check your connection.');
+      if (statusTitle) statusTitle.textContent = t('market.marketMandi', 'Government Mandi Data');
+      if (statusDesc) statusDesc.textContent = errMsg;
       if (statusBadge) {
-        statusBadge.textContent = 'Temporarily Unavailable';
+        statusBadge.textContent = t('market.serverUnavailable', 'Server Unavailable');
         statusBadge.className = 'ks-badge ks-badge-dispute';
       }
       if (tsEl) {
-        tsEl.textContent = 'Current government data is temporarily unavailable.';
+        tsEl.textContent = errMsg;
       }
       MPC_DATA.forEach(function (m) {
         delete m._govData;
@@ -749,8 +764,9 @@ MandiCompare.prototype.loadUserCrops = function () {
 
   wrap.innerHTML = userCrops.map(function (c) {
     var meta = MPC_CROP_META[c.id] || { emoji: '🌾' };
+    var cropName = window.KrishiI18n ? window.KrishiI18n.getCropName(c.id) : c.name;
     return '<button class="mpc-quick-crop-btn' + (c.id === self.crop ? ' active' : '') + '" data-crop="' + c.id + '">'
-      + meta.emoji + ' ' + c.name + '</button>';
+      + meta.emoji + ' ' + cropName + '</button>';
   }).join('');
 
   wrap.querySelectorAll('.mpc-quick-crop-btn').forEach(function (btn) {

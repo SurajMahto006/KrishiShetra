@@ -22,6 +22,10 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
+  <!-- i18n -->
+  <script src="js/translations.js"></script>
+  <script src="js/i18n.js"></script>
+
   <style>
     /* Dispute Center Specific Scoped Styles */
     /* Header & Navigation Alignment Fix */
@@ -468,23 +472,23 @@
 
       <!-- Breadcrumb -->
       <nav class="dash-breadcrumb" style="font-size: 13px; color: var(--ks-text-muted, #6F7F75); margin-bottom: 14px;" id="dash-breadcrumb-nav">
-        <a href="dashboard.html" style="color: var(--ks-sage, #5B9A72); text-decoration: none;" id="bc-home-link">Dashboard</a> /
-        <a href="orders.html" style="color: var(--ks-sage, #5B9A72); text-decoration: none;" id="bc-orders-link">Orders</a> /
-        <strong>Dispute & Grievance Redressal</strong>
+        <a href="dashboard.html" style="color: var(--ks-sage, #5B9A72); text-decoration: none;" id="bc-home-link" data-i18n="disputes.breadcrumbHome">Dashboard</a> /
+        <a href="orders.html" style="color: var(--ks-sage, #5B9A72); text-decoration: none;" id="bc-orders-link" data-i18n="disputes.breadcrumbOrders">Orders</a> /
+        <strong data-i18n="disputes.breadcrumbCurrent">Dispute & Grievance Redressal</strong>
       </nav>
 
       <!-- Page Header Banner -->
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
         <div>
-          <h1 style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen, #12372A); margin: 0 0 6px 0;">
+          <h1 style="font-size: 26px; font-weight: 800; color: var(--ks-evergreen, #12372A); margin: 0 0 6px 0;" data-i18n="disputes.pageTitle">
             🛡️ Dispute & Grievance Redressal Center
           </h1>
-          <p style="font-size: 14px; color: var(--ks-text-muted, #6F7F75); margin: 0; max-width: 680px;">
+          <p style="font-size: 14px; color: var(--ks-text-muted, #6F7F75); margin: 0; max-width: 680px;" data-i18n="disputes.pageSubtitle">
             Fair, transparent conflict resolution for trade orders. Protect your payments and resolve quality or delivery issues through certified FPO and Admin mediation.
           </p>
         </div>
         <button class="btn btn--primary" id="open-raise-modal-btn" onclick="openRaiseDisputeModal()" style="display: inline-flex; align-items: center; gap: 8px;">
-          <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Raise a Dispute
+          <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> <span data-i18n="disputes.raiseDispute">Raise a Dispute</span>
         </button>
       </div>
 
@@ -495,16 +499,16 @@
             🔒
           </div>
           <div>
-            <div style="font-size: 14.5px; font-weight: 700; color: var(--ks-evergreen, #12372A);">
+            <div style="font-size: 14.5px; font-weight: 700; color: var(--ks-evergreen, #12372A);" data-i18n="disputes.protectionTitle">
               KrishiShetra Payment Protection Active
             </div>
-            <div style="font-size: 12.5px; color: var(--ks-text-muted, #6F7F75);">
+            <div style="font-size: 12.5px; color: var(--ks-text-muted, #6F7F75);" data-i18n="disputes.protectionDesc">
               When an order is disputed, transaction funds are automatically held in simulated protection. No funds are cleared until both parties agree or a mediation settlement is recorded.
             </div>
           </div>
         </div>
         <div class="protection-pill">
-          <span>✓ 100% Neutral Protection</span>
+          <span data-i18n="disputes.protectionPill">✓ 100% Neutral Protection</span>
         </div>
       </div>
 
@@ -515,13 +519,13 @@
         <div>
           <!-- Filter Tabs -->
           <div class="filter-pills-bar">
-            <button class="filter-pill-btn active" data-filter="all" onclick="filterDisputes('all')">All</button>
-            <button class="filter-pill-btn" data-filter="active" onclick="filterDisputes('active')">Active</button>
-            <button class="filter-pill-btn" data-filter="review" onclick="filterDisputes('review')">Review / Mediation</button>
-            <button class="filter-pill-btn" data-filter="resolved" onclick="filterDisputes('resolved')">Resolved</button>
+            <button class="filter-pill-btn active" data-filter="all" onclick="filterDisputes('all')" data-i18n="disputes.filterAll">All</button>
+            <button class="filter-pill-btn" data-filter="active" onclick="filterDisputes('active')" data-i18n="disputes.filterActive">Active</button>
+            <button class="filter-pill-btn" data-filter="review" onclick="filterDisputes('review')" data-i18n="disputes.filterReview">Review / Mediation</button>
+            <button class="filter-pill-btn" data-filter="resolved" onclick="filterDisputes('resolved')" data-i18n="disputes.filterResolved">Resolved</button>
           </div>
 
-          <div style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin-bottom: 12px;" id="disputes-list-heading">
+          <div style="font-size: 15px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin-bottom: 12px;" id="disputes-list-heading" data-i18n="disputes.myDisputes">
             My Disputes
           </div>
 
@@ -539,12 +543,12 @@
           <!-- Populated dynamically by js/disputes.js -->
           <div class="detail-section-block" style="text-align: center; padding: 60px 24px; color: var(--ks-text-muted, #6F7F75);">
             <div style="font-size: 40px; margin-bottom: 12px;">⚖️</div>
-            <h3 style="font-size: 18px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin: 0 0 6px 0;">Select a Dispute</h3>
-            <p style="font-size: 13.5px; max-width: 420px; margin: 0 auto 20px auto;">
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin: 0 0 6px 0;" data-i18n="disputes.selectDisputePrompt">Select a Dispute</h3>
+            <p style="font-size: 13.5px; max-width: 420px; margin: 0 auto 20px auto;" data-i18n="disputes.selectDisputeDesc">
               Click on any dispute card from the left panel to inspect the full timeline, evidence documents, simulated payment protection status, and mediation options.
             </p>
             <button class="btn btn--primary btn--sm" onclick="openRaiseDisputeModal()">
-              <i data-lucide="plus-circle" style="width: 14px; height: 14px;"></i> Raise a Dispute
+              <i data-lucide="plus-circle" style="width: 14px; height: 14px;"></i> <span data-i18n="disputes.raiseDispute">Raise a Dispute</span>
             </button>
           </div>
         </div>
@@ -559,10 +563,10 @@
     <div class="dispute-modal-card">
       <div style="padding: 20px 24px; border-bottom: 1px solid var(--ks-border, #E2E0D5); display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <h3 style="font-size: 18px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin: 0;">
+          <h3 style="font-size: 18px; font-weight: 700; color: var(--ks-evergreen, #12372A); margin: 0;" data-i18n="disputes.raiseModalTitle">
             Raise Order Dispute
           </h3>
-          <p style="font-size: 12.5px; color: var(--ks-text-muted, #6F7F75); margin: 2px 0 0 0;">
+          <p style="font-size: 12.5px; color: var(--ks-text-muted, #6F7F75); margin: 2px 0 0 0;" data-i18n="disputes.raiseModalSubtitle">
             Payment will be held in protection until resolved.
           </p>
         </div>
@@ -572,17 +576,17 @@
       <form id="raise-dispute-form" onsubmit="handleDisputeSubmit(event)" style="padding: 22px 24px;">
         <!-- Order ID Selection -->
         <div style="margin-bottom: 16px;">
-          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;" data-i18n="disputes.selectOrder">
             Select Order <span style="color: var(--ks-terracotta, #C96D5B);">*</span>
           </label>
           <select id="modal-order-select" required style="width: 100%; padding: 10px 12px; border: 1px solid var(--ks-border, #E2E0D5); border-radius: 8px; font-size: 13.5px; background: #FFFFFF; color: var(--ks-charcoal, #17221D);">
-            <option value="">Select an order to dispute...</option>
+            <option value="" data-i18n="disputes.selectOrderPlaceholder">Select an order to dispute...</option>
           </select>
         </div>
 
         <!-- Dispute Reason -->
         <div style="margin-bottom: 16px;">
-          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;" data-i18n="disputes.disputeReason">
             Reason for Dispute <span style="color: var(--ks-terracotta, #C96D5B);">*</span>
           </label>
           <select id="modal-dispute-reason" required style="width: 100%; padding: 10px 12px; border: 1px solid var(--ks-border, #E2E0D5); border-radius: 8px; font-size: 13.5px; background: #FFFFFF; color: var(--ks-charcoal, #17221D);">
@@ -597,15 +601,15 @@
 
         <!-- Description -->
         <div style="margin-bottom: 16px;">
-          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;" data-i18n="disputes.disputeDesc">
             Describe the Problem Clearly <span style="color: var(--ks-terracotta, #C96D5B);">*</span>
           </label>
-          <textarea id="modal-dispute-description" rows="4" required placeholder="Explain what happened, including dates, lot condition, weighbridge readings, or communication with counterparty..." style="width: 100%; padding: 10px 12px; border: 1px solid var(--ks-border, #E2E0D5); border-radius: 8px; font-size: 13.5px; font-family: inherit; color: var(--ks-charcoal, #17221D); resize: vertical;"></textarea>
+          <textarea id="modal-dispute-description" rows="4" required data-i18n-placeholder="disputes.disputeDescPlaceholder" placeholder="Explain what happened, including dates, lot condition, weighbridge readings, or communication with counterparty..." style="width: 100%; padding: 10px 12px; border: 1px solid var(--ks-border, #E2E0D5); border-radius: 8px; font-size: 13.5px; font-family: inherit; color: var(--ks-charcoal, #17221D); resize: vertical;"></textarea>
         </div>
 
         <!-- Evidence Attachment (Client-side lightweight preview) -->
         <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;">
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--ks-charcoal, #17221D); margin-bottom: 6px;" data-i18n="disputes.uploadEvidence">
             Evidence / Proof (Photos, Weighbridge Slips, Lab Reports)
           </label>
           <div style="border: 2px dashed var(--ks-border, #E2E0D5); border-radius: 8px; padding: 14px; text-align: center; background: #FAF9F5; cursor: pointer;" onclick="document.getElementById('evidence-file-input').click()">
@@ -621,11 +625,11 @@
 
         <!-- Submit & Cancel -->
         <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--ks-border, #E2E0D5); padding-top: 16px;">
-          <button type="button" class="btn" onclick="closeRaiseDisputeModal()" style="background: transparent; border: 1px solid var(--ks-border, #E2E0D5); color: var(--ks-charcoal, #17221D);">
+          <button type="button" class="btn" onclick="closeRaiseDisputeModal()" style="background: transparent; border: 1px solid var(--ks-border, #E2E0D5); color: var(--ks-charcoal, #17221D);" data-i18n="disputes.cancel">
             Cancel
           </button>
           <button type="submit" id="submit-dispute-btn" class="btn btn--primary" style="display: inline-flex; align-items: center; gap: 6px;">
-            <i data-lucide="shield-check" style="width: 15px; height: 15px;"></i> Submit Dispute & Protect Payment
+            <i data-lucide="shield-check" style="width: 15px; height: 15px;"></i> <span data-i18n="disputes.submitDispute">Submit Dispute & Hold Payment</span>
           </button>
         </div>
       </form>
@@ -641,7 +645,7 @@
             <i data-lucide="sprout" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
             KrishiShetra
           </div>
-          <div class="footer__tagline">Know the Price. Choose the Market. Sell Better.</div>
+          <div class="footer__tagline" data-i18n="disputes.footerTagline">Know the Price. Choose the Market. Sell Better.</div>
         </div>
         <div class="footer__links">
           <a href="orders.html" class="footer__link">Orders</a>

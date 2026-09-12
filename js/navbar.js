@@ -31,21 +31,20 @@ function initRoleAwareNav() {
 
   const navMenusByRole = {
     farmer: [
-      { page: 'dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-      { page: 'lots.html', id: 'nav-lots', icon: 'package', label: 'My Lots' },
-      { page: 'storage.html', id: 'nav-storage', icon: 'warehouse', label: 'Storage Options' },
-      { page: 'market.html', id: 'nav-market', icon: 'store', label: 'Marketplace' },
-      { page: 'ai-forecast.html', id: 'nav-forecast', icon: 'brain', label: 'AI Forecast' },
-      { page: 'orders.html', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
-      { page: 'disputes.html', id: 'nav-disputes', icon: 'shield-alert', label: 'Disputes' },
-      { page: 'buyers.html', id: 'nav-buyers', icon: 'users', label: 'Buyer Inquiries' }
+      { page: 'dashboard.html', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard', i18nKey: 'navigation.dashboard' },
+      { page: 'lots.html', id: 'nav-lots', icon: 'package', label: 'My Lots', i18nKey: 'navigation.myLots' },
+      { page: 'buyers.html', id: 'nav-inquiries', icon: 'message-square', label: 'Buyer Inquiries', i18nKey: 'navigation.buyerInquiries' },
+      { page: 'storage.html', id: 'nav-storage', icon: 'warehouse', label: 'Storage Options', i18nKey: 'navigation.storage' },
+      { page: 'market.html', id: 'nav-market', icon: 'store', label: 'Market Prices', i18nKey: 'navigation.market' },
+      { page: 'ai-forecast.html', id: 'nav-forecast', icon: 'brain', label: 'AI Price Forecast', i18nKey: 'navigation.aiForecast' },
+      { page: 'orders.html', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders', i18nKey: 'navigation.orders' }
     ],
     buyer: [
-      { page: 'buyer.html#/buyer/dashboard', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-      { page: 'buyer.html#/buyer/marketplace', id: 'nav-market', icon: 'store', label: 'Marketplace' },
-      { page: 'buyer.html#/buyer/inquiries', id: 'nav-inquiries', icon: 'message-square', label: 'My Inquiries' },
-      { page: 'buyer.html#/buyer/orders', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders' },
-      { page: 'disputes.html', id: 'nav-disputes', icon: 'shield-alert', label: 'Disputes' },
+      { page: 'buyer.html#/buyer/dashboard', id: 'nav-dashboard', icon: 'layout-dashboard', label: 'Dashboard', i18nKey: 'navigation.dashboard' },
+      { page: 'buyer.html#/buyer/marketplace', id: 'nav-market', icon: 'store', label: 'Marketplace', i18nKey: 'navigation.market' },
+      { page: 'buyer.html#/buyer/inquiries', id: 'nav-inquiries', icon: 'message-square', label: 'My Inquiries', i18nKey: 'navigation.buyerInquiries' },
+      { page: 'buyer.html#/buyer/orders', id: 'nav-orders', icon: 'clipboard-list', label: 'Orders', i18nKey: 'navigation.orders' },
+      { page: 'disputes.html', id: 'nav-disputes', icon: 'shield-alert', label: 'Disputes', i18nKey: 'navigation.disputes' },
       { page: 'buyer.html#/buyer/directory', id: 'nav-directory', icon: 'users', label: 'Farmers & FPOs' },
       { page: 'buyer.html#/buyer/payments', id: 'nav-payments', icon: 'wallet', label: 'Escrow & Payments' }
     ],
@@ -80,21 +79,31 @@ function initRoleAwareNav() {
   };
 
   const menuItems = navMenusByRole[currentRole] || navMenusByRole.farmer;
+  const t = (k, fb) => (window.KrishiI18n && typeof window.KrishiI18n.t === 'function' ? window.KrishiI18n.t(k, fb) : fb);
 
   // Render desktop nav if container is present
   navContainer.innerHTML = menuItems.map(item => `
     <a href="${prefix}${item.page}" class="dash-header__link" id="${item.id}">
-      <i data-lucide="${item.icon}" class="dash-header__link-icon"></i> ${item.label}
+      <i data-lucide="${item.icon}" class="dash-header__link-icon"></i> <span ${item.i18nKey ? `data-i18n="${item.i18nKey}"` : ''}>${item.i18nKey ? t(item.i18nKey, item.label) : item.label}</span>
     </a>
   `).join('');
 
   // Render mobile nav links if container is present
   if (mobileNavContainer) {
-    mobileNavContainer.innerHTML = menuItems.map(item => `
+    let mobileHtml = menuItems.map(item => `
       <a href="${prefix}${item.page}" class="dash-mobile-nav__link" id="m${item.id}">
-        <i data-lucide="${item.icon}"></i> ${item.label}
+        <i data-lucide="${item.icon}"></i> <span ${item.i18nKey ? `data-i18n="${item.i18nKey}"` : ''}>${item.i18nKey ? t(item.i18nKey, item.label) : item.label}</span>
       </a>
     `).join('');
+
+    if (currentRole === 'farmer') {
+      mobileHtml += `
+        <a href="${prefix}disputes.html" class="dash-mobile-nav__link" id="mnav-disputes">
+          <i data-lucide="shield-alert"></i> <span data-i18n="navigation.disputes">${t('navigation.disputes', 'Trade Disputes')}</span>
+        </a>
+      `;
+    }
+    mobileNavContainer.innerHTML = mobileHtml;
   }
 
   // Ensure role badge beside logo
@@ -140,8 +149,10 @@ function initActiveRouteHighlight() {
  * 3. Populate user profile details in header & dropdown
  */
 function initUserProfileHeader() {
-  const user = window.Auth ? window.Auth.getUser() : null;
-  const role = window.Auth ? window.Auth.getRole() : 'farmer';
+  const user = (window.Auth && window.Auth.getUser()) || JSON.parse(localStorage.getItem('krishi_user') || 'null');
+  const role = (window.Auth && window.Auth.getRole()) || 'farmer';
+  const t = (k, fb) => (window.KrishiI18n && typeof window.KrishiI18n.t === 'function' ? window.KrishiI18n.t(k, fb) : fb);
+  const fallback = role === 'farmer' ? t('farmer.farmer', 'Farmer') : 'Krishi User';
 
   const nameElem = document.getElementById('header-user-name');
   const avatarElem = document.getElementById('header-avatar');
@@ -149,13 +160,13 @@ function initUserProfileHeader() {
   const dropdownPhone = document.getElementById('dropdown-user-phone');
   const dropdownAvatar = document.getElementById('dropdown-avatar');
 
-  const displayName = (user && user.name) ? user.name : 'Krishi User';
-  const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'KU';
-  const subtitle = (user && user.email) ? user.email : (role.toUpperCase());
+  const displayName = (user && user.name) ? user.name.trim() : fallback;
+  const initials = displayName.charAt(0).toUpperCase() || (role === 'farmer' ? 'F' : 'U');
+  const subtitle = (user && user.phone) ? `+91 ${user.phone}` : ((user && user.email) || (role.toUpperCase()));
 
-  let shortName = displayName.split(' ')[0] || 'User';
-  if (shortName.length > 9) {
-    shortName = shortName.slice(0, 8) + '…';
+  let shortName = (user && user.name) ? user.name.trim().split(' ')[0] : fallback;
+  if (shortName.length > 12) {
+    shortName = shortName.slice(0, 11) + '…';
   }
 
   if (nameElem) {
@@ -348,3 +359,10 @@ function initGlobalSearch() {
     }
   });
 }
+
+// Re-render navigation labels and profile header on language toggle
+window.addEventListener('languageChanged', () => {
+  initRoleAwareNav();
+  initActiveRouteHighlight();
+  initUserProfileHeader();
+});
