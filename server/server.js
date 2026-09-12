@@ -125,8 +125,16 @@ app.get('/api', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT} (bound to 0.0.0.0)`);
+
+  // Diagnostic environment checks
+  if (!process.env.MONGODB_URI || process.env.MONGODB_URI.trim() === '') {
+    console.warn('⚠️ MONGODB_URI is missing in environment. Database features will be unavailable.');
+  }
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.trim() === '') {
+    console.warn('⚠️ JWT_SECRET is missing in environment. Using default fallback secret for development.');
+  }
 
   // Safe Email Service configuration check
   if (!process.env.BREVO_API_KEY || process.env.BREVO_API_KEY.trim() === '' || process.env.BREVO_API_KEY === 'your_brevo_api_key') {

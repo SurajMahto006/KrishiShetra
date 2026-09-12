@@ -1,13 +1,16 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const { sendVerificationEmail, sendPasswordResetEmail } = require('../services/email.service');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'krishishetra_jwt_default_secret_dev_2026';
 
 // Helper to generate JWT
 const generateToken = (userId, role) => {
   return jwt.sign(
     { userId, role },
-    process.env.JWT_SECRET,
+    JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
   );
 };
@@ -27,6 +30,14 @@ const generateOtp = () => {
 // @access  Public
 const register = async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      console.warn('[Auth Register Warning]: MongoDB is not connected (readyState:', mongoose.connection.readyState, ')');
+      return res.status(503).json({
+        success: false,
+        message: 'Database is currently connecting or offline. If running on Render, ensure MONGODB_URI is configured in environment settings.'
+      });
+    }
+
     const { name, email, phone, password, role } = req.body;
     const userPhone = (phone || req.body.mobile || '').toString().trim();
 
@@ -132,6 +143,7 @@ const register = async (req, res) => {
       message: 'Registration successful. Please check your email for the verification OTP.'
     });
   } catch (error) {
+    console.error('[Auth Register Error]:', error);
     return res.status(500).json({
       success: false,
       message: error.message || 'Server error during registration'
@@ -333,6 +345,14 @@ const resendVerification = async (req, res) => {
 // @access  Public
 const login = async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      console.warn('[Auth Login Warning]: MongoDB is not connected (readyState:', mongoose.connection.readyState, ')');
+      return res.status(503).json({
+        success: false,
+        message: 'Database is currently connecting or offline. If running on Render, ensure MONGODB_URI is configured in environment settings.'
+      });
+    }
+
     const { email, password } = req.body;
 
     // Input validation
@@ -391,6 +411,7 @@ const login = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('[Auth Login Error]:', error);
     return res.status(500).json({
       success: false,
       message: 'Server error during login'
@@ -552,7 +573,7 @@ const verifyResetOtp = async (req, res) => {
     // Valid OTP: Generate short-lived reset token (15 mins)
     const resetToken = jwt.sign(
       { userId: user._id, type: 'password_reset' },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '15m' }
     );
 
@@ -600,7 +621,7 @@ const resetPassword = async (req, res) => {
     // Verify JWT reset token
     let decoded;
     try {
-      decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
+      decoded = jwt.verify(resetToken, JWT_SECRET);
     } catch (err) {
       return res.status(400).json({
         success: false,
