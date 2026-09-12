@@ -1,420 +1,373 @@
-# 🌾 KrishiShetra (कृषि क्षेत्र)
+﻿<div align="center">
 
-<div align="center">
+# KrishiShetra — कृषि क्षेत्र
 
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+**"Which mandi pays more?" → "Which mandi actually gives me more?"**
+
+*A full-stack AgriTech platform giving Indian farmers transparent market intelligence, direct buyer access, and real price discovery — without middlemen.*
+
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express](https://img.shields.io/badge/Express-4.19+-000000?logo=express&logoColor=white)](https://expressjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose%209.9-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Leaflet](https://img.shields.io/badge/Leaflet-Maps%20APMC-199900?logo=leaflet&logoColor=white)](https://leafletjs.com/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#contributing)
+[![Express](https://img.shields.io/badge/Express-4.19-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Multilingual](https://img.shields.io/badge/Multilingual-EN%20%7C%20HI%20%7C%20MR-blue)](#multilingual-support)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**"Know the Price. Choose the Market. Sell Better."**
-
-*A modern, full-stack AgriTech digital ecosystem empowering Indian farmers, verified institutional buyers, Farmer Producer Organizations (FPOs), and agricultural transporters through transparent market intelligence, real-time APMC mandi price arbitrage, AI forecasting, and end-to-end direct trade negotiation.*
-
-[Features](#-key-features) • [Architecture](#-system-architecture) • [Directory Structure](#-project-structure) • [API Reference](#-api-endpoints) • [Getting Started](#-getting-started) • [Environment Config](#-environment-variables)
+[Problem](#the-problem) · [Solution](#our-solution) · [Features](#key-features) · [Architecture](#system-architecture) · [Setup](#getting-started) · [Demo](#demo)
 
 </div>
 
 ---
 
-## 📖 Overview
+## The Problem
 
-Indian agriculture has long suffered from asymmetric price information, opaque middlemen commissions, fragmented supply chains, and lack of direct market access for smallholder farmers.
+Indian smallholder farmers — who produce over 50% of the country's food — sell most of their harvest to local intermediaries at prices well below what distant mandis or institutional buyers would pay. The core barriers are:
 
-**KrishiShetra** bridges this divide by providing an integrated, role-based platform that:
-1. **Democratizes Market Intelligence**: Delivers live market prices across 45+ APMC mandis with automated freight-adjusted arbitrage calculations.
-2. **Eliminates Exploitative Middlemen**: Enables farmers and FPOs to list produce lots directly to verified institutional buyers, food processors, and wholesalers.
-3. **Facilitates Multi-Turn Counter Negotiation**: Provides a transparent deal-making room where prices and quantities are negotiated, counter-offered, and agreed upon with complete audit trails.
-4. **Streamlines Logistics & Fulfillment**: Connects transporters to available freight loads and provides a 6-stage real-time order progression pipeline.
+- **No price transparency** — farmers cannot compare real prices across mandis
+- **Transport cost blindness** — a higher mandi price can mean lower net income after freight
+- **No direct buyer access** — institutional buyers, food processors, and FPOs operate in a separate information world
+- **Paper-based disputes and no payment protection** — once produce leaves the farm, the farmer has little recourse
 
----
-
-## ✨ Key Features
-
-### 👨‍🌾 1. Farmer Portal (`dashboard.html`, `lots.html`)
-- **Produce Lot Management**: Create, publish, edit, or cancel standardized produce lots (`KS-YYYY-XXXXXX`) with grade specifications, expected price, harvest date, and batch imagery.
-- **Interactive 45+ APMC Mandi Map**: Leaflet.js-powered visual geospatial map pinpointing mandis across Indian agricultural belts with live modal rates.
-- **Real-Time Inquiry Inbox**: Instant notifications when institutional buyers submit bids, with instant **Accept**, **Counter-Offer**, or **Reject** actions.
-- **Farm Profile Onboarding**: Intuitive multi-step onboarding capturing farm geolocation, acreage, primary crops, and bank details.
-
-### 🛒 2. Buyer Command Center (`buyer.html`, `buyer-inquiries.html`)
-- **Produce Marketplace**: Real-time filtering by crop type, quality grade (A/B/C), organic certification, distance, and price range.
-- **Purchase Inquiries & Counter-Offers**: Submit formal purchase inquiries with required quantity and proposed target price.
-- **Multi-Turn Negotiation Timeline**: Live conversational offer history detailing timestamped counters, notes, and terms until consensus is reached.
-- **Instant Deal Conversion**: One-click order creation upon deal acceptance with integrated delivery address and payment terms.
-
-### ⚖️ 3. APMC Mandi Price Comparison & Arbitrage Engine (`mandi-compare.html`)
-- **Cross-Mandi Price Analysis**: Compare modal prices for Wheat, Paddy, Mustard, Onion, Potato, Cotton, Soybean, and more across regional mandis.
-- **Net Margin & Freight Calculator**: Calculates estimated transportation cost per quintal based on distance to determine the true net profit margin at different destination markets.
-- **Best Selling Opportunity**: Automatically highlights the highest net realization mandi for any selected crop.
-
-### 🤖 4. AI Price Forecasting (`ai-forecast.html`)
-- **Predictive Price Trends**: Forecasts 15-day and 30-day crop price directions using seasonal patterns and arrival volume indicators.
-- **Harvest & Sell Timing Signals**: Provides farmers with data-driven advice on whether to sell immediately or hold produce in storage.
-
-### 🚚 5. Transporter Logistics Hub (`transporter/`)
-- **Available Freight Loads**: Real-time feed of confirmed agricultural shipments requiring freight dispatch.
-- **Route & Tonnage Optimization**: Inspect cargo weight, pickup farm coordinates, delivery warehouse, and trip payout.
-- **Fleet & Driver Management**: Organize vehicle fleets, driver assignments, and trip milestones (Pickup ➔ In Transit ➔ Delivered).
-- **Earnings Analytics**: Track completed deliveries, pending freight settlements, and historical revenue.
-
-### 👥 6. FPO Collective Hub (`fpo-dashboard.html`)
-- **Produce Aggregation**: Pool smallholder harvests into commercial-grade bulk lots to negotiate volume premiums.
-- **Member Farmer Directory**: Manage member farmers, acreage, and expected seasonal yields.
-
-### 🛡️ 7. Admin Governance & Operations (`admin/`)
-- **System Overview**: Platform-wide metrics on active lots, gross merchandise value (GMV), active shipments, and user growth.
-- **User Verification**: KYC validation and verification badges for buyers and transport providers.
-- **Audit Reports & System Health**: Real-time server diagnostics, database connection status, and error logs.
+The farmer's real question is never "which mandi is cheapest?" — it is **"which mandi actually puts more money in my pocket after transport?"**
 
 ---
 
-## 🔄 Fulfillment & Negotiation Lifecycle
+## Our Solution
 
-### Multi-Turn Negotiation Flow
-```text
-Buyer Discovers Lot ──► Submits Purchase Inquiry ──► Farmer Reviews Offer
-                                                            │
-    ┌───────────────────────────◄───────────────────────────┴───────────────────────────┐
-    │                                                                                   │
-[Accepts Deal]                                                                 [Counter-Offers]
-    │                                                                                   │
-    ▼                                                                                   ▼
-Deal Status: "Accepted"                                                    Buyer Receives Counter
-    │                                                                                   │
-    ├──► [Confirm Deal & Create Order]                                    Accept / Counter Again / Reject
-    ▼
-Order Generated: KS-ORD-YYYY-XXXXXX
-```
+**KrishiShetra** is a role-based platform built for the full agricultural trade chain: farmers, institutional buyers, FPOs (Farmer Producer Organizations), transporters, and platform administrators.
 
-### 6-Stage Order Lifecycle Stepper
-```text
-[ Pending ] ──► [ Confirmed ] ──► [ Processing ] ──► [ Ready for Pickup ] ──► [ In Transit ] ──► [ Delivered ]
-```
+It provides:
+- **Net margin price comparison** across 45+ APMC mandis — factoring in freight cost, not just modal price
+- **Direct lot-to-buyer marketplace** — farmers list standardized produce lots that verified buyers can discover and bid on
+- **Transparent multi-turn negotiation** — complete offer/counter-offer timeline with audit trail
+- **6-stage order lifecycle** from deal acceptance to delivery
+- **Multilingual UI** in English, Hindi, and Marathi so farmers can use the platform in their own language
+
+The platform uses a **demo data fallback system** for local/offline demonstration and connects to live government mandi data (data.gov.in) and a MongoDB backend in production.
 
 ---
 
-## 🏗️ System Architecture
+## Key Features
 
-```text
-+-----------------------------------------------------------------------+
-|                              USER BROWSER                             |
-|          (Farmer, Institutional Buyer, Transporter, FPO, Admin)       |
-+-----------------------------------------------------------------------+
-                                   │
-                                   ▼
-+-----------------------------------------------------------------------+
-|                        PAGE GUARD & ROUTE CHECK                       |
-|                          (js/page-guard.js)                           |
-|       - Validates authentication token (krishi_token)                 |
-|       - Enforces role-based permissions (data-require-role)           |
-+-----------------------------------------------------------------------+
-                                   │
-                                   ▼
-+-----------------------------------------------------------------------+
-|                    ROLE-AWARE NAVIGATION & SHELL                      |
-|                           (js/navbar.js)                              |
-|       - Injects dynamic navigation links based on user session role   |
-|       - Manages responsive mobile menus and notifications             |
-+-----------------------------------------------------------------------+
-                                   │
-                                   ▼
-+-----------------------------------------------------------------------+
-|                       PAGE CONTROLLER MODULES                         |
-|   (dashboard.js, farmer.js, buyer-app.js, mandi-compare.js, etc.)     |
-+-----------------------------------------------------------------------+
-                                   │
-                                   ▼
-+-----------------------------------------------------------------------+
-|                       CENTRALIZED API CLIENT                          |
-|                            (js/api.js)                                |
-|       - Injects Authorization: Bearer <JWT> header                    |
-|       - Global 401 Interceptor with auto-redirect to login            |
-|       - Structured error handling & uniform toast feedback            |
-+-----------------------------------------------------------------------+
-                                   │
-                                   ▼
-+-----------------------------------------------------------------------+
-|                         EXPRESS REST API                              |
-|                     (http://localhost:5000/api)                       |
-|       - JWT Authentication & Role-Based Middleware                    |
-|       - Controller layer with input validation                        |
-+-----------------------------------------------------------------------+
-                                   │
-                                   ▼
-+-----------------------------------------------------------------------+
-|                       MONGODB DATABASE LAYER                          |
-|           (Users, FarmerProfiles, Lots, Inquiries, Orders, Trips)     |
-+-----------------------------------------------------------------------+
+### Farmer Portal
+- Create and publish standardized produce lots (`KS-YYYY-XXXXXX`) with grade, quantity, harvest date, and farm geolocation
+- View live and cached mandi prices across 45+ APMCs from the government data.gov.in dataset
+- Receive, accept, reject, or counter buyer purchase inquiries in real time
+- Track orders through a 6-stage fulfillment pipeline
+- Raise and manage trade disputes with FPO mediation support
+- Store produce with warehouse facilities and apply for pledge financing (Kisan Credit integration path)
+
+### Mandi Price Intelligence
+- **Net margin arbitrage engine** — compares `modal price − estimated freight cost per quintal` across all available mandis for a selected crop
+- Automatically highlights the highest net-realization destination
+- Backed by the official [Agmarknet dataset](https://data.gov.in) refreshed daily
+
+### Buyer Command Center
+- Browse produce marketplace filtered by crop type, quality grade, organic status, region, and price range
+- Submit purchase inquiries with target price and required quantity
+- Multi-turn negotiation with timestamped offer history until mutual agreement
+- One-click order creation from accepted deal
+
+### FPO Collective Hub
+- Pool harvests from member farmers into commercial-scale bulk lots
+- Member farmer directory with acreage and seasonal yield tracking
+- Unified dispute mediation and order oversight
+
+### Transporter Logistics Portal
+- Discover available agricultural freight loads
+- Accept trips, manage driver assignments, and track delivery milestones
+- Earnings analytics per completed delivery
+
+### Admin Governance Suite
+- Platform-wide GMV, user counts, and active lot metrics
+- KYC verification queue for buyers and transporters
+- System health diagnostics
+
+### Multilingual Support
+Full UI in **English, Hindi (हिंदी), and Marathi (मराठी)** — every page, navigation element, status label, and form. Built on a custom i18n system (`js/translations.js` + `js/i18n.js`) — no third-party i18n library needed.
+
+---
+
+## User Roles & Journeys
+
+| Role | Entry Point | Core Journey |
+|---|---|---|
+| **Farmer** | `dashboard.html` | Register farm → Create lot → Receive buyer inquiry → Negotiate → Fulfill order |
+| **Institutional Buyer** | `buyer.html` | Browse marketplace → Submit offer → Negotiate → Confirm order |
+| **FPO** | `fpo-dashboard.html` | Aggregate member lots → List bulk supply → Mediate disputes |
+| **Transporter** | `transporter/dashboard.html` | Discover freight loads → Accept trip → Deliver → Log earnings |
+| **Admin** | `admin/` | Verify users → Monitor platform health → Review disputes |
+
+---
+
+## System Architecture
+
+```mermaid
+graph TD
+    Browser["Browser — Farmer / Buyer / FPO / Transporter / Admin"]
+
+    Browser --> Guard["page-guard.js<br/>JWT validation + role enforcement"]
+    Guard --> Nav["navbar.js<br/>Role-aware navigation injection"]
+    Nav --> Controllers["Page Controllers<br/>dashboard.js · farmer.js · buyer-app.js<br/>mandi-compare.js · orders.js · disputes.js"]
+    Controllers --> API["js/api.js<br/>Centralized REST client<br/>Bearer JWT · 401 interceptor"]
+    API --> Express["Express REST API — /api/*<br/>server/server.js · Port 5000"]
+
+    Express --> AuthMW["Auth Middleware<br/>JWT verify + role guard"]
+    AuthMW --> RouteCtrl["Controllers<br/>auth · lot · inquiry · order<br/>market · storage · transport · dispute"]
+    RouteCtrl --> Mongoose["Mongoose ODM"]
+    Mongoose --> MongoDB[("MongoDB<br/>Users · ProduceLots · Inquiries<br/>Orders · StorageRequests · Disputes")]
+
+    Express --> MandiData["server/data/mandi_cache.json<br/>data.gov.in Agmarknet dataset<br/>Daily-refreshed official prices"]
+
+    i18n["js/i18n.js + translations.js<br/>EN · HI · MR language switcher"]
+    Browser --> i18n
 ```
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
-```bash
+```
 KrishiShetra/
-├── admin/                         # Admin Management Suite
-│   ├── dashboard.html             # Platform governance dashboard
-│   ├── farmers.html               # Farmer directory and status
-│   ├── reports.html               # Platform analytical reports
-│   ├── settings.html              # System parameters & configurations
-│   ├── styles.css                 # Admin-specific stylesheets
-│   └── users.html                 # User account management
-├── assets/                        # Static media assets & imagery
-│   └── images/                    # Hero banners, icons, badges
-├── css/                           # Frontend Design System & Modular Styles
-│   ├── mandi-compare.css          # Mandi price comparison styling
-│   ├── style.css                  # Main landing page styles
-│   └── ...                        # Component styles
-├── js/                            # Client-Side Application Logic
-│   ├── api.js                     # Unified REST API client (window.api)
-│   ├── app-shell.js               # Common application shell utilities
-│   ├── auth.js                    # Client authentication state manager
-│   ├── buyer-app.js               # Buyer portal controller
-│   ├── buyer-inquiries.js         # Inquiry & negotiation manager
-│   ├── dashboard.js               # Farmer dashboard controller
-│   ├── farmer.js                  # Farmer lot management
-│   ├── fpo-dashboard.js           # FPO operations controller
-│   ├── main.js                    # Landing page interactive logic
-│   ├── mandi-compare.js           # Arbitrage & comparison logic
-│   ├── mandi-map.js               # Leaflet APMC mandi geospatial engine
-│   ├── navbar.js                  # Dynamic role navigation injector
-│   ├── orders.js                  # 6-stage order tracking controller
-│   └── page-guard.js              # Client-side route authentication guard
-├── server/                        # Backend REST API Server
-│   ├── config/
-│   │   └── db.js                  # MongoDB Mongoose connection
-│   ├── controllers/               # Business logic controllers
-│   │   ├── auth.controller.js
-│   │   ├── buyer.controller.js
-│   │   ├── farmer.controller.js
-│   │   ├── inquiry.controller.js
-│   │   ├── lot.controller.js
-│   │   ├── market.controller.js
-│   │   ├── order.controller.js
-│   │   └── transport.controller.js
-│   ├── middleware/                # Auth verification & role guards
-│   ├── models/                    # Mongoose database schemas
-│   │   ├── Activity.js
-│   │   ├── FarmerProfile.js
-│   │   ├── Inquiry.js
-│   │   ├── Lot.js
-│   │   ├── Notification.js
-│   │   ├── Order.js
-│   │   ├── TransportTrip.js
-│   │   └── User.js
-│   ├── routes/                    # Express route registrations
-│   │   ├── auth.routes.js
-│   │   ├── buyer.routes.js
-│   │   ├── farmer.routes.js
-│   │   ├── inquiry.routes.js
-│   │   ├── lot.routes.js
-│   │   ├── market.routes.js
-│   │   ├── order.routes.js
-│   │   └── transport.routes.js
-│   ├── services/                  # External integrations (Brevo Email, etc.)
-│   └── server.js                  # Server entry point, CORS & middleware
-├── transporter/                   # Transporter Logistics Portal
-│   ├── active-trips.html          # In-transit delivery management
-│   ├── available-loads.html       # Freight job discovery
-│   ├── dashboard.html             # Transporter command center
-│   ├── drivers.html               # Driver directory
-│   ├── earnings.html              # Payout and revenue tracking
-│   ├── fleet.html                 # Vehicle fleet registry
-│   └── onboarding.html            # Transporter verification setup
-├── .env.example                   # Template for environment variables
-├── ai-forecast.html               # AI Crop Price Forecasting interface
-├── buyer-inquiries.html           # Buyer negotiation room
-├── buyer.html                     # Buyer marketplace & orders hub
-├── dashboard.html                 # Farmer main operational dashboard
-├── fpo-dashboard.html             # Farmer Producer Organization portal
-├── FRONTEND_FLOW.md               # Frontend user flows & design spec
-├── index.html                     # KrishiShetra public landing page
-├── login.html                     # Unified multi-role login portal
-├── lots.html                      # Farmer produce inventory management
-├── mandi-compare.html             # APMC mandi price comparison & arbitrage
-├── market.html                    # Public / authenticated produce marketplace
-├── orders.html                    # Orders & fulfillment tracking stepper
-├── package.json                   # Project dependencies and npm scripts
-└── register.html                  # Multi-role registration portal
+├── index.html                    # Landing page
+├── dashboard.html                # Farmer dashboard
+├── lots.html                     # Produce lot management
+├── buyers.html                   # Buyer inquiry inbox (farmer view)
+├── market.html                   # Public produce marketplace
+├── mandi-compare.html            # Mandi price arbitrage engine
+├── ai-forecast.html              # Price forecast & harvest timing
+├── orders.html                   # Order tracking (6-stage stepper)
+├── storage.html                  # Storage & pledge financing
+├── disputes.html                 # Dispute & mediation center
+├── fpo-dashboard.html            # FPO collective portal
+├── buyer.html                    # Buyer marketplace & command center
+├── login.html / register.html    # Multi-role auth pages
+│
+├── css/
+│   ├── style.css                 # Landing page & shared design tokens
+│   ├── dashboard.css             # Shared farmer header & dashboard styles
+│   └── [page].css                # Per-page component styles
+│
+├── js/
+│   ├── api.js                    # Unified API client (Bearer JWT, error handling)
+│   ├── auth.js                   # Client auth state manager
+│   ├── i18n.js                   # Language switcher & DOM translation
+│   ├── translations.js           # All UI strings in EN / HI / MR
+│   ├── navbar.js                 # Role-aware navigation injector
+│   ├── page-guard.js             # Client-side route authentication
+│   ├── farmer.js                 # Lot management controller
+│   ├── dashboard.js              # Farmer dashboard controller
+│   ├── mandi-compare.js          # Price arbitrage & net margin calculator
+│   ├── mandi-map.js              # Leaflet APMC mandi map engine
+│   ├── orders.js                 # 6-stage order lifecycle
+│   ├── disputes.js               # Dispute & mediation UI
+│   ├── storage.js                # Storage booking & pledge UI
+│   └── grading-engine.js         # Produce quality grading logic
+│
+├── server/
+│   ├── server.js                 # Express entry point, CORS, middleware
+│   ├── config/db.js              # MongoDB / Mongoose connection
+│   ├── models/                   # Mongoose schemas
+│   │   ├── User.js · FarmerProfile.js · BuyerProfile.js
+│   │   ├── ProduceLot.js · Inquiry.js · Offer.js · Order.js
+│   │   ├── StorageFacility.js · StorageRequest.js · PledgeFinancingRequest.js
+│   │   ├── Dispute.js · Notification.js · TransportProfile.js
+│   │   └── ActivityLog.js · KYC.js · Payment.js · SavedLot.js
+│   ├── controllers/              # Business logic (one file per domain)
+│   ├── routes/                   # Express route registrations
+│   ├── middleware/               # JWT verify, role guard, error handler
+│   ├── services/                 # Brevo email delivery service
+│   └── data/mandi_cache.json     # Cached Agmarknet mandi prices
+│
+├── admin/                        # Admin governance suite
+├── transporter/                  # Transporter logistics portal
+├── assets/                       # Crop imagery & background photos
+├── .env.example                  # Environment variable template
+└── package.json                  # Node.js dependencies & scripts
 ```
 
 ---
 
-## 🔌 API Endpoints
+## API Reference
 
-All endpoints are prefixed with `/api`. Protected routes require `Authorization: Bearer <JWT_TOKEN>`.
+All routes are prefixed `/api`. Protected routes require `Authorization: Bearer <token>`.
 
-### Authentication (`/api/auth`)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Register a new user (`farmer`, `buyer`, `transporter`, `fpo`) | Public |
-| `POST` | `/api/auth/login` | Authenticate user and obtain JWT token | Public |
-| `GET` | `/api/auth/me` | Fetch authenticated user profile & role | Authenticated |
-
-### Farmer Profile & Produce Lots (`/api/farmer`, `/api/lots`)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/farmer/profile` | Get logged-in farmer's profile | Farmer |
-| `POST` | `/api/farmer/profile` | Create/complete initial farmer profile | Farmer |
-| `PUT` | `/api/farmer/profile` | Update farm details and geolocation | Farmer |
-| `POST` | `/api/lots` | Create and publish a new produce lot | Farmer |
-| `GET` | `/api/lots/my` | Retrieve all lots created by the farmer | Farmer |
-| `GET` | `/api/lots/:id` | View full details of a specific lot | Authenticated |
-| `PUT` | `/api/lots/:id` | Update lot price, quantity, or details | Farmer |
-| `PUT` | `/api/lots/:id/cancel` | Cancel an active produce listing | Farmer |
-
-### Produce Marketplace (`/api/market`, `/api/buyer/market`)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/market/lots` | Browse active produce lots with filters | Public / Buyer |
-| `GET` | `/api/market/lots/:id` | Inspect specific produce lot specifications | Public / Buyer |
-| `GET` | `/api/buyer/saved-lots` | Retrieve buyer's bookmarked produce lots | Buyer |
-
-### Inquiries & Deal Negotiation (`/api/inquiries`)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/inquiries` | Submit initial purchase offer on a lot | Buyer |
-| `GET` | `/api/inquiries/my` | List inquiries submitted by the buyer | Buyer |
-| `GET` | `/api/inquiries/farmer` | List incoming inquiries received by the farmer | Farmer |
-| `GET` | `/api/inquiries/:id` | Get full multi-turn negotiation timeline | Involved Parties |
-| `PUT` | `/api/inquiries/:id/offer`| Submit counter-offer (price/qty/note) | Involved Parties |
-| `PUT` | `/api/inquiries/:id` | Accept or reject an inquiry/offer | Farmer / Buyer |
-
-### Orders & Fulfillment (`/api/orders`)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/orders` | Create confirmed order from an accepted inquiry | Buyer |
-| `GET` | `/api/orders/my` | View buyer's order history and progress | Buyer |
-| `GET` | `/api/orders/farmer` | View incoming orders for the farmer | Farmer |
-| `PUT` | `/api/orders/:id/status`| Progress order status through the 6 stages | Involved Parties |
-| `PUT` | `/api/orders/:id/cancel`| Cancel order and release reserved stock | Involved Parties |
-
-### Logistics & Freight (`/api/transport`)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/transport/loads` | Discover available loads for dispatch | Transporter |
-| `POST` | `/api/transport/trips` | Accept freight load and generate trip | Transporter |
-| `PUT` | `/api/transport/trips/:id`| Update delivery milestone status | Transporter |
+| Domain | Key Endpoints |
+|---|---|
+| **Auth** | `POST /api/auth/register` · `POST /api/auth/login` · `GET /api/auth/me` |
+| **Farmer** | `GET/POST/PUT /api/farmer/profile` |
+| **Lots** | `POST /api/lots` · `GET /api/lots/my` · `PUT /api/lots/:id` · `PUT /api/lots/:id/cancel` |
+| **Market** | `GET /api/market/lots` · `GET /api/market/lots/:id` |
+| **Inquiries** | `POST /api/inquiries` · `PUT /api/inquiries/:id/offer` · `PUT /api/inquiries/:id` |
+| **Orders** | `POST /api/orders` · `PUT /api/orders/:id/status` · `PUT /api/orders/:id/cancel` |
+| **Storage** | `GET /api/storage` · `POST /api/storage/requests` · `GET /api/storage/my-requests` |
+| **Disputes** | `POST /api/disputes` · `GET /api/disputes/my` · `PUT /api/disputes/:id` |
+| **Transport** | `GET /api/transport/loads` · `POST /api/transport/trips` · `PUT /api/transport/trips/:id` |
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v18.0.0 or higher recommended)
-- [MongoDB](https://www.mongodb.com/) (Local installation or MongoDB Atlas URI)
+
+- [Node.js](https://nodejs.org/) v18+
+- [MongoDB](https://www.mongodb.com/) — local or [MongoDB Atlas](https://www.mongodb.com/atlas) free tier
 - Git
 
-### 1. Clone the Repository
+### 1. Clone
+
 ```bash
 git clone https://github.com/SurajMahto006/KrishiShetra.git
 cd KrishiShetra
 ```
 
-### 2. Install Dependencies
+### 2. Install dependencies
+
 ```bash
 npm install
 ```
 
-### 3. Configure Environment Variables
-Copy the `.env.example` file to create your `.env`:
+### 3. Configure environment
+
 ```bash
 cp .env.example .env
 ```
-Edit `.env` and fill in your configuration:
+
+Edit `.env` with your values:
+
 ```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/krishishetra
-JWT_SECRET=your_super_secret_jwt_key
+MONGODB_URI=mongodb://localhost:27017/krishishetra   # or your Atlas URI
+JWT_SECRET=your_random_secret_key
 JWT_EXPIRES_IN=7d
 
-# Transactional Email (Optional for local testing, powered by Brevo)
+# Optional — transactional email via Brevo
 BREVO_API_KEY=your_brevo_api_key
 EMAIL_FROM=notifications@krishishetra.com
-EMAIL_FROM_NAME=KrishiShetra
 
-# Allowed Frontend Origins (Comma-separated)
-FRONTEND_URL=http://localhost:5000,http://127.0.0.1:5500
+# Optional — live mandi data refresh from data.gov.in
+DATA_GOV_API_KEY=your_data_gov_in_api_key
+
+# CORS allowed origins
+FRONTEND_URL=http://localhost:5000
 ```
 
-### 4. Run the Application
+> The platform includes a **demo data fallback** — if the backend is unavailable, pages display realistic sample data automatically. You do not need a running database to explore the UI.
 
-#### Development Mode (with hot-reload via nodemon):
+### 4. Start
+
 ```bash
+# Development (nodemon auto-reload)
 npm run dev
-```
 
-#### Production Mode:
-```bash
+# Production
 npm start
 ```
 
-### 5. Access the Platform
-Once running, open your browser and navigate to:
-- **Landing Page**: [http://localhost:5000](http://localhost:5000)
-- **Farmer Dashboard**: [http://localhost:5000/dashboard.html](http://localhost:5000/dashboard.html)
-- **Mandi Price Comparison**: [http://localhost:5000/mandi-compare.html](http://localhost:5000/mandi-compare.html)
-- **Buyer Command Center**: [http://localhost:5000/buyer.html](http://localhost:5000/buyer.html)
-- **Marketplace**: [http://localhost:5000/market.html](http://localhost:5000/market.html)
-- **Transporter Portal**: [http://localhost:5000/transporter/dashboard.html](http://localhost:5000/transporter/dashboard.html)
-- **FPO Collective**: [http://localhost:5000/fpo-dashboard.html](http://localhost:5000/fpo-dashboard.html)
-- **Admin Suite**: [http://localhost:5000/admin/index.html](http://localhost:5000/admin/index.html)
+### 5. Open in browser
+
+| Page | URL |
+|---|---|
+| Landing | http://localhost:5000 |
+| Farmer Dashboard | http://localhost:5000/dashboard.html |
+| Mandi Comparison | http://localhost:5000/mandi-compare.html |
+| Buyer Marketplace | http://localhost:5000/buyer.html |
+| Transporter Portal | http://localhost:5000/transporter/dashboard.html |
+| FPO Hub | http://localhost:5000/fpo-dashboard.html |
+| Admin Suite | http://localhost:5000/admin/ |
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 
-| Variable | Required | Default | Description |
-| :--- | :---: | :---: | :--- |
-| `PORT` | No | `5000` | Port on which the Express server listens |
-| `MONGODB_URI` | **Yes** | — | MongoDB connection string (Local or Atlas URI) |
-| `JWT_SECRET` | **Yes** | — | Secret key used for signing JSON Web Tokens |
-| `JWT_EXPIRES_IN` | No | `1d` | Token expiry duration (e.g., `1d`, `7d`) |
-| `BREVO_API_KEY` | No | — | Brevo API key for transactional email delivery |
-| `EMAIL_FROM` | No | — | Verified sender email address for outgoing emails |
-| `EMAIL_FROM_NAME`| No | `KrishiShetra` | Sender display name |
-| `FRONTEND_URL` | No | — | Comma-separated CORS allowed origin URLs |
-
----
-
-## 🗺️ Roadmap
-
-- [x] Multi-Role User Authentication with JWT & Role Guards
-- [x] Farmer Produce Lot creation and listing management
-- [x] Interactive Leaflet Map for 45+ APMC Indian Mandis
-- [x] Enterprise Mandi Price Arbitrage & Net Margin Calculator
-- [x] Multi-Turn Inquiry & Negotiation Protocol
-- [x] 6-Stage Order Lifecycle Stepper & Tracking
-- [x] Transporter Logistics Portal & Trip Dispatch
-- [x] FPO Collective produce aggregation interface
-- [ ] **Live Telematics & GPS Tracking**: Real-time geolocation tracking for active transport trucks
-- [ ] **Vernacular Voice Assistant**: Voice-activated crop listing and mandi queries in Hindi, Punjabi, Marathi, etc.
-- [ ] **Automated Escrow Payments**: Integration with UPI / payment gateways for milestone-based escrow release
+| Variable | Required | Description |
+|---|---|---|
+| `PORT` | No (default 5000) | Express server port |
+| `MONGODB_URI` | **Yes** | MongoDB connection string |
+| `JWT_SECRET` | **Yes** | Secret for signing JWTs |
+| `JWT_EXPIRES_IN` | No (default `1d`) | Token lifespan |
+| `BREVO_API_KEY` | No | Transactional email (Brevo/Sendinblue) |
+| `EMAIL_FROM` | No | Verified sender address |
+| `DATA_GOV_API_KEY` | No | data.gov.in API key for live mandi price refresh |
+| `FRONTEND_URL` | No | Comma-separated CORS allowed origins |
 
 ---
 
-## 🤝 Contributing
+## Demo
 
-Contributions make the open-source community an inspiring place to learn, inspire, and create. Any contributions you make to KrishiShetra are **greatly appreciated**.
+A live deployment is available on Render. The demo mode uses pre-seeded data — no account required to explore the UI.
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'feat: add AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+> **Note:** The backend on Render may spin down after inactivity. If the first page load is slow, wait ~30 seconds for the service to wake.
 
 ---
 
-## 📄 License
+## Technology Stack
 
-Distributed under the MIT License. See `LICENSE` for more details.
+| Layer | Technology |
+|---|---|
+| Frontend | Vanilla HTML · CSS · JavaScript (no framework) |
+| Styling | Custom CSS with design tokens (`--ks-evergreen`, `--ks-sage`, etc.) |
+| Icons | [Lucide](https://lucide.dev/) (CDN) |
+| Maps | [Leaflet.js](https://leafletjs.com/) — APMC mandi geospatial map |
+| Charts | [Chart.js](https://www.chartjs.org/) — price trend visualizations |
+| i18n | Custom system — `js/translations.js` + `js/i18n.js` |
+| Backend | [Node.js](https://nodejs.org/) + [Express](https://expressjs.com/) |
+| Database | [MongoDB](https://www.mongodb.com/) via [Mongoose](https://mongoosejs.com/) |
+| Auth | JWT (`jsonwebtoken`) + `bcryptjs` password hashing |
+| Email | [Brevo](https://brevo.com/) transactional email API |
+| Mandi Data | [data.gov.in](https://data.gov.in/) Agmarknet official dataset |
+| Hosting | [Render](https://render.com/) |
+
+---
+
+## What Is and Is Not Implemented
+
+### Implemented
+- Multi-role authentication (JWT, bcrypt, role guards)
+- Farmer produce lot lifecycle (create, list, edit, cancel)
+- Buyer marketplace with filter and search
+- Multi-turn inquiry and negotiation with offer timeline
+- 6-stage order tracking with status progression
+- Mandi price comparison with freight-adjusted net margin
+- Storage booking and pledge financing request flow
+- Dispute and mediation center with FPO involvement
+- Transporter freight load discovery and trip tracking
+- FPO member management and bulk lot aggregation
+- Admin KYC, platform metrics, and system health
+- Full multilingual UI — English, Hindi, Marathi
+- Official mandi data cache from data.gov.in (daily refresh)
+- Demo data fallback for offline/no-backend exploration
+
+### Future Scope
+- Live GPS truck tracking for in-transit orders
+- UPI / payment gateway integration for in-platform escrow release
+- Voice assistant for mandi queries in Hindi and regional languages
+- Automated warehouse receipt tokenization (pledge financing backend)
+- Mobile app (React Native) for field-level offline lot creation
+
+---
+
+## Project Context
+
+KrishiShetra was built as a hackathon submission addressing the real, documented challenge of agricultural price discovery and market access for Indian smallholder farmers. Every feature represents an actual implementation decision — the mandi arbitrage engine, the negotiation protocol, the multilingual support, and the role-based architecture were all chosen to reflect how agricultural trade actually works in India, not as abstract feature lists.
+
+The platform is designed to be deployable on a free-tier cloud stack (MongoDB Atlas + Render) and operable without an internet connection using the demo data fallback.
+
+---
+
+## Team
+
+| Name | Role |
+|---|---|
+| Suraj Mahto | Full-stack development, system architecture, backend API |
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
 
 ---
 
 <div align="center">
-  <sub>Built with ❤️ for Indian Agriculture and the Farming Community.</sub>
+  <sub>Built for Indian farmers and the agricultural community.</sub>
 </div>
