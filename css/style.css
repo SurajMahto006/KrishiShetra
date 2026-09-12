@@ -2728,12 +2728,16 @@ html[lang="mr"] .hero__actions .btn,
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(13, 26, 20, 0.97);
+    background: rgba(13, 26, 20, 0.98);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    gap: 28px;
+    padding: calc(var(--nav-height) + 24px) 24px 100px;
+    gap: 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     z-index: 999;
   }
 
@@ -2742,8 +2746,10 @@ html[lang="mr"] .hero__actions .btn,
   }
 
   .navbar__nav .navbar__link {
-    font-size: 20px;
+    font-size: 18px;
     color: var(--ks-white);
+    padding: 8px 12px;
+    text-align: center;
   }
 
   .navbar__toggle {
@@ -2758,12 +2764,18 @@ html[lang="mr"] .hero__actions .btn,
   .navbar__nav.active + .navbar__actions {
     display: flex;
     position: fixed;
-    bottom: 60px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    gap: 12px;
+    background: rgba(18, 55, 42, 0.85);
+    padding: 8px 16px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
   }
 
   .hero__headline {
@@ -4099,3 +4111,252 @@ html[lang="mr"] .hero__actions .btn,
     height: 58px;
   }
 }
+
+/* ============================================================
+   KRISHISHETRA LANDING & AUTH RESPONSIVE ENGINE (Tablets & Mobile)
+   Zero Horizontal Scroll | Touch-First | Multilingual Friendly
+   ============================================================ */
+
+/* ── Global Viewport & Media Overflow Prevention ── */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Touch Target Accessibility & iOS Zoom Prevention ── */
+button,
+.btn,
+a.btn,
+select,
+input,
+.navbar__toggle,
+.navbar__link,
+.auth-tab-btn,
+.auth-role-card {
+  touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+  /* Prevent iOS auto-zoom on form inputs */
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  select,
+  textarea,
+  .auth-text-box__input {
+    font-size: 16px !important;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+
+  /* Landing Page Hero Responsiveness */
+  .hero {
+    min-height: auto;
+    padding: calc(var(--nav-height, 64px) + 32px) 0 60px;
+  }
+
+  .hero__content {
+    padding: 0 16px;
+    gap: 24px;
+  }
+
+  .hero__headline {
+    font-size: clamp(26px, 7.5vw, 42px);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+
+  .hero__subtitle {
+    font-size: clamp(14px, 3.8vw, 17px);
+    line-height: 1.55;
+    max-width: 100%;
+  }
+
+  .hero__actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 46px;
+  }
+
+  .hero__trust {
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    justify-content: center;
+  }
+
+  .hero__trust-item {
+    font-size: 12px;
+  }
+
+  /* Problem & Solution Sections */
+  .section-padding {
+    padding: 50px 0;
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+    padding: 0 10px;
+  }
+
+  .section-header__title {
+    font-size: clamp(22px, 6vw, 32px);
+  }
+
+  .problem-card {
+    padding: 22px 18px;
+  }
+
+  .solution-step {
+    padding: 20px 16px;
+  }
+
+  /* Intelligence & AI Architecture Flow */
+  .ai-flow {
+    width: 100%;
+  }
+
+  .ai-flow__step {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Transaction & Escrow Flow */
+  .transaction-flow {
+    gap: 12px;
+  }
+
+  .txn-step {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Buyer & FPO Showcases */
+  .buyer-card,
+  .fpo-card {
+    padding: 20px 16px;
+  }
+
+  /* Auth Pages (Login & Register) */
+  .auth-wrapper {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .auth-hero {
+    min-height: 180px;
+    padding: 24px 18px 20px;
+  }
+
+  .auth-hero__headline {
+    font-size: 22px;
+  }
+
+  .auth-hero__badges {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .auth-hero__badge-item {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  .auth-content {
+    padding: 40px 14px 28px;
+  }
+
+  .auth-card-box {
+    padding: 20px 16px;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .auth-header__title {
+    font-size: 20px;
+  }
+
+  .auth-tabs {
+    margin-bottom: 18px;
+  }
+
+  .auth-tab-btn {
+    min-height: 42px;
+    font-size: 14px;
+  }
+
+  /* 6-Digit OTP Box Grid on Mobile */
+  .auth-otp-boxes {
+    gap: clamp(4px, 1.8vw, 8px);
+    margin-bottom: 14px;
+  }
+
+  .auth-otp-box {
+    font-size: clamp(16px, 4.5vw, 20px);
+    border-radius: 8px;
+  }
+
+  /* Role selector */
+  .auth-roles {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .auth-role-card {
+    padding: 8px 6px;
+    height: auto;
+    min-height: 52px;
+  }
+
+  .auth-role-card__label {
+    font-size: 12px;
+  }
+
+  /* Buttons in auth */
+  .auth-submit-btn {
+    min-height: 46px;
+    font-size: 15px;
+  }
+
+  /* Footer */
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 16px;
+  }
+
+  .footer__bottom-inner {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-roles {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-content__header-bar {
+    position: static;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+

@@ -2073,3 +2073,48 @@ img {
   border-color: var(--kl-sage);
   box-shadow: 0 0 0 3px rgba(91, 154, 114, 0.18);
 }
+
+/* ============================================================
+   BUYER PORTAL RESPONSIVE OPTIMIZATIONS (Tablets & Mobile)
+   ============================================================ */
+@media (max-width: 768px) {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .buyer-main,
+  .buyer-shell {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dash-form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dash-modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: calc(100dvh - 30px);
+    border-radius: 18px 18px 12px 12px;
+  }
+
+  .dash-form-input,
+  .dash-form-textarea,
+  .buyer-filter-select {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+
+  .buyer-orders-table-wrap,
+  .buyer-inquiries-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+}
+

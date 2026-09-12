@@ -2261,3 +2261,39 @@ header nav {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================
+   FPO DASHBOARD RESPONSIVE ENHANCEMENTS (Tablets & Mobile)
+   ============================================================ */
+@media (max-width: 768px) {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .fpo-table-container,
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+  }
+
+  .fpo-table-container table {
+    min-width: 560px;
+  }
+
+  input, select, textarea {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+
+  .fpo-modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: calc(100dvh - 30px);
+    border-radius: 16px 16px 10px 10px;
+  }
+}
+

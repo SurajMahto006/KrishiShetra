@@ -495,3 +495,138 @@
   align-items: center;
   gap: 4px;
 }
+
+/* ============================================================
+   STORAGE DISCOVERY RESPONSIVE MODULE (Tablets & Mobile)
+   ============================================================ */
+@media (max-width: 992px) {
+  .storage-hero {
+    padding: 28px 0 22px;
+  }
+
+  .storage-hero__title {
+    font-size: 24px;
+  }
+
+  .storage-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .storage-map-container {
+    height: 380px;
+  }
+
+  .storage-list-panel {
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+
+@media (max-width: 768px) {
+  .storage-hero__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .storage-hero__actions {
+    width: 100%;
+  }
+
+  .storage-hero__actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .sell-vs-store-banner {
+    padding: 18px 16px;
+    border-radius: 14px;
+  }
+
+  .svs-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .svs-header .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .storage-map-container {
+    height: clamp(260px, 40vh, 340px);
+    border-radius: 12px;
+  }
+
+  .facility-card {
+    padding: 14px 14px;
+  }
+
+  .facility-card__metrics {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 8px 6px;
+  }
+
+  .facility-card__metric-val {
+    font-size: 12px;
+  }
+
+  .facility-card__metric-lbl {
+    font-size: 9.5px;
+  }
+
+  .facility-card__actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .facility-card__actions .btn {
+    width: 100%;
+    min-height: 40px;
+    justify-content: center;
+  }
+
+  /* Storage Modals on Mobile */
+  .storage-modal-overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .storage-modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: calc(100dvh - 30px);
+    border-radius: 18px 18px 12px 12px;
+  }
+
+  .storage-modal__header {
+    padding: 14px 18px;
+  }
+
+  .storage-modal__body {
+    padding: 16px 18px;
+  }
+
+  .storage-modal input,
+  .storage-modal select {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .facility-card__metrics {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .facility-card__top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
+

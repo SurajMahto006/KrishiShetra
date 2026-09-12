@@ -162,21 +162,27 @@
     left: 0;
     width: 100%;
     height: 88vh;
+    height: 88dvh;
+    max-height: calc(100dvh - 30px);
     border-radius: 20px 20px 0 0;
     transform-origin: bottom center;
   }
   .ks-fab-wrap {
-    bottom: 20px;
-    right: 16px;
+    bottom: 16px;
+    right: 14px;
+  }
+  .ks-chat__input {
+    font-size: 16px !important;
   }
 }
 
 /* Tablet adjustments */
 @media (min-width: 481px) and (max-width: 768px) {
   .ks-chat {
-    width: 360px;
+    width: min(380px, calc(100vw - 32px));
     height: 540px;
-    bottom: 88px;
+    max-height: calc(100dvh - 100px);
+    bottom: 84px;
     right: 16px;
   }
   .ks-fab-wrap {

@@ -1683,3 +1683,44 @@ body.dashboard-body {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
 }
+
+/* ============================================================
+   MANDI COMPARE RESPONSIVE OPTIMIZATIONS (Tablets & Mobile)
+   ============================================================ */
+@media (max-width: 768px) {
+  .mpc-table-wrap,
+  .mpc-compare-table-wrap,
+  .mpc-data-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: 16px;
+    border-radius: 10px;
+  }
+
+  .mpc-compare-table,
+  .mpc-table {
+    min-width: 580px;
+  }
+
+  .mpc-chart-wrapper {
+    height: clamp(220px, 45vh, 320px);
+  }
+
+  .mpc-controls-grid input,
+  .mpc-controls-grid select {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mpc-kpi-val {
+    font-size: 20px;
+  }
+
+  .mpc-formula-box {
+    padding: 14px 12px;
+  }
+}
+

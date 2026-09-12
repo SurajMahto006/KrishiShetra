@@ -3715,6 +3715,45 @@ html[lang="mr"] .dash-header__link {
   #btn-help {
     display: none;
   }
+
+  .dash-stats__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-actions__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .dash-forecast-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dash-forecast-btn-wrap {
+    grid-column: span 2;
+  }
+
+  .dash-ai-card__content {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-ai-card__right {
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .dash-two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-opp-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .dash-opp-card__details {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 640px) {
@@ -3735,45 +3774,6 @@ html[lang="mr"] .dash-header__link {
   #btn-language {
     display: none;
   }
-}
-
-.dash-stats__grid {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.dash-actions__grid {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.dash-forecast-form {
-  grid-template-columns: 1fr 1fr;
-}
-
-.dash-forecast-btn-wrap {
-  grid-column: span 2;
-}
-
-.dash-ai-card__content {
-  grid-template-columns: 1fr;
-}
-
-.dash-ai-card__right {
-  flex-direction: row;
-  justify-content: center;
-  gap: 24px;
-}
-
-.dash-two-col {
-  grid-template-columns: 1fr;
-}
-
-.dash-opp-card {
-  flex-direction: column;
-  text-align: center;
-}
-
-.dash-opp-card__details {
-  justify-content: center;
 }
 
 
@@ -7121,3 +7121,605 @@ html[lang="mr"] .dash-header__link {
   gap: 8px;
   flex-wrap: wrap;
 }
+
+/* ============================================================
+   KRISHISHETRA COMPREHENSIVE RESPONSIVE ENGINE (Tablets & Mobile)
+   Zero Horizontal Scroll | Touch-First | Multilingual Friendly
+   ============================================================ */
+
+/* ── Global Viewport & Container Containment ── */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.dash-main {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.container,
+.dash-container {
+  width: 100%;
+  max-width: 1200px;
+  padding-left: clamp(12px, 3.5vw, 24px);
+  padding-right: clamp(12px, 3.5vw, 24px);
+  box-sizing: border-box;
+}
+
+/* Ensure images, svgs, canvases, and media never overflow their containers */
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Responsive Tables: Generic Touch Scroll Wrapper ── */
+.table-responsive,
+.dash-table-responsive,
+.dash-compare-table-wrap,
+.dash-orders-table-wrap,
+.dash-lots-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 16px;
+  border-radius: var(--radius-sm, 8px);
+}
+
+.table-responsive table,
+.dash-table-responsive table,
+.dash-compare-table-wrap table {
+  min-width: 540px;
+  width: 100%;
+}
+
+/* ── Standardized Header Across Breakpoints ── */
+.dash-header {
+  height: var(--nav-height, 70px);
+  width: 100%;
+}
+
+.dash-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  gap: 10px;
+  min-width: 0;
+  padding: 0 clamp(10px, 3vw, 20px);
+}
+
+.dash-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.dash-header__role-badge {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ── Touch-Friendly Interactions & iOS Auto-Zoom Prevention ── */
+button,
+.btn,
+a.btn,
+select,
+input,
+.dash-header__action-btn,
+.dash-header__toggle,
+.dash-lot-tab,
+.auth-tab-btn {
+  touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --nav-height: 64px;
+  }
+
+  .dash-main {
+    padding-top: calc(var(--nav-height, 64px) + 10px);
+    padding-bottom: 70px;
+  }
+
+  /* Prevent auto-zoom on iOS when tapping inputs */
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  select,
+  textarea,
+  .dash-form-input,
+  .dash-form-textarea,
+  .dash-filter-select {
+    font-size: 16px !important;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+
+  /* Clean Touch Target Sizes */
+  .btn,
+  a.btn {
+    min-height: 42px;
+    padding: 10px 16px;
+  }
+
+  .btn--sm {
+    min-height: 36px;
+    padding: 6px 12px;
+  }
+
+  /* Header adjustments */
+  .dash-header__logo-text {
+    font-size: 17px;
+  }
+
+  .dash-header__actions {
+    gap: 6px;
+  }
+
+  .dash-header__profile-name {
+    display: none !important;
+  }
+
+  .dash-header__profile {
+    padding: 2px;
+    border: none;
+    background: transparent;
+  }
+
+  .dash-header__profile-chevron {
+    display: none;
+  }
+
+  .dash-search {
+    display: none;
+  }
+
+  /* Profile Dropdown positioning on mobile */
+  .dash-profile-dropdown {
+    position: fixed;
+    top: calc(var(--nav-height, 64px) + 8px);
+    right: 12px;
+    left: auto;
+    width: 270px;
+    max-width: calc(100vw - 24px);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 1500;
+  }
+
+  /* Notifications Modal on mobile */
+  .dash-notif-modal,
+  .dash-notif-dropdown {
+    position: fixed;
+    top: calc(var(--nav-height, 64px) + 8px);
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-width: calc(100vw - 24px);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 1500;
+  }
+
+  /* Mobile Navigation Drawer */
+  .dash-mobile-nav {
+    top: var(--nav-height, 64px);
+    max-height: calc(100dvh - var(--nav-height, 64px));
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  .dash-mobile-nav__links {
+    padding: 16px 14px;
+    gap: 6px;
+  }
+
+  .dash-mobile-nav__link {
+    padding: 12px 14px;
+    font-size: 14.5px;
+    min-height: 44px;
+  }
+
+  /* Hero & Welcome Sections */
+  .dash-welcome {
+    padding: 24px 0 28px;
+    border-radius: 0 0 18px 18px;
+  }
+
+  .dash-welcome__headline {
+    font-size: clamp(20px, 5.5vw, 26px);
+    line-height: 1.3;
+  }
+
+  .dash-welcome__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .dash-welcome__ctas {
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .dash-welcome__btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Farmer Decision Hub */
+  .farmer-decision-hub {
+    padding: 18px 16px;
+    border-radius: 14px;
+  }
+
+  .farmer-decision-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Produce Lot Tabs horizontal scroll */
+  .dash-lots-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    scrollbar-width: none;
+  }
+
+  .dash-lots-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dash-lots-tabs .dash-lot-tab,
+  .dash-lots-tabs a {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* Two Column Layout Stacking */
+  .dash-two-col {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  /* Active Lots and Offer Cards */
+  .farmer-lot-card {
+    padding: 16px 14px;
+  }
+
+  .farmer-lot-card__top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .farmer-lot-card__mid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .farmer-lot-card__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .farmer-lot-card__actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .farmer-lot-card__actions .btn {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .dash-lot-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .dash-lot-row__right {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dash-offer-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .dash-offer-row__btns {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .dash-offer-row__btns .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* Direct Buyer Inquiries Banner */
+  .dash-inquiries-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .dash-inquiries-banner > div:last-child {
+    width: 100%;
+  }
+
+  .dash-inquiries-banner > div:last-child .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Section Title Rows with Actions */
+  .dash-section__header-row,
+  .dash-panel__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .dash-section__header-row > div:last-child,
+  .dash-panel__header > div:last-child {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dash-section__header-row > div:last-child .btn,
+  .dash-panel__header > div:last-child .btn {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  /* Modals on Mobile */
+  .dash-modal-overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .dash-modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: calc(100dvh - 30px);
+    border-radius: 18px 18px 12px 12px;
+  }
+
+  .dash-modal__header {
+    padding: 16px 18px;
+  }
+
+  .dash-modal__form,
+  .dash-modal__body-pad {
+    padding: 16px 18px;
+    gap: 14px;
+  }
+
+  .dash-form-row {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  .dash-modal__actions-row {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .dash-modal__actions-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* AI Advice & Smart Opportunity Cards */
+  .dash-ai-advice-card {
+    padding: 14px 16px;
+  }
+
+  .dash-ai-advice-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .dash-ai-advice-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .dash-ai-footer-btns {
+    width: 100%;
+  }
+
+  .dash-ai-footer-btns .btn,
+  .dash-ai-footer-btns .dash-ai-btn-view {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* AI Forecast Page Specifics */
+  .ai-hero-header {
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  .ai-eyebrow {
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+
+  .dash-forecast-form {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dash-forecast-btn-wrap {
+    grid-column: span 1 !important;
+  }
+
+  .dash-forecast-btn-wrap .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Orders Page Specifics */
+  .dash-order-card {
+    padding: 16px 14px;
+  }
+
+  .dash-order-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .dash-order-card__footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .dash-order-card__actions {
+    width: 100%;
+  }
+
+  .dash-order-card__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Filter pills & search bars */
+  .dash-filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .dash-filter-group {
+    width: 100%;
+  }
+
+  .dash-filter-select,
+  .dash-filter-input {
+    width: 100%;
+  }
+}
+
+/* ── Small Phones (<= 480px) ── */
+@media (max-width: 480px) {
+  .dash-stats__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .dash-stat {
+    padding: 12px 10px;
+  }
+
+  .dash-stat__value {
+    font-size: 16px;
+  }
+
+  .dash-stat__label {
+    font-size: 11px;
+  }
+
+  .dash-actions__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .dash-action {
+    padding: 10px 4px;
+  }
+
+  .dash-action__icon-wrap {
+    width: 36px;
+    height: 36px;
+  }
+
+  .dash-action__label {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .dash-header__logo-text {
+    font-size: 15px;
+  }
+
+  .farmer-lot-card__mid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .dash-chart-card {
+    padding: 12px 10px;
+  }
+}
+
+/* ── Ultra-Compact Screens (<= 360px) ── */
+@media (max-width: 360px) {
+  .dash-stats__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-actions__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-header__role-badge {
+    display: none;
+  }
+}
+
+/* ── Multilingual Adaptation (Hindi & Marathi Typography) ── */
+html[lang="hi"] body,
+html[lang="mr"] body,
+:lang(hi),
+:lang(mr) {
+  line-height: 1.55;
+}
+
+[data-i18n] {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Ensure no text truncation on translated action buttons */
+.btn [data-i18n],
+.dash-mobile-nav__link [data-i18n],
+.dash-header__link [data-i18n] {
+  white-space: normal;
+  text-align: left;
+}
