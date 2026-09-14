@@ -17,6 +17,9 @@
 
   <!-- Leaflet CSS for Map -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Leaflet MarkerCluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
   <!-- Core & Dashboard Styles -->
   <link rel="stylesheet" href="css/style.css">
@@ -29,6 +32,7 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 </head>
 
 <body class="dashboard-body" data-protected>
@@ -188,43 +192,66 @@
 
       <!-- ── TAB PANEL 1: DISCOVERY & MAP ── -->
       <section id="tab-panel-discovery" class="storage-tab-panel">
+        <!-- Truthful Government Storage Data Status Bar -->
+        <div class="storage-status-bar" id="storage-status-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; background: #FAF9F5; padding: 10px 14px; border-radius: 10px; border: 1px solid #E5E4DD;">
+          <div id="storage-status-indicator" style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700;">
+            <span class="storage-status-dot" id="storage-status-dot" style="width: 9px; height: 9px; border-radius: 50%; background: #2D6A4F; display: inline-block;"></span>
+            <span id="storage-status-text" data-i18n="storage.latestGovStorageData">Latest government storage data</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 12px; flex-wrap: wrap;">
+            <span id="storage-mapped-count-badge" style="font-size: 11.5px; font-weight: 600; color: #1B5E20; background: #E8F5E9; padding: 3px 8px; border-radius: 6px; border: 1px solid #C8E6C9;">
+              Loading mapped locations…
+            </span>
+            <span style="color: #666; font-weight: 600;" id="storage-source-badge">Government of India • IISFM</span>
+            <span style="color: #777;" id="storage-updated-text">Latest government data</span>
+          </div>
+        </div>
+
         <div class="storage-filter-card">
-          <div class="storage-filter-grid">
+          <div class="storage-filter-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: flex-end;">
             <div>
               <label
-                style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;">Search
-                Facilities</label>
+                style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;" data-i18n="storage.searchPlaceholder">Search Facilities</label>
               <div style="position: relative;">
                 <input type="text" id="storage-search-input" class="dash-form-input"
-                  placeholder="Search warehouses, cold storages, districts..."
-                  data-i18n-placeholder="storage.searchFacilitiesPlaceholder" style="padding-left: 32px;">
+                  placeholder="Search depots, warehouses, districts..."
+                  data-i18n-placeholder="storage.searchPlaceholder" style="padding-left: 32px;">
                 <i data-lucide="search"
                   style="position: absolute; left: 10px; top: 11px; width: 15px; height: 15px; color: #999;"></i>
               </div>
             </div>
             <div>
               <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
-                data-i18n="storage.filterType">Storage Type</label>
-              <select id="filter-storage-type" class="dash-filter-select" style="width: 100%;">
-                <option value="all">All Storage Types</option>
-                <option value="warehouse">Warehouse</option>
-                <option value="cold_storage">Cold Storage</option>
-                <option value="silo">Grain Silo</option>
+                data-i18n="storage.filterSource">Facility Source</label>
+              <select id="filter-storage-source" class="dash-filter-select" style="width: 100%;">
+                <option value="iisfm" data-i18n="storage.sourceGov" selected>Government FCI Depots (IISFM)</option>
+                <option value="all" data-i18n="storage.sourceAll">All Facilities</option>
+                <option value="demo" data-i18n="storage.sourceDemo">Accredited / Demo Facilities</option>
               </select>
             </div>
             <div>
               <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
-                data-i18n="storage.filterCrop">Crop Suitability</label>
-              <select id="filter-storage-crop" class="dash-filter-select" style="width: 100%;">
-                <option value="all">All Crops</option>
-                <option value="wheat">Wheat</option>
-                <option value="rice">Rice</option>
-                <option value="onion">Onion</option>
-                <option value="soybean">Soybean</option>
-                <option value="potato">Potato</option>
-                <option value="chilli">Chilli</option>
-                <option value="groundnut">Groundnut</option>
-                <option value="cotton">Cotton</option>
+                data-i18n="storage.stateLabel">State</label>
+              <select id="filter-storage-state" class="dash-filter-select" style="width: 100%;">
+                <option value="all" data-i18n="storage.allStates">All States (India)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
+                data-i18n="storage.districtLabel">District</label>
+              <select id="filter-storage-district" class="dash-filter-select" style="width: 100%;">
+                <option value="all" data-i18n="storage.allDistricts">All Districts</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11.5px; font-weight: 700; color: #555; display: block; margin-bottom: 4px;"
+                data-i18n="storage.filterType">Storage Type</label>
+              <select id="filter-storage-type" class="dash-filter-select" style="width: 100%;">
+                <option value="all">All Storage Types</option>
+                <option value="fci_depot" data-i18n="storage.fciDepot">Government FCI Depot</option>
+                <option value="warehouse">Warehouse</option>
+                <option value="cold_storage">Cold Storage</option>
+                <option value="silo">Grain Silo</option>
               </select>
             </div>
             <div>
@@ -233,17 +260,14 @@
               <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                 <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="25" style="padding: 6px 8px;">25
                   km</button>
-                <button class="btn btn--secondary btn--sm storage-dist-btn active" data-dist="50"
-                  style="padding: 6px 8px; background:#2E7D32; color:#FFF; border-color:#2E7D32;">50 km</button>
-                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="100"
-                  style="padding: 6px 8px;">100 km</button>
-                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="0" style="padding: 6px 8px;">All
-                  India</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="50" style="padding: 6px 8px;">50 km</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn" data-dist="100" style="padding: 6px 8px;">100 km</button>
+                <button class="btn btn--secondary btn--sm storage-dist-btn active" data-dist="0" style="padding: 6px 8px; background:#2E7D32; color:#FFF; border-color:#2E7D32;">All India</button>
               </div>
             </div>
             <div>
               <button class="btn btn--secondary btn--sm" id="storage-my-loc-btn"
-                style="height: 38px; display: flex; align-items: center; gap: 6px;">
+                style="height: 38px; display: flex; align-items: center; gap: 6px; width: 100%; justify-content: center;">
                 <i data-lucide="crosshair"></i> <span>My Location</span>
               </button>
             </div>
@@ -253,13 +277,29 @@
         <!-- MAP + LIST SPLIT LAYOUT -->
         <div class="storage-layout">
           <!-- LEFT: LEAFLET MAP -->
-          <div class="storage-map-container">
+          <div class="storage-map-container" style="position: relative;">
             <div id="storage-map"></div>
+            <!-- Map Legend per Requirement G -->
+            <div class="storage-map-legend" style="position: absolute; bottom: 12px; left: 12px; z-index: 999; background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); padding: 8px 12px; border-radius: 8px; font-size: 11px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: 1px solid #E5E4DD; pointer-events: auto; line-height: 1.5;">
+              <div style="font-weight: 700; color: #1A3320; margin-bottom: 3px; font-size: 11.5px;">Map Legend</div>
+              <div style="display: flex; align-items: center; gap: 6px; color: #333;">
+                <span>📍</span> <span>Verified facility location</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px; color: #333;">
+                <span>◉</span> <span>Approximate district location</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px; color: #1565C0;">
+                <span>🚜</span> <span>Your verified location</span>
+              </div>
+            </div>
           </div>
 
-          <!-- RIGHT: FACILITY CARDS LIST -->
-          <div class="storage-list-panel" id="storage-list-panel">
-            <!-- Dynamic facility cards rendered by storage.js -->
+          <!-- RIGHT: FACILITY CARDS LIST & PAGINATION -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="storage-list-panel" id="storage-list-panel">
+              <!-- Dynamic facility cards rendered by storage.js -->
+            </div>
+            <div id="storage-pagination-wrap"></div>
           </div>
         </div>
       </section>
@@ -671,6 +711,23 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 7. OFFICIAL IISFM DEPOT DETAILS MODAL ── -->
+  <div class="storage-modal-overlay" id="iisfm-depot-modal-overlay">
+    <div class="storage-modal" style="max-width: 520px;">
+      <div class="storage-modal__header" style="border-bottom: 1px solid #E5E4DD; padding-bottom: 12px;">
+        <div>
+          <span style="font-size: 11px; font-weight: 800; color: #1B5E20; background: #E8F5E9; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px;">Government of India • IISFM</span>
+          <h3 style="margin: 0; font-size: 17px; color: #1A3320;" id="iisfm-modal-title">Depot Details</h3>
+          <span id="iisfm-modal-code" style="font-size: 12px; color: #666; font-family: monospace;">CODE</span>
+        </div>
+        <button class="dash-modal__close" onclick="closeGovDepotModal()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="storage-modal__body" id="iisfm-modal-body" style="padding-top: 14px;">
+        <!-- Dynamically rendered -->
       </div>
     </div>
   </div>

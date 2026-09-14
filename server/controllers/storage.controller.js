@@ -3,6 +3,7 @@ const StorageFacility = require('../models/StorageFacility');
 const StorageRequest = require('../models/StorageRequest');
 const PledgeFinancingRequest = require('../models/PledgeFinancingRequest');
 const { evaluateSellVsStore } = require('../services/decision.service');
+const iisfmService = require('../services/iisfm.service');
 
 /**
  * In-memory fallback stores for offline/local development without MongoDB active
@@ -391,7 +392,9 @@ const getNearbyStorage = async (req, res) => {
         distanceKm: Number(distanceKm.toFixed(1)),
         distance: Number(distanceKm.toFixed(1)),
         capacityUtilizationPct,
-        isAvailable
+        isAvailable,
+        isDemo: !f.isGovData,
+        source: f.isGovData ? 'Government of India • IISFM' : (f.source || 'Demo Facility')
       };
     });
 
@@ -1148,9 +1151,91 @@ const adminGetAllFacilities = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get official Government of India / NIC IISFM depots
+ * @route   GET /api/storage/depots
+ * @access  Public
+ */
+const getIISFMDepots = async (req, res) => {
+  try {
+    const { state, district, q, minCap, page, limit, lat, lng, radius } = req.query;
+    const result = await iisfmService.queryDepots({
+      state,
+      district,
+      q,
+      minCap,
+      page,
+      limit,
+      lat,
+      lng,
+      radius
+    });
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error('[IISFM Controller Error]', err.message);
+    return res.status(503).json({
+      success: false,
+      statusMode: 'fallback',
+      message: 'Government API temporarily unavailable',
+      error: err.message,
+      source: 'Government API temporarily unavailable',
+      isGovData: false,
+      depots: []
+    });
+  }
+};
+
+/**
+ * @desc    Get unique States and Districts from official IISFM dataset
+ * @route   GET /api/storage/depots/locations
+ * @access  Public
+ */
+const getIISFMLocations = async (req, res) => {
+  try {
+    if (req.query.type === 'map') {
+      return getIISFMMapDepots(req, res);
+    }
+    const result = await iisfmService.getStatesAndDistricts();
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error('[IISFM Locations Error]', err.message);
+    return res.status(503).json({
+      success: false,
+      message: 'Government warehouse locations are temporarily unavailable.',
+      states: []
+    });
+  }
+};
+
+/**
+ * @desc    Get all mappable IISFM depots for Leaflet Map (unpaginated, nationwide)
+ * @route   GET /api/storage/depots/map
+ * @access  Public
+ */
+const getIISFMMapDepots = async (req, res) => {
+  try {
+    const { state, district, q } = req.query;
+    const result = await iisfmService.getMappableDepots({ state, district, q });
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error('[IISFM Map Controller Error]', err.message);
+    return res.status(503).json({
+      success: false,
+      message: 'Government storage map data is temporarily unavailable.',
+      totalDepots: 0,
+      mappableDepots: 0,
+      unmappableDepots: 0,
+      depots: []
+    });
+  }
+};
+
 module.exports = {
   seedInitialFacilities,
   getNearbyStorage,
+  getIISFMDepots,
+  getIISFMLocations,
+  getIISFMMapDepots,
   searchStorage,
   getStorageById,
   getStorageOptionsForCrop,

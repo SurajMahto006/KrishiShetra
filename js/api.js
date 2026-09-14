@@ -332,6 +332,15 @@ const api = {
 
   // 10. Storage & Warehouse Discovery (/api/storage)
   storage: {
+    getDepots: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return client.get(`/storage/depots${qs ? `?${qs}` : ''}`);
+    },
+    getDepotLocations: () => client.get('/storage/depots/locations'),
+    getMapDepots: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return client.get(`/storage/depots/map${qs ? `?${qs}` : ''}`);
+    },
     getNearby: (params = {}) => {
       const qs = new URLSearchParams(params).toString();
       return client.get(`/storage/nearby${qs ? `?${qs}` : ''}`);

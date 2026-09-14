@@ -2,7 +2,7 @@
   "source": "data.gov.in",
   "resourceId": "9ef84268-d588-465a-a308-a864a43d0070",
   "title": "Current Daily Price of Various Commodities from Various Markets (Mandi)",
-  "fetchedAt": "2026-09-12T15:00:45Z",
+  "fetchedAt": "2026-09-14T04:00:41Z",
   "records": [
     {
       "commodity": "Onion",
@@ -3626,7 +3626,7 @@
       "minPrice": 1900,
       "maxPrice": 4800,
       "modalPrice": 3800,
-      "arrivalDate": "12/09/2026",
+      "arrivalDate": "14/09/2026",
       "arrivalVolume": null,
       "isGovData": true
     },

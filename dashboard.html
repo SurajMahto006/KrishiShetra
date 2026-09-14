@@ -252,9 +252,8 @@
               <div class="dash-ai-decision-label">
                 <i data-lucide="lightbulb" style="width: 14px; height: 14px;"></i> RECOMMENDATION
               </div>
-              <div class="dash-ai-decision-desc">
-                Consider checking nearby buyer offers before dispatching, or hold in accredited cold storage (35 MT
-                available at Vashi Hub · ₹2.6/kg/day).
+              <div class="dash-ai-decision-desc" id="kisan-rec-desc">
+                Consider checking nearby buyer offers before dispatching, or hold in accredited warehouse facilities to avoid mandi gluts.
               </div>
             </div>
           </div>
@@ -533,215 +532,25 @@
             </div>
           </div>
 
+          <!-- Truthful Storage Status & Region Bar -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; background:#FAF9F5; padding:10px 14px; border-radius:10px; border:1px solid #E5E4DD;">
+            <div id="dash-storage-status-indicator" style="display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:700;">
+              <span class="dash-status-dot" style="width:9px; height:9px; border-radius:50%; background:#2D6A4F; display:inline-block;"></span>
+              <span id="dash-storage-status-text">Loading government storage data…</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:12px; flex-wrap:wrap;">
+              <span style="color:#666;" id="dash-storage-updated-text">Source: Government of India • IISFM</span>
+              <button class="btn btn--secondary btn--sm" id="dash-storage-loc-btn" onclick="requestDashboardFarmerLocation()" style="font-size:11.5px; padding:3px 10px; height:30px; display:inline-flex; align-items:center; gap:4px;">
+                <i data-lucide="crosshair"></i> <span>Detect My Location</span>
+              </button>
+            </div>
+          </div>
+
           <div class="storage-grid" id="storage-quick-grid">
-            <!-- Storage Card 1: Nashik Agro Cold Storage -->
-            <div class="storage-card">
-              <div>
-                <div class="storage-card__header">
-                  <div>
-                    <h4 class="storage-card__title">Nashik Agro Cold Storage</h4>
-                    <span class="storage-card__loc">📍 8.4 km · Dindori Road, Nashik</span>
-                  </div>
-                  <span class="storage-type-badge">Cold Chain</span>
-                </div>
-                <div class="storage-card__specs">
-                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>12 Tonnes</strong></div>
-                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹2.5/kg/day</strong></div>
-                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Tomato, Onion, Grapes</span></div>
-                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢
-                      Available</span></div>
-                </div>
-                <div class="distress-savings-box">
-                  <span>💡</span>
-                  <span><strong>Save ₹3,400:</strong> Storing for 7 days avoids current mandi glut drop.</span>
-                </div>
-              </div>
-              <div style="display: flex; gap: 8px; margin-top: 10px;">
-                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;"
-                  onclick="openStorageModal()">
-                  <i data-lucide="eye"></i> View Details
-                </button>
-                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
-                  onclick="bookStorageDirect('Nashik Agro Cold Storage', 'Cold Chain', 2.5)">
-                  <i data-lucide="bookmark-check"></i> Book Space
-                </button>
-              </div>
-            </div>
-
-            <!-- Storage Card 2: Pune Krishi Dry Warehouse -->
-            <div class="storage-card">
-              <div>
-                <div class="storage-card__header">
-                  <div>
-                    <h4 class="storage-card__title">Pune Krishi Dry Warehouse</h4>
-                    <span class="storage-card__loc">📍 14.2 km · Gultekdi Market Yard, Pune</span>
-                  </div>
-                  <span class="storage-type-badge" style="background:#FEF3C7; color:#92400E;">Dry Storage</span>
-                </div>
-                <div class="storage-card__specs">
-                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>45 Tonnes</strong></div>
-                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹45/quintal/month</strong></div>
-                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Wheat, Rice, Soybean, Pulses</span>
-                  </div>
-                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢
-                      Available</span></div>
-                </div>
-                <div class="distress-savings-box">
-                  <span>💡</span>
-                  <span><strong>Govt Subsidy:</strong> WDRA registered negotiable warehouse receipt eligible.</span>
-                </div>
-              </div>
-              <div style="display: flex; gap: 8px; margin-top: 10px;">
-                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;"
-                  onclick="openStorageModal()">
-                  <i data-lucide="eye"></i> View Details
-                </button>
-                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
-                  onclick="bookStorageDirect('Pune Krishi Dry Warehouse', 'Dry Storage', 1.5)">
-                  <i data-lucide="bookmark-check"></i> Book Space
-                </button>
-              </div>
-            </div>
-
-            <!-- Storage Card 3: Solapur Central Cold Chain -->
-            <div class="storage-card">
-              <div>
-                <div class="storage-card__header">
-                  <div>
-                    <h4 class="storage-card__title">Solapur Central Cold Chain</h4>
-                    <span class="storage-card__loc">📍 22.0 km · Mohol Highway, Solapur</span>
-                  </div>
-                  <span class="storage-type-badge">Controlled Temp</span>
-                </div>
-                <div class="storage-card__specs">
-                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>18 Tonnes</strong></div>
-                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹2.8/kg/day</strong></div>
-                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Chilli, Onion, Pomegranate</span>
-                  </div>
-                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢
-                      Available</span></div>
-                </div>
-                <div class="distress-savings-box">
-                  <span>💡</span>
-                  <span><strong>Zero Loss:</strong> Multi-chamber dehumidifier preservation.</span>
-                </div>
-              </div>
-              <div style="display: flex; gap: 8px; margin-top: 10px;">
-                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;"
-                  onclick="openStorageModal()">
-                  <i data-lucide="eye"></i> View Details
-                </button>
-                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
-                  onclick="bookStorageDirect('Solapur Central Cold Chain', 'Controlled Temp', 2.8)">
-                  <i data-lucide="bookmark-check"></i> Book Space
-                </button>
-              </div>
-            </div>
-
-            <!-- Storage Card 4: Vashi Agri Storage Hub -->
-            <div class="storage-card">
-              <div>
-                <div class="storage-card__header">
-                  <div>
-                    <h4 class="storage-card__title">Vashi Agri Storage Hub</h4>
-                    <span class="storage-card__loc">📍 4.5 km · Sector 19, Vashi APMC</span>
-                  </div>
-                  <span class="storage-type-badge" style="background:#E0F2FE; color:#0369A1;">Cold Chain</span>
-                </div>
-                <div class="storage-card__specs">
-                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>35 Tonnes</strong></div>
-                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹2.6/kg/day</strong></div>
-                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Tomato, Capsicum, Green Veg</span>
-                  </div>
-                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢
-                      Available</span></div>
-                </div>
-                <div class="distress-savings-box">
-                  <span>💡</span>
-                  <span><strong>Mandi Linked:</strong> Direct 15-minute dock transfer to Vashi trading floor.</span>
-                </div>
-              </div>
-              <div style="display: flex; gap: 8px; margin-top: 10px;">
-                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;"
-                  onclick="openStorageModal()">
-                  <i data-lucide="eye"></i> View Details
-                </button>
-                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
-                  onclick="bookStorageDirect('Vashi Agri Storage Hub', 'Cold Chain', 2.6)">
-                  <i data-lucide="bookmark-check"></i> Book Space
-                </button>
-              </div>
-            </div>
-
-            <!-- Storage Card 5: Mumbai Fresh Produce Warehouse -->
-            <div class="storage-card">
-              <div>
-                <div class="storage-card__header">
-                  <div>
-                    <h4 class="storage-card__title">Mumbai Fresh Produce Warehouse</h4>
-                    <span class="storage-card__loc">📍 18.5 km · Turbhe MIDC, Mumbai Region</span>
-                  </div>
-                  <span class="storage-type-badge">Controlled Temp</span>
-                </div>
-                <div class="storage-card__specs">
-                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>50 Tonnes</strong></div>
-                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹3.0/kg/day</strong></div>
-                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Fruits, Vegetables, Exotics</span>
-                  </div>
-                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢
-                      Available</span></div>
-                </div>
-                <div class="distress-savings-box">
-                  <span>💡</span>
-                  <span><strong>Export Ready:</strong> Ethylene filtration and humidity management.</span>
-                </div>
-              </div>
-              <div style="display: flex; gap: 8px; margin-top: 10px;">
-                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;"
-                  onclick="openStorageModal()">
-                  <i data-lucide="eye"></i> View Details
-                </button>
-                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
-                  onclick="bookStorageDirect('Mumbai Fresh Produce Warehouse', 'Controlled Temp', 3.0)">
-                  <i data-lucide="bookmark-check"></i> Book Space
-                </button>
-              </div>
-            </div>
-
-            <!-- Storage Card 6: Navi Mumbai Distribution Storage -->
-            <div class="storage-card">
-              <div>
-                <div class="storage-card__header">
-                  <div>
-                    <h4 class="storage-card__title">Navi Mumbai Distribution Storage</h4>
-                    <span class="storage-card__loc">📍 11.0 km · Kopar Khairane Industrial Belt</span>
-                  </div>
-                  <span class="storage-type-badge" style="background:#FEF3C7; color:#92400E;">Dry Storage</span>
-                </div>
-                <div class="storage-card__specs">
-                  <div class="storage-spec-row"><span>Available Capacity:</span><strong>80 Tonnes</strong></div>
-                  <div class="storage-spec-row"><span>Storage Tariff:</span><strong>₹35/quintal/month</strong></div>
-                  <div class="storage-spec-row"><span>Suitable Crops:</span><span>Onion, Potato, Grains, Pulses</span>
-                  </div>
-                  <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢
-                      Available</span></div>
-                </div>
-                <div class="distress-savings-box">
-                  <span>💡</span>
-                  <span><strong>Transit Buffer:</strong> 24/7 round-the-clock loading bays for logistics
-                    dispatch.</span>
-                </div>
-              </div>
-              <div style="display: flex; gap: 8px; margin-top: 10px;">
-                <button class="btn btn--outline btn--sm" style="flex: 1; font-size: 11.5px;"
-                  onclick="openStorageModal()">
-                  <i data-lucide="eye"></i> View Details
-                </button>
-                <button class="btn btn--primary btn--sm" style="flex: 1.2; font-size: 11.5px;"
-                  onclick="bookStorageDirect('Navi Mumbai Distribution Storage', 'Dry Storage', 1.2)">
-                  <i data-lucide="bookmark-check"></i> Book Space
-                </button>
-              </div>
+            <!-- Dynamically populated from live Government IISFM depots or demo fallback by dashboard.js -->
+            <div style="grid-column:1/-1; text-align:center; padding:30px; color:#666;">
+              <div class="dash-spinner" style="margin:0 auto 10px; width:26px; height:26px; border:3px solid #DDD; border-top-color:var(--ks-evergreen); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+              Loading nearby storage depots & capacity...
             </div>
           </div>
         </div>

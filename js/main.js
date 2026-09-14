@@ -88,46 +88,46 @@ function heroAnimation() {
     ease: 'power3.out'
   }, 0.8)
 
-  // Subtitle with blur reveal
-  .fromTo('#hero-subtitle',
-    { opacity: 0, y: 30, filter: 'blur(6px)' },
-    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' },
-    '-=0.4'
-  )
+    // Subtitle with blur reveal
+    .fromTo('#hero-subtitle',
+      { opacity: 0, y: 30, filter: 'blur(6px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' },
+      '-=0.4'
+    )
 
-  // CTA buttons with scale-in
-  .fromTo('#hero-actions',
-    { opacity: 0, y: 25, scale: 0.95 },
-    { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out' },
-    '-=0.3'
-  )
+    // CTA buttons with scale-in
+    .fromTo('#hero-actions',
+      { opacity: 0, y: 25, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out' },
+      '-=0.3'
+    )
 
-  // Trust bar items stagger in
-  .fromTo('.hero__trust-item',
-    { opacity: 0, x: -15 },
-    { opacity: 1, x: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' },
-    '-=0.3'
-  )
+    // Trust bar items stagger in
+    .fromTo('.hero__trust-item',
+      { opacity: 0, x: -15 },
+      { opacity: 1, x: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' },
+      '-=0.3'
+    )
 
-  // Floating intelligence card with dramatic entrance
-  .fromTo('#hero-intel',
-    { opacity: 0, x: 60, scale: 0.9, filter: 'blur(10px)' },
-    {
-      opacity: 1, x: 0, scale: 1, filter: 'blur(0px)',
-      duration: 1.2, ease: 'power3.out',
-      onComplete: () => {
-        document.getElementById('hero-intel')?.classList.add('animated');
-      }
-    },
-    '-=0.6'
-  )
+    // Floating intelligence card with dramatic entrance
+    .fromTo('#hero-intel',
+      { opacity: 0, x: 60, scale: 0.9, filter: 'blur(10px)' },
+      {
+        opacity: 1, x: 0, scale: 1, filter: 'blur(0px)',
+        duration: 1.2, ease: 'power3.out',
+        onComplete: () => {
+          document.getElementById('hero-intel')?.classList.add('animated');
+        }
+      },
+      '-=0.6'
+    )
 
-  // Scroll indicator
-  .to('#hero-scroll', {
-    opacity: 1,
-    duration: 0.5,
-    ease: 'power2.out'
-  }, '-=0.3');
+    // Scroll indicator
+    .to('#hero-scroll', {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power2.out'
+    }, '-=0.3');
 }
 
 /* ── HERO PARALLAX ── */
@@ -163,19 +163,19 @@ function scrollTransitionAnimation() {
     { opacity: 1, scale: 1, duration: 1, ease: 'power2.inOut' }
   )
 
-  // Flow steps stagger in with blur
-  .fromTo('.flow-step',
-    { opacity: 0, y: 40, scale: 0.8, filter: 'blur(4px)' },
-    { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.6, stagger: 0.12, ease: 'back.out(1.4)' },
-    0.3
-  )
+    // Flow steps stagger in with blur
+    .fromTo('.flow-step',
+      { opacity: 0, y: 40, scale: 0.8, filter: 'blur(4px)' },
+      { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.6, stagger: 0.12, ease: 'back.out(1.4)' },
+      0.3
+    )
 
-  // Arrows with scale
-  .fromTo('.flow-arrow',
-    { opacity: 0, scale: 0 },
-    { opacity: 1, scale: 1, duration: 0.3, stagger: 0.08, ease: 'back.out(2)' },
-    0.4
-  );
+    // Arrows with scale
+    .fromTo('.flow-arrow',
+      { opacity: 0, scale: 0 },
+      { opacity: 1, scale: 1, duration: 0.3, stagger: 0.08, ease: 'back.out(2)' },
+      0.4
+    );
 }
 
 /* ── PROBLEM SECTION ── */
@@ -264,16 +264,16 @@ function aiDecisionAnimation() {
     { opacity: 0, y: 40, scale: 0.9, filter: 'blur(4px)' },
     { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.18, ease: 'power2.out' }
   )
-  .fromTo('.ai-flow__connector',
-    { opacity: 0, scale: 0 },
-    { opacity: 1, scale: 1, duration: 0.35, stagger: 0.1, ease: 'back.out(2)' },
-    0.3
-  )
-  .fromTo('#ai-confidence',
-    { opacity: 0, y: 20, scale: 0.95 },
-    { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out' },
-    '-=0.3'
-  );
+    .fromTo('.ai-flow__connector',
+      { opacity: 0, scale: 0 },
+      { opacity: 1, scale: 1, duration: 0.35, stagger: 0.1, ease: 'back.out(2)' },
+      0.3
+    )
+    .fromTo('#ai-confidence',
+      { opacity: 0, y: 20, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out' },
+      '-=0.3'
+    );
 }
 
 /* ── BUYER CARDS ── */
@@ -317,17 +317,17 @@ function transactionAnimation() {
     stagger: 0.1,
     ease: 'power2.out'
   })
-  .to('.txn-connector', {
-    opacity: 1,
-    duration: 0.3,
-    stagger: 0.08,
-    ease: 'power2.out'
-  }, 0.15)
-  .to('#txn-note', {
-    opacity: 1,
-    duration: 0.5,
-    ease: 'power2.out'
-  }, '-=0.2');
+    .to('.txn-connector', {
+      opacity: 1,
+      duration: 0.3,
+      stagger: 0.08,
+      ease: 'power2.out'
+    }, 0.15)
+    .to('#txn-note', {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power2.out'
+    }, '-=0.2');
 }
 
 /* ── FPO SECTION ── */
@@ -371,11 +371,11 @@ function finalCtaAnimation() {
     { opacity: 0, y: 50, filter: 'blur(6px)' },
     { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power2.out' }
   )
-  .fromTo('.section-final__actions',
-    { opacity: 0, y: 20 },
-    { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
-    '-=0.4'
-  );
+    .fromTo('.section-final__actions',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+      '-=0.4'
+    );
 
   // Sunset parallax
   gsap.to('.section-final__bg img', {

@@ -2932,6 +2932,15 @@ const STORAGE_FACILITIES = [
   }
 ];
 
+const dashboardStorageState = {
+  depots: [],
+  isLive: false,
+  fetchedAt: null,
+  userLat: null,
+  userLng: null,
+  isExactLocation: false
+};
+
 function initStorageModule() {
   const modal = document.getElementById('storage-modal-overlay');
   const bookingModal = document.getElementById('storage-booking-modal-overlay');
@@ -2942,7 +2951,7 @@ function initStorageModule() {
   if (closeBtn) closeBtn.onclick = () => closeModal(modal);
   if (bookCloseBtn) bookCloseBtn.onclick = () => closeModal(bookingModal);
 
-  // Search input filter
+  // Search input filter in modal
   const searchInp = document.getElementById('storage-search-input');
   if (searchInp) {
     searchInp.addEventListener('input', (e) => {
@@ -2963,6 +2972,259 @@ function initStorageModule() {
       showToast(`🏢 Reservation Confirmed! ${qty} Tonnes of ${crop} booked at ${facility} for ${days} days. Booking ID: KS-STR-${Math.floor(1000 + Math.random() * 9000)}`);
     });
   }
+
+  // Load live government storage data onto farmer dashboard
+  loadDashboardStorageData();
+}
+
+/**
+ * Load official IISFM storage depots or fallback demo data onto Farmer Dashboard
+ */
+async function loadDashboardStorageData() {
+  const statusEl = document.getElementById('dash-storage-status-text');
+  const dot = document.querySelector('#dash-storage-status-indicator .dash-status-dot');
+  const updatedEl = document.getElementById('dash-storage-updated-text');
+
+  if (statusEl) statusEl.textContent = 'Loading government storage data…';
+  if (dot) dot.style.background = '#3B82F6';
+
+  const params = { limit: 6 };
+  if (dashboardStorageState.userLat && dashboardStorageState.userLng) {
+    params.lat = dashboardStorageState.userLat;
+    params.lng = dashboardStorageState.userLng;
+  }
+
+  try {
+    let res = null;
+    if (window.api && window.api.storage && typeof window.api.storage.getDepots === 'function') {
+      res = await window.api.storage.getDepots(params);
+    } else {
+      const qs = new URLSearchParams(params).toString();
+      const response = await fetch(`/api/storage/depots?${qs}`);
+      res = await response.json();
+    }
+
+    if (res && res.success && Array.isArray(res.depots) && res.depots.length > 0) {
+      dashboardStorageState.depots = res.depots;
+      dashboardStorageState.isLive = true;
+      dashboardStorageState.fetchedAt = res.fetchedAt;
+
+      const isCached = res.statusMode === 'cached' || res.cached || res.stale;
+      if (statusEl) {
+        statusEl.textContent = isCached
+          ? 'Latest cached government storage data • Government of India • IISFM'
+          : 'Latest government storage data • Government of India • IISFM';
+      }
+      if (dot) dot.style.background = isCached ? '#D97706' : '#2D6A4F';
+
+      if (updatedEl) {
+        if (res.fetchedAt) {
+          const d = new Date(res.fetchedAt);
+          const timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+          const dateStr = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+          updatedEl.textContent = `Fetched: ${dateStr}, ${timeStr}`;
+        } else {
+          updatedEl.textContent = 'Latest government data';
+        }
+      }
+
+      renderDashboardStorageGrid(res.depots, true);
+      updateDashboardStorageDecision(res.depots);
+      return;
+    } else {
+      throw new Error(res ? res.message : 'No government depots returned');
+    }
+  } catch (err) {
+    console.warn('[Dashboard Storage Notice] Real government API unavailable, using truthful fallback demo data:', err.message);
+    dashboardStorageState.isLive = false;
+    dashboardStorageState.depots = STORAGE_FACILITIES;
+
+    if (statusEl) statusEl.textContent = 'Demo data • Government API temporarily unavailable';
+    if (dot) dot.style.background = '#DC2626';
+    if (updatedEl) updatedEl.textContent = 'Demo data';
+
+    renderDashboardStorageGrid(STORAGE_FACILITIES, false);
+    updateDashboardStorageDecision(STORAGE_FACILITIES);
+  }
+}
+
+/**
+ * Render storage cards on the farmer dashboard
+ */
+function renderDashboardStorageGrid(depots, isLive = true) {
+  const grid = document.getElementById('storage-quick-grid');
+  if (!grid) return;
+
+  if (!depots || depots.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1; text-align:center; padding:30px; color:#777; background:#FAF9F5; border-radius:12px;">
+        <span style="font-size:24px;">🏬</span>
+        <div style="font-weight:700; margin-top:6px;">No government storage records found.</div>
+        <p style="font-size:12px; margin-top:4px;">Try detecting your location or exploring the full national storage map.</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = depots.map(d => {
+    const isGov = d.isGovData || (d.source && d.source.includes('IISFM'));
+    let distText = '';
+    if (d.distanceKm !== undefined) {
+      distText = ` · Approx. distance: ${d.distanceKm} km`;
+    } else if (dashboardStorageState.userLat !== null) {
+      distText = ` · Distance unavailable`;
+    }
+    const district = d.revenueDistrict || (d.address && d.address.district) || 'District';
+    const state = d.revenueState || (d.address && d.address.state) || 'State';
+    const locText = `📍 ${district}, ${state} · Approx. district location${distText}`;
+    const openCap = typeof d.openCapacity === 'number' ? d.openCapacity : 0;
+    const totalCap = typeof d.totalCapacity === 'number' ? d.totalCapacity : (parseFloat(d.capacity) || 0);
+    const coveredCap = typeof d.coveredCapacity === 'number' ? d.coveredCapacity : 0;
+
+    const badgeHtml = isGov
+      ? `<span class="storage-type-badge" style="background:#E8F5E9; color:#1B5E20; border:1px solid #C8E6C9; font-weight:700;">Government FCI Depot</span>`
+      : `<span class="storage-type-badge" style="background:#FEF3C7; color:#92400E; font-weight:700;">Demo Facility</span>`;
+
+    const statusHtml = openCap > 0
+      ? `<span style="color:#2D6A4F; font-weight:700;">🟢 ${openCap.toLocaleString('en-IN')} MT Open</span>`
+      : `<span style="color:#92400E; font-weight:600; background:#FEF3C7; padding:2px 6px; border-radius:4px; font-size:11px;">Currently no open capacity reported</span>`;
+
+    const hintHtml = isGov
+      ? `<span>🏛️</span> <span><strong>Source:</strong> Government of India • IISFM</span>`
+      : `<span>💡</span> <span><strong>Demo data:</strong> Reference storage facility.</span>`;
+
+    return `
+      <div class="storage-card">
+        <div>
+          <div class="storage-card__header">
+            <div>
+              <h4 class="storage-card__title">${d.depotName || d.name}</h4>
+              <span class="storage-card__loc">${locText}</span>
+            </div>
+            ${badgeHtml}
+          </div>
+          <div class="storage-card__specs">
+            <div class="storage-spec-row"><span>Total Capacity:</span><strong>${totalCap ? totalCap.toLocaleString('en-IN') + ' MT' : 'Capacity not specified'}</strong></div>
+            <div class="storage-spec-row"><span>Covered Capacity:</span><strong>${coveredCap ? coveredCap.toLocaleString('en-IN') + ' MT' : '0 MT'}</strong></div>
+            <div class="storage-spec-row"><span>Open Capacity:</span><strong>${openCap ? openCap.toLocaleString('en-IN') + ' MT' : '0 MT'}</strong></div>
+            <div class="storage-spec-row"><span>Status:</span>${statusHtml}</div>
+          </div>
+          <div class="distress-savings-box">
+            ${hintHtml}
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:10px;">
+          <a href="storage.html" class="btn btn--outline btn--sm" style="flex:1; font-size:11.5px; text-decoration:none; text-align:center;">
+            <i data-lucide="eye"></i> View Details
+          </a>
+          <a class="btn btn--secondary btn--sm" style="flex:1; font-size:11.5px; text-decoration:none; text-align:center;" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((d.depotName || d.name) + ' FCI depot ' + district + ' ' + state)}">
+            <i data-lucide="map-pin"></i> Directions
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (window.lucide) window.lucide.createIcons();
+}
+
+/**
+ * Dynamically updates the AI decision recommendation and quick stats using live storage capacity
+ * Truthfully filters openCapacity > 0 per Requirement 3, 9 & 10
+ */
+function updateDashboardStorageDecision(depots) {
+  if (!depots || depots.length === 0) return;
+
+  const recDesc = document.getElementById('kisan-rec-desc');
+  const nearestVal = document.getElementById('kisan-nearest-warehouse-val');
+
+  // Strictly filter depots with open capacity > 0 (Requirement 3 & 10)
+  const candidates = depots.filter(d => (d.openCapacity || 0) > 0);
+
+  if (candidates.length === 0) {
+    if (recDesc) {
+      recDesc.textContent = 'Nearby government storage depots report no open capacity currently. Mandi dispatch or accredited private storage recommended.';
+    }
+    if (nearestVal) {
+      nearestVal.textContent = 'No open capacity reported';
+    }
+    return;
+  }
+
+  // Prioritize candidates: proximity if available, then highest open capacity
+  candidates.sort((a, b) => {
+    if (a.distanceKm !== undefined && b.distanceKm !== undefined) {
+      return a.distanceKm - b.distanceKm;
+    }
+    if (a.distanceKm !== undefined) return -1;
+    if (b.distanceKm !== undefined) return 1;
+    return (b.openCapacity || 0) - (a.openCapacity || 0);
+  });
+
+  const topDepot = candidates[0];
+
+  if (recDesc && topDepot) {
+    const isGov = topDepot.isGovData || (topDepot.source && topDepot.source.includes('IISFM'));
+    const depotName = topDepot.depotName || topDepot.name;
+    const distStr = topDepot.distanceKm !== undefined ? ` · Approx. distance: ${topDepot.distanceKm} km` : '';
+    const openCap = `${topDepot.openCapacity.toLocaleString('en-IN')} MT open capacity`;
+
+    recDesc.textContent = isGov
+      ? `Consider checking nearby buyer offers before dispatching, or hold in official government storage (e.g. ${depotName} in ${topDepot.revenueDistrict || ''}, ${openCap}${distStr}).`
+      : `Consider checking nearby buyer offers before dispatching, or hold in accredited storage (${depotName} · ${openCap}${distStr}).`;
+  }
+
+  if (nearestVal && topDepot) {
+    const depotName = (topDepot.depotName || topDepot.name || '').split('—')[0].trim();
+    if (topDepot.distanceKm !== undefined) {
+      nearestVal.textContent = `Approx. ${topDepot.distanceKm} km (${depotName})`;
+    } else {
+      nearestVal.textContent = `${depotName} (${topDepot.openCapacity.toLocaleString('en-IN')} MT open)`;
+    }
+  }
+}
+
+/**
+ * Request device geolocation for farmer dashboard
+ */
+function requestDashboardFarmerLocation() {
+  if (!navigator.geolocation) {
+    showToast('Geolocation is not supported by your browser.');
+    return;
+  }
+  const btn = document.getElementById('dash-storage-loc-btn');
+  if (btn) btn.innerHTML = '<i data-lucide="crosshair"></i> <span>Detecting...</span>';
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      dashboardStorageState.userLat = pos.coords.latitude;
+      dashboardStorageState.userLng = pos.coords.longitude;
+      dashboardStorageState.isExactLocation = true;
+      if (btn) {
+        btn.innerHTML = '<i data-lucide="check"></i> <span>Location Detected</span>';
+        btn.style.background = '#eaf6ed';
+        btn.style.borderColor = '#2D6A4F';
+        btn.style.color = '#2D6A4F';
+      }
+      showToast('📍 Exact farm coordinates detected!');
+      loadDashboardStorageData();
+    },
+    err => {
+      console.warn('Dashboard geolocation error:', err.message);
+      dashboardStorageState.userLat = null;
+      dashboardStorageState.userLng = null;
+      dashboardStorageState.isExactLocation = false;
+      if (btn) {
+        btn.innerHTML = '<i data-lucide="crosshair"></i> <span>Detect My Location</span>';
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }
+      showToast('Location permission is required to show your exact position.');
+      loadDashboardStorageData();
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
 }
 
 function openStorageModal() {
@@ -2977,44 +3239,54 @@ function renderStorageList(query = '') {
   const grid = document.getElementById('storage-modal-grid');
   if (!grid) return;
 
-  const filtered = STORAGE_FACILITIES.filter(s =>
-    s.name.toLowerCase().includes(query) ||
-    s.loc.toLowerCase().includes(query) ||
-    s.crops.toLowerCase().includes(query)
-  );
+  const dataset = dashboardStorageState.depots.length > 0 ? dashboardStorageState.depots : STORAGE_FACILITIES;
+
+  const filtered = dataset.filter(s => {
+    const name = (s.depotName || s.name || '').toLowerCase();
+    const loc = ((s.revenueDistrict || '') + ' ' + (s.revenueState || '') + ' ' + (s.loc || '')).toLowerCase();
+    const crops = (s.crops || '').toLowerCase();
+    return name.includes(query) || loc.includes(query) || crops.includes(query);
+  });
 
   if (!filtered.length) {
     grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">No storage facilities match your search.</div>`;
     return;
   }
 
-  grid.innerHTML = filtered.map(s => `
-    <div class="storage-card">
-      <div>
-        <div class="storage-card__header">
-          <div>
-            <h4 class="storage-card__title">${s.name}</h4>
-            <span class="storage-card__loc">${s.loc}</span>
+  grid.innerHTML = filtered.map(s => {
+    const isGov = s.isGovData || (s.source && s.source.includes('IISFM'));
+    const distText = s.distanceKm !== undefined ? ` · ${s.distanceKm} km away` : '';
+    const loc = isGov
+      ? `📍 ${s.revenueDistrict || ''}, ${s.revenueState || ''}${distText}`
+      : (s.loc || 'Local Facility');
+    const cap = isGov
+      ? `${(s.totalCapacity || 0).toLocaleString('en-IN')} MT Total (${(s.openCapacity || 0).toLocaleString('en-IN')} MT Open)`
+      : (s.capacity || 'Not specified');
+
+    return `
+      <div class="storage-card">
+        <div>
+          <div class="storage-card__header">
+            <div>
+              <h4 class="storage-card__title">${s.depotName || s.name}</h4>
+              <span class="storage-card__loc">${loc}</span>
+            </div>
+            <span class="storage-type-badge">${isGov ? 'Government FCI Depot' : (s.type || 'Warehouse')}</span>
           </div>
-          <span class="storage-type-badge">${s.type}</span>
+          <div class="storage-card__specs">
+            <div class="storage-spec-row"><span>Available Capacity:</span><strong>${cap}</strong></div>
+            <div class="storage-spec-row"><span>Source:</span><span>${s.source || (isGov ? 'Government of India • IISFM' : 'Accredited Facility')}</span></div>
+            <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Active</span></div>
+          </div>
         </div>
-        <div class="storage-card__specs">
-          <div class="storage-spec-row"><span>Available Capacity:</span><strong>${s.capacity}</strong></div>
-          <div class="storage-spec-row"><span>Storage Cost:</span><strong>${s.rate}</strong></div>
-          <div class="storage-spec-row"><span>Environment:</span><span>${s.temp}</span></div>
-          <div class="storage-spec-row"><span>Suitable For:</span><span>${s.crops}</span></div>
-          <div class="storage-spec-row"><span>Status:</span><span style="color:#2D6A4F; font-weight:700;">🟢 Available</span></div>
-        </div>
-        <div class="distress-savings-box">
-          <span>💡</span>
-          <span>${s.subsidy}</span>
+        <div style="display:flex; gap:6px; margin-top:10px;">
+          <a href="storage.html" class="btn btn--primary btn--sm" style="flex:1; text-align:center; text-decoration:none;">
+            View in Storage Discovery
+          </a>
         </div>
       </div>
-      <button class="btn btn--primary btn--sm" style="width:100%;" onclick="bookStorageDirect('${s.name}', '${s.type}', ${s.rateNum})">
-        <i data-lucide="bookmark-check"></i> Book Storage Space
-      </button>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   if (window.lucide) lucide.createIcons();
 }
@@ -3709,6 +3981,11 @@ function updateDecisionSummary(cropKey = 'tomato') {
         </div>
       </div>
     `).join('');
+  }
+
+  // Update dynamic storage recommendation in sync with crop selection
+  if (typeof updateDashboardStorageDecision === 'function' && dashboardStorageState.depots.length > 0) {
+    updateDashboardStorageDecision(dashboardStorageState.depots);
   }
 
   if (window.lucide) lucide.createIcons();

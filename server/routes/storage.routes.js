@@ -21,6 +21,10 @@ const optionalAuth = async (req, res, next) => {
 };
 
 // --- PUBLIC / DISCOVERY ROUTES ---
+router.get('/depots/locations', storageController.getIISFMLocations);
+router.get('/depots/map', storageController.getIISFMMapDepots);
+router.get('/depots', storageController.getIISFMDepots);
+router.get('/iisfm/depots', storageController.getIISFMDepots);
 router.get('/nearby', storageController.getNearbyStorage);
 router.get('/search', storageController.searchStorage);
 router.get('/options-for-crop', storageController.getStorageOptionsForCrop);
