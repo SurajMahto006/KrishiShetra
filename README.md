@@ -296,6 +296,8 @@ npm start
 
 A live deployment is available on Render. The demo mode uses pre-seeded data — no account required to explore the UI.
 
+https://krishishetra-tew1.onrender.com/
+
 > **Note:** The backend on Render may spin down after inactivity. If the first page load is slow, wait ~30 seconds for the service to wake.
 
 ---
@@ -353,12 +355,6 @@ KrishiShetra was built as a hackathon submission addressing the real, documented
 The platform is designed to be deployable on a free-tier cloud stack (MongoDB Atlas + Render) and operable without an internet connection using the demo data fallback.
 
 ---
-
-## Team
-
-| Name | Role |
-|---|---|
-| Suraj Mahto | Full-stack development, system architecture, backend API |
 
 ---
 
