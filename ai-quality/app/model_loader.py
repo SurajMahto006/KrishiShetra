@@ -73,7 +73,28 @@ def load_model() -> None:
         _device = "cuda:0" if torch.cuda.is_available() else "cpu"
         logger.info("AI inference device: %s", "CUDA:0" if "cuda" in _device else "CPU")
 
-        _model = YOLO(str(path))
+        # Register safe globals for PyTorch 2.4+ if supported
+        if hasattr(torch.serialization, "add_safe_globals"):
+            try:
+                import ultralytics.nn.tasks
+                torch.serialization.add_safe_globals([ultralytics.nn.tasks.DetectionModel])
+            except Exception as sg_err:
+                logger.debug("Safe globals registration notice: %s", sg_err)
+
+        # Scoped trusted checkpoint loader for our verified MODEL_PATH (handles PyTorch 2.6+ weights_only default)
+        orig_torch_load = torch.load
+
+        def _trusted_torch_load(*args, **kwargs):
+            if "weights_only" not in kwargs:
+                kwargs["weights_only"] = False
+            return orig_torch_load(*args, **kwargs)
+
+        try:
+            torch.load = _trusted_torch_load
+            _model = YOLO(str(path))
+        finally:
+            torch.load = orig_torch_load
+
         try:
             _model.to(_device)
         except Exception as dev_err:
