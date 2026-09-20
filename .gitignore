@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 
 # Environment secrets — NEVER commit real .env files
@@ -41,3 +41,6 @@ coverage/
 # Misc
 *.tmp
 *.bak
+
+/weights/
+ai-quality/.venv312/

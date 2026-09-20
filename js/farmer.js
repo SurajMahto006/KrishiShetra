@@ -7,6 +7,8 @@
  * 4. Marketplace Live Lot Feed Connection (api.market.getLots)
  */
 
+const AI_QUALITY_MIN_ACCEPT_CONFIDENCE = 0.40;
+
 const FarmerFlow = {
   profile: null,
   lots: [],
@@ -15,6 +17,10 @@ const FarmerFlow = {
   selectedAiCrop: 'Wheat',
   selectedAiSample: 'premium',
   currentAiScan: null,
+  temporaryEvidence: null,
+  _selectedQualityPhoto: null,
+  _aqPendingAiResult: null,
+  _aiPhotoState: 'AI_IDLE',
 
   async init() {
     // 1. Enforce Farmer Role Guard
@@ -496,6 +502,779 @@ const FarmerFlow = {
 
   /**
    * ═══════════════════════════════════════════════════════════════════════
+   * QUALITY EVIDENCE MANAGEMENT (Phase 10)
+   * ═══════════════════════════════════════════════════════════════════════
+   */
+  setAiPhotoState(stateName, data = {}) {
+    this._aiPhotoState = stateName;
+    const states = {
+      AI_IDLE: 'qe-state-idle',
+      AI_PREVIEW: 'qe-state-preview',
+      AI_ANALYZING: 'qe-state-loading',
+      AI_SUCCESS: 'qe-state-success',
+      AI_CROP_MISMATCH: 'qe-state-mismatch',
+      AI_LOW_CONFIDENCE: 'qe-state-low-confidence',
+      AI_ERROR: 'qe-state-error'
+    };
+
+    // Hide all states first to guarantee mutual exclusivity (SUCCESS and ERROR never show together)
+    Object.values(states).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+
+    // Show active state
+    const activeId = states[stateName];
+    if (activeId) {
+      const el = document.getElementById(activeId);
+      if (el) el.style.display = 'block';
+    }
+
+    if (window.lucide) window.lucide.createIcons();
+  },
+
+  selectQualityEvidenceTab(tab) {
+    const photoBtn = document.getElementById('qe-btn-photo');
+    const reportBtn = document.getElementById('qe-btn-report');
+    const manualBtn = document.getElementById('qe-btn-manual');
+    const photoPanel = document.getElementById('qe-panel-photo');
+    const reportPanel = document.getElementById('qe-panel-report');
+    const manualPanel = document.getElementById('qe-panel-manual');
+
+    [photoBtn, reportBtn, manualBtn].forEach(b => {
+      if (b) {
+        b.style.borderColor = '#CCDBCD';
+        b.style.background = '#FFFFFF';
+      }
+    });
+
+    if (tab === 'photo') {
+      if (photoBtn) {
+        photoBtn.style.borderColor = '#2D6A4F';
+        photoBtn.style.background = '#F0FDF4';
+      }
+      if (photoPanel) photoPanel.style.display = 'block';
+      if (reportPanel) reportPanel.style.display = 'none';
+      if (manualPanel) manualPanel.style.display = 'none';
+
+      // If no photo selected yet, ensure state is AI_IDLE
+      if (!this._selectedQualityPhoto && !this._aqPendingAiResult) {
+        this.setAiPhotoState('AI_IDLE');
+      }
+    } else if (tab === 'report') {
+      this.stopCameraStream();
+      this.closeCameraModal();
+      if (reportBtn) {
+        reportBtn.style.borderColor = '#2D6A4F';
+        reportBtn.style.background = '#F0FDF4';
+      }
+      if (photoPanel) photoPanel.style.display = 'none';
+      if (reportPanel) reportPanel.style.display = 'block';
+      if (manualPanel) manualPanel.style.display = 'none';
+      this.updateReportMetadata();
+    } else if (tab === 'manual') {
+      this.stopCameraStream();
+      this.closeCameraModal();
+      if (manualBtn) {
+        manualBtn.style.borderColor = '#2D6A4F';
+        manualBtn.style.background = '#F0FDF4';
+      }
+      if (photoPanel) photoPanel.style.display = 'none';
+      if (reportPanel) reportPanel.style.display = 'none';
+      if (manualPanel) manualPanel.style.display = 'block';
+      this.updateManualQuality();
+    } else if (tab === 'skip') {
+      this.skipQualityEvidence();
+    }
+    if (window.lucide) window.lucide.createIcons();
+  },
+
+  skipQualityEvidence() {
+    // 1. Invalidate any in-flight AI quality analysis request and abort fetch
+    this._aqRequestId = (this._aqRequestId || 0) + 1;
+    if (this._aqAbortController) {
+      try { this._aqAbortController.abort(); } catch (e) {}
+      this._aqAbortController = null;
+    }
+
+    // 2. Stop camera stream & modal
+    this.stopCameraStream();
+    this.closeCameraModal();
+
+    // 3. Clear evidence & inputs
+    this.clearQualityEvidence();
+
+    // 4. Hide all option panels
+    const photoPanel = document.getElementById('qe-panel-photo');
+    const reportPanel = document.getElementById('qe-panel-report');
+    const manualPanel = document.getElementById('qe-panel-manual');
+    if (photoPanel) photoPanel.style.display = 'none';
+    if (reportPanel) reportPanel.style.display = 'none';
+    if (manualPanel) manualPanel.style.display = 'none';
+
+    // 5. Unhighlight option cards
+    ['qe-btn-photo', 'qe-btn-report', 'qe-btn-manual'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.borderColor = '#CCDBCD';
+        el.style.background = '#FFFFFF';
+      }
+    });
+
+    if (window.lucide) window.lucide.createIcons();
+  },
+
+  normalizeCrop(value) {
+    return String(value || "").trim().toLowerCase();
+  },
+
+  getCurrentSelectedCrop() {
+    // 1. Check active selected crop chip in wizard (e.g. dashboard.html)
+    const activeChip = document.querySelector('.lot-crop-chips-grid .lot-crop-chip.selected, .lot-crop-chip.selected');
+    if (activeChip) {
+      const chipCrop = activeChip.getAttribute('data-crop') || activeChip.dataset?.crop;
+      if (chipCrop) {
+        return chipCrop.charAt(0).toUpperCase() + chipCrop.slice(1);
+      }
+      const chipText = activeChip.querySelector('.lot-crop-chip-name, .lot-crop-name')?.textContent?.trim();
+      if (chipText) {
+        return chipText.charAt(0).toUpperCase() + chipText.slice(1);
+      }
+    }
+
+    // 2. Check wizard hidden crop input if set
+    const wizVal = document.getElementById('wiz-crop-val')?.value?.trim();
+    if (wizVal) {
+      return wizVal.charAt(0).toUpperCase() + wizVal.slice(1);
+    }
+
+    // 3. Check lot crop dropdown or input (e.g. lots.html)
+    const cropSelect = document.getElementById('lot-crop-select');
+    if (cropSelect) {
+      if (cropSelect.tagName === 'SELECT') {
+        const selectedOpt = cropSelect.options[cropSelect.selectedIndex];
+        const val = selectedOpt ? (selectedOpt.text || selectedOpt.value || '').trim() : (cropSelect.value || '').trim();
+        if (val) {
+          return val.charAt(0).toUpperCase() + val.slice(1);
+        }
+      } else if (cropSelect.value && cropSelect.value.trim()) {
+        const val = cropSelect.value.trim();
+        return val.charAt(0).toUpperCase() + val.slice(1);
+      }
+    }
+
+    return 'Tomato';
+  },
+
+  /* ──────────────── Camera Modal & Live Webcam Stream ──────────────── */
+  openCameraModal() {
+    const overlay = document.getElementById('qe-camera-modal-overlay');
+    if (!overlay) {
+      // Native camera input fallback if modal element is not in DOM
+      const camInput = document.getElementById('qe-photo-camera');
+      if (camInput) camInput.click();
+      return;
+    }
+
+    overlay.classList.add('active');
+    overlay.style.display = 'flex';
+    if (window.lucide) window.lucide.createIcons();
+
+    this.startCameraStream();
+  },
+
+  async startCameraStream() {
+    const video = document.getElementById('qe-camera-video');
+    const errorBox = document.getElementById('qe-camera-error-box');
+    const actionsBox = document.getElementById('qe-camera-actions');
+
+    if (errorBox) errorBox.style.display = 'none';
+    if (video) video.style.display = 'block';
+    if (actionsBox) actionsBox.style.display = 'flex';
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.warn('[Camera Access]: getUserMedia not supported on this browser/device.');
+      this.handleCameraStreamError();
+      return;
+    }
+
+    this.stopCameraStream();
+
+    try {
+      let stream = null;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' } },
+          audio: false
+        });
+      } catch (err1) {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false
+        });
+      }
+
+      this._cameraStream = stream;
+      if (video) {
+        video.srcObject = stream;
+        video.onloadedmetadata = () => {
+          video.play().catch(e => console.warn('[Video Play]:', e));
+        };
+      }
+    } catch (err) {
+      console.warn('[Camera Access]:', err.name, err.message);
+      this.handleCameraStreamError();
+    }
+  },
+
+  handleCameraStreamError() {
+    const video = document.getElementById('qe-camera-video');
+    const errorBox = document.getElementById('qe-camera-error-box');
+    const actionsBox = document.getElementById('qe-camera-actions');
+
+    if (video) video.style.display = 'none';
+    if (errorBox) errorBox.style.display = 'block';
+    if (actionsBox) actionsBox.style.display = 'none';
+    if (window.lucide) window.lucide.createIcons();
+  },
+
+  captureCameraPhoto() {
+    const video = document.getElementById('qe-camera-video');
+    if (!video || !this._cameraStream) {
+      this.closeCameraModal();
+      return;
+    }
+
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          this.closeCameraModal();
+          return;
+        }
+        const file = new File([blob], `camera-capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
+        this.stopCameraStream();
+        this.closeCameraModal();
+        this.handleQualityPhotoFile(file);
+      }, 'image/jpeg', 0.92);
+    } catch (err) {
+      console.warn('[Camera Capture]:', err);
+      this.stopCameraStream();
+      this.closeCameraModal();
+    }
+  },
+
+  closeCameraModal() {
+    this.stopCameraStream();
+    const overlay = document.getElementById('qe-camera-modal-overlay');
+    if (overlay) {
+      overlay.classList.remove('active');
+      overlay.style.display = 'none';
+    }
+  },
+
+  stopCameraStream() {
+    if (this._cameraStream) {
+      try {
+        this._cameraStream.getTracks().forEach(track => {
+          try { track.stop(); } catch(e) {}
+        });
+      } catch (e) {}
+      this._cameraStream = null;
+    }
+    const video = document.getElementById('qe-camera-video');
+    if (video) {
+      video.srcObject = null;
+    }
+  },
+
+  handleQualityPhotoFile(file) {
+    if (!file) return;
+    this._selectedQualityPhoto = file;
+    this._aqPendingAiResult = null;
+
+    const preview = document.getElementById('qe-photo-preview');
+    if (preview) preview.src = URL.createObjectURL(file);
+
+    this.setAiPhotoState('AI_PREVIEW');
+  },
+
+  handleQualityPhotoSelected(event) {
+    const file = event.target?.files?.[0];
+    if (!file) return;
+    this.handleQualityPhotoFile(file);
+  },
+
+  clearQualityPhoto() {
+    this.stopCameraStream();
+    this._selectedQualityPhoto = null;
+    this._aqPendingAiResult = null;
+    const pCam = document.getElementById('qe-photo-camera');
+    if (pCam) pCam.value = '';
+    const pUp = document.getElementById('qe-photo-upload');
+    if (pUp) pUp.value = '';
+    const pGal = document.getElementById('qe-photo-gallery');
+    if (pGal) pGal.value = '';
+    const pFile = document.getElementById('qe-photo-file');
+    if (pFile) pFile.value = '';
+    const preview = document.getElementById('qe-photo-preview');
+    if (preview) preview.src = '';
+    const annImg = document.getElementById('qe-photo-annotated-img');
+    if (annImg) annImg.src = '';
+    const annWrap = document.getElementById('qe-photo-annotated-wrap');
+    if (annWrap) annWrap.style.display = 'none';
+
+    this.setAiPhotoState('AI_IDLE');
+  },
+
+  retryQualityPhoto() {
+    this.clearQualityPhoto();
+  },
+
+  async analyzeQualityPhoto() {
+    const file = this._selectedQualityPhoto ||
+      document.getElementById('qe-photo-camera')?.files?.[0] ||
+      document.getElementById('qe-photo-upload')?.files?.[0] ||
+      document.getElementById('qe-photo-gallery')?.files?.[0] ||
+      document.getElementById('qe-photo-file')?.files?.[0];
+
+    if (!file) {
+      this.showToast('Please select or capture a crop photo first.', 'warning');
+      this.setAiPhotoState('AI_IDLE');
+      return;
+    }
+
+    console.log('[AI Quality UI] analysis started');
+    this.setAiPhotoState('AI_ANALYZING');
+
+    const selectedCrop = this.getCurrentSelectedCrop();
+    console.log('[AI Quality UI] Selected crop:', selectedCrop);
+
+    // Abort any prior in-flight request
+    if (this._aqAbortController) {
+      try {
+        this._aqAbortController.abort();
+      } catch (e) {}
+    }
+    const controller = new AbortController();
+    this._aqAbortController = controller;
+
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+    }, 15000);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      if (selectedCrop) {
+        formData.append('selected_crop', selectedCrop);
+      }
+
+      console.log('[AI Quality UI] request sent');
+      const resp = await fetch('/api/quality/analyze', {
+        method: 'POST',
+        body: formData,
+        signal: controller.signal
+      });
+
+      // Clear timeout immediately after fetch resolves
+      clearTimeout(timeoutId);
+
+      console.log('[AI Quality UI] response received: HTTP', resp.status);
+
+      if (!resp.ok) {
+        console.log('[AI Quality UI] state -> AI_ERROR');
+        let errMsg = 'Photo assessment is temporarily unavailable.';
+        if (resp.status === 413) errMsg = 'Image file is too large (max 10 MB). Please choose a smaller photo.';
+        if (resp.status === 415) errMsg = 'Unsupported image format. Please use a JPG, PNG, or WebP photo.';
+        if (resp.status === 503 || resp.status === 504) errMsg = 'Photo assessment is temporarily unavailable.';
+
+        const errorEl = document.getElementById('qe-error-text');
+        if (errorEl) errorEl.textContent = errMsg;
+        this.setAiPhotoState('AI_ERROR');
+        return;
+      }
+
+      const data = await resp.json();
+      console.log('[AI Quality UI] response parsed', data);
+      console.log(
+        '[AI Quality UI] API status:',
+        data?.status,
+        'crop:',
+        data?.crop,
+        'confidence:',
+        data?.confidence
+      );
+
+      // 1. NO DETECTION
+      if (data.status === 'NO_DETECTION') {
+        console.log('[AI Quality UI] state -> AI_ERROR');
+        this._aqPendingAiResult = null;
+        const errorEl = document.getElementById('qe-error-text');
+        if (errorEl) {
+          errorEl.textContent = 'No produce was detected in this photo. Please ensure the produce is clearly visible and well-lit, or enter quality details manually.';
+        }
+        this.setAiPhotoState('AI_ERROR');
+        return;
+      }
+
+      // 2. MODEL NOT LOADED / VALIDATION ERROR
+      if (data.status === 'MODEL_NOT_LOADED' || data.status === 'VALIDATION_ERROR') {
+        console.log('[AI Quality UI] state -> AI_ERROR');
+        this._aqPendingAiResult = null;
+        const errorEl = document.getElementById('qe-error-text');
+        if (errorEl) {
+          errorEl.textContent = 'We couldn\'t complete the photo assessment right now. You can try another photo or continue another way.';
+        }
+        this.setAiPhotoState('AI_ERROR');
+        return;
+      }
+
+      // 3. CROP MISMATCH PROTECTION
+      const detectedCrop = data.crop ? (data.crop.charAt(0).toUpperCase() + data.crop.slice(1)) : '';
+      const isMismatch = data.status === 'AI_CROP_MISMATCH' || (selectedCrop && detectedCrop && this.normalizeCrop(selectedCrop) !== this.normalizeCrop(detectedCrop));
+
+      if (isMismatch) {
+        console.log('[AI Quality UI] state -> AI_CROP_MISMATCH');
+        this._aqPendingAiResult = null;
+        const mismatchEl = document.getElementById('qe-mismatch-text');
+        if (mismatchEl) {
+          mismatchEl.textContent = `We couldn't confidently find ${selectedCrop || 'the crop'} in this photo.`;
+        }
+        this.setAiPhotoState('AI_CROP_MISMATCH');
+        return;
+      }
+
+      // 4. MATCHED OR UNRESTRICTED CROP -> EVALUATE CONFIDENCE
+      const condition = data.condition || 'Fresh';
+      const rawConf = typeof data.confidence === 'number' ? data.confidence : (typeof data.cropConfidence === 'number' ? data.cropConfidence : 0);
+      const confRatio = rawConf <= 1 ? rawConf : rawConf / 100;
+      const confPctDisplay = (confRatio * 100).toFixed(1) + '%';
+      const assessmentType = data.assessmentType || 'Visual condition detection';
+      const modelVersion = data.modelVersion || 'vegqual-20ep';
+      const annotatedImageUrl = data.annotatedImageUrl || (data.annotatedImageId ? `/api/quality/annotated/${data.annotatedImageId}` : null);
+      const annotatedImageId = data.annotatedImageId || null;
+
+      // Handle confidence threshold
+      if (confRatio < AI_QUALITY_MIN_ACCEPT_CONFIDENCE) {
+        console.log('[AI Quality UI] state -> AI_LOW_CONFIDENCE');
+        this._aqPendingAiResult = null;
+        const lowConfEl = document.getElementById('qe-low-conf-text');
+        if (lowConfEl) {
+          lowConfEl.textContent = `We detected ${detectedCrop || selectedCrop || 'the crop'}, but the visual model isn't confident enough to complete the assessment.`;
+        }
+        this.setAiPhotoState('AI_LOW_CONFIDENCE');
+      } else {
+        console.log('[AI Quality UI] state -> AI_SUCCESS');
+        this._aqPendingAiResult = {
+          crop: detectedCrop || selectedCrop || 'Produce',
+          condition: condition,
+          confidence: confRatio,
+          confPctDisplay: confPctDisplay,
+          assessmentType: assessmentType,
+          modelVersion: modelVersion,
+          annotatedImageUrl: annotatedImageUrl,
+          annotatedImageId: annotatedImageId
+        };
+
+        const cropEl = document.getElementById('qe-photo-crop');
+        const condEl = document.getElementById('qe-photo-condition');
+        const confEl = document.getElementById('qe-photo-confidence');
+        const annWrap = document.getElementById('qe-photo-annotated-wrap');
+        const annImg = document.getElementById('qe-photo-annotated-img');
+
+        if (cropEl) cropEl.textContent = detectedCrop || selectedCrop || 'Produce';
+        if (condEl) condEl.textContent = condition;
+        if (confEl) confEl.textContent = confPctDisplay;
+
+        // Set state immediately before loading annotated image
+        this.setAiPhotoState('AI_SUCCESS');
+
+        // Load annotated image asynchronously without blocking UI result state
+        if (annotatedImageUrl && annImg && annWrap) {
+          annImg.src = annotatedImageUrl;
+          annWrap.style.display = 'block';
+        } else if (annWrap) {
+          annWrap.style.display = 'none';
+        }
+      }
+
+    } catch (err) {
+      this._aqPendingAiResult = null;
+      if (err.name === 'AbortError') {
+        console.warn('[AI Quality UI] request aborted');
+        const errorEl = document.getElementById('qe-error-text');
+        if (errorEl) {
+          errorEl.textContent = 'Photo assessment is taking longer than expected. Please try another photo or continue using another quality option.';
+        }
+      } else {
+        console.warn('[AI Quality UI] error:', err.name, err.message);
+        const errorEl = document.getElementById('qe-error-text');
+        if (errorEl) {
+          errorEl.textContent = 'Photo assessment is temporarily unavailable.';
+        }
+      }
+      console.log('[AI Quality UI] state -> AI_ERROR');
+      this.setAiPhotoState('AI_ERROR');
+    } finally {
+      clearTimeout(timeoutId);
+      if (this._aqAbortController === controller) {
+        this._aqAbortController = null;
+      }
+    }
+  },
+
+  applyQualityAssessment(isLowConfidenceOverride = false) {
+    const res = this._aqPendingAiResult;
+    if (!res) {
+      this.showToast('Please analyze a photo first.', 'warning');
+      return;
+    }
+
+    this.temporaryEvidence = {
+      source: 'AI_ASSESSMENT',
+      aiAssessment: {
+        status: 'AI_ASSESSED',
+        crop: res.crop,
+        condition: res.condition,
+        confidence: res.confidence,
+        cropConfidence: res.confidence,
+        conditionConfidence: res.confidence,
+        assessmentType: res.assessmentType,
+        modelVersion: res.modelVersion,
+        annotatedImageUrl: res.annotatedImageUrl,
+        annotatedImageId: res.annotatedImageId,
+        assessedAt: new Date().toISOString()
+      },
+      report: {},
+      manual: {}
+    };
+    this.currentAiScan = this.temporaryEvidence.aiAssessment;
+
+    this.renderQualityEvidenceSummary(`🤖 AI Assessed: ${res.crop} · ${res.condition} (${res.confPctDisplay})`);
+    this.highlightEvidenceCard('photo');
+    this.showToast(`✓ AI-assisted assessment applied for ${res.crop} (${res.condition})`, 'success');
+  },
+
+  handleReportFileSelect(event) {
+    const file = event.target?.files?.[0];
+    if (!file) return;
+    this.temporaryEvidence = {
+      source: 'FARMER_PROVIDED_REPORT',
+      report: {
+        fileName: file.name,
+        fileUrl: '',
+        provider: document.getElementById('qe-report-provider')?.value.trim() || '',
+        reportNumber: document.getElementById('qe-report-number')?.value.trim() || '',
+        reportDate: document.getElementById('qe-report-date')?.value || '',
+        verificationStatus: 'unverified'
+      },
+      manual: {},
+      aiAssessment: {}
+    };
+    this.renderQualityEvidenceSummary(`📄 Quality Report: ${file.name}`);
+    this.highlightEvidenceCard('report');
+  },
+
+  updateReportMetadata() {
+    const fileInput = document.getElementById('qe-report-file');
+    const fileName = fileInput?.files?.[0]?.name || (this.temporaryEvidence?.report?.fileName) || '';
+    const provider = document.getElementById('qe-report-provider')?.value.trim() || '';
+    const reportNumber = document.getElementById('qe-report-number')?.value.trim() || '';
+    const reportDate = document.getElementById('qe-report-date')?.value || '';
+
+    if (fileName || provider || reportNumber || reportDate) {
+      this.temporaryEvidence = {
+        source: 'FARMER_PROVIDED_REPORT',
+        report: {
+          fileName: fileName || 'Report attached',
+          fileUrl: '',
+          provider,
+          reportNumber,
+          reportDate,
+          verificationStatus: 'unverified'
+        },
+        manual: {},
+        aiAssessment: {}
+      };
+      this.renderQualityEvidenceSummary(`📄 Quality Report: ${fileName || provider || 'Details added'}`);
+      this.highlightEvidenceCard('report');
+    }
+  },
+
+  updateManualQuality() {
+    const cond = document.getElementById('qe-manual-condition')?.value || '';
+    const grade = document.getElementById('qe-manual-grade')?.value.trim() || '';
+    const desc = document.getElementById('qe-manual-desc')?.value.trim() || '';
+    const notes = document.getElementById('qe-manual-notes')?.value.trim() || '';
+
+    if (cond || grade || desc || notes) {
+      this.temporaryEvidence = {
+        source: 'MANUAL',
+        manual: {
+          condition: cond,
+          grade,
+          description: desc,
+          notes
+        },
+        report: {},
+        aiAssessment: {}
+      };
+      const label = cond ? `Condition: ${cond}` : (grade ? `Grade: ${grade}` : 'Manual information entered');
+      this.renderQualityEvidenceSummary(`✍️ Quality Info: ${label}`);
+      this.highlightEvidenceCard('manual');
+    }
+  },
+
+  renderQualityEvidenceSummary(text) {
+    const summaryBox = document.getElementById('qe-active-summary');
+    const summaryText = document.getElementById('qe-active-summary-text');
+    if (summaryBox && summaryText) {
+      summaryText.textContent = text;
+      summaryBox.style.display = 'flex';
+    }
+  },
+
+  highlightEvidenceCard(type) {
+    const photoBtn = document.getElementById('qe-btn-photo');
+    const reportBtn = document.getElementById('qe-btn-report');
+    const manualBtn = document.getElementById('qe-btn-manual');
+    [photoBtn, reportBtn, manualBtn].forEach(b => {
+      if (b) {
+        b.style.borderColor = '#CCDBCD';
+        b.style.background = '#FFFFFF';
+      }
+    });
+    if (type === 'photo' && photoBtn) {
+      photoBtn.style.borderColor = '#2D6A4F';
+      photoBtn.style.background = '#F0FDF4';
+    } else if (type === 'report' && reportBtn) {
+      reportBtn.style.borderColor = '#2D6A4F';
+      reportBtn.style.background = '#F0FDF4';
+    } else if (type === 'manual' && manualBtn) {
+      manualBtn.style.borderColor = '#2D6A4F';
+      manualBtn.style.background = '#F0FDF4';
+    }
+  },
+
+  clearQualityEvidence() {
+    this.temporaryEvidence = null;
+    this.currentAiScan = null;
+    this._aqLastResult = null;
+    this._aqPendingAiResult = null;
+    this._selectedQualityPhoto = null;
+
+    const summaryBox = document.getElementById('qe-active-summary');
+    if (summaryBox) summaryBox.style.display = 'none';
+
+    // Clear photo fields
+    const pCam = document.getElementById('qe-photo-camera');
+    if (pCam) pCam.value = '';
+    const pUp = document.getElementById('qe-photo-upload');
+    if (pUp) pUp.value = '';
+    const pGal = document.getElementById('qe-photo-gallery');
+    if (pGal) pGal.value = '';
+    const pFile = document.getElementById('qe-photo-file');
+    if (pFile) pFile.value = '';
+    const pPrev = document.getElementById('qe-photo-preview');
+    if (pPrev) pPrev.src = '';
+    const annImg = document.getElementById('qe-photo-annotated-img');
+    if (annImg) annImg.src = '';
+    const annWrap = document.getElementById('qe-photo-annotated-wrap');
+    if (annWrap) annWrap.style.display = 'none';
+
+    // Clear report fields
+    const rFile = document.getElementById('qe-report-file');
+    if (rFile) rFile.value = '';
+    const rProv = document.getElementById('qe-report-provider');
+    if (rProv) rProv.value = '';
+    const rNum = document.getElementById('qe-report-number');
+    if (rNum) rNum.value = '';
+    const rDate = document.getElementById('qe-report-date');
+    if (rDate) rDate.value = '';
+
+    // Clear manual fields
+    const mCond = document.getElementById('qe-manual-condition');
+    if (mCond) mCond.value = '';
+    const mGrade = document.getElementById('qe-manual-grade');
+    if (mGrade) mGrade.value = '';
+    const mDesc = document.getElementById('qe-manual-desc');
+    if (mDesc) mDesc.value = '';
+    const mNotes = document.getElementById('qe-manual-notes');
+    if (mNotes) mNotes.value = '';
+
+    // Reset option card highlights
+    ['qe-btn-photo', 'qe-btn-report', 'qe-btn-manual'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.borderColor = '#CCDBCD';
+        el.style.background = '#FFFFFF';
+      }
+    });
+
+    this.setAiPhotoState('AI_IDLE');
+  },
+
+  resetQualityEvidenceForm() {
+    this.clearQualityEvidence();
+    const pPanel = document.getElementById('qe-panel-photo');
+    if (pPanel) pPanel.style.display = 'none';
+    const rPanel = document.getElementById('qe-panel-report');
+    if (rPanel) rPanel.style.display = 'none';
+    const mPanel = document.getElementById('qe-panel-manual');
+    if (mPanel) mPanel.style.display = 'none';
+  },
+
+  buildQualityEvidencePayload() {
+    if (this.temporaryEvidence && this.temporaryEvidence.source) {
+      return this.temporaryEvidence;
+    }
+    const file = document.getElementById('qe-report-file')?.files?.[0];
+    const prov = document.getElementById('qe-report-provider')?.value.trim();
+    if (file || prov) {
+      return {
+        source: 'FARMER_PROVIDED_REPORT',
+        report: {
+          fileName: file ? file.name : 'Report attached',
+          fileUrl: '',
+          provider: prov || '',
+          reportNumber: document.getElementById('qe-report-number')?.value.trim() || '',
+          reportDate: document.getElementById('qe-report-date')?.value || '',
+          verificationStatus: 'unverified'
+        },
+        manual: {},
+        aiAssessment: {}
+      };
+    }
+
+    const cond = document.getElementById('qe-manual-condition')?.value;
+    const grade = document.getElementById('qe-manual-grade')?.value.trim();
+    const desc = document.getElementById('qe-manual-desc')?.value.trim();
+    const notes = document.getElementById('qe-manual-notes')?.value.trim();
+    if (cond || grade || desc || notes) {
+      return {
+        source: 'MANUAL',
+        manual: {
+          condition: cond || '',
+          grade: grade || '',
+          description: desc || '',
+          notes: notes || ''
+        },
+        report: {},
+        aiAssessment: {}
+      };
+    }
+
+    return { source: null };
+  },
+
+  /**
+   * ═══════════════════════════════════════════════════════════════════════
    * CREATE PRODUCE LOT MODAL & SUCCESS SCREEN
    * ═══════════════════════════════════════════════════════════════════════
    */
@@ -509,6 +1288,9 @@ const FarmerFlow = {
 
     let overlay = document.getElementById('create-lot-modal-overlay');
     if (!overlay) return;
+
+    // Fresh start: discard any leftover evidence from previous actions
+    this.resetQualityEvidenceForm();
 
     // Prefill location from profile if available
     const locInput = document.getElementById('lot-location-input');
@@ -604,6 +1386,28 @@ const FarmerFlow = {
       };
     }
 
+    // Build unified quality evidence payload
+    const qePayload = this.buildQualityEvidencePayload();
+
+    // Build backward-compatible aiQualityScan sub-document
+    const aiScanPayload = (() => {
+      if (qePayload && qePayload.source === 'AI_ASSESSMENT' && qePayload.aiAssessment && qePayload.aiAssessment.status === 'AI_ASSESSED') {
+        const ai = qePayload.aiAssessment;
+        return {
+          status: ai.status,
+          crop: ai.crop || null,
+          condition: ai.condition || null,
+          confidence: (typeof ai.confidence === 'number') ? ai.confidence : null,
+          assessmentType: ai.assessmentType || 'visual_condition_detection',
+          modelVersion: ai.modelVersion || 'vegqual-20ep',
+          annotatedImageUrl: ai.annotatedImageUrl || null,
+          annotatedImageId: ai.annotatedImageId || null,
+          assessedAt: ai.assessedAt || new Date().toISOString()
+        };
+      }
+      return {};
+    })();
+
     const payload = {
       cropName: cropName,
       cropCategory: cat,
@@ -622,7 +1426,8 @@ const FarmerFlow = {
         damagedGrains: 0.9
       },
       assaying: assayObj,
-      aiQualityScan: this.currentAiScan || {},
+      aiQualityScan: aiScanPayload,
+      qualityEvidence: qePayload,
       storageType: 'farm',
       storageLocation: this.profile ? `${this.profile.district || ''}, ${this.profile.state || ''}` : '',
       state: this.profile?.state || 'Maharashtra',
@@ -635,24 +1440,56 @@ const FarmerFlow = {
 
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Listing lot on marketplace...';
+      submitBtn.innerHTML = this._editingLotId ? '<i data-lucide="loader-2" class="spin"></i> Updating lot...' : '<i data-lucide="loader-2" class="spin"></i> Listing lot on marketplace...';
     }
 
     try {
-      const res = await window.api.lots.create(payload);
-      if (res.success && res.lot) {
-        // Reset scanner and form
-        this.currentAiScan = null;
-        document.getElementById('create-lot-modal-overlay')?.classList.remove('active');
-        form.reset();
+      if (this._editingLotId) {
+        const editId = this._editingLotId;
+        const res = await window.api.lots.update(editId, payload);
+        if (res.success && res.lot) {
+          this._editingLotId = null;
+          this.resetQualityEvidenceForm();
+          document.getElementById('create-lot-modal-overlay')?.classList.remove('active');
+          form.reset();
 
-        // Show Dedicated Success Screen
-        this.showLotCreatedSuccess(res.lot);
+          // Update in memory
+          if (Array.isArray(this.myLots)) {
+            const idx = this.myLots.findIndex(l => l.lotId === editId || l._id === editId || l.id === editId);
+            if (idx >= 0) {
+              this.myLots[idx] = { ...this.myLots[idx], ...res.lot };
+            }
+          }
 
-        // Refresh lots list
-        await this.loadMyLots();
+          this.showToast('Lot updated successfully! ✓', 'success');
+
+          // Refresh market feed and lots page
+          await this.initMarketPage();
+          if (document.getElementById('lots-container') || document.getElementById('lots-panel-body')) {
+            await this.loadMyLots(this.currentFilter || 'all');
+          }
+        } else {
+          this.showToast(res.message || 'Unable to update produce lot.', 'error');
+        }
       } else {
-        this.showToast(res.message || 'Unable to create produce lot.', 'error');
+        const res = await window.api.lots.create(payload);
+        if (res.success && res.lot) {
+          // Discard temporary evidence and reset form cleanly
+          this.resetQualityEvidenceForm();
+          document.getElementById('create-lot-modal-overlay')?.classList.remove('active');
+          form.reset();
+
+          // Show Dedicated Success Screen with the persisted lot
+          this.showLotCreatedSuccess(res.lot);
+
+          // Refresh market feed and lots list
+          await this.initMarketPage();
+          if (document.getElementById('lots-container') || document.getElementById('lots-panel-body')) {
+            await this.loadMyLots();
+          }
+        } else {
+          this.showToast(res.message || 'Unable to create produce lot.', 'error');
+        }
       }
     } catch (err) {
       this.showToast('Server connection error. Please try again.', 'error');
@@ -706,32 +1543,19 @@ const FarmerFlow = {
     }
 
     // AI Scanner Close
-    document.getElementById('ai-scanner-modal-close')?.addEventListener('click', () => {
-      document.getElementById('ai-scanner-modal-overlay')?.classList.remove('active');
-    });
-
-    // AI Sample Selectors
-    document.querySelectorAll('.ai-sample-btn').forEach(btn => {
-      if (!btn.dataset.bound) {
-        btn.dataset.bound = 'true';
-        btn.addEventListener('click', () => {
-          this.selectAiSample(btn.dataset.crop, btn.dataset.sample);
-        });
-      }
-    });
-
-    // Run AI Scan
-    const runScanBtn = document.getElementById('btn-run-ai-scan');
-    if (runScanBtn && !runScanBtn.dataset.bound) {
-      runScanBtn.dataset.bound = 'true';
-      runScanBtn.addEventListener('click', () => this.runAiScan());
+    const aiClose = document.getElementById('ai-scanner-modal-close');
+    if (aiClose && !aiClose.dataset.bound) {
+      aiClose.dataset.bound = 'true';
+      aiClose.addEventListener('click', () => {
+        document.getElementById('ai-scanner-modal-overlay')?.classList.remove('active');
+      });
     }
 
-    // Apply AI Params
-    const applyBtn = document.getElementById('btn-apply-ai-params');
-    if (applyBtn && !applyBtn.dataset.bound) {
-      applyBtn.dataset.bound = 'true';
-      applyBtn.addEventListener('click', () => this.applyAiParams());
+    // AI file input change handler
+    const aqInput = document.getElementById('aq-file-input');
+    if (aqInput && !aqInput.dataset.bound) {
+      aqInput.dataset.bound = 'true';
+      aqInput.addEventListener('change', () => this._aqHandleFileSelect(aqInput));
     }
 
     // Certificate modal close
@@ -796,176 +1620,384 @@ const FarmerFlow = {
   },
 
   /**
-   * AI Produce Defect Scanner Controller
+   * ═══════════════════════════════════════════════════════════════════════
+   * AI Quality Assessment — real FastAPI integration
+   *
+   * Endpoint: POST http://localhost:8001/api/quality/analyze
+   * Field:    file (multipart/form-data)
+   * Model:    outputs/vegqual-20ep/weights/best.pt
+   * ═══════════════════════════════════════════════════════════════════════
    */
+
+  /** Open the AI quality modal and reset its state. */
   openAiScannerModal() {
-    const cropSelect = document.getElementById('lot-crop-select');
-    const cropName = cropSelect ? (cropSelect.value || cropSelect.options[cropSelect.selectedIndex]?.value || 'Wheat') : 'Wheat';
-    this.selectAiSample(cropName, 'premium');
+    // Reset modal to clean state
+    this._aqReset();
     document.getElementById('ai-scanner-modal-overlay')?.classList.add('active');
     if (window.lucide) window.lucide.createIcons();
   },
 
-  selectAiSample(crop, sample) {
-    this.selectedAiCrop = crop;
-    this.selectedAiSample = sample;
-
-    const sampleImages = {
-      'Wheat_premium': 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop&q=80',
-      'Wheat_defective': 'https://images.unsplash.com/photo-1543257580-7269da773bf5?w=600&auto=format&fit=crop&q=80',
-      'Onion_premium': 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=600&auto=format&fit=crop&q=80',
-      'Tomato_defective': 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop&q=80'
-    };
-
-    const key = `${crop}_${sample}`;
-    const imgUrl = sampleImages[key] || sampleImages['Wheat_premium'];
-    const previewImg = document.getElementById('scanner-preview-img');
-    if (previewImg) previewImg.src = imgUrl;
-
-    // Reset boxes & results
-    const boxes = document.getElementById('scanner-boxes-container');
-    if (boxes) boxes.innerHTML = '';
-    const results = document.getElementById('scan-results-box');
-    if (results) results.style.display = 'none';
-
-    const status = document.getElementById('scan-status-indicator');
-    if (status) {
-      status.textContent = `Sample: ${crop} (${sample === 'premium' ? 'High Grade' : 'Defective Sample'})`;
-      status.style.color = '#718E68';
-    }
+  /** Reset all UI elements inside the AI quality modal. */
+  _aqReset() {
+    const el = id => document.getElementById(id);
+    this._aqSelectedFile = null;
+    // Upload zone
+    if (el('aq-upload-placeholder')) el('aq-upload-placeholder').style.display = 'block';
+    if (el('aq-preview-wrap'))       el('aq-preview-wrap').style.display = 'none';
+    if (el('aq-preview-img'))        el('aq-preview-img').src = '';
+    if (el('aq-file-input'))         el('aq-file-input').value = '';
+    // State sections
+    if (el('aq-error-msg'))          el('aq-error-msg').style.display = 'none';
+    if (el('aq-result-card'))        el('aq-result-card').style.display = 'none';
+    if (el('aq-no-detection'))       el('aq-no-detection').style.display = 'none';
+    if (el('aq-service-unavailable'))el('aq-service-unavailable').style.display = 'none';
+    // Analyze button
+    const btn = el('aq-analyze-btn');
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+    const btnTxt = el('aq-analyze-btn-text');
+    if (btnTxt) btnTxt.textContent = 'Analyze Crop Photo';
   },
 
-  async runAiScan() {
-    const laser = document.getElementById('scanner-laser');
-    const status = document.getElementById('scan-status-indicator');
-    const runBtn = document.getElementById('btn-run-ai-scan');
-    const boxes = document.getElementById('scanner-boxes-container');
+  /** Called when the file input changes — show preview. */
+  _aqHandleFileSelect(input) {
+    const file = input?.files?.[0];
+    if (!file) return;
+    this._aqSelectedFile = file;
 
-    if (laser) laser.style.display = 'block';
-    if (status) status.textContent = 'Scanning grain geometry & defects...';
-    if (runBtn) runBtn.disabled = true;
+    // Hide any previous result/error
+    const el = id => document.getElementById(id);
+    if (el('aq-result-card'))        el('aq-result-card').style.display = 'none';
+    if (el('aq-no-detection'))       el('aq-no-detection').style.display = 'none';
+    if (el('aq-service-unavailable'))el('aq-service-unavailable').style.display = 'none';
+    if (el('aq-error-msg'))          el('aq-error-msg').style.display = 'none';
+
+    // Show image preview
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = el('aq-preview-img');
+      if (img) img.src = e.target.result;
+      if (el('aq-upload-placeholder')) el('aq-upload-placeholder').style.display = 'none';
+      if (el('aq-preview-wrap'))       el('aq-preview-wrap').style.display = 'block';
+      if (window.lucide) window.lucide.createIcons();
+    };
+    reader.readAsDataURL(file);
+  },
+
+  /** Clear the selected image and reset upload zone. */
+  aqClearImage() {
+    const el = id => document.getElementById(id);
+    this._aqSelectedFile = null;
+    this.currentAiScan = null;
+    this._aqLastResult = null;
+    if (el('aq-file-input')) el('aq-file-input').value = '';
+    if (el('aq-preview-img')) el('aq-preview-img').src = '';
+    if (el('aq-annotated-img')) {
+      el('aq-annotated-img').src = '';
+      el('aq-annotated-img').onerror = null;
+      el('aq-annotated-img').onload = null;
+    }
+    if (el('aq-annotated-img-wrap')) el('aq-annotated-img-wrap').style.display = 'none';
+    if (el('aq-annotated-img-warn')) el('aq-annotated-img-warn').style.display = 'none';
+    if (el('aq-upload-placeholder')) el('aq-upload-placeholder').style.display = 'block';
+    if (el('aq-preview-wrap')) el('aq-preview-wrap').style.display = 'none';
+    if (el('aq-result-card')) el('aq-result-card').style.display = 'none';
+    if (el('aq-no-detection')) el('aq-no-detection').style.display = 'none';
+    if (el('aq-service-unavailable')) el('aq-service-unavailable').style.display = 'none';
+    if (el('aq-error-msg')) el('aq-error-msg').style.display = 'none';
+    if (window.lucide) window.lucide.createIcons();
+  },
+
+  /**
+   * POST selected image to the real AI quality service and display the result.
+   * Field name MUST be "file" per API spec.
+   */
+  async aqRunAnalysis() {
+    const el = id => document.getElementById(id);
+    const AI_QUALITY_URL = '/api/quality/analyze';
+
+    // Validate file selected
+    if (!this._aqSelectedFile) {
+      this._aqShowError('Please upload a crop photo first.');
+      return;
+    }
+
+    // Loading state
+    const btn = el('aq-analyze-btn');
+    const btnTxt = el('aq-analyze-btn-text');
+    if (btn)    { btn.disabled = true; btn.style.opacity = '0.7'; }
+    if (btnTxt) btnTxt.textContent = 'Analysing…';
+
+    // Hide previous states
+    if (el('aq-error-msg'))           el('aq-error-msg').style.display = 'none';
+    if (el('aq-result-card'))         el('aq-result-card').style.display = 'none';
+    if (el('aq-no-detection'))        el('aq-no-detection').style.display = 'none';
+    if (el('aq-service-unavailable')) el('aq-service-unavailable').style.display = 'none';
+    if (el('aq-annotated-img-warn'))  el('aq-annotated-img-warn').style.display = 'none';
 
     try {
-      let res;
-      if (window.api && window.api.lots && window.api.lots.aiEstimate) {
-        res = await window.api.lots.aiEstimate({
-          cropName: this.selectedAiCrop,
-          sampleKey: this.selectedAiSample
-        });
+      const formData = new FormData();
+      formData.append('file', this._aqSelectedFile);
+
+      const resp = await fetch(AI_QUALITY_URL, {
+        method: 'POST',
+        body: formData,
+        // Do NOT set Content-Type — browser sets multipart boundary automatically
+      });
+
+      if (!resp.ok) {
+        // HTTP error (413 too large, 415 unsupported format, etc.)
+        let errMsg = 'Photo assessment is temporarily unavailable.';
+        if (resp.status === 413) errMsg = 'Image file is too large. Please use a file under 10 MB.';
+        if (resp.status === 415) errMsg = 'Unsupported image format. Please use JPG, PNG or WebP.';
+        this._aqShowError(errMsg);
+        return;
       }
 
-      // Fallback simulation if offline or network error
-      if (!res || !res.success) {
-        const isGrain = !['Onion', 'Tomato'].includes(this.selectedAiCrop);
-        const isDefect = this.selectedAiSample === 'defective';
-        res = {
-          success: true,
-          confidenceScore: isDefect ? 94.6 : 97.9,
-          qualityParameters: isGrain
-            ? (isDefect ? { moistureContent: 14.8, foreignMatter: 2.4, brokenGrains: 5.8, damagedGrains: 3.6 } : { moistureContent: 11.2, foreignMatter: 0.7, brokenGrains: 1.5, damagedGrains: 0.8 })
-            : (isDefect ? { blemishPercentage: 8.2, uniformity: 71, ripenessIndex: 68 } : { blemishPercentage: 1.8, uniformity: 94, ripenessIndex: 90 }),
-          detectedDefects: isGrain
-            ? (isDefect ? [{ defectType: 'Broken Grain', count: 12, percentage: 5.8 }, { defectType: 'Foreign Matter', count: 5, percentage: 2.4 }] : [{ defectType: 'Foreign Particle', count: 1, percentage: 0.7 }])
-            : (isDefect ? [{ defectType: 'Surface Blemish', count: 9, percentage: 8.2 }] : [{ defectType: 'Skin Freckle', count: 2, percentage: 1.8 }]),
-          suggestedGrade: isDefect ? 'B' : 'A',
-          gradeLabel: isDefect ? 'Grade B (Standard FAQ)' : 'Grade A (Agmark Premium FAQ)'
+      const data = await resp.json();
+
+      // Handle API-level status
+      if (data.status === 'AI_ASSESSED' && data.crop && data.condition) {
+        // Store result for lot prefill
+        this.currentAiScan = {
+          _isRealAiResult: true,
+          status: data.status,
+          crop: data.crop,
+          condition: data.condition,
+          confidence: data.confidence,
+          assessmentType: data.assessmentType || 'visual_condition_detection',
+          modelVersion: data.modelVersion || null,
+          detectionCount: data.detectionCount != null ? data.detectionCount : (data.detections ? data.detections.length : 1),
+          imageCondition: data.imageCondition || data.condition,
+          detections: data.detections || [],
+          annotatedImageUrl: data.annotatedImageUrl || null,
         };
-      }
+        this._aqLastResult = this.currentAiScan;
 
-      this.currentAiScan = res;
+        // Crop icon mapping
+        const cropIcons = {
+          potato: '🥔',
+          tomato: '🍅',
+          onion: '🧅',
+          brinjal: '🍆',
+          capsicum: '🫑',
+          'bitter gourd': '🥒',
+          'pointed gourd': '🥒',
+        };
+        const cropLower = (data.crop || '').toLowerCase();
+        const cropIcon = cropIcons[cropLower] || '🌱';
+        const topConfPct = data.confidence != null ? (data.confidence * 100).toFixed(2) + '%' : '—';
 
-      // Simulated bounding boxes overlay
-      if (boxes) {
-        boxes.innerHTML = '';
-        const sampleBoxes = this.selectedAiSample === 'defective' ? [
-          { top: '25%', left: '30%', width: '60px', height: '60px', label: 'Broken Grain' },
-          { top: '55%', left: '60%', width: '50px', height: '50px', label: 'Foreign Matter' },
-          { top: '35%', left: '70%', width: '45px', height: '45px', label: 'Discolored' }
-        ] : [
-          { top: '40%', left: '45%', width: '40px', height: '40px', label: 'Uniform Grain' }
-        ];
+        // 1. Display Annotated Image (prominently, from backend YOLO render)
+        const annotatedImg = el('aq-annotated-img');
+        const annotatedWrap = el('aq-annotated-img-wrap');
+        const annotatedWarn = el('aq-annotated-img-warn');
+        const annotatedWarnText = el('aq-annotated-img-warn-text');
 
-        sampleBoxes.forEach(b => {
-          const el = document.createElement('div');
-          el.className = 'scanner-defect-box';
-          el.style.cssText = `top: ${b.top}; left: ${b.left}; width: ${b.width}; height: ${b.height};`;
-          el.innerHTML = `<span class="scanner-defect-box__label">${b.label}</span>`;
-          boxes.appendChild(el);
-        });
-      }
+        if (annotatedWarn) annotatedWarn.style.display = 'none';
 
-      // Populate results box
-      const results = document.getElementById('scan-results-box');
-      const chips = document.getElementById('scan-defect-chips');
-      const breakdown = document.getElementById('scan-params-breakdown');
-      const confBadge = document.getElementById('scan-confidence-badge');
+        if (annotatedImg && data.annotatedImageUrl) {
+          const fullImgUrl = data.annotatedImageUrl;
 
-      if (confBadge) confBadge.textContent = `${res.confidenceScore}% Confidence`;
-      if (chips) {
-        chips.innerHTML = res.detectedDefects.map(d => `
-          <div class="defect-chip">
-            <span style="color: #dc2626;">⚠</span> ${d.defectType} (${d.percentage}%)
-          </div>
-        `).join('');
-      }
+          // Non-blocking error handling if image fails to load
+          annotatedImg.onerror = () => {
+            annotatedImg.style.display = 'none';
+            if (annotatedWrap) annotatedWrap.style.display = 'none';
+            if (annotatedWarn) {
+              if (annotatedWarnText) {
+                annotatedWarnText.textContent = 'Unable to load annotated image; detection results are detailed below.';
+              }
+              annotatedWarn.style.display = 'flex';
+              if (window.lucide) window.lucide.createIcons();
+            }
+          };
 
-      if (breakdown) {
-        const p = res.qualityParameters;
-        if (p.moistureContent !== undefined) {
-          breakdown.innerHTML = `
-            <strong>Detected Metrics:</strong> Moisture: <strong>${p.moistureContent}%</strong> | Foreign Matter: <strong>${p.foreignMatter}%</strong> | Broken Grains: <strong>${p.brokenGrains}%</strong> | Damaged: <strong>${p.damagedGrains}%</strong>
-            <div style="margin-top: 4px; color: #12372A; font-weight: 700;">Suggested Standard: ${res.gradeLabel}</div>
-          `;
+          annotatedImg.onload = () => {
+            annotatedImg.style.display = 'block';
+            if (annotatedWrap) annotatedWrap.style.display = 'block';
+            if (annotatedWarn) annotatedWarn.style.display = 'none';
+          };
+
+          annotatedImg.src = fullImgUrl;
+          annotatedImg.style.display = 'block';
+          if (annotatedWrap) annotatedWrap.style.display = 'block';
         } else {
-          breakdown.innerHTML = `
-            <strong>Detected Metrics:</strong> Blemish: <strong>${p.blemishPercentage}%</strong> | Size Uniformity: <strong>${p.uniformity}%</strong> | Ripeness: <strong>${p.ripenessIndex}%</strong>
-            <div style="margin-top: 4px; color: #12372A; font-weight: 700;">Suggested Standard: ${res.gradeLabel}</div>
-          `;
+          // If annotatedImageUrl is missing despite AI_ASSESSED: show JSON detection info + warning
+          if (annotatedImg) annotatedImg.style.display = 'none';
+          if (annotatedWrap) annotatedWrap.style.display = 'none';
+          if (annotatedWarn) {
+            if (annotatedWarnText) {
+              annotatedWarnText.textContent = 'Annotated visual render is unavailable; detection results are detailed below.';
+            }
+            annotatedWarn.style.display = 'flex';
+            if (window.lucide) window.lucide.createIcons();
+          }
         }
+
+        // 2. Populate Image Summary
+        if (el('aq-res-crop-icon')) el('aq-res-crop-icon').textContent = cropIcon;
+        if (el('aq-res-primary-text')) {
+          el('aq-res-primary-text').textContent = `${data.crop} • ${data.condition} • ${topConfPct}`;
+        }
+        if (el('aq-res-detection-count')) {
+          el('aq-res-detection-count').textContent = data.detectionCount != null
+            ? data.detectionCount
+            : (data.detections ? data.detections.length : 1);
+        }
+        if (el('aq-res-image-condition')) {
+          el('aq-res-image-condition').textContent = data.imageCondition || data.condition || '—';
+        }
+
+        // 3. Populate dynamic "Detected Objects" list (renders every detection)
+        const detList = el('aq-detections-list');
+        if (detList) {
+          detList.innerHTML = '';
+          const items = Array.isArray(data.detections) && data.detections.length > 0
+            ? data.detections
+            : [{ crop: data.crop, condition: data.condition, confidence: data.confidence }];
+
+          items.forEach(d => {
+            const card = document.createElement('div');
+            card.style.cssText = 'padding: 10px 12px; border-radius: 8px; background: #FAFCFA; border: 1px solid #DCE7DF; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;';
+
+            const dConf = d.confidence != null ? (d.confidence * 100).toFixed(2) + '%' : '—';
+            const isFresh = (d.condition || '').toLowerCase() === 'fresh';
+            const condColor = isFresh ? '#2E7D32' : '#C62828';
+            const condBg = isFresh ? '#E8F5E9' : '#FFEBEE';
+            const condBorder = isFresh ? '#C8E6C9' : '#FFCDD2';
+            const dCropIcon = cropIcons[(d.crop || '').toLowerCase()] || '🌱';
+
+            card.innerHTML = `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 18px; line-height: 1;">${dCropIcon}</span>
+                <span style="font-weight: 700; color: #12372A; font-size: 14px;">${d.crop}</span>
+                <span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: ${condBg}; color: ${condColor}; border: 1px solid ${condBorder}; text-transform: capitalize;">${d.condition}</span>
+              </div>
+              <div style="font-size: 12px; color: #555;">
+                Detection confidence: <strong style="color: #12372A; font-weight: 700;">${dConf}</strong>
+              </div>
+            `;
+            detList.appendChild(card);
+          });
+        }
+
+        // Backward compatibility elements
+        if (el('aq-res-crop'))        el('aq-res-crop').textContent = data.crop;
+        if (el('aq-res-condition'))   el('aq-res-condition').textContent = data.condition;
+        if (el('aq-res-confidence'))  el('aq-res-confidence').textContent = topConfPct;
+
+        if (el('aq-result-card')) el('aq-result-card').style.display = 'block';
+
+      } else if (data.status === 'NO_DETECTION') {
+        this.currentAiScan = null;
+        if (el('aq-result-card')) el('aq-result-card').style.display = 'none';
+        if (el('aq-annotated-img')) {
+          el('aq-annotated-img').src = '';
+          el('aq-annotated-img').onerror = null;
+          el('aq-annotated-img').onload = null;
+        }
+        if (el('aq-annotated-img-wrap')) el('aq-annotated-img-wrap').style.display = 'none';
+        if (el('aq-annotated-img-warn')) el('aq-annotated-img-warn').style.display = 'none';
+        if (el('aq-no-detection')) el('aq-no-detection').style.display = 'block';
+
+      } else if (data.status === 'MODEL_NOT_LOADED') {
+        this.currentAiScan = null;
+        if (el('aq-service-unavailable')) el('aq-service-unavailable').style.display = 'block';
+
+      } else {
+        // VALIDATION_ERROR or unexpected
+        this._aqShowError(
+          data.status === 'VALIDATION_ERROR'
+            ? 'Image validation failed. Please use a clear, well-lit crop photo.'
+            : 'Unexpected response from AI service. Please try again.'
+        );
       }
 
-      if (results) results.style.display = 'block';
-      if (status) {
-        status.textContent = `Scan Complete: ${res.suggestedGrade === 'A' ? 'Premium Quality' : 'Standard FAQ'}`;
-        status.style.color = '#12372A';
-      }
     } catch (err) {
-      if (status) status.textContent = 'Scan failed. Please retry.';
+      // Network error — service not running or unreachable
+      console.warn('[AQ] AI quality service unreachable:', err.message);
+      this.currentAiScan = null;
+      if (el('aq-service-unavailable')) el('aq-service-unavailable').style.display = 'block';
+
     } finally {
-      if (laser) laser.style.display = 'none';
-      if (runBtn) runBtn.disabled = false;
+      if (btn)    { btn.disabled = false; btn.style.opacity = '1'; }
+      if (btnTxt) btnTxt.textContent = 'Analyze Crop Photo';
       if (window.lucide) window.lucide.createIcons();
     }
   },
 
-  applyAiParams() {
-    if (!this.currentAiScan || !this.currentAiScan.qualityParameters) {
-      this.showToast('Please run the AI scan first.', 'warning');
+  /** Show an inline error message inside the AI quality modal. */
+  _aqShowError(msg) {
+    const errDiv = document.getElementById('aq-error-msg');
+    const errTxt = document.getElementById('aq-error-text');
+    if (errTxt) errTxt.textContent = msg || 'Something went wrong.';
+    if (errDiv) errDiv.style.display = 'flex';
+    if (window.lucide) window.lucide.createIcons();
+  },
+
+  /**
+   * Apply AI result to the lot form and close the modal.
+   */
+  aqApplyResult() {
+    const result = this._aqLastResult;
+    if (!result || result.status !== 'AI_ASSESSED') {
+      this.showToast('Please run the AI analysis first.', 'warning');
       return;
     }
 
-    const p = this.currentAiScan.qualityParameters;
-    if (p.moistureContent !== undefined) {
-      const m = document.getElementById('lot-moisture-input');
-      const f = document.getElementById('lot-foreign-input');
-      const b = document.getElementById('lot-broken-input');
-      const d = document.getElementById('lot-damaged-input');
-      if (m) m.value = p.moistureContent;
-      if (f) f.value = p.foreignMatter;
-      if (b) b.value = p.brokenGrains;
-      if (d) d.value = p.damagedGrains;
-    } else {
-      const b = document.getElementById('lot-blemish-input');
-      const u = document.getElementById('lot-uniformity-input');
-      const r = document.getElementById('lot-ripeness-input');
-      if (b) b.value = p.blemishPercentage;
-      if (u) u.value = p.uniformity;
-      if (r) r.value = p.ripenessIndex;
+    const cropSelect = document.getElementById('lot-crop-select');
+    const selectedCrop = (cropSelect?.value || '').trim();
+    if (selectedCrop && result.crop && selectedCrop.toLowerCase() !== result.crop.toLowerCase()) {
+      this.showToast(`Selected crop (${selectedCrop}) does not match detected crop (${result.crop}). Cannot apply this assessment.`, 'error');
+      return;
     }
 
-    this.updateAgmarkScorecardPreview();
+    // Record as quality evidence
+    this.temporaryEvidence = {
+      source: 'AI_ASSESSMENT',
+      aiAssessment: {
+        status: result.status,
+        crop: result.crop,
+        condition: result.condition,
+        confidence: typeof result.confidence === 'number' ? result.confidence : null,
+        cropConfidence: typeof result.confidence === 'number' ? result.confidence : null,
+        conditionConfidence: typeof result.confidence === 'number' ? result.confidence : null,
+        assessmentType: result.assessmentType || 'visual_condition_detection',
+        modelVersion: result.modelVersion || 'vegqual-20ep',
+        annotatedImageUrl: result.annotatedImageUrl || null,
+        annotatedImageId: result.annotatedImageId || null,
+        assessedAt: new Date().toISOString()
+      },
+      report: {},
+      manual: {}
+    };
+    this.currentAiScan = this.temporaryEvidence.aiAssessment;
+
+    // Prefill crop select only if empty
+    if (cropSelect && result.crop && !cropSelect.value) {
+      const detectedLower = result.crop.toLowerCase();
+      for (const opt of cropSelect.options) {
+        if (opt.value.toLowerCase() === detectedLower || opt.text.toLowerCase() === detectedLower) {
+          cropSelect.value = opt.value;
+          cropSelect.dispatchEvent(new Event('change'));
+          break;
+        }
+      }
+    }
+
+    // Update Quality Evidence summary in Create Lot step
+    const confPct = result.confidence != null ? ` (${(result.confidence * 100).toFixed(1)}% confidence)` : '';
+    this.renderQualityEvidenceSummary(`📷 AI-Assisted Visual Assessment: ${result.crop} • ${result.condition}${confPct}`);
+    this.highlightEvidenceCard('photo');
+
+    // Close the AI modal
     document.getElementById('ai-scanner-modal-overlay')?.classList.remove('active');
-    this.showToast('✓ AI defect metrics auto-populated into Parametric Quality Card!', 'success');
+
+    // Notify user
+    const condLabel = result.condition || '';
+    this.showToast(
+      `✓ AI assessment: ${result.crop} — ${condLabel}${confPct}. Review and complete the lot details.`,
+      'success'
+    );
   },
 
   /**
@@ -1438,6 +2470,23 @@ const FarmerFlow = {
       return `<span style="padding: 4px 10px; border-radius: 8px; background: #F5F4ED; color: #666; font-size: 12px; font-weight: 700;">${status}</span>`;
     };
 
+    const evidenceBadge = (l) => {
+      const qe = l.qualityEvidence;
+      if (qe && qe.source === 'AI_ASSESSMENT') {
+        return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;background:#EDF7ED;color:#1B6B3A;font-size:11px;font-weight:700;border:1px solid #B8D8C0;">🤖 AI Assessed</span>`;
+      }
+      if (qe && qe.source === 'FARMER_PROVIDED_REPORT') {
+        return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;background:#EFF6FF;color:#1D4ED8;font-size:11px;font-weight:700;border:1px solid #BFDBFE;">📄 Report Added</span>`;
+      }
+      if (qe && qe.source === 'MANUAL') {
+        return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;background:#FEF3C7;color:#92400E;font-size:11px;font-weight:700;border:1px solid #FDE68A;">✍️ Quality Added</span>`;
+      }
+      if (l.aiQualityScan && l.aiQualityScan.status === 'AI_ASSESSED') {
+        return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;background:#EDF7ED;color:#1B6B3A;font-size:11px;font-weight:700;border:1px solid #B8D8C0;">🤖 AI Assessed</span>`;
+      }
+      return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;background:#F3F4F6;color:#6B7280;font-size:11px;font-weight:600;border:1px solid #E5E7EB;">No quality evidence added</span>`;
+    };
+
     container.innerHTML = lots.map(lot => {
       const isAssayed = lot.assaying && (lot.assaying.isAssayed || lot.assaying.verificationStatus === 'verified');
       const gradeStr = lot.qualityGrade ? `Grade ${lot.qualityGrade}` : 'Grade A';
@@ -1467,6 +2516,7 @@ const FarmerFlow = {
               ${statusBadge(lot.status, lot.storageType)}
               <span class="agmark-badge agmark-badge--grade-${gradeClass}">${gradeStr}</span>
               ${isAssayed ? `<span class="agmark-badge agmark-badge--verified">✓ ${t('farmer.labAssayed', 'LAB ASSAYED')}</span>` : ''}
+              ${evidenceBadge(lot)}
             </div>
           </div>
 
@@ -1546,386 +2596,568 @@ const FarmerFlow = {
    * LOT DETAILS MODAL
    * ═══════════════════════════════════════════════════════════════════════
    */
+  /**
+   * ═══════════════════════════════════════════════════════════════════════
+   * LOT DETAILS MODAL / DRAWER (Complete Lot Specifications)
+   * ═══════════════════════════════════════════════════════════════════════
+   */
   async viewLotDetails(lotId) {
     let overlay = document.getElementById('lot-detail-modal-overlay');
     if (!overlay) {
       overlay = document.createElement('div');
       overlay.id = 'lot-detail-modal-overlay';
-      overlay.className = 'dash-modal-overlay active';
+      overlay.className = 'dash-modal-overlay';
       document.body.appendChild(overlay);
     }
 
     overlay.innerHTML = `
-      <div class="dash-modal" style="max-width: 540px;">
-        <div class="dash-modal__header">
-          <div>
-            <h3 style="margin: 0;">Lot Details</h3>
-            <span style="font-family: monospace; font-size: 13px; color: var(--ks-gold); font-weight: 700;">${lotId}</span>
+      <div class="dash-modal" style="max-width: 580px; width: 92%; max-height: 90vh; overflow-y: auto; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+        <div class="dash-modal__header" style="padding: 16px 20px; border-bottom: 1px solid #E5E4DD; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--ks-evergreen);">Lot Details</h3>
+            <span style="font-family: monospace; font-size: 12px; color: #12372A; background: #E5F0E7; padding: 2px 8px; border-radius: 6px; font-weight: 700;">${lotId}</span>
           </div>
-          <button class="dash-modal__close" onclick="document.getElementById('lot-detail-modal-overlay').classList.remove('active')"><i data-lucide="x"></i></button>
+          <button class="dash-modal__close" onclick="document.getElementById('lot-detail-modal-overlay').classList.remove('active')" aria-label="Close"><i data-lucide="x"></i></button>
         </div>
-        <div class="dash-modal__body-pad" id="lot-detail-modal-content">
-          <div style="padding: 30px; text-align: center;">Loading lot details...</div>
+        <div class="dash-modal__body-pad" id="lot-detail-modal-content" style="padding: 20px;">
+          <div style="padding: 30px; text-align: center; color: #666;">
+            <i data-lucide="loader-2" class="spin" style="width: 24px; height: 24px; margin-bottom: 8px;"></i>
+            <div>Loading lot details...</div>
+          </div>
         </div>
       </div>
     `;
     overlay.classList.add('active');
+    if (window.lucide) window.lucide.createIcons();
 
-    try {
-      const res = await window.api.lots.getById(lotId);
-      if (res.success && res.lot) {
-        const lot = res.lot;
-        const harvestStr = lot.harvestDate ? new Date(lot.harvestDate).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
-        const content = document.getElementById('lot-detail-modal-content');
+    // Multi-tier lot resolution by exact lotId
+    let lot = null;
+    if (this.myLots && this.myLots.length > 0) {
+      lot = this.myLots.find(l => l.lotId === lotId || l._id === lotId || l.id === lotId);
+    }
+    if (!lot && window.api && window.api.lots) {
+      try {
+        const res = await window.api.lots.getById(lotId);
+        if (res && res.success && res.lot) lot = res.lot;
+      } catch (e) {}
+    }
+    if (!lot && window.api && window.api.market) {
+      try {
+        const res = await window.api.market.getLot(lotId);
+        if (res && res.success && res.lot) lot = res.lot;
+      } catch (e) {}
+    }
+    if (!lot && window.krishiStore) {
+      const storeLots = window.krishiStore.getLots('all');
+      lot = storeLots.find(l => l.lotId === lotId || l._id === lotId || l.id === lotId);
+    }
+    if (!lot && Array.isArray(window.demoLots)) {
+      lot = window.demoLots.find(l => l.lotId === lotId || l._id === lotId || l.id === lotId);
+    }
 
-        const p = lot.qualityParameters || {};
-        const isGrain = !['Onion', 'Tomato'].includes(lot.cropName);
-        const isAssayed = lot.assaying && (lot.assaying.isAssayed || lot.assaying.verificationStatus === 'verified');
+    const content = document.getElementById('lot-detail-modal-content');
+    if (!content) return;
 
-        content.innerHTML = `
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;">
-            <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: #777;">Crop & Variety</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--ks-evergreen); margin-top: 2px;">${lot.cropName} (${lot.variety || 'Standard'})</div>
+    if (!lot) {
+      content.innerHTML = `
+        <div style="padding: 30px 20px; text-align: center; color: #991B1B;">
+          <i data-lucide="alert-circle" style="width: 32px; height: 32px; margin-bottom: 8px;"></i>
+          <div style="font-weight: 700; font-size: 15px;">Produce lot not found</div>
+          <p style="font-size: 13px; color: #666; margin-top: 4px;">Could not find specifications for lot ${lotId}.</p>
+          <button class="btn btn--secondary btn--sm" style="margin-top: 12px;" onclick="document.getElementById('lot-detail-modal-overlay').classList.remove('active')">Close</button>
+        </div>
+      `;
+      if (window.lucide) window.lucide.createIcons();
+      return;
+    }
+
+    const cropDisp = lot.cropName || lot.crop || 'Produce';
+    const varietyDisp = lot.variety || 'Standard Variety';
+    const qty = lot.quantity || 0;
+    const unit = lot.quantityUnit || 'quintal';
+    const price = lot.askingPrice || lot.price || 0;
+    const priceUnit = lot.priceUnit || 'quintal';
+    const totalVal = qty * price;
+    const statusVal = (lot.status || 'available').toLowerCase();
+    const statusLabel = statusVal === 'active' || statusVal === 'available' ? 'Available' : (statusVal.charAt(0).toUpperCase() + statusVal.slice(1));
+    const statusBg = (statusVal === 'active' || statusVal === 'available') ? '#E5F0E7' : (statusVal === 'sold' ? '#DBEAFE' : '#FEF3C7');
+    const statusColor = (statusVal === 'active' || statusVal === 'available') ? '#12372A' : (statusVal === 'sold' ? '#1E40AF' : '#92400E');
+
+    const createdStr = lot.createdAt ? new Date(lot.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Recently';
+    const harvestStr = lot.harvestDate ? new Date(lot.harvestDate).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : null;
+    const locationParts = [lot.village, lot.taluka, lot.district, lot.state].filter(Boolean);
+    const locationStr = locationParts.length > 0 ? locationParts.join(', ') : (lot.storageLocation || 'Pune, Maharashtra');
+
+    // Quality Evidence Block
+    const qe = lot.qualityEvidence || (lot.aiQualityScan && (lot.aiQualityScan.status === 'AI_ASSESSED' || lot.aiQualityScan.crop) ? {
+      source: 'AI_ASSESSMENT',
+      aiAssessment: lot.aiQualityScan
+    } : null);
+
+    let evidenceHtml = '';
+    if (qe && qe.source === 'AI_ASSESSMENT' && qe.aiAssessment) {
+      const ai = qe.aiAssessment;
+      const confRatio = typeof ai.confidence === 'number' ? ai.confidence : (typeof ai.cropConfidence === 'number' ? ai.cropConfidence : null);
+      const confFormatted = confRatio != null ? (confRatio <= 1 ? (confRatio * 100).toFixed(1) + '%' : confRatio.toFixed(1) + '%') : '—';
+      const annUrl = ai.annotatedImageUrl;
+      const fullAnnUrl = annUrl ? (annUrl.startsWith('http') ? annUrl : annUrl) : null;
+
+      evidenceHtml = `
+        <div style="background: #F0FDF4; border: 1.5px solid #B8D8C0; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;">
+          <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #1B6B3A; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="scan-line" style="width:14px;height:14px;"></i>
+              AI-ASSISTED VISUAL ASSESSMENT
+            </span>
+            <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: #DCFCE7; color: #166534;">
+              🤖 AI-Assessed
+            </span>
+          </div>
+
+          ${fullAnnUrl ? `
+            <div style="width: 100%; border-radius: 8px; overflow: hidden; background: #1A1E1A; margin-bottom: 12px; text-align: center; border: 1px solid #2D5A3E;">
+              <img src="${fullAnnUrl}" alt="Annotated crop detection"
+                style="width: 100%; max-height: 220px; object-fit: contain; display: block; margin: 0 auto;">
             </div>
-            <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: #777;">Quantity Listed</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--ks-evergreen); margin-top: 2px;">${lot.quantity} ${lot.quantityUnit || 'quintal'}</div>
+          ` : ''}
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 13px;">
+            <div>
+              <div style="font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Detected Crop</div>
+              <div style="font-weight: 800; color: #12372A;">${ai.crop || cropDisp}</div>
             </div>
-            <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: #777;">Asking Price</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--ks-evergreen); margin-top: 2px;">₹${lot.askingPrice?.toLocaleString('en-IN')} / ${lot.priceUnit || 'q'}</div>
+            <div>
+              <div style="font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Visible Condition</div>
+              <div style="font-weight: 800; color: #12372A;">${ai.condition || 'Fresh'}</div>
             </div>
-            <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: #777;">Agmark Trade Grade</div>
-              <div style="margin-top: 4px;">
-                <span class="agmark-badge agmark-badge--grade-${(lot.qualityGrade || 'A').toLowerCase()}">Grade ${lot.qualityGrade || 'A'}</span>
-                ${isAssayed ? `<span class="agmark-badge agmark-badge--verified" style="margin-left: 6px;">✓ LAB ASSAYED</span>` : ''}
-              </div>
+            <div>
+              <div style="font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Detection confidence</div>
+              <div style="font-weight: 700; color: #12372A;">${confFormatted}</div>
             </div>
-            <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: #777;">Harvest Date</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--ks-evergreen); margin-top: 2px;">${harvestStr}</div>
-            </div>
-            <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: #777;">Status</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--ks-evergreen); margin-top: 2px; text-transform: uppercase;">${lot.status}</div>
+            <div>
+              <div style="font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Assessment type</div>
+              <div style="font-size: 12px; font-weight: 600; color: #555;">${ai.assessmentType || 'Visual object detection'}</div>
             </div>
           </div>
 
-          <!-- PARAMETRIC QUALITY SPECIFICATION CARD -->
-          <div class="quality-card" style="margin-bottom: 20px;">
-            <div class="quality-card__header">
-              <div class="quality-card__title">
-                <i data-lucide="shield-check" style="color: #2D6A4F;"></i> Parametric Quality Specifications (Agmark / e-NAM)
-              </div>
-              <span class="agmark-badge agmark-badge--grade-${(lot.qualityGrade || 'A').toLowerCase()}">
-                Agmark Grade ${lot.qualityGrade || 'A'}
-              </span>
-            </div>
-
-            <div class="param-grid">
-              ${isGrain ? `
-                <div class="param-item">
-                  <div class="param-item__label">Moisture <span class="param-status-dot param-status-dot--pass"></span></div>
-                  <div class="param-item__val">${p.moistureContent !== undefined && p.moistureContent !== null ? p.moistureContent : '11.4'}%</div>
-                  <div class="param-item__benchmark">Benchmark: ≤ 12.0%</div>
-                </div>
-                <div class="param-item">
-                  <div class="param-item__label">Foreign Matter <span class="param-status-dot param-status-dot--pass"></span></div>
-                  <div class="param-item__val">${p.foreignMatter !== undefined && p.foreignMatter !== null ? p.foreignMatter : '0.6'}%</div>
-                  <div class="param-item__benchmark">Benchmark: ≤ 1.0%</div>
-                </div>
-                <div class="param-item">
-                  <div class="param-item__label">Broken Grains <span class="param-status-dot param-status-dot--pass"></span></div>
-                  <div class="param-item__val">${p.brokenGrains !== undefined && p.brokenGrains !== null ? p.brokenGrains : '1.5'}%</div>
-                  <div class="param-item__benchmark">Benchmark: ≤ 2.0%</div>
-                </div>
-                <div class="param-item">
-                  <div class="param-item__label">Damaged Grains <span class="param-status-dot param-status-dot--pass"></span></div>
-                  <div class="param-item__val">${p.damagedGrains !== undefined && p.damagedGrains !== null ? p.damagedGrains : '0.8'}%</div>
-                  <div class="param-item__benchmark">Benchmark: ≤ 1.5%</div>
-                </div>
-              ` : `
-                <div class="param-item">
-                  <div class="param-item__label">Surface Blemish <span class="param-status-dot param-status-dot--pass"></span></div>
-                  <div class="param-item__val">${p.blemishPercentage !== undefined && p.blemishPercentage !== null ? p.blemishPercentage : '2.1'}%</div>
-                  <div class="param-item__benchmark">Benchmark: ≤ 3.0%</div>
-                </div>
-                <div class="param-item">
-                  <div class="param-item__label">Uniformity <span class="param-status-dot param-status-dot--pass"></span></div>
-                  <div class="param-item__val">${p.uniformity !== undefined && p.uniformity !== null ? p.uniformity : '93'}%</div>
-                  <div class="param-item__benchmark">Benchmark: ≥ 90%</div>
-                </div>
-                <div class="param-item">
-                  <div class="param-item__label">Ripeness Index <span class="param-status-dot param-status-dot--pass"></span></div>
-                  <div class="param-item__val">${p.ripenessIndex !== undefined && p.ripenessIndex !== null ? p.ripenessIndex : '91'}%</div>
-                  <div class="param-item__benchmark">Benchmark: ≥ 85%</div>
-                </div>
-                <div class="param-item">
-                  <div class="param-item__label">Avg Caliber <span class="param-status-dot param-status-dot--pass"></span></div>
-                  <div class="param-item__val">${p.avgDiameter || '58'} mm</div>
-                  <div class="param-item__benchmark">Optimum: 45-75mm</div>
-                </div>
-              `}
-            </div>
-
-            ${p.gradeCalculationRationale ? `
-              <div style="font-size: 11.5px; color: #555; background: #FAF9F5; border-radius: 6px; padding: 8px 10px; margin-top: 10px; border-left: 3px solid #2D6A4F;">
-                <strong>Grading Rationale:</strong> ${p.gradeCalculationRationale}
-              </div>
-            ` : ''}
+          <div style="margin-top: 10px; padding: 7px 10px; background: #FFF9ED; border: 1px solid #F0DCAA; border-radius: 6px; font-size: 11px; color: #7A5F20; line-height: 1.5;">
+            ⚠️ Visual assessment is indicative and does not replace laboratory or certified mandi quality testing.
           </div>
-
-          <!-- ASSAYER / LAB CERTIFICATION CARD -->
-          ${isAssayed ? `
-            <div class="assay-cert-card" style="margin-bottom: 20px;">
-              <div class="assay-cert-card__stamp">✓ NABL VERIFIED</div>
-              <div style="font-size: 13px; font-weight: 800; color: #12372A;">
-                Lab Certificate: ${lot.assaying.certificateNumber || 'AGM-2026-QC-48912'}
-              </div>
-              <div style="font-size: 12px; color: #555; margin-top: 2px;">
-                Assayer: <strong>${lot.assaying.assayerName || 'Dr. Vivek Deshmukh'}</strong> • ${lot.assaying.assayerOrganization || 'NABL Accredited Quality Lab #MH-44'}
-              </div>
-              <div class="cert-sig-hash">
-                Digital Signature: ${lot.assaying.digitalSignature?.signatureHash || 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'}
-              </div>
-              <button class="btn btn--sm btn--primary" style="margin-top: 10px; background: #12372A; color: #E8B96A; font-weight: 700;" onclick='FarmerFlow.showCertificateModal(${JSON.stringify(lot).replace(/'/g, "&apos;")})'>
-                <i data-lucide="award"></i> View Official Digital Certificate & Seal
-              </button>
+        </div>
+      `;
+    } else if (qe && qe.source === 'FARMER_PROVIDED_REPORT' && qe.report) {
+      const rpt = qe.report;
+      evidenceHtml = `
+        <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;">
+          <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #334155; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="file-text" style="width:14px;height:14px;"></i>
+              FARMER-PROVIDED QUALITY REPORT
+            </span>
+            <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
+              📄 ${rpt.verificationStatus === 'verified' ? 'Verified' : 'Report Added'}
+            </span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 13px;">
+            <div>
+              <div style="font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">File name</div>
+              <div style="font-weight: 800; color: #12372A; word-break: break-all;">${rpt.fileName || 'Report attached'}</div>
             </div>
-          ` : `
-            <div style="background: #FAF9F5; border: 1px dashed #CCC; border-radius: 10px; padding: 12px 14px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <div style="font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Provider / Lab</div>
+              <div style="font-weight: 700; color: #12372A;">${rpt.provider || 'Not specified'}</div>
+            </div>
+            ${rpt.reportDate ? `
               <div>
-                <div style="font-size: 12.5px; font-weight: 700; color: #555;">Third-Party Lab Assaying Not Recorded</div>
-                <div style="font-size: 11px; color: #888;">Certified testing increases buyer inquiry rates by up to 3.4x</div>
+                <div style="font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Report date</div>
+                <div style="font-weight: 700; color: #12372A;">${rpt.reportDate}</div>
               </div>
-              <button class="btn btn--sm btn--secondary" onclick="FarmerFlow.openAssayLotModal('${lot.lotId}')">
-                <i data-lucide="shield-check"></i> Certify This Lot
-              </button>
-            </div>
-          `}
-
-          <!-- AI SCAN TELEMETRY (IF SCANNED) -->
-          ${lot.aiQualityScan && lot.aiQualityScan.confidenceScore ? `
-            <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 10px 14px; margin-bottom: 20px;">
-              <div style="font-size: 12px; font-weight: 800; color: #166534; display: flex; align-items: center; gap: 6px;">
-                <i data-lucide="cpu" style="width: 15px; height: 15px;"></i> AI Defect Scan Verified (${lot.aiQualityScan.confidenceScore}% Confidence)
+            ` : ''}
+            ${rpt.reportNumber ? `
+              <div>
+                <div style="font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Report number</div>
+                <div style="font-weight: 700; color: #12372A;">${rpt.reportNumber}</div>
               </div>
-              <div style="font-size: 11.5px; color: #14532D; margin-top: 2px;">
-                ${lot.aiQualityScan.summary || 'Computer vision defect analysis confirmed low defect density.'}
-              </div>
-            </div>
-          ` : ''}
-
-          <div style="margin-bottom: 16px;">
-            <div style="font-size: 12px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 4px;">Storage & Location</div>
-            <div style="font-size: 13.5px; color: #444;">Storage: ${lot.storageType || 'Farm Storage'} · ${lot.village || ''} ${lot.taluka || ''} ${lot.district || 'Pune'}, ${lot.state || 'Maharashtra'} (${lot.pincode || ''})</div>
-          </div>
-
-          ${lot.qualityNotes ? `
-            <div style="margin-bottom: 20px;">
-              <div style="font-size: 12px; font-weight: 700; color: var(--ks-evergreen); margin-bottom: 4px;">Quality Notes & Description</div>
-              <div style="font-size: 13px; color: #555; background: #FAF9F5; padding: 10px 12px; border-radius: 6px; border: 1px solid #EEE;">${lot.qualityNotes}</div>
-            </div>
-          ` : ''}
-
-          <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap;">
-            <button class="btn btn--secondary" onclick="document.getElementById('lot-detail-modal-overlay').classList.remove('active')">Close</button>
-            ${window.Auth && window.Auth.getRole() === 'buyer' && lot.status === 'active' ? `
-              <button class="btn btn--primary" style="background: #E8B96A; color: #12372A; font-weight: 700;" onclick="document.getElementById('lot-detail-modal-overlay').classList.remove('active'); window.location.href='buyer.html#/buyer/marketplace';">
-                Send Purchase Inquiry →
-              </button>
-            ` : (!window.Auth || !window.Auth.isAuthenticated()) ? `
-              <a href="login.html" class="btn btn--primary" style="text-decoration: none;">
-                Login to Send Inquiry →
-              </a>
-            ` : (lot.status === 'active' || lot.status === 'draft') ? `
-              <a href="market.html?crop=${encodeURIComponent(lot.cropName.toLowerCase())}&lotId=${lot.lotId}" class="btn btn--primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                Check Market Prices →
-              </a>
-              <button class="btn btn--secondary" onclick="document.getElementById('lot-detail-modal-overlay').classList.remove('active'); FarmerFlow.openEditLotModal('${lot.lotId}')">Edit Lot</button>
             ` : ''}
           </div>
-        `;
-        if (window.lucide) window.lucide.createIcons();
-      }
-    } catch (err) {
-      document.getElementById('lot-detail-modal-content').innerHTML = `
-        <div style="padding: 20px; text-align: center; color: #dc2626;">Unable to load lot details.</div>
+        </div>
+      `;
+    } else if (qe && qe.source === 'MANUAL' && qe.manual) {
+      const man = qe.manual;
+      evidenceHtml = `
+        <div style="background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;">
+          <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #92400E; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="edit-3" style="width:14px;height:14px;"></i>
+              FARMER-PROVIDED QUALITY INFORMATION
+            </span>
+            <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: #FEF3C7; color: #92400E;">
+              ✍ Quality Added
+            </span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 13px;">
+            ${man.condition ? `
+              <div>
+                <div style="font-size: 11px; color: #78350F; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Condition</div>
+                <div style="font-weight: 800; color: #12372A;">${man.condition}</div>
+              </div>
+            ` : ''}
+            ${man.grade ? `
+              <div>
+                <div style="font-size: 11px; color: #78350F; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Grade / Standard</div>
+                <div style="font-weight: 700; color: #12372A;">${man.grade}</div>
+              </div>
+            ` : ''}
+            ${man.description ? `
+              <div style="grid-column: 1 / -1;">
+                <div style="font-size: 11px; color: #78350F; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Description</div>
+                <div style="font-size: 13px; color: #333;">${man.description}</div>
+              </div>
+            ` : ''}
+            ${man.notes ? `
+              <div style="grid-column: 1 / -1;">
+                <div style="font-size: 11px; color: #78350F; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Notes</div>
+                <div style="font-size: 13px; color: #555;">${man.notes}</div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    } else {
+      evidenceHtml = `
+        <div style="background: #F9FAFB; border: 1px dashed #E5E7EB; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;">
+          <div style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="info" style="width: 14px; height: 14px;"></i>
+            QUALITY EVIDENCE
+          </div>
+          <div style="font-size: 12.5px; color: #6B7280; margin-top: 4px;">
+            No quality evidence added
+          </div>
+        </div>
       `;
     }
+
+    content.innerHTML = `
+      <!-- Status & Trade Grade Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #EEE;">
+        <div>
+          <span style="display: inline-block; padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; background: ${statusBg}; color: ${statusColor};">
+            ${statusLabel}
+          </span>
+          ${lot.qualityGrade ? `
+            <span class="agmark-badge agmark-badge--grade-${lot.qualityGrade.toLowerCase()}" style="margin-left: 6px; font-size: 11px;">
+              Grade ${lot.qualityGrade}
+            </span>
+          ` : ''}
+        </div>
+        <div style="font-size: 12px; color: #777;">
+          Listed on <strong>${createdStr}</strong>
+        </div>
+      </div>
+
+      <!-- Core Metrics Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+        <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Crop & Variety</div>
+          <div style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen); margin-top: 2px;">${cropDisp}</div>
+          <div style="font-size: 12px; color: #666;">${varietyDisp}</div>
+        </div>
+        <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Quantity Available</div>
+          <div style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen); margin-top: 2px;">${qty} ${unit}</div>
+          <div style="font-size: 12px; color: #666;">Farm stock</div>
+        </div>
+        <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Asking Price</div>
+          <div style="font-size: 15px; font-weight: 800; color: var(--ks-evergreen); margin-top: 2px;">₹${price.toLocaleString('en-IN')} <small style="font-size: 11px; font-weight: 600; color: #666;">/ ${priceUnit}</small></div>
+        </div>
+        <div style="background: #F5F4ED; padding: 12px 14px; border-radius: 8px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #777; font-weight: 700;">Expected Total Value</div>
+          <div style="font-size: 15px; font-weight: 800; color: #1B6B3A; margin-top: 2px;">₹${totalVal.toLocaleString('en-IN')}</div>
+        </div>
+      </div>
+
+      <!-- Quality Evidence Section -->
+      ${evidenceHtml}
+
+      <!-- Location & Dates -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; font-size: 13px;">
+        <div style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
+          <i data-lucide="map-pin" style="width: 15px; height: 15px; color: #2D6A4F; flex-shrink: 0; margin-top: 2px;"></i>
+          <div>
+            <strong style="color: #12372A;">Farm Location:</strong>
+            <span style="color: #444;"> ${locationStr}${lot.pincode ? ` (${lot.pincode})` : ''}</span>
+          </div>
+        </div>
+        ${harvestStr ? `
+          <div style="display: flex; align-items: center; gap: 6px; color: #555;">
+            <i data-lucide="calendar" style="width: 15px; height: 15px; color: #2D6A4F; flex-shrink: 0;"></i>
+            <span><strong>Harvest Date:</strong> ${harvestStr}</span>
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- Description / Notes if available -->
+      ${(lot.description || lot.qualityNotes) ? `
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #777; margin-bottom: 4px;">Description / Notes</div>
+          <div style="font-size: 13px; color: #444; background: #FAF9F5; padding: 10px 12px; border-radius: 8px; border: 1px solid #EEE; line-height: 1.5;">
+            ${lot.description || lot.qualityNotes}
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Actions Bar -->
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 14px; border-top: 1px solid #EEE; flex-wrap: wrap;">
+        <button type="button" class="btn btn--secondary" onclick="document.getElementById('lot-detail-modal-overlay').classList.remove('active')">Close</button>
+        ${(statusVal === 'active' || statusVal === 'available' || statusVal === 'draft') ? `
+          <button type="button" class="btn btn--secondary" style="color: #991B1B; border-color: #FCA5A5; background: #FEF2F2;" onclick="FarmerFlow.confirmDeleteLot('${lot.lotId}')">
+            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Delete Lot
+          </button>
+          <button type="button" class="btn btn--primary" onclick="FarmerFlow.openEditLotModal('${lot.lotId}')">
+            <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> Edit Lot
+          </button>
+        ` : ''}
+      </div>
+    `;
+
+    if (window.lucide) window.lucide.createIcons();
   },
 
   /**
    * ═══════════════════════════════════════════════════════════════════════
-   * EDIT PRODUCE LOT MODAL
+   * EDIT PRODUCE LOT MODAL (Unified with Create Lot Wizard)
    * ═══════════════════════════════════════════════════════════════════════
    */
   async openEditLotModal(lotId) {
-    let overlay = document.getElementById('edit-lot-modal-overlay');
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'edit-lot-modal-overlay';
-      overlay.className = 'dash-modal-overlay';
-      document.body.appendChild(overlay);
+    // Close detail modal if open
+    const detailOverlay = document.getElementById('lot-detail-modal-overlay');
+    if (detailOverlay) detailOverlay.classList.remove('active');
+
+    // Resolve lot
+    let lot = null;
+    if (this.myLots && this.myLots.length > 0) {
+      lot = this.myLots.find(l => l.lotId === lotId || l._id === lotId || l.id === lotId);
+    }
+    if (!lot && window.api && window.api.lots) {
+      try {
+        const res = await window.api.lots.getById(lotId);
+        if (res && res.success && res.lot) lot = res.lot;
+      } catch (e) {}
     }
 
-    try {
-      const res = await window.api.lots.getById(lotId);
-      if (!res.success || !res.lot) {
-        this.showToast('Unable to load lot for editing.', 'error');
-        return;
-      }
-      const lot = res.lot;
-
-      if (lot.status === 'sold') {
-        this.showToast('This lot has already been sold and cannot be edited.', 'warning');
-        return;
-      }
-
-      overlay.innerHTML = `
-        <div class="dash-modal" style="max-width: 500px;">
-          <div class="dash-modal__header">
-            <div>
-              <h3 style="margin: 0;">Edit Produce Lot</h3>
-              <span style="font-family: monospace; font-size: 12px; color: var(--ks-gold);">${lot.lotId} — ${lot.cropName}</span>
-            </div>
-            <button class="dash-modal__close" onclick="document.getElementById('edit-lot-modal-overlay').classList.remove('active')"><i data-lucide="x"></i></button>
-          </div>
-          <form class="dash-modal__form" id="edit-lot-form" style="padding: 20px 24px;">
-            <div class="dash-form-row">
-              <div class="dash-modal__field">
-                <label for="edit-lot-qty">Quantity (${lot.quantityUnit || 'quintal'})</label>
-                <input type="number" id="edit-lot-qty" class="dash-form-input" value="${lot.quantity}" min="0.1" step="0.1" required>
-              </div>
-              <div class="dash-modal__field">
-                <label for="edit-lot-price">Asking Price (₹ / ${lot.priceUnit || 'q'})</label>
-                <input type="number" id="edit-lot-price" class="dash-form-input" value="${lot.askingPrice}" min="1" required>
-              </div>
-            </div>
-
-            <div class="dash-form-row">
-              <div class="dash-modal__field">
-                <label for="edit-lot-grade">Quality Grade</label>
-                <select id="edit-lot-grade" class="dash-filter-select">
-                  <option value="A" ${lot.qualityGrade === 'A' ? 'selected' : ''}>Grade A (Premium)</option>
-                  <option value="B" ${lot.qualityGrade === 'B' ? 'selected' : ''}>Grade B (Standard)</option>
-                  <option value="C" ${lot.qualityGrade === 'C' ? 'selected' : ''}>Grade C</option>
-                </select>
-              </div>
-              <div class="dash-modal__field">
-                <label for="edit-lot-status">Status</label>
-                <select id="edit-lot-status" class="dash-filter-select">
-                  <option value="active" ${lot.status === 'active' ? 'selected' : ''}>Active (Marketplace)</option>
-                  <option value="draft" ${lot.status === 'draft' ? 'selected' : ''}>Draft</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="dash-modal__field">
-              <label for="edit-lot-notes">Quality Notes / Variety</label>
-              <textarea id="edit-lot-notes" class="dash-form-textarea" rows="2">${lot.qualityNotes || lot.variety || ''}</textarea>
-            </div>
-
-            <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-save-edit-lot" style="width: 100%; margin-top: 14px;">
-              <i data-lucide="check"></i> Save Lot Changes
-            </button>
-          </form>
-        </div>
-      `;
-
-      overlay.classList.add('active');
-      if (window.lucide) window.lucide.createIcons();
-
-      overlay.querySelector('#edit-lot-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const submitBtn = overlay.querySelector('#btn-save-edit-lot');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = 'Saving changes...';
-
-        const payload = {
-          quantity: parseFloat(document.getElementById('edit-lot-qty').value),
-          askingPrice: parseFloat(document.getElementById('edit-lot-price').value),
-          qualityGrade: document.getElementById('edit-lot-grade').value,
-          status: document.getElementById('edit-lot-status').value,
-          qualityNotes: document.getElementById('edit-lot-notes').value.trim()
-        };
-
-        try {
-          const updateRes = await window.api.lots.update(lot.lotId, payload);
-          if (updateRes.success) {
-            overlay.classList.remove('active');
-            this.showToast('Produce lot updated successfully! ✓', 'success');
-            await this.loadMyLots(this.currentFilter);
-          } else {
-            this.showToast(updateRes.message || 'Failed to update lot.', 'error');
-          }
-        } catch (err) {
-          this.showToast('Server error while updating lot.', 'error');
-        } finally {
-          submitBtn.disabled = false;
-        }
-      });
-    } catch (err) {
-      this.showToast('Unable to open edit lot modal.', 'error');
+    if (!lot) {
+      this.showToast('Unable to load lot for editing.', 'error');
+      return;
     }
+
+    if (lot.status === 'sold') {
+      this.showToast('This lot has already been sold and cannot be edited.', 'warning');
+      return;
+    }
+
+    this._editingLotId = lot.lotId;
+
+    let overlay = document.getElementById('create-lot-modal-overlay');
+    if (!overlay) return;
+
+    // Reset temporary evidence & populate with existing lot evidence
+    this.resetQualityEvidenceForm();
+    if (lot.qualityEvidence && lot.qualityEvidence.source) {
+      this.temporaryEvidence = JSON.parse(JSON.stringify(lot.qualityEvidence));
+      if (lot.qualityEvidence.source === 'AI_ASSESSMENT' && lot.qualityEvidence.aiAssessment) {
+        const ai = lot.qualityEvidence.aiAssessment;
+        this.renderQualityEvidenceSummary(`🤖 AI Assessed: ${ai.crop || lot.cropName} · ${ai.condition || 'Fresh'}`);
+        this.highlightEvidenceCard('photo');
+      } else if (lot.qualityEvidence.source === 'FARMER_PROVIDED_REPORT' && lot.qualityEvidence.report) {
+        this.renderQualityEvidenceSummary(`📄 Quality Report: ${lot.qualityEvidence.report.fileName || 'Report attached'}`);
+        this.highlightEvidenceCard('report');
+      } else if (lot.qualityEvidence.source === 'MANUAL' && lot.qualityEvidence.manual) {
+        this.renderQualityEvidenceSummary(`✍️ Quality Info: ${lot.qualityEvidence.manual.condition || 'Manual entered'}`);
+        this.highlightEvidenceCard('manual');
+      }
+    }
+
+    // Pre-fill inputs
+    const cropSelect = document.getElementById('lot-crop-select');
+    if (cropSelect && lot.cropName) {
+      cropSelect.value = lot.cropName;
+      // Trigger change for grading params
+      cropSelect.dispatchEvent(new Event('change'));
+    }
+
+    const qtyInput = document.getElementById('lot-qty-input');
+    if (qtyInput) qtyInput.value = lot.quantity || '';
+
+    const priceInput = document.getElementById('lot-price-input');
+    if (priceInput) priceInput.value = lot.askingPrice || lot.price || '';
+
+    const harvestInput = document.getElementById('lot-harvest-input');
+    if (harvestInput && lot.harvestDate) {
+      harvestInput.value = new Date(lot.harvestDate).toISOString().split('T')[0];
+    }
+
+    const descInput = document.getElementById('lot-desc-input');
+    if (descInput) descInput.value = lot.description || lot.qualityNotes || '';
+
+    const locInput = document.getElementById('lot-location-input');
+    if (locInput) {
+      const locParts = [lot.village, lot.taluka, lot.district, lot.state].filter(Boolean);
+      locInput.value = locParts.length > 0 ? locParts.join(', ') : (lot.storageLocation || 'Pune, Maharashtra');
+    }
+
+    // Update modal submit button text
+    const submitBtn = overlay.querySelector('#btn-submit-lot') || overlay.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.innerHTML = '<i data-lucide="check"></i> Save Lot Changes';
+    }
+
+    overlay.classList.add('active');
+    this.initQualityGradingEvents();
+    if (window.lucide) window.lucide.createIcons();
   },
 
   /**
    * ═══════════════════════════════════════════════════════════════════════
-   * CANCEL PRODUCE LOT (Soft Cancel)
+   * PERMANENT DELETE LOT CONFIRMATION MODAL
    * ═══════════════════════════════════════════════════════════════════════
    */
-  async confirmCancelLot(lotId) {
-    let overlay = document.getElementById('cancel-lot-confirm-overlay');
+  async confirmDeleteLot(lotId) {
+    // Close detail modal if open
+    const detailOverlay = document.getElementById('lot-detail-modal-overlay');
+    if (detailOverlay) detailOverlay.classList.remove('active');
+
+    let lot = null;
+    if (this.myLots && this.myLots.length > 0) {
+      lot = this.myLots.find(l => l.lotId === lotId || l._id === lotId || l.id === lotId);
+    }
+    if (!lot && window.api && window.api.lots) {
+      try {
+        const res = await window.api.lots.getById(lotId);
+        if (res && res.success && res.lot) lot = res.lot;
+      } catch (e) {}
+    }
+
+    const cropDisp = lot?.cropName || lot?.crop || 'Produce';
+    const qtyDisp = `${lot?.quantity || ''} ${lot?.quantityUnit || 'quintal'}`.trim();
+    const priceDisp = `₹${(lot?.askingPrice || lot?.price || 0).toLocaleString('en-IN')}/${lot?.priceUnit || 'quintal'}`;
+
+    let overlay = document.getElementById('delete-lot-confirm-overlay');
     if (!overlay) {
       overlay = document.createElement('div');
-      overlay.id = 'cancel-lot-confirm-overlay';
+      overlay.id = 'delete-lot-confirm-overlay';
       overlay.className = 'dash-modal-overlay';
       document.body.appendChild(overlay);
     }
 
     overlay.innerHTML = `
-      <div class="dash-modal" style="max-width: 440px; text-align: center; padding: 28px 24px;">
-        <div style="width: 52px; height: 52px; border-radius: 50%; background: #FEE2E2; color: #dc2626; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 14px;">
-          ⚠️
+      <div class="dash-modal" style="max-width: 440px; text-align: center; padding: 28px 24px; border-radius: 14px;">
+        <div style="width: 52px; height: 52px; border-radius: 50%; background: #FEE2E2; color: #DC2626; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 14px;">
+          <i data-lucide="trash-2" style="width: 26px; height: 26px;"></i>
         </div>
-        <h3 style="font-size: 18px; font-weight: 700; color: #12372A; margin: 0 0 8px 0;">Cancel Produce Lot?</h3>
-        <p style="font-size: 13.5px; color: #666; margin: 0 0 20px 0; line-height: 1.5;">
-          Are you sure you want to cancel <strong>${lotId}</strong>? This lot will no longer appear for buyer discovery on the marketplace.
+        <h3 style="font-size: 19px; font-weight: 800; color: #12372A; margin: 0 0 8px 0;">Delete this lot?</h3>
+        <p style="font-size: 14.5px; font-weight: 700; color: #12372A; margin: 0 0 4px 0;">
+          ${cropDisp} • ${qtyDisp} • ${priceDisp}
+        </p>
+        <p style="font-size: 13px; color: #666; margin: 0 0 22px 0; line-height: 1.5;">
+          This lot will be permanently removed from your active listings and cannot be recovered.
         </p>
         <div style="display: flex; gap: 10px;">
-          <button class="btn btn--secondary" style="flex: 1;" onclick="document.getElementById('cancel-lot-confirm-overlay').classList.remove('active')">
-            Keep Lot
+          <button type="button" class="btn btn--secondary" style="flex: 1;" onclick="document.getElementById('delete-lot-confirm-overlay').classList.remove('active')">
+            Cancel
           </button>
-          <button class="btn" style="flex: 1; background: #dc2626; color: #FFFFFF; font-weight: 700; border: none; border-radius: 8px; cursor: pointer;" id="btn-do-cancel-lot">
-            Cancel Lot
+          <button type="button" class="btn" style="flex: 1; background: #DC2626; color: #FFFFFF; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; padding: 10px 14px;" id="btn-do-permanent-delete">
+            Delete Lot
           </button>
         </div>
       </div>
     `;
 
     overlay.classList.add('active');
+    if (window.lucide) window.lucide.createIcons();
 
-    overlay.querySelector('#btn-do-cancel-lot').addEventListener('click', async () => {
-      const btn = overlay.querySelector('#btn-do-cancel-lot');
+    overlay.querySelector('#btn-do-permanent-delete').addEventListener('click', async () => {
+      const btn = overlay.querySelector('#btn-do-permanent-delete');
       btn.disabled = true;
-      btn.textContent = 'Cancelling...';
+      btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Deleting...';
 
       try {
         const res = await window.api.lots.cancel(lotId);
-        if (res.success) {
+        if (res && res.success) {
           overlay.classList.remove('active');
-          this.showToast(`Lot ${lotId} has been cancelled.`, 'success');
-          await this.loadMyLots(this.currentFilter);
+
+          // Remove exact lot from in-memory state
+          if (Array.isArray(this.myLots)) {
+            this.myLots = this.myLots.filter(l => l.lotId !== lotId && l._id !== lotId && l.id !== lotId);
+          }
+          if (window.krishiStore && typeof window.krishiStore.getLots === 'function') {
+            try {
+              const allStore = window.krishiStore.getLots('all').filter(l => l.lotId !== lotId && l._id !== lotId && l.id !== lotId);
+              localStorage.setItem('krishi_lots', JSON.stringify(allStore));
+            } catch (e) {}
+          }
+
+          this.showToast('Lot deleted successfully.', 'success');
+
+          // Refresh market page live lots feed and lots page list
+          await this.initMarketPage();
+          if (document.getElementById('lots-container') || document.getElementById('lots-panel-body')) {
+            await this.loadMyLots(this.currentFilter || 'all');
+          }
         } else {
-          this.showToast(res.message || 'Failed to cancel lot.', 'error');
+          this.showToast(res?.message || 'Lot could not be deleted. Please try again.', 'error');
         }
       } catch (err) {
-        this.showToast('Server error while cancelling lot.', 'error');
+        this.showToast('Lot could not be deleted. Please try again.', 'error');
+      } finally {
+        btn.disabled = false;
       }
     });
+  },
+
+  // Alias for backward compatibility
+  async confirmCancelLot(lotId) {
+    return this.confirmDeleteLot(lotId);
+  },
+
+  /**
+   * Toggle 3-dot dropdown menu on market cards
+   */
+  toggleLotMenu(event, lotId) {
+    event.stopPropagation();
+    // Close any other open lot menus
+    document.querySelectorAll('.lot-card-menu-dropdown').forEach(m => m.remove());
+
+    const btn = event.currentTarget;
+    const parent = btn.parentElement;
+
+    const menu = document.createElement('div');
+    menu.className = 'lot-card-menu-dropdown';
+    menu.style.cssText = 'position: absolute; right: 0; bottom: 100%; margin-bottom: 6px; background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); z-index: 100; min-width: 140px; overflow: hidden; padding: 4px 0;';
+    menu.innerHTML = `
+      <button type="button" style="width: 100%; text-align: left; padding: 8px 12px; border: none; background: transparent; font-size: 12.5px; font-weight: 600; color: #12372A; cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="FarmerFlow.viewLotDetails('${lotId}'); this.parentElement.remove();">
+        <i data-lucide="eye" style="width: 14px; height: 14px;"></i> View details
+      </button>
+      <button type="button" style="width: 100%; text-align: left; padding: 8px 12px; border: none; background: transparent; font-size: 12.5px; font-weight: 600; color: #12372A; cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="FarmerFlow.openEditLotModal('${lotId}'); this.parentElement.remove();">
+        <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> Edit lot
+      </button>
+      <div style="height: 1px; background: #EEE; margin: 4px 0;"></div>
+      <button type="button" style="width: 100%; text-align: left; padding: 8px 12px; border: none; background: transparent; font-size: 12.5px; font-weight: 600; color: #DC2626; cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="FarmerFlow.confirmDeleteLot('${lotId}'); this.parentElement.remove();">
+        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Delete lot
+      </button>
+    `;
+
+    parent.appendChild(menu);
+    if (window.lucide) window.lucide.createIcons();
+
+    // Auto-close on click outside
+    const closeListener = (e) => {
+      if (!menu.contains(e.target) && e.target !== btn) {
+        menu.remove();
+        document.removeEventListener('click', closeListener);
+      }
+    };
+    setTimeout(() => document.addEventListener('click', closeListener), 0);
   },
 
   /**
@@ -2091,53 +3323,116 @@ const FarmerFlow = {
     if (!liveFeed) return;
 
     try {
-      const res = await window.api.market.getLots({ limit: 12, sortBy: 'newest' });
-      if (res.success && Array.isArray(res.lots) && res.lots.length > 0) {
-        // Prepend real marketplace lots section
-        const existingContainer = document.getElementById('real-marketplace-lots-section');
-        if (!existingContainer) {
-          const section = document.createElement('div');
-          section.id = 'real-marketplace-lots-section';
-          section.style.cssText = 'margin-bottom: 32px;';
-          section.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-              <div>
-                <h3 style="font-size: 20px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">Active Farmer Produce Lots</h3>
-                <p style="font-size: 13px; color: var(--ks-text-muted); margin: 0;">Direct farm-gate lots available for purchase and procurement</p>
-              </div>
-              <span style="font-size: 12px; font-weight: 700; background: #E5F0E7; color: #12372A; padding: 4px 10px; border-radius: 6px;">${res.lots.length} Live Lots</span>
+      let lots = [];
+      const res = await window.api.market.getLots({ limit: 50, sortBy: 'newest' });
+      if (res.success && Array.isArray(res.lots)) {
+        lots = res.lots;
+      } else if (Array.isArray(this.myLots) && this.myLots.length > 0) {
+        lots = this.myLots;
+      } else if (window.krishiStore && typeof window.krishiStore.getLots === 'function') {
+        lots = window.krishiStore.getLots('all');
+      }
+
+      // Filter active / available lots
+      const activeLots = lots.filter(l => l.status !== 'sold' && l.status !== 'cancelled');
+
+      let section = document.getElementById('real-marketplace-lots-section');
+      if (!section) {
+        section = document.createElement('div');
+        section.id = 'real-marketplace-lots-section';
+        section.style.cssText = 'margin-bottom: 32px;';
+        liveFeed.parentNode.insertBefore(section, liveFeed);
+      }
+
+      if (activeLots.length === 0) {
+        section.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <h3 style="font-size: 20px; font-weight: 800; color: var(--ks-evergreen); margin: 0 0 4px 0;">Active Farmer Produce Lots</h3>
+              <p style="font-size: 13px; color: var(--ks-text-muted); margin: 0;">Manage your active produce listings and share them with buyers.</p>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
-              ${res.lots.map(lot => `
-                <div style="background: #FFFFFF; border: 1px solid var(--border-light, #E5E4DD); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <span style="font-size: 12px; font-weight: 700; background: #F3F4F6; color: #4B5563; padding: 4px 10px; border-radius: 6px;">0 Live Lots</span>
+          </div>
+          <div style="background: #FFFFFF; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 36px 20px; text-align: center;">
+            <div style="width: 48px; height: 48px; border-radius: 50%; background: #F0FDF4; color: #166534; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+              <i data-lucide="package-open" style="width: 24px; height: 24px;"></i>
+            </div>
+            <h4 style="font-size: 16px; font-weight: 700; color: #12372A; margin: 0 0 6px 0;">No active produce lots</h4>
+            <p style="font-size: 13px; color: #666; margin: 0 0 16px 0; max-width: 360px; margin-left: auto; margin-right: auto;">Create a lot to start listing your produce for buyers.</p>
+            <button type="button" class="btn btn--primary btn--sm" onclick="FarmerFlow.openCreateLotModal()">
+              <i data-lucide="plus"></i> Create a Lot
+            </button>
+          </div>
+        `;
+      } else {
+        section.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <h3 style="font-size: 20px; font-weight: 800; color: var(--ks-evergreen); margin: 0 0 4px 0;">Active Farmer Produce Lots</h3>
+              <p style="font-size: 13px; color: var(--ks-text-muted); margin: 0;">Manage your active produce listings and share them with buyers.</p>
+            </div>
+            <span style="font-size: 12px; font-weight: 800; background: #E5F0E7; color: #12372A; padding: 5px 12px; border-radius: 6px; letter-spacing: 0.2px;">${activeLots.length} Live Lots</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px;">
+            ${activeLots.map(lot => {
+              const qe = lot.qualityEvidence || (lot.aiQualityScan && (lot.aiQualityScan.status === 'AI_ASSESSED' || lot.aiQualityScan.crop) ? {
+                source: 'AI_ASSESSMENT',
+                aiAssessment: lot.aiQualityScan
+              } : null);
+
+              let qeBadge = '';
+              if (qe && qe.source === 'AI_ASSESSMENT') {
+                qeBadge = `<span style="font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;"><i data-lucide="scan-line" style="width:12px;height:12px;"></i> AI-Assessed</span>`;
+              } else if (qe && qe.source === 'FARMER_PROVIDED_REPORT') {
+                qeBadge = `<span style="font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: #F8FAFC; color: #334155; border: 1px solid #CBD5E1; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;"><i data-lucide="file-text" style="width:12px;height:12px;"></i> Report Added</span>`;
+              } else if (qe && qe.source === 'MANUAL') {
+                qeBadge = `<span style="font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;"><i data-lucide="edit-3" style="width:12px;height:12px;"></i> Quality Added</span>`;
+              }
+
+              const statusBadge = (lot.status === 'active' || !lot.status) ? 'AVAILABLE' : lot.status.toUpperCase();
+              const locStr = [lot.district, lot.state].filter(Boolean).join(', ') || 'Pune, Maharashtra';
+
+              return `
+                <div class="market-lot-card" style="background: #FFFFFF; border: 1px solid #E5E4DD; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
                   <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                       <span style="font-family: monospace; font-size: 11.5px; color: #888; font-weight: 600;">${lot.lotId}</span>
-                      <span style="padding: 2px 8px; border-radius: 6px; background: #E5F0E7; color: #12372A; font-size: 11px; font-weight: 700;">GRADE ${lot.qualityGrade || 'A'}</span>
+                      <span style="padding: 2px 8px; border-radius: 6px; background: #E5F0E7; color: #12372A; font-size: 11px; font-weight: 800; text-transform: uppercase;">${statusBadge}</span>
                     </div>
-                    <h4 style="font-size: 16px; font-weight: 700; color: var(--ks-evergreen); margin: 0 0 4px 0;">${lot.cropName}</h4>
-                    <p style="font-size: 12.5px; color: #666; margin: 0 0 12px 0;">${lot.variety || 'Standard Variety'} • ${lot.district || 'Pune'}, ${lot.state || 'Maharashtra'}</p>
-                    <div style="background: #F5F4ED; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px;">
+                      <h4 style="font-size: 17px; font-weight: 800; color: var(--ks-evergreen); margin: 0;">${lot.cropName || lot.crop || 'Produce'}</h4>
+                      ${lot.qualityGrade ? `<span class="agmark-badge agmark-badge--grade-${lot.qualityGrade.toLowerCase()}" style="font-size: 10.5px;">Grade ${lot.qualityGrade}</span>` : ''}
+                    </div>
+                    <p style="font-size: 12.5px; color: #666; margin: 0 0 10px 0;">${lot.variety || 'Standard Variety'} • ${locStr}</p>
+                    <div style="background: #F5F4ED; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px;">
                       <div style="font-size: 11px; color: #777;">Quantity Available</div>
-                      <div style="font-size: 15px; font-weight: 700; color: #222;">${lot.quantity} ${lot.quantityUnit || 'quintal'}</div>
+                      <div style="font-size: 15px; font-weight: 800; color: #222;">${lot.quantity} ${lot.quantityUnit || 'quintal'}</div>
                     </div>
+                    ${qeBadge ? `<div style="margin-bottom: 10px;">${qeBadge}</div>` : ''}
                   </div>
-                  <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #EEE; padding-top: 10px; margin-bottom: 12px;">
+                  <div style="border-top: 1px solid #EEE; padding-top: 12px; margin-top: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                       <span style="font-size: 11.5px; color: #777;">Asking Price</span>
-                      <span style="font-size: 16px; font-weight: 800; color: var(--ks-evergreen);">₹${lot.askingPrice?.toLocaleString('en-IN')}<span style="font-size: 11px; font-weight: 400;"> / ${lot.priceUnit || 'q'}</span></span>
+                      <span style="font-size: 16px; font-weight: 800; color: var(--ks-evergreen);">₹${(lot.askingPrice || lot.price || 0).toLocaleString('en-IN')}<span style="font-size: 11px; font-weight: 400; color: #666;"> / ${lot.priceUnit || 'q'}</span></span>
                     </div>
-                    <button class="btn btn--primary btn--sm" style="width: 100%; justify-content: center;" onclick="FarmerFlow.viewLotDetails('${lot.lotId}')">
-                      View Lot Specifications
-                    </button>
+                    <div style="display: flex; gap: 8px; align-items: center; position: relative;">
+                      <button type="button" class="btn btn--primary btn--sm" style="flex: 1; justify-content: center; font-weight: 700;" onclick="FarmerFlow.viewLotDetails('${lot.lotId}')">
+                        View details
+                      </button>
+                      <div style="position: relative;">
+                        <button type="button" class="btn btn--secondary btn--sm" style="padding: 7px 11px; border-radius: 8px;" onclick="FarmerFlow.toggleLotMenu(event, '${lot.lotId}')" title="Manage lot" aria-label="Manage lot">
+                          <i data-lucide="more-vertical" style="width: 15px; height: 15px;"></i>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              `).join('')}
-            </div>
-          `;
-          liveFeed.parentNode.insertBefore(section, liveFeed);
-        }
+              `;
+            }).join('')}
+          </div>
+        `;
       }
+      if (window.lucide) window.lucide.createIcons();
     } catch (err) {
       console.warn('[Marketplace Live Feed]:', err);
     }

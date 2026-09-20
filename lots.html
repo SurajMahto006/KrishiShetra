@@ -402,7 +402,7 @@
       <form class="dash-modal__form" id="create-lot-form">
         <div class="dash-modal__field">
           <label for="lot-crop-select" data-i18n="cropLotModal.cropCategory">Crop</label>
-          <select id="lot-crop-select" class="dash-filter-select" required>
+          <select id="lot-crop-select" class="dash-filter-select" required onchange="if (window.FarmerFlow && typeof window.FarmerFlow.clearQualityEvidence === 'function') window.FarmerFlow.clearQualityEvidence();">
             <option value="rice">Rice</option>
             <option value="wheat">Wheat</option>
             <option value="onion">Onion</option>
@@ -426,18 +426,326 @@
               required>
           </div>
         </div>
-        <div class="dash-form-row">
-          <div class="dash-modal__field">
-            <label for="lot-grade-select" data-i18n="cropLotModal.gradeSelection">Quality / Grade</label>
-            <select id="lot-grade-select" class="dash-filter-select">
-              <option value="Grade A">Grade A (Premium)</option>
-              <option value="Grade B">Grade B (Standard FAQ)</option>
-              <option value="Grade C">Grade C (Under-grade)</option>
-            </select>
+        <div class="dash-modal__field" style="margin-bottom: 16px;">
+          <label for="lot-harvest-input" data-i18n="market.harvestDate">Harvest Date</label>
+          <input type="date" id="lot-harvest-input" class="dash-form-input" required>
+        </div>
+
+        <!-- QUALITY EVIDENCE SECTION -->
+        <div id="quality-evidence-step-box"
+          style="background: #FDFCF9; border: 1.5px solid #D5E2D5; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <div style="font-size: 13.5px; font-weight: 800; color: var(--ks-evergreen); display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i data-lucide="shield-check" style="width: 18px; height: 18px; color: var(--ks-sage);"></i>
+                QUALITY EVIDENCE
+              </div>
+              <div style="font-size: 12px; color: #666; margin-top: 3px;">
+                Help buyers understand the quality of your produce.
+              </div>
+            </div>
+            <button type="button" id="qe-skip-btn" onclick="FarmerFlow.selectQualityEvidenceTab('skip')"
+              style="font-size: 12px; color: #777; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 4px;">
+              Skip for now
+            </button>
           </div>
-          <div class="dash-modal__field">
-            <label for="lot-harvest-input" data-i18n="market.harvestDate">Harvest Date</label>
-            <input type="date" id="lot-harvest-input" class="dash-form-input" required>
+
+          <!-- Active selected evidence summary pill -->
+          <div id="qe-active-summary" style="display: none; margin-bottom: 12px; padding: 10px 14px; border-radius: 8px; background: #E8F5E9; border: 1px solid #A5D6A7; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <div id="qe-active-summary-text" style="font-size: 12.5px; font-weight: 700; color: #1B5E20; display: flex; align-items: center; gap: 8px;"></div>
+            <button type="button" onclick="FarmerFlow.clearQualityEvidence()" style="background: none; border: none; color: #B71C1C; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: underline;">
+              Remove
+            </button>
+          </div>
+
+          <!-- 3 Options Buttons -->
+          <div class="qe-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; margin-bottom: 12px;">
+            <!-- Option 1: AI Photo -->
+            <button type="button" id="qe-btn-photo" class="qe-option-card" onclick="FarmerFlow.selectQualityEvidenceTab('photo')"
+              style="padding: 12px 10px; border-radius: 10px; border: 1.5px solid #CCDBCD; background: #FFFFFF; text-align: left; cursor: pointer; transition: all 0.2s ease;">
+              <div style="font-size: 20px; margin-bottom: 4px;">📷</div>
+              <div style="font-size: 13px; font-weight: 800; color: #12372A;">Check with Photo</div>
+              <div style="font-size: 11px; color: #666; margin-top: 2px;">AI-assisted visual assessment</div>
+            </button>
+
+            <!-- Option 2: Report -->
+            <button type="button" id="qe-btn-report" class="qe-option-card" onclick="FarmerFlow.selectQualityEvidenceTab('report')"
+              style="padding: 12px 10px; border-radius: 10px; border: 1.5px solid #CCDBCD; background: #FFFFFF; text-align: left; cursor: pointer; transition: all 0.2s ease;">
+              <div style="font-size: 20px; margin-bottom: 4px;">📄</div>
+              <div style="font-size: 13px; font-weight: 800; color: #12372A;">I already have a report</div>
+              <div style="font-size: 11px; color: #666; margin-top: 2px;">Upload a quality or lab report</div>
+            </button>
+
+            <!-- Option 3: Manual -->
+            <button type="button" id="qe-btn-manual" class="qe-option-card" onclick="FarmerFlow.selectQualityEvidenceTab('manual')"
+              style="padding: 12px 10px; border-radius: 10px; border: 1.5px solid #CCDBCD; background: #FFFFFF; text-align: left; cursor: pointer; transition: all 0.2s ease;">
+              <div style="font-size: 20px; margin-bottom: 4px;">✍️</div>
+              <div style="font-size: 13px; font-weight: 800; color: #12372A;">Enter manually</div>
+              <div style="font-size: 11px; color: #666; margin-top: 2px;">Add quality information yourself</div>
+            </button>
+          </div>
+
+          <!-- Photo Upload & AI Scan Panel (Option 1) -->
+          <div id="qe-panel-photo" style="display: none; background: #FFFFFF; border: 1.5px solid #CCDBCD; border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+            <!-- Hidden native file inputs (camera + upload) -->
+            <input type="file" id="qe-photo-camera" accept="image/*" capture="environment" class="sr-only" style="display:none;" onchange="FarmerFlow.handleQualityPhotoSelected(event)">
+            <input type="file" id="qe-photo-upload" accept="image/*" class="sr-only" style="display:none;" onchange="FarmerFlow.handleQualityPhotoSelected(event)">
+            <input type="file" id="qe-photo-gallery" accept="image/*" class="sr-only" style="display:none;" onchange="FarmerFlow.handleQualityPhotoSelected(event)">
+            <input type="file" id="qe-photo-file" accept="image/*" class="sr-only" style="display:none;" onchange="FarmerFlow.handleQualityPhotoSelected(event)">
+
+            <!-- Header -->
+            <div style="margin-bottom: 12px;">
+              <div style="font-size: 13px; font-weight: 800; color: #12372A; text-transform: uppercase; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; margin-bottom: 4px;">
+                <i data-lucide="camera" style="width:16px;height:16px;color:var(--ks-sage);"></i> CHECK WITH PHOTO
+              </div>
+              <div style="font-size: 12px; color: #555; line-height: 1.45;">
+                Use your camera or choose an existing photo. We'll check whether the photo matches your selected crop and assess its visible condition.
+              </div>
+            </div>
+
+            <!-- STATE 1: IDLE / START SCREEN -->
+            <div id="qe-state-idle" style="display: block;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px;">
+                <!-- Take a photo Card (Camera) -->
+                <button type="button" id="qe-take-photo" class="btn" onclick="FarmerFlow.openCameraModal()"
+                  style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px 12px; background: #F4F8F4; border: 1.5px dashed #2D6A4F; border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.2s ease;">
+                  <div style="font-size: 24px; margin-bottom: 4px;">📷</div>
+                  <div style="font-size: 13.5px; font-weight: 800; color: #12372A;">Take a photo</div>
+                  <div style="font-size: 11px; color: #555; margin-top: 2px;">Use your camera</div>
+                </button>
+                <!-- Choose a photo Card (Gallery/File) -->
+                <button type="button" id="qe-upload-photo" class="btn" onclick="document.getElementById('qe-photo-upload').click()"
+                  style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px 12px; background: #F8FAF8; border: 1.5px dashed #A5D6A7; border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.2s ease;">
+                  <div style="font-size: 24px; margin-bottom: 4px;">🖼️</div>
+                  <div style="font-size: 13.5px; font-weight: 800; color: #12372A;">Choose a photo</div>
+                  <div style="font-size: 11px; color: #555; margin-top: 2px;">Select from your device</div>
+                </button>
+              </div>
+
+              <!-- Photo Tips Box -->
+              <div style="background: #FDFCF9; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px 14px;">
+                <div style="font-size: 11.5px; font-weight: 800; color: #12372A; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
+                  💡 For a better assessment
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 6px 12px; font-size: 11px; color: #555;">
+                  <div>• Use good lighting</div>
+                  <div>• Keep the produce clearly visible</div>
+                  <div>• Avoid blurry photos</div>
+                  <div>• Avoid covering the produce</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STATE 2: PREVIEW SCREEN (Photo selected, awaiting analyze) -->
+            <div id="qe-state-preview" style="display: none; margin-bottom: 10px;">
+              <div style="font-size: 12px; font-weight: 700; color: #166534; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="check-circle" style="width:14px;height:14px;color:#16a34a;"></i> Photo selected
+              </div>
+              <div style="width: 100%; border-radius: 10px; overflow: hidden; background: #F0F4F0; border: 1.5px solid #CCDBCD; margin-bottom: 12px; text-align: center;">
+                <img id="qe-photo-preview" src="" alt="Selected crop preview" style="max-width: 100%; max-height: 220px; object-fit: contain; display: block; margin: 0 auto;">
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <button type="button" id="qe-btn-analyze-photo" class="btn btn--primary btn--sm" onclick="FarmerFlow.analyzeQualityPhoto()" style="flex: 1; min-width: 140px; padding: 10px 14px; font-weight: 800;">
+                  <i data-lucide="sparkles"></i> Analyze Photo
+                </button>
+                <button type="button" class="btn btn--secondary btn--sm" onclick="document.getElementById('qe-photo-upload').click()" style="padding: 10px 12px;">
+                  <i data-lucide="image"></i> Choose another
+                </button>
+                <button type="button" class="btn btn--sm" onclick="FarmerFlow.clearQualityPhoto()" style="padding: 10px 12px; background: #FEF2F2; color: #991B1B; border: 1px solid #FCA5A5;">
+                  <i data-lucide="trash-2"></i> Remove
+                </button>
+              </div>
+            </div>
+
+            <!-- STATE 3: LOADING SCREEN -->
+            <div id="qe-state-loading" style="display: none; padding: 24px 16px; text-align: center; background: #F8FAF8; border-radius: 10px; margin-bottom: 10px; border: 1px solid #E2E8F0;">
+              <div class="dash-spinner" style="width: 32px; height: 32px; margin: 0 auto 12px auto; border-width: 3px; border-color: rgba(18, 55, 42, 0.2); border-top-color: #12372A;"></div>
+              <div style="font-size: 14px; font-weight: 800; color: var(--ks-evergreen); margin-bottom: 6px;">Checking your photo…</div>
+              <div style="font-size: 12px; color: #555555; line-height: 1.45; max-width: 280px; margin: 0 auto;">
+                We're checking the crop and visible condition.<br>This may take a few seconds.
+              </div>
+            </div>
+
+            <!-- STATE 4: SUCCESS SCREEN (AI_SUCCESS) -->
+            <div id="qe-state-success" style="display: none; background: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <strong style="font-size: 13px; color: #166534; display: flex; align-items: center; gap: 6px; letter-spacing: 0.4px; text-transform: uppercase;">
+                  <i data-lucide="sparkles" style="width: 16px; height: 16px; color: #16a34a;"></i>
+                  AI-ASSISTED QUALITY ASSESSMENT
+                </strong>
+              </div>
+
+              <div id="qe-photo-annotated-wrap" style="display: none; margin-bottom: 10px; text-align: center;">
+                <img id="qe-photo-annotated-img" src="" alt="AI Annotated Detection" style="max-width: 100%; max-height: 220px; border-radius: 8px; border: 1.5px solid #22c55e; object-fit: contain; background: #000; display: block; margin: 0 auto;">
+                <div style="font-size: 11px; color: #15803d; margin-top: 4px; font-weight: 600;">Annotated detection image</div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 10px; font-size: 12.5px;">
+                <div style="background: #FFFFFF; padding: 8px 10px; border-radius: 6px; border: 1px solid #BBF7D0;">
+                  <span style="font-size: 11px; color: #666; display: block;">Crop</span>
+                  <strong id="qe-photo-crop" style="color: var(--ks-evergreen); font-size: 13.5px;">-</strong>
+                </div>
+                <div style="background: #FFFFFF; padding: 8px 10px; border-radius: 6px; border: 1px solid #BBF7D0;">
+                  <span style="font-size: 11px; color: #666; display: block;">Visible condition</span>
+                  <strong id="qe-photo-condition" style="color: var(--ks-evergreen); font-size: 13.5px;">-</strong>
+                </div>
+                <div style="background: #FFFFFF; padding: 8px 10px; border-radius: 6px; border: 1px solid #BBF7D0;">
+                  <span style="font-size: 11px; color: #666; display: block;">Detection confidence</span>
+                  <strong id="qe-photo-confidence" style="color: #15803d; font-size: 13.5px;">-</strong>
+                </div>
+                <div style="background: #FFFFFF; padding: 8px 10px; border-radius: 6px; border: 1px solid #BBF7D0;">
+                  <span style="font-size: 11px; color: #666; display: block;">Assessment type</span>
+                  <strong style="color: var(--ks-evergreen); font-size: 12px;">Visual object detection</strong>
+                </div>
+              </div>
+
+              <div style="font-size: 11.5px; color: #166534; margin-bottom: 12px; font-weight: 600;">
+                Assessment is based on visible features in the uploaded photo.
+              </div>
+
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" id="qe-btn-use-assessment" class="btn btn--primary btn--sm" onclick="FarmerFlow.applyQualityAssessment()" style="flex: 1; min-width: 140px; padding: 9px 14px; font-weight: 800;">
+                  <i data-lucide="check"></i> Use this assessment
+                </button>
+                <button type="button" class="btn btn--secondary btn--sm" onclick="FarmerFlow.retryQualityPhoto()" style="padding: 9px 12px;">
+                  <i data-lucide="refresh-cw"></i> Try another photo
+                </button>
+              </div>
+            </div>
+
+            <!-- STATE 5: CROP MISMATCH SCREEN (AI_CROP_MISMATCH) -->
+            <div id="qe-state-mismatch" style="display: none; background: #FEF2F2; border: 1.5px solid #F87171; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: #991B1B;">
+                <i data-lucide="alert-triangle" style="width: 18px; height: 18px; color: #DC2626; flex-shrink: 0;"></i>
+                <strong style="font-size: 13.5px;">Photo doesn't match the selected crop</strong>
+              </div>
+              <div id="qe-mismatch-text" style="font-size: 12.5px; color: #7F1D1D; line-height: 1.5; margin-bottom: 12px;">
+                We couldn't confidently find the selected crop in this photo.
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn--primary btn--sm" onclick="FarmerFlow.openCameraModal()" style="padding: 8px 12px; font-weight: 700;">
+                  <i data-lucide="camera"></i> Take another photo
+                </button>
+                <button type="button" class="btn btn--secondary btn--sm" onclick="document.getElementById('qe-photo-upload').click()" style="padding: 8px 12px;">
+                  <i data-lucide="image"></i> Choose another photo
+                </button>
+                <button type="button" class="btn btn--sm" onclick="FarmerFlow.selectQualityEvidenceTab('manual')" style="padding: 8px 12px; background: #FFFFFF; border: 1px solid #CCDBCD; color: #12372A;">
+                  <i data-lucide="edit-3"></i> Enter manually
+                </button>
+                <button type="button" class="btn btn--sm" onclick="FarmerFlow.skipQualityEvidence()" style="padding: 8px 12px; background: #FFFFFF; border: 1px solid #CCDBCD; color: #666;">
+                  Skip for now
+                </button>
+              </div>
+            </div>
+
+            <!-- STATE 6: LOW CONFIDENCE SCREEN (AI_LOW_CONFIDENCE) -->
+            <div id="qe-state-low-confidence" style="display: none; background: #FFFBEB; border: 1.5px solid #FCD34D; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: #92400E;">
+                <i data-lucide="alert-circle" style="width: 18px; height: 18px; color: #D97706; flex-shrink: 0;"></i>
+                <strong style="font-size: 13.5px;">Assessment confidence is low</strong>
+              </div>
+              <div id="qe-low-conf-text" style="font-size: 12.5px; color: #78350F; line-height: 1.5; margin-bottom: 12px;">
+                We detected the crop, but the visual model isn't confident enough to complete the assessment.
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn--primary btn--sm" onclick="FarmerFlow.openCameraModal()" style="padding: 8px 12px; font-weight: 700;">
+                  <i data-lucide="camera"></i> Take another photo
+                </button>
+                <button type="button" class="btn btn--secondary btn--sm" onclick="document.getElementById('qe-photo-upload').click()" style="padding: 8px 12px;">
+                  <i data-lucide="image"></i> Choose another photo
+                </button>
+                <button type="button" class="btn btn--sm" onclick="FarmerFlow.selectQualityEvidenceTab('manual')" style="padding: 8px 12px; background: #FFFFFF; border: 1px solid #CCDBCD; color: #12372A;">
+                  <i data-lucide="edit-3"></i> Enter manually
+                </button>
+                <button type="button" class="btn btn--sm" onclick="FarmerFlow.skipQualityEvidence()" style="padding: 8px 12px; background: #FFFFFF; border: 1px solid #CCDBCD; color: #666;">
+                  Skip for now
+                </button>
+              </div>
+            </div>
+
+            <!-- STATE 7: ERROR / SERVICE UNAVAILABLE SCREEN (AI_ERROR) -->
+            <div id="qe-state-error" style="display: none; background: #FEF2F2; border: 1.5px solid #FCA5A5; border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: #991B1B;">
+                <i data-lucide="alert-octagon" style="width: 18px; height: 18px; color: #DC2626; flex-shrink: 0;"></i>
+                <strong style="font-size: 13.5px;">We couldn't check this photo right now</strong>
+              </div>
+              <div id="qe-error-text" style="font-size: 12.5px; color: #7F1D1D; line-height: 1.5; margin-bottom: 12px;">
+                We couldn't complete the photo assessment right now. You can try another photo or continue another way.
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn--primary btn--sm" onclick="FarmerFlow.analyzeQualityPhoto()" style="padding: 8px 12px; font-weight: 700;">
+                  <i data-lucide="refresh-cw"></i> Try again
+                </button>
+                <button type="button" class="btn btn--secondary btn--sm" onclick="document.getElementById('qe-photo-upload').click()" style="padding: 8px 12px;">
+                  <i data-lucide="image"></i> Choose another photo
+                </button>
+                <button type="button" class="btn btn--sm" onclick="FarmerFlow.selectQualityEvidenceTab('manual')" style="padding: 8px 12px; background: #FFFFFF; border: 1px solid #CCDBCD; color: #12372A;">
+                  <i data-lucide="edit-3"></i> Enter manually
+                </button>
+                <button type="button" class="btn btn--sm" onclick="FarmerFlow.skipQualityEvidence()" style="padding: 8px 12px; background: #FFFFFF; border: 1px solid #CCDBCD; color: #666;">
+                  Skip for now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Report Upload Panel (Option 2) -->
+          <div id="qe-panel-report" style="display: none; background: #FFFFFF; border: 1px solid #CCDBCD; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+            <div style="font-size: 12px; font-weight: 800; color: #12372A; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="file-text" style="width:14px;height:14px;"></i> QUALITY REPORT
+            </div>
+            <div class="dash-modal__field" style="margin-bottom: 10px;">
+              <label style="font-size: 12px; font-weight: 700; color: #333;">Upload report (PDF, JPG, JPEG, PNG)</label>
+              <input type="file" id="qe-report-file" class="dash-form-input" accept=".pdf,.jpg,.jpeg,.png" onchange="FarmerFlow.handleReportFileSelect(event)">
+            </div>
+            <div class="dash-form-row">
+              <div class="dash-modal__field">
+                <label for="qe-report-provider" style="font-size: 11.5px; font-weight: 600;">Provider / laboratory (Optional)</label>
+                <input type="text" id="qe-report-provider" class="dash-form-input" placeholder="e.g. Mahadhan Agmark Lab" oninput="FarmerFlow.updateReportMetadata()">
+              </div>
+              <div class="dash-modal__field">
+                <label for="qe-report-number" style="font-size: 11.5px; font-weight: 600;">Report number (Optional)</label>
+                <input type="text" id="qe-report-number" class="dash-form-input" placeholder="e.g. RPT-2026-8812" oninput="FarmerFlow.updateReportMetadata()">
+              </div>
+            </div>
+            <div class="dash-modal__field" style="margin-bottom: 4px;">
+              <label for="qe-report-date" style="font-size: 11.5px; font-weight: 600;">Report date (Optional)</label>
+              <input type="date" id="qe-report-date" class="dash-form-input" onchange="FarmerFlow.updateReportMetadata()">
+            </div>
+            <div style="font-size: 11px; color: #777; margin-top: 6px;">
+              ℹ️ Stored as farmer-provided quality report.
+            </div>
+          </div>
+
+          <!-- Manual Quality Panel (Option 3) -->
+          <div id="qe-panel-manual" style="display: none; background: #FFFFFF; border: 1px solid #CCDBCD; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+            <div style="font-size: 12px; font-weight: 800; color: #12372A; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="edit-3" style="width:14px;height:14px;"></i> ENTER QUALITY MANUALLY
+            </div>
+            <div class="dash-form-row">
+              <div class="dash-modal__field">
+                <label for="qe-manual-condition" style="font-size: 11.5px; font-weight: 600;">Condition</label>
+                <select id="qe-manual-condition" class="dash-filter-select" onchange="FarmerFlow.updateManualQuality()">
+                  <option value="">Select Condition</option>
+                  <option value="Fresh">Fresh / Good</option>
+                  <option value="Standard">Standard FAQ</option>
+                  <option value="Dry">Dry / Sun-cured</option>
+                  <option value="Fair">Fair</option>
+                </select>
+              </div>
+              <div class="dash-modal__field">
+                <label for="qe-manual-grade" style="font-size: 11.5px; font-weight: 600;">Grade / standard (Optional)</label>
+                <input type="text" id="qe-manual-grade" class="dash-form-input" placeholder="e.g. Standard Grade B" oninput="FarmerFlow.updateManualQuality()">
+              </div>
+            </div>
+            <div class="dash-modal__field" style="margin-bottom: 10px;">
+              <label for="qe-manual-desc" style="font-size: 11.5px; font-weight: 600;">Quality description (Optional)</label>
+              <input type="text" id="qe-manual-desc" class="dash-form-input" placeholder="e.g. Machine cleaned, no mold, uniform size" oninput="FarmerFlow.updateManualQuality()">
+            </div>
+            <div class="dash-modal__field" style="margin-bottom: 4px;">
+              <label for="qe-manual-notes" style="font-size: 11.5px; font-weight: 600;">Notes (Optional)</label>
+              <textarea id="qe-manual-notes" class="dash-form-textarea" rows="2" placeholder="Any additional quality notes for buyers..." oninput="FarmerFlow.updateManualQuality()"></textarea>
+            </div>
           </div>
         </div>
 
@@ -779,81 +1087,166 @@
     </div>
   </div>
 
-  <!-- AI PRODUCE DEFECT SCANNER MODAL -->
+  <!-- AI QUALITY ASSESSMENT MODAL (real FastAPI integration) -->
   <div class="dash-modal-overlay" id="ai-scanner-modal-overlay">
-    <div class="dash-modal" id="ai-scanner-modal" style="max-width: 620px;">
+    <div class="dash-modal" id="ai-scanner-modal" style="max-width: 560px;">
       <div class="dash-modal__header">
         <div style="display: flex; align-items: center; gap: 8px;">
           <div
-            style="width: 32px; height: 32px; border-radius: 8px; background: #12372A; color: #E8B96A; display: flex; align-items: center; justify-content: center;">
-            <i data-lucide="cpu" style="width: 18px; height: 18px;"></i>
+            style="width: 32px; height: 32px; border-radius: 8px; background: #12372A; color: #E8B96A; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <i data-lucide="scan-line" style="width: 18px; height: 18px;"></i>
           </div>
           <div>
-            <h3 style="margin: 0; font-size: 17px; color: var(--ks-evergreen);">AI Produce Defect Scanner</h3>
-            <div style="font-size: 11.5px; color: #777;">Computer Vision defect estimation for grains & horticulture
-            </div>
+            <h3 style="margin: 0; font-size: 17px; color: var(--ks-evergreen);">AI-Assisted Visual Assessment</h3>
+            <div style="font-size: 11.5px; color: #777;">Upload a crop photo to get visual condition assessment</div>
           </div>
         </div>
         <button class="dash-modal__close" id="ai-scanner-modal-close"><i data-lucide="x"></i></button>
       </div>
       <div class="dash-modal__body-pad">
-        <!-- Sample Presets / Image Selector -->
-        <div style="margin-bottom: 14px;">
-          <div style="font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; margin-bottom: 6px;">
-            Select Crop Test Sample or Upload Photo:</div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button type="button" class="btn btn--secondary ai-sample-btn" data-crop="Wheat" data-sample="premium"
-              style="font-size: 11.5px; padding: 5px 10px;">🌾 Wheat (Grade A Premium)</button>
-            <button type="button" class="btn btn--secondary ai-sample-btn" data-crop="Wheat" data-sample="defective"
-              style="font-size: 11.5px; padding: 5px 10px;">⚠️ Wheat (Defective/Broken)</button>
-            <button type="button" class="btn btn--secondary ai-sample-btn" data-crop="Onion" data-sample="premium"
-              style="font-size: 11.5px; padding: 5px 10px;">🧅 Onion (Export Grade A)</button>
-            <button type="button" class="btn btn--secondary ai-sample-btn" data-crop="Tomato" data-sample="defective"
-              style="font-size: 11.5px; padding: 5px 10px;">🍅 Tomato (Blemished)</button>
+
+        <!-- Upload area -->
+        <div id="aq-upload-zone"
+          style="border: 2px dashed #B8C9B0; border-radius: 12px; background: #FAFAF7; padding: 28px 20px; text-align: center; cursor: pointer; transition: border-color 0.2s ease; margin-bottom: 14px; position: relative;"
+          onclick="document.getElementById('aq-file-input').click()">
+          <input type="file" id="aq-file-input" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
+          <div id="aq-upload-placeholder">
+            <i data-lucide="image-plus" style="width: 36px; height: 36px; color: #5B9A72; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;"></i>
+            <div style="font-size: 14px; font-weight: 700; color: #12372A; margin-bottom: 4px;">Click to upload crop photo</div>
+            <div style="font-size: 12px; color: #888;">JPG, JPEG, PNG, WebP · Max 10 MB</div>
+          </div>
+          <!-- Preview (hidden until file selected) -->
+          <div id="aq-preview-wrap" style="display: none;">
+            <img id="aq-preview-img" alt="Crop preview"
+              style="max-width: 100%; max-height: 200px; border-radius: 8px; object-fit: cover; display: block; margin: 0 auto;">
+            <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+              <button type="button" id="aq-replace-btn"
+                style="font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 1.5px solid #5B9A72; background: #fff; color: #12372A; cursor: pointer; font-weight: 600;"
+                onclick="event.stopPropagation(); document.getElementById('aq-file-input').click();">
+                <i data-lucide="image" style="width:13px;height:13px;vertical-align:-2px;"></i> Replace
+              </button>
+              <button type="button" id="aq-remove-btn"
+                style="font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 1.5px solid #E2837A; background: #fff; color: #B04040; cursor: pointer; font-weight: 600;"
+                onclick="event.stopPropagation(); FarmerFlow.aqClearImage();">
+                <i data-lucide="trash-2" style="width:13px;height:13px;vertical-align:-2px;"></i> Remove
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Scanner Viewport with Laser and Defect Overlay -->
-        <div class="scanner-viewport" id="scanner-viewport">
-          <img id="scanner-preview-img" class="scanner-viewport__img"
-            src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop&q=80"
-            alt="Produce Sample">
-          <div class="scanner-viewport__overlay"></div>
-          <div class="scanner-grid"></div>
-          <div class="scanner-laser" id="scanner-laser" style="display: none;"></div>
-          <!-- Bounding Boxes Container -->
-          <div id="scanner-boxes-container"></div>
+        <!-- Error message -->
+        <div id="aq-error-msg"
+          style="display: none; background: #FFF2F2; border: 1px solid #FAC5C5; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #B04040; margin-bottom: 12px; align-items: center; gap: 8px;">
+          <i data-lucide="alert-circle" style="width:16px;height:16px;flex-shrink:0;"></i>
+          <span id="aq-error-text">Something went wrong.</span>
         </div>
 
-        <!-- Action Bar -->
-        <div
-          style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 10px;">
-          <button type="button" class="btn btn--primary" id="btn-run-ai-scan"
-            style="background: #12372A; color: #E8B96A; font-weight: 800; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-            <i data-lucide="zap" style="width: 16px; height: 16px;"></i> Run Neural Defect Scan
+        <!-- Analyze button -->
+        <button type="button" id="aq-analyze-btn"
+          style="width: 100%; padding: 11px 18px; font-size: 14px; font-weight: 800; background: #12372A; color: #E8B96A; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s ease; margin-bottom: 14px;"
+          onclick="FarmerFlow.aqRunAnalysis()">
+          <i data-lucide="cpu" style="width:16px;height:16px;"></i>
+          <span id="aq-analyze-btn-text">Analyze Crop Photo</span>
+        </button>
+
+        <!-- Result card (hidden until result) -->
+        <div id="aq-result-card" style="display: none; background: #F4FBF4; border: 1.5px solid #B8D8C0; border-radius: 12px; padding: 16px; margin-bottom: 14px;">
+          <!-- Header -->
+          <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #5B9A72; letter-spacing: 0.6px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="scan-line" style="width:14px;height:14px;"></i>
+              AI-ASSISTED VISUAL ASSESSMENT
+            </span>
+          </div>
+
+          <!-- Annotated uploaded image display -->
+          <div id="aq-annotated-img-wrap" style="position: relative; width: 100%; border-radius: 10px; overflow: hidden; background: #1A1E1A; margin-bottom: 14px; text-align: center; border: 1.5px solid #2D5A3E; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            <img id="aq-annotated-img" alt="Annotated crop detection"
+              style="width: 100%; max-height: 280px; object-fit: contain; display: block; margin: 0 auto;">
+          </div>
+
+          <!-- Non-blocking image warning/error -->
+          <div id="aq-annotated-img-warn" style="display: none; background: #FFF8ED; border: 1px solid #F0DCAA; border-radius: 8px; padding: 9px 12px; font-size: 12px; color: #7A5F20; margin-bottom: 12px; align-items: center; gap: 8px;">
+            <i data-lucide="alert-triangle" style="width:15px;height:15px;flex-shrink:0;"></i>
+            <span id="aq-annotated-img-warn-text">Annotated visual render is unavailable; detection data is shown below.</span>
+          </div>
+
+          <!-- Top-confidence assessment banner -->
+          <div style="background: #FFFFFF; border: 1px solid #D1E5D5; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px;">
+            <div id="aq-res-primary-heading" style="font-size: 15px; font-weight: 800; color: #12372A; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span id="aq-res-crop-icon" style="font-size: 18px;">🌱</span>
+              <span id="aq-res-primary-text">—</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: 12px; color: #444;">
+              <div>
+                <span style="color: #666; font-size: 11px; text-transform: uppercase; font-weight: 700; display: block;">Detection count:</span>
+                <span id="aq-res-detection-count" style="font-size: 14px; font-weight: 800; color: #12372A;">—</span>
+              </div>
+              <div>
+                <span style="color: #666; font-size: 11px; text-transform: uppercase; font-weight: 700; display: block;">Image condition:</span>
+                <span id="aq-res-image-condition" style="font-size: 14px; font-weight: 800; color: #12372A;">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detected Objects list -->
+          <div id="aq-detected-objects-wrap" style="background: #FFFFFF; border: 1px solid #D1E5D5; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px;">
+            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #3A6349; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="layers" style="width:14px;height:14px;"></i>
+              Detected Objects
+            </div>
+            <div id="aq-detections-list" style="display: flex; flex-direction: column; gap: 8px;">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Hidden compat elements -->
+          <span id="aq-res-crop" style="display:none;"></span>
+          <span id="aq-res-condition" style="display:none;"></span>
+          <span id="aq-res-confidence" style="display:none;"></span>
+          <span id="aq-res-model" style="display:none;"></span>
+
+          <!-- Disclaimer -->
+          <div
+            style="margin-top: 10px; padding: 8px 10px; background: #FFF9ED; border: 1px solid #F0DCAA; border-radius: 7px; font-size: 11px; color: #7A5F20; line-height: 1.5;">
+            ⚠️ Visual assessment is indicative and does not replace laboratory or certified mandi quality testing.
+          </div>
+
+          <!-- Apply button -->
+          <button type="button" id="aq-apply-btn"
+            style="width: 100%; margin-top: 12px; padding: 11px 16px; font-size: 13px; font-weight: 800; background: #12372A; color: #E8B96A; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;"
+            onclick="FarmerFlow.aqApplyResult()">
+            <i data-lucide="check" style="width:15px;height:15px;"></i>
+            Use Assessment &amp; Continue to Lot Details
           </button>
-          <div id="scan-status-indicator" style="font-size: 12px; font-weight: 700; color: #718E68;">Ready to scan</div>
         </div>
 
-        <!-- Scan Results & Detected Defect Chips -->
-        <div id="scan-results-box"
-          style="margin-top: 16px; display: none; background: #FAF8F5; border: 1px solid #E2E0D5; border-radius: 10px; padding: 14px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <div style="font-size: 12px; font-weight: 800; color: #12372A; text-transform: uppercase;">Defect Analysis
-              Summary</div>
-            <div id="scan-confidence-badge"
-              style="font-size: 11px; background: #E5F0E7; color: #12372A; font-weight: 800; padding: 2px 8px; border-radius: 4px;">
-              97.8% Confidence</div>
+        <!-- No-detection message -->
+        <div id="aq-no-detection" style="display: none; background: #FFF8ED; border: 1px solid #F0DCAA; border-radius: 10px; padding: 14px 16px; font-size: 13px; color: #7A5F20; margin-bottom: 12px; line-height: 1.5;">
+          <div style="font-weight: 800; font-size: 14px; margin-bottom: 4px; color: #8A641A; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="help-circle" style="width:16px;height:16px;"></i>
+            No produce detected in this image. Please upload a clearer crop image.
           </div>
-          <div id="scan-defect-chips" class="defect-chip-list"></div>
-          <div id="scan-params-breakdown" style="margin-top: 10px; font-size: 12.5px; color: #333; line-height: 1.5;">
+          <div style="font-size: 12px; color: #775A18;">
+            The AI visual scan did not detect any known crops above the confidence threshold. Ensure the produce is clearly visible and well-lit, or continue with manual quality entry below.
           </div>
+        </div>
 
-          <button type="button" class="btn btn--primary" id="btn-apply-ai-params"
-            style="width: 100%; margin-top: 14px; justify-content: center; display: flex; align-items: center; gap: 8px;">
-            <i data-lucide="check-circle-2"></i> Apply AI Parameters to Lot Listing
+        <!-- Service unavailable message -->
+        <div id="aq-service-unavailable" style="display: none; background: #FFF2F2; border: 1px solid #FAC5C5; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #B04040; margin-bottom: 12px;">
+          <strong>AI quality assessment is temporarily unavailable.</strong><br>
+          You can continue with manual quality entry in the lot form below.
+        </div>
+
+        <!-- Skip link -->
+        <div style="text-align: center;">
+          <button type="button"
+            style="font-size: 12px; color: #777; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 4px 8px;"
+            onclick="document.getElementById('ai-scanner-modal-overlay').classList.remove('active')">
+            Skip — enter quality manually
           </button>
         </div>
+
       </div>
     </div>
   </div>
@@ -905,6 +1298,56 @@
         <button type="submit" class="btn btn--primary dash-modal__submit" id="btn-submit-assay"><i
             data-lucide="shield-check"></i> Sign & Certify Lot</button>
       </form>
+    </div>
+  </div>
+
+  <!-- LIVE CAMERA CAPTURE MODAL -->
+  <div class="dash-modal-overlay" id="qe-camera-modal-overlay" style="display: none; z-index: 10000; align-items: center; justify-content: center;">
+    <div class="dash-modal" style="max-width: 480px; width: 92%; padding: 20px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 20px 40px rgba(0,0,0,0.25); position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #12372A; display: flex; align-items: center; gap: 8px;">
+          📷 Take a photo
+        </h3>
+        <button type="button" class="dash-modal__close" onclick="FarmerFlow.closeCameraModal()" aria-label="Close" style="border: none; background: transparent; cursor: pointer; font-size: 18px; padding: 4px; color: #666;">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <!-- Live Video / Error Box -->
+      <div id="qe-camera-view-wrap" style="position: relative; width: 100%; height: 280px; background: #000000; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+        <video id="qe-camera-video" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+        
+        <!-- Camera Error fallback inside modal -->
+        <div id="qe-camera-error-box" style="display: none; padding: 20px; text-align: center; color: #FFFFFF; width: 100%;">
+          <div style="font-size: 28px; margin-bottom: 8px;">📷</div>
+          <div style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Camera access isn't available</div>
+          <div style="font-size: 12px; color: #CCCCCC; margin-bottom: 16px; line-height: 1.4;">
+            Please allow camera access or choose a photo from your device.
+          </div>
+          <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+            <button type="button" class="btn btn--primary btn--sm" onclick="FarmerFlow.startCameraStream()" style="font-weight: 700; padding: 8px 14px;">
+              Try camera again
+            </button>
+            <button type="button" class="btn btn--secondary btn--sm" onclick="FarmerFlow.closeCameraModal(); document.getElementById('qe-photo-upload').click();" style="padding: 8px 14px; background: #FFFFFF; color: #12372A;">
+              Choose a photo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size: 12px; color: #555555; text-align: center; margin-bottom: 16px; line-height: 1.4;">
+        Position the produce clearly inside the frame.
+      </div>
+
+      <!-- Modal Action Buttons -->
+      <div id="qe-camera-actions" style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+        <button type="button" class="btn btn--secondary btn--sm" onclick="FarmerFlow.closeCameraModal()" style="padding: 10px 18px; font-weight: 600;">
+          Cancel
+        </button>
+        <button type="button" class="btn btn--primary btn--sm" onclick="FarmerFlow.captureCameraPhoto()" style="flex: 1; padding: 10px 18px; font-weight: 800; font-size: 13.5px;">
+          📸 Capture photo
+        </button>
+      </div>
     </div>
   </div>
 

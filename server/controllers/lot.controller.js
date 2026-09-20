@@ -184,6 +184,7 @@ const createLot = async (req, res) => {
       qualityParameters,
       assaying,
       aiQualityScan,
+      qualityEvidence,
       storageType,
       storageLocation,
       storageRequired,
@@ -265,6 +266,68 @@ const createLot = async (req, res) => {
       };
     }
 
+    // Build unified quality evidence and synchronize with aiQualityScan for backward compatibility
+    let finalQualityEvidence = qualityEvidence || {};
+    let finalAiScan = aiQualityScan || {};
+
+    // Backend crop mismatch guard: Compare lot cropName against AI detected crop
+    const normLotCrop = String(cropName || '').trim().toLowerCase();
+
+    if (finalQualityEvidence && finalQualityEvidence.source === 'AI_ASSESSMENT' && finalQualityEvidence.aiAssessment) {
+      const detectedCrop = String(finalQualityEvidence.aiAssessment.crop || '').trim().toLowerCase();
+      const aiStatus = finalQualityEvidence.aiAssessment.status;
+
+      // If crop does not match or status is mismatch, reject persistence
+      if (detectedCrop !== normLotCrop || aiStatus === 'AI_CROP_MISMATCH') {
+        return res.status(400).json({
+          success: false,
+          error: 'AI_CROP_MISMATCH',
+          message: `The AI quality assessment crop (${finalQualityEvidence.aiAssessment.crop || 'Unknown'}) does not match the selected crop (${cropName}).`
+        });
+      }
+
+      const ai = finalQualityEvidence.aiAssessment;
+      finalAiScan = {
+        status: ai.status || 'AI_ASSESSED',
+        crop: ai.crop || null,
+        condition: ai.condition || null,
+        confidence: typeof ai.confidence === 'number' ? ai.confidence : null,
+        assessmentType: ai.assessmentType || 'visual_condition_detection',
+        modelVersion: ai.modelVersion || 'vegqual-20ep',
+        annotatedImageUrl: ai.annotatedImageUrl || null,
+        annotatedImageId: ai.annotatedImageId || null,
+        assessedAt: ai.assessedAt ? new Date(ai.assessedAt) : new Date()
+      };
+    } else if (finalAiScan && finalAiScan.status === 'AI_ASSESSED' && (!finalQualityEvidence || !finalQualityEvidence.source)) {
+      const detectedCrop = String(finalAiScan.crop || '').trim().toLowerCase();
+      if (detectedCrop && detectedCrop !== normLotCrop) {
+        return res.status(400).json({
+          success: false,
+          error: 'AI_CROP_MISMATCH',
+          message: `The AI scan crop (${finalAiScan.crop || 'Unknown'}) does not match the selected crop (${cropName}).`
+        });
+      }
+
+      finalQualityEvidence = {
+        source: 'AI_ASSESSMENT',
+        aiAssessment: {
+          status: finalAiScan.status,
+          crop: finalAiScan.crop,
+          condition: finalAiScan.condition,
+          confidence: finalAiScan.confidence,
+          cropConfidence: finalAiScan.confidence,
+          conditionConfidence: finalAiScan.confidence,
+          assessmentType: finalAiScan.assessmentType || 'visual_condition_detection',
+          modelVersion: finalAiScan.modelVersion || 'vegqual-20ep',
+          annotatedImageUrl: finalAiScan.annotatedImageUrl || null,
+          annotatedImageId: finalAiScan.annotatedImageId || null,
+          assessedAt: finalAiScan.assessedAt ? new Date(finalAiScan.assessedAt) : new Date()
+        },
+        report: {},
+        manual: {}
+      };
+    }
+
     // 4. Create ProduceLot document
     const lot = await ProduceLot.create({
       farmer: farmerProfile._id,
@@ -280,7 +343,8 @@ const createLot = async (req, res) => {
       qualityNotes: qualityNotes ? String(qualityNotes).trim() : '',
       qualityParameters: formattedParams,
       assaying: assayObj,
-      aiQualityScan: aiQualityScan || {},
+      aiQualityScan: finalAiScan,
+      qualityEvidence: finalQualityEvidence,
       storageType: storageType || 'farm',
       storageLocation: storageLocation ? String(storageLocation).trim() : '',
       storageRequired: Boolean(storageRequired),
@@ -508,7 +572,7 @@ const updateLot = async (req, res) => {
 };
 
 /**
- * @desc    Cancel a Produce Lot (Soft cancellation)
+ * @desc    Delete a Produce Lot (Permanent MongoDB Document Deletion)
  * @route   DELETE /api/lots/:lotId
  * @access  Private (Farmer role only)
  */
@@ -526,23 +590,33 @@ const deleteLot = async (req, res) => {
     if (lot.status === 'sold') {
       return res.status(400).json({
         success: false,
-        message: 'Cannot cancel or delete a lot that has already been sold.'
+        message: 'Cannot delete a lot that has already been sold.'
       });
     }
 
-    // Set status to cancelled
-    lot.status = 'cancelled';
-    await lot.save();
+    // Permanently remove the database document
+    const result = await ProduceLot.deleteOne({
+      _id: lot._id,
+      createdBy: req.user._id
+    });
+
+    if (result.deletedCount !== 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Could not permanently delete produce lot.'
+      });
+    }
 
     return res.status(200).json({
       success: true,
-      message: 'Produce lot status updated to cancelled',
-      lot
+      deletedCount: result.deletedCount,
+      lotId: lot.lotId,
+      message: 'Produce lot deleted permanently.'
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: 'Server error while cancelling produce lot'
+      message: 'Server error while deleting produce lot'
     });
   }
 };

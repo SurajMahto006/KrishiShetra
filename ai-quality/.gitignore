@@ -1,0 +1,49 @@
+# Model weights — must be trained locally, never committed
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.engine
+
+# Training outputs — large, generated
+outputs/*
+!outputs/vegqual-20ep/
+outputs/vegqual-20ep/*
+!outputs/vegqual-20ep/weights/
+outputs/vegqual-20ep/weights/*
+!outputs/vegqual-20ep/weights/best.pt
+
+# Dataset — download separately from figshare
+data/vegqual/
+data/*.zip
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environment
+.env
+
+# Temporary uploads
+tmp/
+temp/
+uploads/
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local model weights
+/weights/

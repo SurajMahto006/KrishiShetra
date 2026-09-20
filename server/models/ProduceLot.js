@@ -137,13 +137,59 @@ const produceLotSchema = new mongoose.Schema(
       },
       labRemarks: { type: String, trim: true, default: '' }
     },
-    // AI Image Defect Estimation
+    // AI Image Quality Assessment (real FastAPI vegqual-20ep model output)
     aiQualityScan: {
+      // ── New real-model fields (populated from FastAPI /api/quality/analyze) ──
+      status: { type: String, default: null },           // 'AI_ASSESSED' | 'NO_DETECTION' | etc.
+      crop: { type: String, trim: true, default: null }, // Detected crop name, e.g. 'Potato'
+      condition: { type: String, trim: true, default: null }, // 'Fresh' | 'Defective'
+      confidence: { type: Number, default: null },       // 0–1 detection confidence
+      assessmentType: { type: String, default: null },   // 'visual_condition_detection'
+      modelVersion: { type: String, trim: true, default: null }, // e.g. 'vegqual-20ep'
+      annotatedImageUrl: { type: String, default: null },
+      annotatedImageId: { type: String, default: null },
+      assessedAt: { type: Date, default: null },         // timestamp when assessment was done
+      // ── Legacy simulated-scan fields kept for backward compatibility ──
       scannedAt: { type: Date, default: null },
       confidenceScore: { type: Number, default: null },
       detectedDefects: { type: Array, default: [] },
       sampleImage: { type: String, default: '' },
       summary: { type: String, default: '' }
+    },
+    // Quality Evidence (Phase 10 unified structure)
+    qualityEvidence: {
+      source: {
+        type: String,
+        enum: ['AI_ASSESSMENT', 'FARMER_PROVIDED_REPORT', 'MANUAL', null],
+        default: null
+      },
+      aiAssessment: {
+        status: { type: String, default: null },
+        crop: { type: String, trim: true, default: null },
+        condition: { type: String, trim: true, default: null },
+        confidence: { type: Number, default: null },
+        cropConfidence: { type: Number, default: null },
+        conditionConfidence: { type: Number, default: null },
+        assessmentType: { type: String, default: null },
+        modelVersion: { type: String, trim: true, default: null },
+        annotatedImageUrl: { type: String, default: null },
+        annotatedImageId: { type: String, default: null },
+        assessedAt: { type: Date, default: null }
+      },
+      report: {
+        fileName: { type: String, default: '' },
+        fileUrl: { type: String, default: '' },
+        provider: { type: String, trim: true, default: '' },
+        reportNumber: { type: String, trim: true, default: '' },
+        reportDate: { type: String, default: '' },
+        verificationStatus: { type: String, default: 'unverified' }
+      },
+      manual: {
+        condition: { type: String, trim: true, default: '' },
+        description: { type: String, trim: true, default: '' },
+        grade: { type: String, trim: true, default: '' },
+        notes: { type: String, trim: true, default: '' }
+      }
     },
     // Storage
     storageType: {

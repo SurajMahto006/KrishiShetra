@@ -678,6 +678,16 @@ function renderLotsPanel(filter = 'all') {
     const isPaused = lot.status === 'paused';
     const cropDisplay = window.KrishiI18n ? window.KrishiI18n.getCropName(lot.crop || lot.cropId) : lot.crop;
 
+    let evidenceBadge = '<span style="color:#888; font-size:11px;">No quality evidence added</span>';
+    const qe = lot.qualityEvidence || (lot.aiQualityScan && lot.aiQualityScan.status === 'AI_ASSESSED' ? { source: 'AI_ASSESSMENT', aiAssessment: lot.aiQualityScan } : null);
+    if (qe && qe.source === 'AI_ASSESSMENT' && qe.aiAssessment && (qe.aiAssessment.status === 'AI_ASSESSED' || qe.aiAssessment.crop)) {
+      evidenceBadge = '<span style="color:#2D6A4F; font-size:11px; font-weight:700; background:#EAF6ED; padding:2px 8px; border-radius:4px;">🤖 AI Assessed</span>';
+    } else if (qe && qe.source === 'FARMER_PROVIDED_REPORT') {
+      evidenceBadge = '<span style="color:#1E40AF; font-size:11px; font-weight:700; background:#EFF6FF; padding:2px 8px; border-radius:4px;">📄 Report Added</span>';
+    } else if (qe && qe.source === 'MANUAL') {
+      evidenceBadge = '<span style="color:#92400E; font-size:11px; font-weight:700; background:#FEF3C7; padding:2px 8px; border-radius:4px;">✍️ Quality Added</span>';
+    }
+
     return `
       <div class="dash-lot-row" id="lot-row-${lot.id}">
         <div class="dash-lot-row__thumb">
@@ -685,10 +695,10 @@ function renderLotsPanel(filter = 'all') {
         </div>
         <div class="dash-lot-row__info">
           <div class="dash-lot-row__crop">${cropDisplay}</div>
-          <div class="dash-lot-row__details">
+          <div class="dash-lot-row__details" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
             <span><strong>${lot.quantity}</strong> quintals</span>
             <span class="dash-lot-row__sep">·</span>
-            <span>${lot.grade}</span>
+            ${evidenceBadge}
           </div>
           <div class="dash-lot-row__meta">
             <span class="dash-lot-row__meta-item">Expected: ₹${lot.expectedPrice.toLocaleString('en-IN')}/q</span>
@@ -701,7 +711,7 @@ function renderLotsPanel(filter = 'all') {
             <span class="dash-status-badge__dot"></span> ${lot.status === 'listed' ? t('farmer.activeForSale', 'Listed') : (lot.status === 'paused' ? 'Paused' : t('farmer.soldStatus', 'Sold'))}
           </span>
           <div class="dash-lot-row__actions">
-            <button class="dash-lot-btn" title="View Details" onclick="openCropDetails('${lot.cropId}')"><i data-lucide="eye"></i></button>
+            <button class="dash-lot-btn" title="View Details" onclick="if(window.FarmerFlow && typeof window.FarmerFlow.viewLotDetails === 'function'){ FarmerFlow.viewLotDetails('${lot.id || lot.lotId}'); } else { openCropDetails('${lot.cropId}'); }"><i data-lucide="eye"></i></button>
             <button class="dash-lot-btn" title="Edit Lot" onclick="openEditLotModal('${lot.id}')"><i data-lucide="pencil"></i></button>
             <button class="dash-lot-btn ${isPaused ? 'dash-lot-btn--resume' : 'dash-lot-btn--pause'}"
               title="${isPaused ? 'Resume Listing' : 'Pause Listing'}"
@@ -1270,11 +1280,16 @@ function openCropDetails(cropId) {
 }
 
 // 2. Create Lot Modal
-function openCreateLotModal(cropId = 'rice') {
+function openCreateLotModal(cropId = null) {
   const form = document.getElementById('create-lot-form');
   if (form) form.reset();
+  if (window.FarmerFlow && typeof window.FarmerFlow.resetQualityEvidenceForm === 'function') {
+    window.FarmerFlow.resetQualityEvidenceForm();
+  }
   const select = document.getElementById('lot-crop-select');
   if (select && cropId) select.value = cropId;
+  const cropVal = document.getElementById('wiz-crop-val');
+  if (cropVal && cropId) cropVal.value = cropId;
   const dateInput = document.getElementById('lot-harvest-input');
   if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
   if (typeof goToWizardStep === 'function') {
@@ -2654,7 +2669,7 @@ const totalWizardSteps = 8;
 const wizardStepSubtitles = [
   'Select the agricultural commodity to sell',
   'Specify total available harvest quantity & variety',
-  'Select certified quality grade and sorting level',
+  'Add quality evidence to help buyers understand your produce (Optional)',
   'Confirm farm origin village and dispatch pincode',
   'Set your expected base price per quintal',
   'Specify harvest date and dispatch deadline',
@@ -2675,11 +2690,18 @@ function initLotWizard() {
       const crop = chip.getAttribute('data-crop');
       const cropVal = document.getElementById('wiz-crop-val');
       if (cropVal) cropVal.value = crop;
+      const selectVal = document.getElementById('lot-crop-select');
+      if (selectVal) selectVal.value = crop;
+
+      // Clear quality evidence when switching crop to prevent stale AI data leakage
+      if (window.FarmerFlow && typeof window.FarmerFlow.clearQualityEvidence === 'function') {
+        window.FarmerFlow.clearQualityEvidence();
+      }
 
       // Update variety placeholder
       const varietyInput = document.getElementById('wiz-variety-input');
       if (varietyInput) {
-        varietyInput.value = chip.querySelector('.lot-crop-name')?.textContent + ' (Grade A Premium)';
+        varietyInput.value = (chip.querySelector('.lot-crop-chip-name, .lot-crop-name')?.textContent?.trim() || crop) + ' (Standard Variety)';
       }
     });
   });
@@ -2727,10 +2749,17 @@ function initLotWizard() {
       const cropName = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
       const qty = parseFloat(document.getElementById('wiz-qty-input')?.value || 25);
       const price = parseFloat(document.getElementById('wiz-price-input')?.value || 2850);
-      const grade = document.getElementById('wiz-grade-select')?.value || 'Grade A';
       const location = document.getElementById('wiz-location-input')?.value || 'Nashik, Maharashtra';
       const harvestDate = document.getElementById('wiz-harvest-date')?.value || new Date().toISOString().split('T')[0];
-      const desc = document.getElementById('wiz-desc-input')?.value || 'Fresh harvest, machine cleaned and sorted.';
+      const desc = document.getElementById('wiz-desc-input')?.value || 'Fresh harvest, ready for procurement.';
+
+      // Extract Quality Evidence from FarmerFlow
+      const qe = (window.FarmerFlow && typeof window.FarmerFlow.buildQualityEvidencePayload === 'function')
+        ? window.FarmerFlow.buildQualityEvidencePayload()
+        : null;
+
+      const manualGrade = qe?.manual?.grade || '';
+      const finalGrade = (manualGrade && ['A', 'B', 'C'].includes(manualGrade.toUpperCase())) ? manualGrade.toUpperCase() : 'A';
 
       const newLot = {
         id: `lot-${Date.now()}`,
@@ -2741,20 +2770,55 @@ function initLotWizard() {
         marketPrice: price - 150,
         location: location,
         harvestDate: harvestDate,
-        grade: grade,
+        grade: manualGrade || 'Standard FAQ',
+        qualityGrade: finalGrade,
+        qualityEvidence: qe,
         description: desc,
         image: `assets/images/crop-${cropKey}.jpg`,
         status: 'listed',
         createdAt: new Date().toISOString()
       };
 
+      if (btnPublish) {
+        btnPublish.disabled = true;
+        btnPublish.innerHTML = '<div class="dash-spinner" style="width:14px;height:14px;border-width:2px;margin:0 auto;"></div> Publishing...';
+      }
+
+      // Try creating via API if available
+      if (window.api && window.api.lots && typeof window.api.lots.create === 'function') {
+        try {
+          const apiPayload = {
+            cropName: cropName,
+            cropCategory: 'cereals_grains',
+            variety: desc ? desc.slice(0, 50) : `${cropName} Standard Variety`,
+            quantity: qty,
+            quantityUnit: 'quintal',
+            askingPrice: price,
+            priceUnit: 'quintal',
+            harvestDate: harvestDate,
+            qualityGrade: finalGrade,
+            qualityNotes: desc,
+            qualityEvidence: qe,
+            status: 'active'
+          };
+          const res = await window.api.lots.create(apiPayload);
+          if (res && res.lot) {
+            newLot.id = res.lot.lotId || res.lot._id || newLot.id;
+            newLot.qualityEvidence = res.lot.qualityEvidence || qe;
+            newLot.aiQualityScan = res.lot.aiQualityScan;
+          }
+        } catch (apiErr) {
+          console.warn('[Dashboard API Lot Create]:', apiErr);
+        }
+      }
+
       if (window.krishiStore) {
         window.krishiStore.addLot(newLot);
       }
 
-      if (btnPublish) {
-        btnPublish.disabled = true;
-        btnPublish.innerHTML = '<div class="dash-spinner" style="width:14px;height:14px;border-width:2px;margin:0 auto;"></div> Publishing...';
+      // Reset Quality Evidence form cleanly so next lot starts empty
+      if (window.FarmerFlow && typeof window.FarmerFlow.resetQualityEvidenceForm === 'function') {
+        window.FarmerFlow.resetQualityEvidenceForm();
       }
 
       setTimeout(() => {
@@ -2851,12 +2915,23 @@ function renderWizardSummary() {
   const cropName = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
   const qty = document.getElementById('wiz-qty-input')?.value || 25;
   const variety = document.getElementById('wiz-variety-input')?.value || 'Standard Variety';
-  const grade = document.getElementById('wiz-grade-select')?.value || 'Grade A';
   const location = document.getElementById('wiz-location-input')?.value || 'Nashik, Maharashtra';
   const price = document.getElementById('wiz-price-input')?.value || 2850;
   const harvest = document.getElementById('wiz-harvest-date')?.value || 'Today';
   const avail = document.getElementById('wiz-available-until')?.value || 'Next 7 Days';
   const totalVal = (parseFloat(qty) * parseFloat(price)).toLocaleString('en-IN');
+
+  const qe = (window.FarmerFlow && window.FarmerFlow.temporaryEvidence) || null;
+  let qeBadge = '<span style="background:#F3F4F6; color:#4B5563; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:6px;">No Quality Evidence (Optional)</span>';
+  if (qe) {
+    if (qe.source === 'AI_ASSESSMENT' && qe.aiAssessment) {
+      qeBadge = `<span style="background:#EAF6ED; color:#2D6A4F; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:6px;">🤖 AI: ${qe.aiAssessment.crop || cropName} · ${qe.aiAssessment.condition || 'Fresh'} (${qe.aiAssessment.confidence || 90}%)</span>`;
+    } else if (qe.source === 'FARMER_PROVIDED_REPORT') {
+      qeBadge = `<span style="background:#EFF6FF; color:#1E40AF; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:6px;">📄 Report: ${qe.report?.fileName || 'Attached'}</span>`;
+    } else if (qe.source === 'MANUAL') {
+      qeBadge = `<span style="background:#FEF3C7; color:#92400E; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:6px;">✍️ Quality: ${qe.manual?.condition || qe.manual?.grade || 'Manual Info'}</span>`;
+    }
+  }
 
   summaryEl.innerHTML = `
     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; border-bottom:1px dashed #DDD; padding-bottom:10px;">
@@ -2864,7 +2939,7 @@ function renderWizardSummary() {
         <h4 style="font-size:18px; font-weight:800; color:var(--ks-evergreen); margin:0 0 2px 0;">${cropName} (${variety})</h4>
         <span style="font-size:12px; color:var(--ks-text-muted);">📍 ${location}</span>
       </div>
-      <span style="background:var(--ks-mint-light); color:var(--ks-evergreen); font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:6px;">${grade}</span>
+      ${qeBadge}
     </div>
     <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; font-size:13px; margin-bottom:12px;">
       <div><span style="color:#777; font-size:11px; display:block;">Quantity:</span><strong>${qty} Quintals</strong></div>

@@ -852,7 +852,9 @@ async function renderMarketplaceView(container) {
         sellerVerified: l.sellerVerified !== false,
         mandiCess: l.mandiCessPerQ,
         minOrderQty: Math.min(25, l.quantity),
-        harvestDate: l.harvestDate || '2026-08-24'
+        harvestDate: l.harvestDate || '2026-08-24',
+        aiQualityScan: l.aiQualityScan || {},
+        qualityEvidence: l.qualityEvidence || {}
       }));
     }
 
@@ -1176,6 +1178,133 @@ async function openLotDetailModal(lotId) {
           </div>
         `}
 
+        <!-- QUALITY EVIDENCE (persisted on exact lot) -->
+        ${(() => {
+          const qe = lot.qualityEvidence || (lot.aiQualityScan && lot.aiQualityScan.status === 'AI_ASSESSED' ? {
+            source: 'AI_ASSESSMENT',
+            aiAssessment: lot.aiQualityScan
+          } : null);
+
+          if (qe && qe.source === 'AI_ASSESSMENT' && qe.aiAssessment) {
+            const ai = qe.aiAssessment;
+            const confFormatted = ai.confidence != null ? (ai.confidence * 100).toFixed(2) + '%' : '—';
+            const annUrl = ai.annotatedImageUrl;
+            const fullAnnUrl = annUrl ? (annUrl.startsWith('http') ? annUrl : annUrl) : null;
+
+            return `
+              <div style="background: #F0FDF4; border: 1.5px solid #B8D8C0; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
+                  <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #1B6B3A; display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="scan-line" style="width:15px;height:15px;"></i>
+                    AI-ASSISTED VISUAL ASSESSMENT
+                  </div>
+                  <span style="display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 12px; background: #DCFCE7; color: #15803D; font-size: 11px; font-weight: 700; border: 1px solid #86EFAC;">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #16A34A; display: inline-block;"></span>
+                    AI Assessment Available
+                  </span>
+                </div>
+
+                ${fullAnnUrl ? `
+                  <div style="width: 100%; border-radius: 8px; overflow: hidden; background: #1A1E1A; margin-bottom: 12px; text-align: center; border: 1px solid #2D5A3E;">
+                    <img src="${fullAnnUrl}" alt="Annotated detection"
+                      style="width: 100%; max-height: 220px; object-fit: contain; display: block; margin: 0 auto;">
+                  </div>
+                ` : ''}
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; font-size: 13px;">
+                  <div>
+                    <div style="font-size: 10.5px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Crop detected</div>
+                    <div style="font-weight: 800; color: #12372A;">${ai.crop || lot.cropName || '—'}</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 10.5px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Condition</div>
+                    <div style="font-weight: 800; color: #12372A;">${ai.condition || '—'}</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 10.5px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Detection confidence</div>
+                    <div style="font-weight: 700; color: #12372A;">${confFormatted}</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 10.5px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Assessment type</div>
+                    <div style="font-size: 12px; font-weight: 600; color: #555;">${ai.assessmentType || 'Visual condition detection'}</div>
+                  </div>
+                </div>
+                <div style="margin-top: 12px; padding: 8px 12px; background: #FFF9ED; border: 1px solid #F0DCAA; border-radius: 6px; font-size: 11px; color: #7A5F20; line-height: 1.5;">
+                  Use this assessment as supporting information when evaluating the lot. It does not replace physical inspection, laboratory testing, or certified mandi quality assessment.
+                </div>
+              </div>
+            `;
+          }
+
+          if (qe && qe.source === 'FARMER_PROVIDED_REPORT' && qe.report) {
+            const rpt = qe.report;
+            return `
+              <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;">
+                <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #334155; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                  <span style="display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="file-text" style="width:14px;height:14px;"></i>
+                    FARMER-PROVIDED QUALITY REPORT
+                  </span>
+                  <span style="font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
+                    Farmer-Provided (Unverified)
+                  </span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 13px;">
+                  <div>
+                    <div style="font-size: 10.5px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">File name</div>
+                    <div style="font-weight: 800; color: #12372A; word-break: break-all;">${rpt.fileName || 'Report attached'}</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 10.5px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Provider</div>
+                    <div style="font-weight: 700; color: #12372A;">${rpt.provider || 'Not specified'}</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 10.5px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Report date</div>
+                    <div style="font-weight: 700; color: #12372A;">${rpt.reportDate || 'Not specified'}</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 10.5px; color: #666; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Report number</div>
+                    <div style="font-weight: 700; color: #12372A;">${rpt.reportNumber || 'N/A'}</div>
+                  </div>
+                </div>
+                <div style="margin-top: 10px; font-size: 11px; color: #777;">
+                  This document was supplied by the seller. Verification by independent assayer can be requested.
+                </div>
+              </div>
+            `;
+          }
+
+          if (qe && qe.source === 'MANUAL' && qe.manual) {
+            const man = qe.manual;
+            return `
+              <div style="background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;">
+                <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #92400E; display: flex; align-items: center; gap: 6px; margin-bottom: 10px;">
+                  <i data-lucide="edit-3" style="width:14px;height:14px;"></i>
+                  FARMER-PROVIDED QUALITY INFORMATION
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 13px;">
+                  <div>
+                    <div style="font-size: 10.5px; color: #78350F; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Condition</div>
+                    <div style="font-weight: 800; color: #12372A;">${man.condition || '—'}</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 10.5px; color: #78350F; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Grade / Standard</div>
+                    <div style="font-weight: 700; color: #12372A;">${man.grade || '—'}</div>
+                  </div>
+                  ${man.description ? `
+                    <div style="grid-column: 1 / -1;">
+                      <div style="font-size: 10.5px; color: #78350F; font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">Description</div>
+                      <div style="font-size: 13px; color: #333;">${man.description}</div>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }
+
+          return '';
+        })()}
+
         <!-- Seller Trust Card -->
         <div style="background: #FAF9F5; border: 1px solid #EAE6DF; border-radius: 10px; padding: 12px 14px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
@@ -1243,6 +1372,13 @@ async function openLotDetailModal(lotId) {
 
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
+  }
+}
+
+function renderLotDetailView(container, lotId) {
+  renderMarketplaceView(container);
+  if (lotId) {
+    openLotDetailModal(lotId);
   }
 }
 

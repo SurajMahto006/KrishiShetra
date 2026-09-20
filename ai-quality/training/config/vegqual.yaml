@@ -1,0 +1,35 @@
+# training/config/vegqual.yaml
+#
+# Ultralytics dataset config for VegQual.
+# Mirrors the dataset definition in ai-quality/data/VegQual/data.yaml.
+#
+# Usage:
+#   python training/train.py --data training/config/vegqual.yaml
+
+path: data/VegQual
+
+# Split directories (relative to `path`)
+train: train/images
+val:   valid/images
+test:  test/images
+
+# Number of classes
+nc: 14
+
+# Class names — YOLO flat detection labels (crop + condition in one label).
+# Source: VegQual dataset (Roboflow vegmining-i6j82 v6, CC BY 4.0).
+names:
+  - defected_Potato
+  - defected_bitter_gourd
+  - defected_brinjal
+  - defected_capsicum
+  - defected_onion
+  - defected_pointed_gourd
+  - defected_tomato
+  - fresh_bitter_gourd
+  - fresh_brinjal
+  - fresh_capsicum
+  - fresh_onion
+  - fresh_pointed_gourd
+  - fresh_potato
+  - fresh_tomato
