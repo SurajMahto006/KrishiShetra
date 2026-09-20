@@ -1,3 +1,5 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 # KrishiShetra AI Quality Service — Python Dependencies
 #
 # Install with:
@@ -18,8 +20,8 @@ pydantic-settings==2.2.1       # BaseSettings for .env loading
 
 # ── AI / Vision ────────────────────────────────────────────
 ultralytics==8.2.18            # YOLOv8 — includes torch requirement
-torch>=2.0.0                   # installed by ultralytics; pin floor only
-torchvision>=0.15.0
+torch==2.3.1+cpu
+torchvision==0.18.1+cpu
 opencv-python-headless==4.9.0.80
 Pillow==11.0.0
 numpy>=1.24.0
