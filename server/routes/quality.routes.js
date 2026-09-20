@@ -35,7 +35,7 @@ router.post('/analyze', (req, res) => {
       path: targetUrl.pathname + (targetUrl.search || ''),
       method: 'POST',
       headers: headers,
-      timeout: 30000
+      timeout: 135000
     };
 
     const proxyReq = client.request(options, (proxyRes) => {

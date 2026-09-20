@@ -590,6 +590,7 @@ const FarmerFlow = {
   },
 
   skipQualityEvidence() {
+    this._aqUserCancelled = true;
     // 1. Invalidate any in-flight AI quality analysis request and abort fetch
     this._aqRequestId = (this._aqRequestId || 0) + 1;
     if (this._aqAbortController) {
@@ -811,6 +812,11 @@ const FarmerFlow = {
   },
 
   clearQualityPhoto() {
+    this._aqUserCancelled = true;
+    if (this._aqAbortController) {
+      try { this._aqAbortController.abort(); } catch (e) {}
+      this._aqAbortController = null;
+    }
     this.stopCameraStream();
     this._selectedQualityPhoto = null;
     this._aqPendingAiResult = null;
@@ -851,6 +857,7 @@ const FarmerFlow = {
 
     console.log('[AI Quality UI] analysis started');
     this.setAiPhotoState('AI_ANALYZING');
+    this._aqUserCancelled = false;
 
     const selectedCrop = this.getCurrentSelectedCrop();
     console.log('[AI Quality UI] Selected crop:', selectedCrop);
@@ -864,9 +871,15 @@ const FarmerFlow = {
     const controller = new AbortController();
     this._aqAbortController = controller;
 
+    const tStart = performance.now();
+    let isTimedOut = false;
+
     const timeoutId = setTimeout(() => {
-      controller.abort();
-    }, 15000);
+      isTimedOut = true;
+      try {
+        controller.abort();
+      } catch (e) {}
+    }, 120000); // 120s tolerance for Render cold starts
 
     try {
       const formData = new FormData();
@@ -885,7 +898,8 @@ const FarmerFlow = {
       // Clear timeout immediately after fetch resolves
       clearTimeout(timeoutId);
 
-      console.log('[AI Quality UI] response received: HTTP', resp.status);
+      const elapsedMs = Math.round(performance.now() - tStart);
+      console.log(`[AI Quality UI] response received: HTTP ${resp.status} (${elapsedMs}ms)`);
 
       if (!resp.ok) {
         console.log('[AI Quality UI] state -> AI_ERROR');
@@ -1005,8 +1019,19 @@ const FarmerFlow = {
       }
 
     } catch (err) {
+      clearTimeout(timeoutId);
       this._aqPendingAiResult = null;
-      if (err.name === 'AbortError') {
+      if (this._aqUserCancelled) {
+        console.log('[AI Quality UI] request cancelled by user');
+        return;
+      }
+      if (isTimedOut) {
+        console.warn('[AI Quality UI] request timed out after 120s');
+        const errorEl = document.getElementById('qe-error-text');
+        if (errorEl) {
+          errorEl.textContent = 'Photo assessment is taking longer than expected. Please try another photo or continue using another quality option.';
+        }
+      } else if (err.name === 'AbortError') {
         console.warn('[AI Quality UI] request aborted');
         const errorEl = document.getElementById('qe-error-text');
         if (errorEl) {
