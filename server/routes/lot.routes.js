@@ -13,6 +13,7 @@ router.post('/ai-estimate', lotController.aiQualityScanEstimate);
 router.post('/:lotId/assay', authorize('farmer', 'fpo', 'assayer', 'admin'), lotController.verifyAssay);
 
 // Farmer-specific lot management
+router.get('/', authorize('farmer'), lotController.getMyLots);
 router.post('/', authorize('farmer'), lotController.createLot);
 router.get('/my', authorize('farmer'), lotController.getMyLots);
 router.get('/:lotId', lotController.getSingleLot);

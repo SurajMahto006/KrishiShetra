@@ -1314,13 +1314,27 @@ function initCreateLotForm() {
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const cropId = document.getElementById('lot-crop-select').value;
-      const quantity = document.getElementById('lot-qty-input').value;
-      const expectedPrice = document.getElementById('lot-price-input').value;
-      const grade = document.getElementById('lot-grade-select').value;
-      const harvestDate = document.getElementById('lot-harvest-input').value;
-      const location = document.getElementById('lot-location-input').value;
-      const description = document.getElementById('lot-desc-input').value;
+
+      const cropSelect = document.getElementById('lot-crop-select');
+      const cropId = cropSelect && cropSelect.value ? cropSelect.value : (document.getElementById('wiz-crop-val')?.value || 'tomato');
+      const quantityInput = document.getElementById('lot-qty-input') || document.getElementById('wiz-qty-input');
+      const expectedPriceInput = document.getElementById('lot-price-input') || document.getElementById('wiz-price-input');
+      const gradeSelect = document.getElementById('lot-grade-select');
+      const harvestDateInput = document.getElementById('lot-harvest-input') || document.getElementById('wiz-harvest-date');
+      const locationInput = document.getElementById('lot-location-input') || document.getElementById('wiz-location-input');
+      const descriptionInput = document.getElementById('lot-desc-input') || document.getElementById('wiz-desc-input');
+
+      const quantity = quantityInput ? quantityInput.value : '';
+      const expectedPrice = expectedPriceInput ? expectedPriceInput.value : '';
+      const grade = gradeSelect ? gradeSelect.value : 'A';
+      const harvestDate = harvestDateInput ? harvestDateInput.value : '';
+      const location = locationInput ? locationInput.value : '';
+      const description = descriptionInput ? descriptionInput.value : '';
+
+      if (!cropId || !quantity || !expectedPrice) {
+        showToast('Please complete the lot details before publishing.');
+        return;
+      }
 
       const newLot = krishiStore.addLot({
         cropId,
