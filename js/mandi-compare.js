@@ -378,7 +378,7 @@ function MandiCompare() {
   this.stateFilter = 'all';
   this.distFilter = 'all';
   this.demandFilter = 'all';
-  this.selected = ['pune', 'mumbai', 'nashik', 'indore', 'surat']; // default selection
+  this.selected = []; // user-driven selection; no stale hardcoded mandis
   this.chartMode = 'net'; // 'net', 'price', 'transport', 'scatter'
   this.chart = null;
   this.lastUpdated = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + ' IST';
@@ -465,8 +465,7 @@ MandiCompare.prototype.bindControls = function () {
   var sortSel = document.getElementById('mpc-sort-select');
   if (sortSel) sortSel.addEventListener('change', function (e) {
     self.sortBy = e.target.value;
-    self.renderTable();
-    self.renderCards();
+    self.render();
   });
 
   // State / Region Filter
@@ -480,18 +479,14 @@ MandiCompare.prototype.bindControls = function () {
   var distSel = document.getElementById('mpc-dist-filter');
   if (distSel) distSel.addEventListener('change', function (e) {
     self.distFilter = e.target.value;
-    self.renderTable();
-    self.renderCards();
-    self.renderChart();
+    self.render();
   });
 
   // Demand Filter
   var demandSel = document.getElementById('mpc-demand-filter');
   if (demandSel) demandSel.addEventListener('change', function (e) {
     self.demandFilter = e.target.value;
-    self.renderTable();
-    self.renderCards();
-    self.renderChart();
+    self.render();
   });
 
   // Search Input
@@ -502,9 +497,7 @@ MandiCompare.prototype.bindControls = function () {
       clearTimeout(st);
       st = setTimeout(function () {
         self.searchQ = e.target.value.toLowerCase().trim();
-        self.renderTable();
-        self.renderCards();
-        self.renderChart();
+        self.render();
       }, 250);
     });
   }
@@ -879,7 +872,7 @@ MandiCompare.prototype.render = function () {
 // ── Render 4 KPI Decision Summary Cards ──────────────────────────────────────
 MandiCompare.prototype.renderKPIs = function () {
   var crop = this.crop, qty = this.qty;
-  var allList = MPC_DATA.filter(function (m) { return m.prices && m.prices[crop] > 0; });
+  var allList = this.getProcessedList().slice();
   if (!allList.length) return;
 
   var gradeF = mpcGradeFactor(this.grade);
