@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Active Trips & Live GPS Telemetry Radar | KrishiShetra Transporter</title>
-  <meta name="description" content="Live GPS Telemetry Console, Real-time Agri-Corridor Tracking, Reefer Temperature Sensors, FASTag Toll Crossing, and Digital POD Verification.">
+  <title>Active Trips & Telemetry Control Center | KrishiShetra Transporter</title>
+  <meta name="description" content="Track live agri-corridor deliveries, AIS-140 GPS telemetry, milestone status, reefer sensors, and digital POD verification.">
   
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Outfit + Playfair Display + Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,44 +20,383 @@
 
   <link rel="stylesheet" href="css/transporter.css">
   <style>
-    .trip-map-card {
-      position: relative;
-      background: #092F25;
+    /* =========================================================================
+       FLEET TRACKING OPERATIONS MAP & TELEMETRY BAR
+       ========================================================================= */
+    .fleet-tracking-section {
+      background: var(--transporter-surface);
+      border: 1px solid var(--transporter-border);
       border-radius: var(--radius-lg);
-      border: 1px solid rgba(91, 154, 114, 0.3);
       overflow: hidden;
+      box-shadow: var(--shadow-sm);
       margin-bottom: 24px;
-      box-shadow: var(--shadow-lg);
     }
+
+    .fleet-map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px 18px;
+      background: var(--transporter-primary-dark);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .fleet-map-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .fleet-map-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-radar-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px #10B981;
+      animation: pulseDot 1.5s infinite;
+      flex-shrink: 0;
+    }
+
+    .fleet-map-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #FFFFFF;
+      font-family: var(--font-sans);
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .fleet-map-subtitle {
+      font-size: 12px;
+      color: #8FCB9B;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .fleet-map-header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fleet-badge-trips {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(200, 150, 62, 0.2);
+      border: 1px solid rgba(200, 150, 62, 0.4);
+      color: #F8E7C9;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .fleet-badge-trips svg,
+    .fleet-badge-trips i {
+      width: 13px;
+      height: 13px;
+      color: var(--transporter-accent);
+    }
+
+    .btn-map-refresh {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-map-refresh:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .btn-map-refresh.is-spinning #refreshIcon {
+      animation: spinRefresh 0.7s linear infinite;
+    }
+
+    @keyframes spinRefresh {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Map viewport container */
+    .fleet-map-container {
+      position: relative;
+      width: 100%;
+      background: #E8ECE9;
+    }
+
     #activeTripsMap {
       width: 100%;
-      height: 440px;
-      background: #061e18;
+      height: 280px;
+      background: #E8ECE9;
       z-index: 1;
     }
-    .map-overlay-panel {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      z-index: 1000;
-      background: rgba(13, 68, 53, 0.88);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(200, 150, 62, 0.35);
-      border-radius: var(--radius-md);
+
+    @media (max-width: 640px) {
+      #activeTripsMap {
+        height: 230px;
+      }
+    }
+
+    /* Selected Trip / Live Status Panel */
+    .selected-trip-panel {
+      background: #FFFFFF;
+      border-top: 1px solid var(--transporter-border);
       padding: 14px 18px;
-      color: #FFF;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      max-width: 300px;
+      transition: background-color 0.2s ease;
     }
+
+    .selected-trip-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .selected-trip-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      color: var(--transporter-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .pulse-indicator-emerald {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 6px #10B981;
+      animation: pulseDot 1.5s infinite;
+    }
+
+    .selected-trip-subinfo {
+      color: var(--transporter-muted);
+      font-weight: 500;
+    }
+
+    .selected-trip-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .selected-trip-col-main {
+      flex: 1 1 280px;
+    }
+
+    .selected-trip-commodity {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--transporter-text);
+      line-height: 1.25;
+    }
+
+    .selected-trip-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--transporter-muted);
+      margin-top: 4px;
+    }
+
+    .selected-trip-meta strong {
+      color: var(--transporter-text);
+      font-weight: 700;
+    }
+
+    .selected-trip-meta code {
+      font-family: monospace;
+      background: var(--transporter-surface);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      border: 1px solid var(--transporter-border-subtle);
+    }
+
+    .meta-separator {
+      color: var(--transporter-border);
+    }
+
+    .selected-trip-col-status {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .selected-trip-eta {
+      font-size: 12px;
+      color: var(--transporter-muted);
+      font-weight: 600;
+    }
+
+    .selected-trip-col-action {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Custom vehicle marker pins */
+    .fleet-div-marker {
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .fleet-marker-wrap {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transform: translate(-50%, -100%);
+      user-select: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .fleet-marker-wrap:hover {
+      transform: translate(-50%, -108%) scale(1.06);
+    }
+
+    .fleet-marker-wrap.is-selected {
+      transform: translate(-50%, -110%) scale(1.1);
+      z-index: 1000 !important;
+    }
+
+    .fleet-marker-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #0B3326;
+      border: 1.5px solid #10B981;
+      border-radius: 20px;
+      padding: 3px 9px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      white-space: nowrap;
+    }
+
+    .fleet-marker-pill.status-in-transit {
+      background: #093325;
+      border-color: #10B981;
+    }
+
+    .fleet-marker-pill.status-toll-plaza {
+      background: #3B2405;
+      border-color: #F59E0B;
+    }
+
+    .fleet-marker-pill.status-delivered {
+      background: #0C2B47;
+      border-color: #38BDF8;
+    }
+
+    .fleet-marker-pill.status-loading {
+      background: #25282A;
+      border-color: #94A3B8;
+    }
+
+    .fleet-marker-icon {
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .fleet-marker-plate {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: 0.3px;
+    }
+
+    .fleet-marker-arrow {
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid #10B981;
+      margin-top: -1px;
+    }
+
+    .fleet-marker-pill.status-toll-plaza + .fleet-marker-arrow {
+      border-top-color: #F59E0B;
+    }
+
+    .fleet-marker-pill.status-delivered + .fleet-marker-arrow {
+      border-top-color: #38BDF8;
+    }
+
+    .fleet-marker-pill.status-loading + .fleet-marker-arrow {
+      border-top-color: #94A3B8;
+    }
+
+    .fleet-marker-wrap.is-selected .fleet-marker-pill {
+      box-shadow: 0 0 0 3px rgba(200, 150, 62, 0.5), 0 6px 18px rgba(0, 0, 0, 0.45);
+      border-color: #FBBF24;
+    }
+
+    .fleet-marker-ping {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      width: 22px;
+      height: 22px;
+      margin: -11px 0 0 -11px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.4);
+      pointer-events: none;
+      animation: markerPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes markerPing {
+      0% { transform: scale(0.6); opacity: 0.85; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    /* Leaflet popup customization */
     .leaflet-popup-content-wrapper {
-      background: #0D4435 !important;
+      background: #092B21 !important;
       color: #FFFFFF !important;
-      border-radius: 12px !important;
-      border: 1px solid #D97706 !important;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
+      border-radius: 10px !important;
+      border: 1px solid #C8963E !important;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35) !important;
     }
+
     .leaflet-popup-tip {
-      background: #0D4435 !important;
+      background: #092B21 !important;
+    }
+
+    .leaflet-container {
+      font-family: var(--font-sans) !important;
+    }
+
+    /* Active Trip Card map focus state */
+    .trip-operational-card.map-selected-card {
+      outline: 2px solid var(--transporter-accent);
+      box-shadow: 0 0 0 4px rgba(200, 150, 62, 0.18), var(--shadow-card);
     }
   </style>
 </head>
@@ -78,14 +417,14 @@
 
       <nav>
         <ul class="trans-nav-menu" id="transNavMenu">
-          <li><a href="dashboard.html" class="trans-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
-          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search" style="width:16px;height:16px;"></i> Available Loads</a></li>
-          <li><a href="active-trips.html" class="trans-nav-link active"><i data-lucide="truck" style="width:16px;height:16px;"></i> Active Trips</a></li>
-          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Fleet</a></li>
-          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
-          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
-          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
-          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a></li>
+          <li><a href="dashboard.html" class="trans-nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a></li>
+          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search"></i> Available Loads</a></li>
+          <li><a href="active-trips.html" class="trans-nav-link active"><i data-lucide="truck"></i> Active Trips</a></li>
+          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check"></i> Fleet</a></li>
+          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users"></i> Drivers</a></li>
+          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet"></i> Earnings</a></li>
+          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check"></i> Profile</a></li>
+          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out"></i> Logout / Sign Out</a></li>
         </ul>
       </nav>
 
@@ -111,18 +450,18 @@
 
           <div class="trans-profile-dropdown" id="transProfileDropdown" role="menu">
             <div class="trans-dropdown-header">
-              <div class="trans-user-avatar trans-user-avatar--lg" id="transDropdownAvatar">KE</div>
+              <div class="trans-user-avatar" style="width:38px;height:38px;font-size:14px;" id="transDropdownAvatar">KE</div>
               <div style="overflow:hidden;">
                 <div class="trans-dropdown-name" id="transDropdownName">Kisan Express Logistics</div>
                 <div class="trans-dropdown-sub" id="transDropdownSub">Gold Carrier · VAHAN Verified</div>
               </div>
             </div>
             <div class="trans-dropdown-sep"></div>
-            <a href="profile.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile & Fleet Info</a>
-            <a href="onboarding.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Compliance & Permits</a>
-            <a href="earnings.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="wallet" style="width:16px;height:16px;"></i> FASTag & Earnings</a>
+            <a href="profile.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="user-check"></i> Profile & Fleet Info</a>
+            <a href="onboarding.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="shield-check"></i> Compliance & Permits</a>
+            <a href="earnings.html" class="trans-dropdown-item" role="menuitem"><i data-lucide="wallet"></i> FASTag & Earnings</a>
             <div class="trans-dropdown-sep"></div>
-            <a href="javascript:void(0)" class="trans-dropdown-item trans-dropdown-item--danger" id="transLogoutBtn" role="menuitem"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a>
+            <a href="javascript:void(0)" class="trans-dropdown-item trans-dropdown-item--danger" id="transLogoutBtn" role="menuitem"><i data-lucide="log-out"></i> Logout / Sign Out</a>
           </div>
         </div>
 
@@ -141,140 +480,448 @@
   <main class="trans-main">
     <div class="trans-container">
 
-      <!-- Page Title & Actions -->
+      <!-- Page Header -->
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:20px;">
         <div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-            <span class="badge-tag" style="background:#D1FAE5;color:#065F46;font-weight:700;font-size:12px;">5 Trucks Live GPS Telemetry</span>
-            <span style="font-size:12px;color:var(--text-muted);">● AIS 140 Govt GPS Connected</span>
+          <div style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--transporter-primary);background:var(--transporter-surface-mint);padding:3px 9px;border-radius:var(--radius-full);margin-bottom:6px;">
+            <i data-lucide="radio" style="width:13px;height:13px;"></i> AIS-140 Live Fleet Telemetry
           </div>
-          <h1 style="font-size:28px;font-weight:800;color:var(--text-heading);font-family:var(--font-serif);">Active Highway Transit & Telemetry</h1>
-          <p style="color:var(--text-secondary);font-size:14px;margin-top:2px;">
-            Live satellite tracking, reefer temperature graphs, FASTag toll updates, and instant digital Proof of Delivery (POD).
+          <h1 style="font-size:26px;font-weight:800;color:var(--transporter-text);font-family:var(--font-serif);line-height:1.2;">
+            Active Trips
+          </h1>
+          <p style="color:var(--transporter-muted);font-size:14px;margin-top:3px;">
+            Track your current deliveries and complete each milestone.
           </p>
         </div>
         
         <div style="display:flex;gap:10px;align-items:center;">
-          <button class="btn btn-secondary" onclick="simulateGpsSync()"><i data-lucide="radio" style="width:15px;height:15px;color:var(--amber);"></i> Sync GPS Radar</button>
-          <a href="available-loads.html" class="btn btn-amber"><i data-lucide="plus" style="width:15px;height:15px;"></i> Find Return Loads</a>
+          <button class="btn btn-secondary" onclick="simulateGpsSync()"><i data-lucide="radio"></i> Sync GPS Radar</button>
+          <a href="available-loads.html" class="btn btn-amber"><i data-lucide="plus"></i> Find Return Loads</a>
         </div>
       </div>
 
-      <!-- =====================================================================
-           INTERACTIVE LEAFLET HIGHWAY MAP CONSOLE
-           ===================================================================== -->
-      <div class="trip-map-card">
-        <div id="activeTripsMap"></div>
-        <div class="map-overlay-panel">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <div style="width:10px;height:10px;border-radius:50%;background:#10B981;box-shadow:0 0 10px #10B981;animation:pulse 1.5s infinite;"></div>
-            <strong style="font-size:13px;color:#FFF;">Live GPS Fleet Stream</strong>
+      <!-- Top Compact Summary -->
+      <div class="stats-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px;">
+        <div class="stat-kpi-card">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl">Ongoing</span>
+            <div class="stat-kpi-icon green"><i data-lucide="truck"></i></div>
           </div>
-          <div style="font-size:12px;color:#8FCB9B;line-height:1.5;">
-            5 active trucks tracked across Western & Central India corridors. Click any marker for speed & temperature stats.
+          <div class="stat-kpi-val">3 Trips</div>
+          <div class="stat-kpi-sub">On Western Highway Corridors</div>
+        </div>
+
+        <div class="stat-kpi-card">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl">Starting Today</span>
+            <div class="stat-kpi-icon blue"><i data-lucide="clock"></i></div>
           </div>
+          <div class="stat-kpi-val">1 Trip</div>
+          <div class="stat-kpi-sub">Loading at Narayangaon Hub</div>
+        </div>
+
+        <div class="stat-kpi-card">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl">Delayed</span>
+            <div class="stat-kpi-icon amber"><i data-lucide="alert-triangle"></i></div>
+          </div>
+          <div class="stat-kpi-val">0 Trips</div>
+          <div class="stat-kpi-sub"><span style="color:var(--transporter-success);font-weight:700;">100% On-Time SLA</span></div>
+        </div>
+
+        <div class="stat-kpi-card">
+          <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl">Completed</span>
+            <div class="stat-kpi-icon purple"><i data-lucide="check-circle"></i></div>
+          </div>
+          <div class="stat-kpi-val">1 Trip</div>
+          <div class="stat-kpi-sub">Arrived at Vashi APMC dock</div>
         </div>
       </div>
+
+      <!-- Practical Live Fleet Tracking Console -->
+      <section class="fleet-tracking-section" aria-label="Live Fleet Tracking Operations">
+        <!-- Compact Map Header -->
+        <div class="fleet-map-header">
+          <div class="fleet-map-header-left">
+            <div class="fleet-map-title-row">
+              <span class="live-radar-dot" aria-hidden="true"></span>
+              <h2 class="fleet-map-title">Live Fleet Tracking</h2>
+            </div>
+            <p class="fleet-map-subtitle">Tracking active deliveries across Western Maharashtra corridors</p>
+          </div>
+
+          <div class="fleet-map-header-right">
+            <span class="fleet-badge-trips" id="activeTripsBadge">
+              <i data-lucide="truck"></i> <span id="activeTripsCountText">3 Active Trips</span>
+            </span>
+            <button type="button" class="btn-map-refresh" id="btnRefreshFleet" onclick="refreshFleetMap()" title="Sync live AIS-140 GPS radar">
+              <i data-lucide="refresh-cw" id="refreshIcon"></i> Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Practical Fleet Map Viewport -->
+        <div class="fleet-map-container">
+          <div id="activeTripsMap" role="region" aria-label="Interactive Fleet Telemetry Map"></div>
+        </div>
+
+        <!-- Selected Trip / Live Status Panel -->
+        <div class="selected-trip-panel" id="selectedTripPanel">
+          <div class="selected-trip-top">
+            <div class="selected-trip-tag">
+              <span class="pulse-indicator-emerald"></span>
+              <span>Selected Trip / Live Status</span>
+            </div>
+            <div class="selected-trip-subinfo" id="selTripSubinfo">
+              Corridor: NH-160 (Nashik–Mumbai) · AIS-140 Live
+            </div>
+          </div>
+
+          <div class="selected-trip-grid">
+            <div class="selected-trip-col-main">
+              <div class="selected-trip-commodity" id="selTripCommodityRoute">
+                Tomato • Nashik → Vashi APMC
+              </div>
+              <div class="selected-trip-meta">
+                <span>Vehicle: <strong id="selTripVehicle">MH 15 CP 3391</strong></span>
+                <span class="meta-separator">•</span>
+                <span>Driver: <strong id="selTripDriver">Ankush Borde</strong></span>
+                <span class="meta-separator">•</span>
+                <span>E-Way: <code id="selTripEWay">EWB-1109-8472-3321</code></span>
+              </div>
+            </div>
+
+            <div class="selected-trip-col-status">
+              <div id="selTripBadgeWrap">
+                <span class="trip-status-badge in-transit" id="selTripStatusBadge">● In Transit (58 km/h)</span>
+              </div>
+              <div class="selected-trip-eta" id="selTripEta">
+                ETA: Tomorrow, 05:30 AM
+              </div>
+            </div>
+
+            <div class="selected-trip-col-action">
+              <button class="btn btn-amber btn-sm" id="selTripActionBtn" onclick="viewTripDetail('TRIP-9024')">
+                <i data-lucide="gauge"></i> View Telemetry & POD
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- Filters Ribbon -->
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="pill-chip active" onclick="filterTrips('ALL', this)">All Active Trips (5)</button>
-          <button class="pill-chip" onclick="filterTrips('in-transit', this)">In Transit (3)</button>
+          <button class="pill-chip active" onclick="filterTrips('ALL', this)">All Trips (4)</button>
+          <button class="pill-chip" onclick="filterTrips('in-transit', this)">In Transit (2)</button>
           <button class="pill-chip" onclick="filterTrips('toll-plaza', this)">At Toll Plaza (1)</button>
-          <button class="pill-chip" onclick="filterTrips('loading', this)">Loading / Gate (1)</button>
+          <button class="pill-chip" onclick="filterTrips('delivered', this)">Arrived / Delivered (1)</button>
         </div>
 
-        <div style="font-size:13px;color:var(--text-secondary);font-weight:600;">
-          Auto-refreshing every 15s ✓
+        <div style="font-size:12.5px;color:var(--transporter-muted);font-weight:600;">
+          Auto-synchronized with GPS Telemetry ✓
         </div>
       </div>
 
-      <!-- Active Trips Detailed Cards List -->
-      <div id="tripsListContainer" style="display:flex;flex-direction:column;gap:18px;">
-        <!-- Rendered via transporter.js / TransporterData -->
+      <!-- Active Trips List -->
+      <div id="tripsListContainer" style="display:flex;flex-direction:column;gap:16px;">
+        <!-- Rendered dynamically via JavaScript -->
       </div>
 
     </div>
   </main>
 
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
   <footer class="trans-footer">
-    <div class="trans-footer-inner">
+    <div class="trans-container trans-footer-inner">
       <div>© 2026 KrishiShetra Agri-Logistics Infrastructure Ltd. · VAHAN & Sarathi Integrated</div>
       <div style="display:flex;gap:16px;">
-        <a href="onboarding.html" style="color:var(--text-secondary);text-decoration:none;">Compliance & Permits</a>
-        <a href="earnings.html" style="color:var(--text-secondary);text-decoration:none;">FASTag Escrow</a>
-        <a href="profile.html" style="color:var(--text-secondary);text-decoration:none;">Carrier Support</a>
+        <a href="onboarding.html">Compliance & Permits</a>
+        <a href="earnings.html">FASTag Escrow</a>
+        <a href="profile.html">Carrier Support</a>
       </div>
     </div>
   </footer>
 
+  <script src="../js/auth.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/page-guard.js"></script>
   <script src="js/transporter-data.js"></script>
   <script src="js/transporter.js"></script>
   <script>
     let leafletMap = null;
     let markersLayer = null;
+    let routesLayer = null;
+    let markerInstances = {};
+    let polylineInstances = {};
+    let currentSelectedTripId = 'TRIP-9024';
+
+    const tripLocations = [
+      {
+        id: 'TRIP-9024',
+        plate: 'MH 15 CP 3391',
+        commodityDisplay: 'Tomato • Nashik/Narayangaon → Vashi APMC',
+        corridor: 'NH-60 / NH-160 Agri Expressway Corridor',
+        lat: 19.1234,
+        lng: 73.7876,
+        routeCoords: [
+          [19.1234, 73.9876], // Narayangaon FPO Hub
+          [19.1234, 73.7876], // Current vehicle pos (Otur segment)
+          [19.2183, 73.1340], // Kalyan Junction
+          [19.0760, 72.8777]  // Vashi APMC Dock
+        ],
+        loc: 'NH-160 Otur Toll Approach',
+        speed: '58 km/h',
+        status: 'In Transit',
+        statusBadgeClass: 'in-transit',
+        eta: 'Tomorrow, 05:30 AM'
+      },
+      {
+        id: 'TRIP-9023',
+        plate: 'MH 15 DK 8812',
+        commodityDisplay: 'Green Chilli • Jalgaon → Surat APMC',
+        corridor: 'NH-53 Western Cargo Highway · Navapur Checkpost',
+        lat: 21.1685,
+        lng: 73.8012,
+        routeCoords: [
+          [21.0077, 75.5626], // Jalgaon
+          [21.1685, 73.8012], // Current vehicle pos (Navapur)
+          [21.1702, 72.8311]  // Surat APMC
+        ],
+        loc: 'Navapur Highway Border',
+        speed: '54 km/h',
+        status: 'In Transit',
+        statusBadgeClass: 'in-transit',
+        eta: 'Tomorrow, 04:00 AM'
+      },
+      {
+        id: 'TRIP-9022',
+        plate: 'MH 15 BX 1094',
+        commodityDisplay: 'Red Apple (Reefer) • Sopore → Pune APMC',
+        corridor: 'NH-48 Golden Quadrilateral · Khed-Shivapur Toll',
+        lat: 18.3582,
+        lng: 73.8471,
+        routeCoords: [
+          [18.6200, 73.8100], // North entry
+          [18.3582, 73.8471], // Current vehicle pos (Khed-Shivapur)
+          [18.4900, 73.8650]  // Pune APMC Cold Chain
+        ],
+        loc: 'Khed-Shivapur Toll Plaza',
+        speed: '0 km/h (At Toll)',
+        status: 'At Toll Plaza',
+        statusBadgeClass: 'toll-plaza',
+        eta: 'Tonight, 11:15 PM'
+      },
+      {
+        id: 'TRIP-9021',
+        plate: 'MH 15 EG 4820',
+        commodityDisplay: 'Tomato • Nashik → Vashi APMC',
+        corridor: 'NH-160 Mumbai–Nashik Expressway · Bay 4',
+        lat: 19.0760,
+        lng: 72.8777,
+        routeCoords: [
+          [19.5760, 74.2070], // Sangamner / Nashik
+          [19.2183, 73.0867], // Thane
+          [19.0760, 72.8777]  // Vashi APMC
+        ],
+        loc: 'Vashi APMC Receiving Bay 4',
+        speed: '0 km/h (Delivered)',
+        status: 'Delivered',
+        statusBadgeClass: 'delivered',
+        eta: 'Delivered · 12:45 PM'
+      }
+    ];
 
     document.addEventListener('DOMContentLoaded', () => {
       initTripsMap();
       renderTripsList('ALL');
+      selectTrip('TRIP-9024', false);
     });
 
     function initTripsMap() {
       const mapEl = document.getElementById('activeTripsMap');
       if (!mapEl || !window.L) return;
 
-      // Center map on Central/Western India (Nashik/Maharashtra region)
+      // Initialize map with zoom controls in bottom-right corner
       leafletMap = L.map('activeTripsMap', {
-        zoomControl: true,
-        scrollWheelZoom: false
-      }).setView([19.7515, 75.7139], 6);
+        zoomControl: false,
+        scrollWheelZoom: false,
+        minZoom: 5,
+        maxZoom: 18
+      }).setView([19.7515, 75.7139], 7);
 
-      // CartoDB Dark Matter / Positron tiles for high-tech aesthetic
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
+      L.control.zoom({ position: 'bottomright' }).addTo(leafletMap);
+
+      // OpenStreetMap public raster tiles (No CARTO watermark, 100% reliable)
+      const osmTiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
         maxZoom: 19
-      }).addTo(leafletMap);
+      });
 
+      osmTiles.on('tileerror', (err) => {
+        console.warn('Map tile load error handled gracefully:', err);
+      });
+
+      osmTiles.addTo(leafletMap);
+
+      routesLayer = L.layerGroup().addTo(leafletMap);
       markersLayer = L.layerGroup().addTo(leafletMap);
-      plotTripMarkers();
+
+      plotTripMarkersAndRoutes();
+
+      // Fit map viewport to encompass all active Maharashtra routes
+      const bounds = L.latLngBounds(tripLocations.map(t => [t.lat, t.lng]));
+      leafletMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
     }
 
-    function plotTripMarkers() {
-      if (!markersLayer || !window.L) return;
+    function plotTripMarkersAndRoutes() {
+      if (!markersLayer || !routesLayer || !window.L) return;
       markersLayer.clearLayers();
-
-      const tripLocations = [
-        { id: 'TRIP-9021', name: 'MH 15 EG 4820 (Onion 18.5 MT)', lat: 19.6890, lng: 73.5412, loc: 'Kasara Ghat (NH 160)', speed: '48 km/h', eta: '09:45 PM' },
-        { id: 'TRIP-9022', name: 'MH 15 BX 1094 (Apple Reefer 14 MT)', lat: 18.3582, lng: 73.8471, loc: 'Khed-Shivapur Toll', speed: '54 km/h', eta: '11:15 PM' },
-        { id: 'TRIP-9023', name: 'MH 15 DC 7712 (Wheat 22 MT)', lat: 21.7051, lng: 72.9959, loc: 'Ankleshwar Narmada Bridge', speed: '52 km/h', eta: 'Tomorrow 05:30 AM' },
-        { id: 'TRIP-9024', name: 'MH 15 AK 3390 (Tomato 7.5 MT)', lat: 19.0760, lng: 72.8777, loc: 'Vashi APMC Gate #2', speed: '12 km/h', eta: 'Arrived (Unloading)' },
-        { id: 'TRIP-9025', name: 'MH 15 ZZ 5501 (Cotton Bales 16 MT)', lat: 20.9374, lng: 77.7796, loc: 'Amravati Bypass', speed: '50 km/h', eta: 'Tomorrow 02:00 PM' }
-      ];
+      routesLayer.clearLayers();
+      markerInstances = {};
+      polylineInstances = {};
 
       tripLocations.forEach(t => {
-        const marker = L.circleMarker([t.lat, t.lng], {
-          radius: 9,
-          fillColor: '#D97706',
-          color: '#FFFFFF',
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.95
+        // Draw route polyline
+        const isSelected = (t.id === currentSelectedTripId);
+        const polyline = L.polyline(t.routeCoords, {
+          color: isSelected ? '#C8963E' : '#2D7A5B',
+          weight: isSelected ? 4.5 : 3,
+          opacity: isSelected ? 0.95 : 0.55,
+          dashArray: isSelected ? null : '6, 8'
+        }).addTo(routesLayer);
+        polylineInstances[t.id] = polyline;
+
+        // Create custom vehicle marker pin
+        const markerIcon = L.divIcon({
+          className: 'fleet-div-marker',
+          html: `
+            <div class="fleet-marker-wrap ${isSelected ? 'is-selected' : ''}" id="marker-${t.id}">
+              <div class="fleet-marker-ping"></div>
+              <div class="fleet-marker-pill status-${t.statusBadgeClass}">
+                <span class="fleet-marker-icon">🚚</span>
+                <span class="fleet-marker-plate">${t.plate}</span>
+              </div>
+              <div class="fleet-marker-arrow"></div>
+            </div>
+          `,
+          iconSize: [110, 36],
+          iconAnchor: [55, 36],
+          popupAnchor: [0, -38]
         });
 
+        const marker = L.marker([t.lat, t.lng], { icon: markerIcon });
+
         marker.bindPopup(`
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;padding:6px;min-width:180px;">
-            <div style="font-size:12px;font-weight:700;color:#8FCB9B;">${t.id}</div>
-            <div style="font-size:14px;font-weight:800;color:#FFF;margin-top:2px;">${t.name}</div>
-            <div style="font-size:12px;color:#EDE9DC;margin-top:4px;"><strong>Location:</strong> ${t.loc}</div>
-            <div style="font-size:12px;color:#D97706;margin-top:2px;"><strong>Speed:</strong> ${t.speed} · <strong>ETA:</strong> ${t.eta}</div>
-            <button class="btn btn-amber btn-sm" style="margin-top:8px;width:100%;font-size:11px;padding:4px 8px;" onclick="viewTripDetail('${t.id}')">Open Telemetry</button>
+          <div style="font-family:var(--font-sans,'Plus Jakarta Sans',sans-serif);padding:6px;min-width:190px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+              <span style="font-size:11px;font-weight:800;color:var(--transporter-accent,#C8963E);">${t.id}</span>
+              <span class="trip-status-badge ${t.statusBadgeClass}" style="font-size:10.5px;padding:2px 7px;">● ${t.status}</span>
+            </div>
+            <div style="font-size:13.5px;font-weight:800;color:#FFF;margin-top:2px;">${t.commodityDisplay}</div>
+            <div style="font-size:11.5px;color:#EDE9DC;margin-top:4px;"><strong>Location:</strong> ${t.loc}</div>
+            <div style="font-size:11.5px;color:#8FCB9B;margin-top:2px;"><strong>Speed:</strong> ${t.speed} · <strong>ETA:</strong> ${t.eta}</div>
+            <button class="btn btn-amber btn-sm" style="margin-top:8px;width:100%;font-size:11px;padding:5px 8px;" onclick="viewTripDetail('${t.id}')">View Telemetry & POD</button>
           </div>
         `);
 
+        marker.on('click', () => {
+          selectTrip(t.id, true);
+        });
+
         markersLayer.addLayer(marker);
+        markerInstances[t.id] = marker;
       });
+    }
+
+    function selectTrip(tripId, fromMapClick = false) {
+      currentSelectedTripId = tripId;
+      const tripData = TransporterData.activeTrips.find(t => t.id === tripId) || TransporterData.activeTrips[0];
+      const locData = tripLocations.find(t => t.id === tripId) || tripLocations[0];
+
+      // Update [Selected Trip / Live Status] Panel
+      const commEl = document.getElementById('selTripCommodityRoute');
+      if (commEl) commEl.textContent = locData.commodityDisplay;
+
+      const vehEl = document.getElementById('selTripVehicle');
+      if (vehEl) vehEl.textContent = tripData.vehicleNo;
+
+      const drvEl = document.getElementById('selTripDriver');
+      if (drvEl) drvEl.textContent = tripData.driverName;
+
+      const ewayEl = document.getElementById('selTripEWay');
+      if (ewayEl) ewayEl.textContent = tripData.eWayBill;
+
+      const statusBadge = document.getElementById('selTripStatusBadge');
+      if (statusBadge) {
+        statusBadge.className = `trip-status-badge ${tripData.statusBadgeClass}`;
+        statusBadge.textContent = `● ${tripData.status} (${tripData.speedKmh})`;
+      }
+
+      const etaEl = document.getElementById('selTripEta');
+      if (etaEl) etaEl.textContent = `ETA: ${tripData.eta}`;
+
+      const subinfoEl = document.getElementById('selTripSubinfo');
+      if (subinfoEl) subinfoEl.textContent = `Corridor: ${locData.corridor} · Telemetry AIS-140 Live`;
+
+      const actionBtn = document.getElementById('selTripActionBtn');
+      if (actionBtn) {
+        actionBtn.setAttribute('onclick', `viewTripDetail('${tripData.id}')`);
+        actionBtn.innerHTML = `<i data-lucide="gauge"></i> View Telemetry & POD`;
+        if (window.lucide) lucide.createIcons();
+      }
+
+      // Update map marker highlights
+      document.querySelectorAll('.fleet-marker-wrap').forEach(el => el.classList.remove('is-selected'));
+      const activeMarkerWrap = document.getElementById(`marker-${tripId}`);
+      if (activeMarkerWrap) activeMarkerWrap.classList.add('is-selected');
+
+      // Update route polylines highlight
+      Object.keys(polylineInstances).forEach(id => {
+        const poly = polylineInstances[id];
+        if (id === tripId) {
+          poly.setStyle({ color: '#C8963E', weight: 4.5, opacity: 0.95, dashArray: null });
+          if (poly.bringToFront) poly.bringToFront();
+        } else {
+          poly.setStyle({ color: '#2D7A5B', weight: 3, opacity: 0.55, dashArray: '6, 8' });
+        }
+      });
+
+      // Smooth pan map to vehicle if not already clicking exact spot
+      if (leafletMap && locData) {
+        if (!fromMapClick) {
+          leafletMap.panTo([locData.lat, locData.lng], { animate: true, duration: 0.6 });
+          if (markerInstances[tripId]) {
+            markerInstances[tripId].openPopup();
+          }
+        }
+      }
+
+      // Highlight card in trips list
+      document.querySelectorAll('.trip-operational-card').forEach(card => card.classList.remove('map-selected-card'));
+      const cardEl = document.getElementById(`trip-card-${tripId}`);
+      if (cardEl) {
+        cardEl.classList.add('map-selected-card');
+      }
+    }
+
+    function refreshFleetMap() {
+      const btn = document.getElementById('btnRefreshFleet');
+      if (btn) btn.classList.add('is-spinning');
+
+      setTimeout(() => {
+        if (btn) btn.classList.remove('is-spinning');
+        showToast('📡 Live GPS Telemetry updated for 4 active fleet vehicles (AIS-140 ping OK)', 'success');
+        
+        const subinfoEl = document.getElementById('selTripSubinfo');
+        if (subinfoEl) {
+          const locData = tripLocations.find(t => t.id === currentSelectedTripId) || tripLocations[0];
+          subinfoEl.textContent = `Corridor: ${locData.corridor} · Synced just now ✓`;
+        }
+      }, 650);
     }
 
     function filterTrips(status, btn) {
@@ -292,74 +939,133 @@
         list = list.filter(t => t.statusBadgeClass.includes(filter));
       }
 
-      container.innerHTML = list.map(trip => `
-        <div class="card-panel" style="padding:20px;border-left:4px solid ${trip.statusBadgeClass==='in-transit'?'var(--green-mid)':(trip.statusBadgeClass==='toll-plaza'?'var(--amber)':'var(--blue-accent)')};">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
-            <div>
-              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <span class="trip-id-badge">${trip.id}</span>
-                <span class="trip-status-badge ${trip.statusBadgeClass}">● ${trip.status} (${trip.speedKmh})</span>
-                <span style="font-size:12px;color:var(--text-muted);"><i data-lucide="map-pin" style="width:12px;height:12px;display:inline;"></i> Current: ${trip.currentLocation}</span>
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="card-panel" style="text-align:center;padding:44px 20px;">
+            <div style="font-size:40px;margin-bottom:10px;">🚚</div>
+            <h3 style="font-size:18px;font-weight:700;color:var(--transporter-text);">No active trips in this category</h3>
+            <p style="font-size:13.5px;color:var(--transporter-muted);margin-top:4px;">
+              Your accepted loads will appear here once dispatch starts.
+            </p>
+            <a href="available-loads.html" class="btn btn-primary btn-sm" style="margin-top:14px;"><i data-lucide="package-search"></i> Browse Available Loads</a>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = list.map(trip => {
+        const isDelivered = trip.status === 'Delivered';
+        const isDelayed = trip.status.toLowerCase().includes('delayed');
+
+        return `
+          <div class="trip-operational-card ${isDelayed ? 'warning-state' : ''}" id="trip-card-${trip.id}" style="border-left: 4px solid ${isDelivered ? 'var(--transporter-success)' : (trip.statusBadgeClass==='toll-plaza' ? 'var(--transporter-accent)' : 'var(--transporter-info)')};">
+            
+            <div class="trip-card-top">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                  <span class="trip-id-badge">${trip.id}</span>
+                  <span class="trip-status-badge ${trip.statusBadgeClass}">● ${trip.status} (${trip.speedKmh})</span>
+                  <span style="font-size:12px;color:var(--transporter-muted);display:inline-flex;align-items:center;gap:4px;">
+                    <i data-lucide="map-pin" style="width:12px;height:12px;"></i> ${trip.currentLocation}
+                  </span>
+                </div>
+                <h3 style="font-size:17px;font-weight:800;color:var(--transporter-text);margin-top:6px;">
+                  ${trip.commodity} — ${trip.vehicleNo}
+                </h3>
+                <div style="font-size:12.5px;color:var(--transporter-muted);margin-top:2px;">
+                  Driver: <strong>${trip.driverName}</strong> · E-Way Bill: <code>${trip.eWayBill}</code>
+                </div>
               </div>
-              <h3 style="font-size:18px;font-weight:800;color:var(--text-heading);margin-top:6px;">
-                ${trip.commodity} — ${trip.vehicleNo}
-              </h3>
-              <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">
-                Driver: <strong>${trip.driverName}</strong> (<a href="tel:${trip.driverPhone}" style="color:var(--green-mid);font-weight:700;">${trip.driverPhone}</a>) · E-Way Bill: <code>${trip.eWayBill}</code>
+
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-secondary btn-sm" onclick="selectTrip('${trip.id}'); event.stopPropagation();" title="Focus vehicle on map">
+                  <i data-lucide="crosshair"></i> View on Map
+                </button>
+                <a href="tel:${trip.driverPhone}" class="btn btn-secondary btn-sm"><i data-lucide="phone"></i> Call</a>
+                <button class="btn ${isDelivered ? 'btn-amber' : 'btn-primary'} btn-sm" onclick="viewTripDetail('${trip.id}')">
+                  <i data-lucide="${isDelivered ? 'file-check-2' : 'gauge'}"></i> ${isDelivered ? 'Submit POD' : 'Update Status'}
+                </button>
               </div>
             </div>
 
-            <div style="display:flex;gap:8px;">
-              <button class="btn btn-secondary btn-sm" onclick="showToast('Driver pinged via SMS & WhatsApp.')"><i data-lucide="phone-forwarded" style="width:13px;height:13px;"></i> Call Driver</button>
-              <button class="btn btn-amber btn-sm" onclick="viewTripDetail('${trip.id}')"><i data-lucide="gauge" style="width:13px;height:13px;"></i> Telemetry & POD</button>
+            <!-- Route Timeline -->
+            <div class="route-timeline" style="margin: 10px 0;">
+              <div class="route-point">
+                <span class="route-dot origin"></span>
+                <div class="route-city">${trip.origin}</div>
+              </div>
+              <div class="route-point">
+                <span class="route-dot dest"></span>
+                <div class="route-city">${trip.destination}</div>
+                <div class="route-mandi">ETA: <strong>${trip.eta}</strong></div>
+              </div>
             </div>
-          </div>
 
-          <!-- Trip Progress Route Bar -->
-          <div class="trip-progress-container" style="margin-bottom:16px;">
-            <div class="trip-progress-meta">
-              <span><strong>Origin:</strong> ${trip.origin}</span>
-              <span><strong>ETA:</strong> ${trip.eta}</span>
-              <span><strong>Destination:</strong> ${trip.destination}</span>
+            <!-- Horizontal Milestone Progress -->
+            <div class="milestone-stepper">
+              <div class="milestone-node completed">
+                <div class="milestone-dot"><i data-lucide="check" style="width:13px;height:13px;"></i></div>
+                <div class="milestone-label">Booked</div>
+              </div>
+              <div class="milestone-node completed">
+                <div class="milestone-dot"><i data-lucide="check" style="width:13px;height:13px;"></i></div>
+                <div class="milestone-label">Pickup</div>
+              </div>
+              <div class="milestone-node ${isDelivered ? 'completed' : 'current'}">
+                <div class="milestone-dot">${isDelivered ? '<i data-lucide="check" style="width:13px;height:13px;"></i>' : '3'}</div>
+                <div class="milestone-label">In Transit</div>
+              </div>
+              <div class="milestone-node ${isDelivered ? 'completed' : ''}">
+                <div class="milestone-dot">${isDelivered ? '<i data-lucide="check" style="width:13px;height:13px;"></i>' : '4'}</div>
+                <div class="milestone-label">Arrived</div>
+              </div>
+              <div class="milestone-node ${isDelivered ? 'current' : ''}">
+                <div class="milestone-dot">${isDelivered ? '✓' : '5'}</div>
+                <div class="milestone-label">Delivered</div>
+              </div>
             </div>
-            <div class="trip-progress-track">
-              <div class="trip-progress-fill" style="width:${trip.progressPct}%;"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-top:4px;">
-              <span>${trip.completedDistance} covered</span>
-              <span style="font-weight:700;color:var(--green-primary);">${trip.progressPct}% Completed</span>
-              <span>${trip.totalDistance} Total</span>
-            </div>
-          </div>
 
-          <!-- Telemetry Badges Grid -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:10px;background:var(--bg-surface);padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);">
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">FASTag Toll Status</div>
-              <div style="font-size:12.5px;font-weight:700;color:var(--text-primary);margin-top:2px;">${trip.tollCrossed}</div>
+            <!-- Distance Progress Track -->
+            <div class="trip-progress-container">
+              <div class="trip-progress-track">
+                <div class="trip-progress-fill" style="width:${trip.progressPct}%;"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--transporter-muted);margin-top:4px;">
+                <span>${trip.completedDistance} covered</span>
+                <span style="font-weight:700;color:var(--transporter-primary);">${trip.progressPct}% Completed</span>
+                <span>${trip.totalDistance} total</span>
+              </div>
             </div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Reefer / Cargo Temp</div>
-              <div style="font-size:12.5px;font-weight:700;color:${trip.reeferTemp.includes('Ambient')?'var(--text-primary)':'#B45309'};margin-top:2px;">${trip.reeferTemp}</div>
-            </div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">FPO / Mandi Consignee</div>
-              <div style="font-size:12.5px;font-weight:700;color:var(--green-primary);margin-top:2px;">Verified Partner ✓</div>
-            </div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">POD Verification</div>
-              <div style="font-size:12.5px;font-weight:700;color:var(--status-success-text);margin-top:2px;">OTP Settlement Ready</div>
+
+            <!-- Telemetry Badges Grid -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:8px;background:var(--transporter-surface);padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--transporter-border-subtle);margin-top:12px;">
+              <div>
+                <div style="font-size:10px;font-weight:700;color:var(--transporter-subtle);text-transform:uppercase;">FASTag Toll Status</div>
+                <div style="font-size:12px;font-weight:700;color:var(--transporter-text);margin-top:1px;">${trip.tollCrossed}</div>
+              </div>
+              <div>
+                <div style="font-size:10px;font-weight:700;color:var(--transporter-subtle);text-transform:uppercase;">Reefer / Sensors</div>
+                <div style="font-size:12px;font-weight:700;color:${trip.reeferTemp.includes('Ambient')?'var(--transporter-text)':'var(--transporter-accent-dark)'};margin-top:1px;">${trip.reeferTemp}</div>
+              </div>
+              <div>
+                <div style="font-size:10px;font-weight:700;color:var(--transporter-subtle);text-transform:uppercase;">Consignee Gate</div>
+                <div style="font-size:12px;font-weight:700;color:var(--transporter-primary);margin-top:1px;">Verified Buyer Dock ✓</div>
+              </div>
+              <div>
+                <div style="font-size:10px;font-weight:700;color:var(--transporter-subtle);text-transform:uppercase;">POD Settlement</div>
+                <div style="font-size:12px;font-weight:700;color:var(--transporter-success);margin-top:1px;">${isDelivered ? 'OTP Ready for Release' : 'Pending Dock Arrival'}</div>
+              </div>
             </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       if (window.lucide) lucide.createIcons();
     }
 
     function simulateGpsSync() {
-      showToast('📡 Satellite GPS Telemetry Synchronized across all 14 Fleet AIS-140 Trackers.', 'success');
-      plotTripMarkers();
+      refreshFleetMap();
     }
   </script>
 </body>

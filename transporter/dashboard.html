@@ -3,18 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KrishiShetra — Transporter & Logistics Command Dashboard</title>
-  <meta name="description" content="KrishiShetra Transporter Dashboard — Real-time Agri-Logistics, Farm-to-Mandi Load Board, Live Telemetry GPS Tracking, Fleet & Driver Management.">
+  <title>KrishiShetra — Transporter Operations Console</title>
+  <meta name="description" content="KrishiShetra Transporter Operations Hub — Real-time farm-to-mandi logistics, active trip tracking, fleet dispatch and guaranteed escrow settlements.">
   
-  <!-- Google Fonts: Playfair Display + Plus Jakarta Sans + Outfit -->
+  <!-- Google Fonts: Outfit + Playfair Display + Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <link rel="stylesheet" href="css/transporter.css">
 </head>
@@ -37,14 +35,14 @@
       <!-- Desktop Nav -->
       <nav>
         <ul class="trans-nav-menu" id="transNavMenu">
-          <li><a href="dashboard.html" class="trans-nav-link active"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
-          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search" style="width:16px;height:16px;"></i> Available Loads</a></li>
-          <li><a href="active-trips.html" class="trans-nav-link"><i data-lucide="truck" style="width:16px;height:16px;"></i> Active Trips</a></li>
-          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Fleet</a></li>
-          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Drivers</a></li>
-          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet" style="width:16px;height:16px;"></i> Earnings</a></li>
-          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile</a></li>
-          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out</a></li>
+          <li><a href="dashboard.html" class="trans-nav-link active"><i data-lucide="layout-dashboard"></i> Dashboard</a></li>
+          <li><a href="available-loads.html" class="trans-nav-link"><i data-lucide="package-search"></i> Available Loads</a></li>
+          <li><a href="active-trips.html" class="trans-nav-link"><i data-lucide="truck"></i> Active Trips</a></li>
+          <li><a href="fleet.html" class="trans-nav-link"><i data-lucide="shield-check"></i> Fleet</a></li>
+          <li><a href="drivers.html" class="trans-nav-link"><i data-lucide="users"></i> Drivers</a></li>
+          <li><a href="earnings.html" class="trans-nav-link"><i data-lucide="wallet"></i> Earnings</a></li>
+          <li><a href="profile.html" class="trans-nav-link"><i data-lucide="user-check"></i> Profile</a></li>
+          <li class="trans-mobile-logout"><a href="javascript:void(0)" class="trans-nav-link trans-nav-link--danger" onclick="if(window.Auth&&typeof window.Auth.logout==='function'){window.Auth.logout();}else{localStorage.clear();window.location.href='../login.html';}"><i data-lucide="log-out"></i> Logout / Sign Out</a></li>
         </ul>
       </nav>
 
@@ -74,7 +72,7 @@
 
           <div class="trans-profile-dropdown" id="transProfileDropdown" role="menu" aria-label="Profile options">
             <div class="trans-dropdown-header">
-              <div class="trans-user-avatar trans-user-avatar--lg" id="transDropdownAvatar">VM</div>
+              <div class="trans-user-avatar" style="width:38px;height:38px;font-size:14px;" id="transDropdownAvatar">VM</div>
               <div style="overflow:hidden;">
                 <div class="trans-dropdown-name" id="transDropdownName">Vijay More Logistics</div>
                 <div class="trans-dropdown-sub" id="transDropdownSub">Kisan Express · VAHAN Verified</div>
@@ -82,17 +80,17 @@
             </div>
             <div class="trans-dropdown-sep"></div>
             <a href="profile.html" class="trans-dropdown-item" role="menuitem">
-              <i data-lucide="user-check" style="width:16px;height:16px;"></i> Profile & Fleet Info
+              <i data-lucide="user-check"></i> Profile & Fleet Info
             </a>
             <a href="onboarding.html" class="trans-dropdown-item" role="menuitem">
-              <i data-lucide="shield-check" style="width:16px;height:16px;"></i> Compliance & Permits
+              <i data-lucide="shield-check"></i> Compliance & Permits
             </a>
             <a href="earnings.html" class="trans-dropdown-item" role="menuitem">
-              <i data-lucide="wallet" style="width:16px;height:16px;"></i> FASTag & Earnings
+              <i data-lucide="wallet"></i> FASTag & Earnings
             </a>
             <div class="trans-dropdown-sep"></div>
             <a href="javascript:void(0)" class="trans-dropdown-item trans-dropdown-item--danger" id="transLogoutBtn" role="menuitem">
-              <i data-lucide="log-out" style="width:16px;height:16px;"></i> Logout / Sign Out
+              <i data-lucide="log-out"></i> Logout / Sign Out
             </a>
           </div>
         </div>
@@ -114,187 +112,249 @@
     <div class="trans-container">
 
       <!-- =====================================================================
-           ONBOARDING / VERIFICATION STATUS BANNER (DL, RC, Permit)
+           TOP GREETING & OPERATIONAL CONTEXT
            ===================================================================== -->
-      <div class="verification-alert-card">
-        <div class="verif-alert-left">
-          <div class="verif-icon-badge">
-            <i data-lucide="shield-check" style="width:22px;height:22px;"></i>
-          </div>
-          <div>
-            <div class="verif-alert-title">Transporter KYC & Regulatory Compliance: 94% Complete (Gold Tier)</div>
-            <div class="verif-alert-sub">All commercial documents are VAHAN / Sarathi verified with active National Permit.</div>
-            <div class="verif-alert-pills">
-              <span class="verif-pill-item done"><i data-lucide="check" style="width:12px;height:12px;"></i> Driving License (DL)</span>
-              <span class="verif-pill-item done"><i data-lucide="check" style="width:12px;height:12px;"></i> Vehicle RC (14 Trucks)</span>
-              <span class="verif-pill-item done"><i data-lucide="check" style="width:12px;height:12px;"></i> All-India Permit (Form 48)</span>
-              <span class="verif-pill-item done"><i data-lucide="check" style="width:12px;height:12px;"></i> FASTag Active</span>
-              <span class="verif-pill-item pending"><i data-lucide="alert-circle" style="width:12px;height:12px;"></i> 1 Insurance Expiring Soon</span>
-            </div>
-          </div>
-        </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:20px;">
         <div>
-          <a href="onboarding.html" class="btn btn-amber btn-sm"><i data-lucide="file-badge-2" style="width:15px;height:15px;"></i> Compliance Center</a>
+          <div style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--transporter-primary);background:var(--transporter-surface-mint);padding:3px 9px;border-radius:var(--radius-full);margin-bottom:6px;">
+            <i data-lucide="shield-check" style="width:13px;height:13px;"></i> All-India National Permit Active · VAHAN Verified
+          </div>
+          <h1 id="dashboardGreeting" style="font-size:26px;font-weight:800;color:var(--transporter-text);font-family:var(--font-serif);line-height:1.2;">
+            Good morning, <em>Vijay More</em> 👋
+          </h1>
+          <p style="color:var(--transporter-muted);font-size:14px;margin-top:3px;">
+            Here's what's happening with your transport operations today.
+          </p>
+        </div>
+
+        <div style="display:flex;gap:10px;align-items:center;">
+          <a href="available-loads.html" class="btn btn-primary"><i data-lucide="package-plus"></i> Browse Available Loads</a>
+          <a href="active-trips.html" class="btn btn-secondary"><i data-lucide="radio"></i> GPS Console</a>
         </div>
       </div>
 
       <!-- =====================================================================
-           HERO WELCOME BANNER
-           ===================================================================== -->
-      <div class="trans-hero-card">
-        <div class="trans-hero-glow"></div>
-        <div class="trans-hero-inner">
-          <div class="trans-hero-content">
-            <div class="trans-badge-tag">
-              <i data-lucide="zap" style="width:14px;height:14px;"></i> Live Fleet Logistics Control
-            </div>
-            <h1 class="trans-hero-title">Welcome back, <em>Vijay More</em> 👋</h1>
-            <p class="trans-hero-desc">
-              You have <strong>5 active transit trips</strong> on Maharashtra & Gujarat agri-corridors. <strong>Ramesh Patil's 850 kg Grade A Tomato</strong> load is ready for delivery at Vashi APMC dock.
-            </p>
-            <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
-              <a href="available-loads.html" class="btn btn-amber"><i data-lucide="package-plus" style="width:16px;height:16px;"></i> Browse 18 Available Loads</a>
-              <a href="active-trips.html" class="btn btn-secondary"><i data-lucide="map" style="width:16px;height:16px;"></i> Live GPS Telemetry Console</a>
-            </div>
-          </div>
-          
-          <div class="trans-hero-stats">
-            <div class="trans-hero-stat-box">
-              <div class="trans-hero-stat-val">₹4.82L</div>
-              <div class="trans-hero-stat-lbl">Aug Freight GMV</div>
-            </div>
-            <div class="trans-hero-stat-box">
-              <div class="trans-hero-stat-val">97.8%</div>
-              <div class="trans-hero-stat-lbl">On-Time SLA</div>
-            </div>
-            <div class="trans-hero-stat-box">
-              <div class="trans-hero-stat-val">14 / 14</div>
-              <div class="trans-hero-stat-lbl">GPS Online</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- =====================================================================
-           KEY PERFORMANCE INDICATORS (KPIs)
+           COMPACT OPERATIONAL SUMMARY (Not Enormous)
            ===================================================================== -->
       <div class="stats-kpi-grid">
+        <!-- Active Trips -->
         <div class="stat-kpi-card">
           <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl">Active Trips</span>
             <div class="stat-kpi-icon green"><i data-lucide="truck"></i></div>
-            <span class="stat-kpi-badge up"><i data-lucide="activity" style="width:12px;height:12px;"></i> Live</span>
           </div>
           <div class="stat-kpi-val">5 Trips</div>
-          <div class="stat-kpi-lbl">Active on Highway</div>
-          <div class="stat-kpi-sub">3 In-transit · 1 At Toll · 1 Loading</div>
+          <div class="stat-kpi-sub" style="display:flex;align-items:center;gap:4px;">
+            <span class="status-badge available" style="font-size:11px;padding:1px 6px;">● 3 In Transit</span>
+            <span style="font-size:11px;color:var(--transporter-muted);">· 1 Toll · 1 Loading</span>
+          </div>
         </div>
 
+        <!-- Available Loads -->
         <div class="stat-kpi-card">
           <div class="stat-kpi-top">
-            <div class="stat-kpi-icon amber"><i data-lucide="package"></i></div>
-            <span class="stat-kpi-badge up"><i data-lucide="trending-up" style="width:12px;height:12px;"></i> +6 New</span>
+            <span class="stat-kpi-lbl">Available Loads</span>
+            <div class="stat-kpi-icon amber"><i data-lucide="package-search"></i></div>
           </div>
           <div class="stat-kpi-val">18 Loads</div>
-          <div class="stat-kpi-lbl">Available Loads Nearby</div>
-          <div class="stat-kpi-sub">Average rate ₹2,450 / MT</div>
+          <div class="stat-kpi-sub">
+            <span style="color:var(--transporter-primary);font-weight:700;">6 return matches</span> nearby
+          </div>
         </div>
 
+        <!-- Vehicles -->
         <div class="stat-kpi-card">
           <div class="stat-kpi-top">
-            <div class="stat-kpi-icon blue"><i data-lucide="pie-chart"></i></div>
-            <span class="stat-kpi-badge info">85.7%</span>
+            <span class="stat-kpi-lbl">Vehicles</span>
+            <div class="stat-kpi-icon blue"><i data-lucide="shield-check"></i></div>
           </div>
           <div class="stat-kpi-val">12 / 14</div>
-          <div class="stat-kpi-lbl">Fleet Utilization</div>
-          <div class="stat-kpi-sub">2 Trucks available at Nashik Hub</div>
+          <div class="stat-kpi-sub">
+            <strong>2 Available</strong> at Nashik & Pune Hubs
+          </div>
         </div>
 
+        <!-- Today's Earnings -->
         <div class="stat-kpi-card">
           <div class="stat-kpi-top">
+            <span class="stat-kpi-lbl">Today's Earnings</span>
             <div class="stat-kpi-icon purple"><i data-lucide="wallet"></i></div>
-            <span class="stat-kpi-badge up">Instant Pay</span>
           </div>
           <div class="stat-kpi-val">₹92,500</div>
-          <div class="stat-kpi-lbl">Wallet Escrow Balance</div>
-          <div class="stat-kpi-sub"><a href="earnings.html" style="color:var(--green-mid);font-weight:700;">Withdraw to Bank ➔</a></div>
+          <div class="stat-kpi-sub">
+            <a href="earnings.html" style="color:var(--transporter-primary);font-weight:700;">Withdraw to Bank ➔</a>
+          </div>
         </div>
       </div>
 
       <!-- =====================================================================
-           LIVE FLEET RADAR & ONGOING TRIPS TELEMETRY
+           NEEDS YOUR ATTENTION (Operational Priority Center)
+           ===================================================================== -->
+      <section class="attention-section">
+        <div class="panel-header" style="margin-bottom:12px;">
+          <div class="panel-title-wrap">
+            <div class="panel-icon-box" style="background:#FEF3C7;color:#B45309;"><i data-lucide="alert-circle"></i></div>
+            <div>
+              <h2 class="panel-title" style="font-size:17px;">Needs Your Attention</h2>
+              <div class="panel-subtitle">Immediate operational actions required for ongoing trips and bookings</div>
+            </div>
+          </div>
+          <span class="status-badge pending">3 Items Pending Action</span>
+        </div>
+
+        <div class="attention-grid">
+          <!-- Alert 1: POD Verification Required -->
+          <div class="attention-item">
+            <div class="attention-left">
+              <div class="attention-icon-box"><i data-lucide="file-check"></i></div>
+              <div class="attention-content">
+                <div class="attention-title">
+                  <span>Digital POD OTP Required — TRIP-9021</span>
+                  <span class="status-badge attention">Action Required</span>
+                </div>
+                <div class="attention-desc">
+                  Truck MH 15 EG 4820 arrived at Vashi APMC dock. Enter receiver OTP to trigger instant ₹34,225 freight release.
+                </div>
+              </div>
+            </div>
+            <div class="attention-action">
+              <button class="btn btn-amber btn-sm" onclick="viewTripDetail('TRIP-9021')"><i data-lucide="check-circle"></i> Verify POD</button>
+            </div>
+          </div>
+
+          <!-- Alert 2: Trip Ready to Start -->
+          <div class="attention-item">
+            <div class="attention-left">
+              <div class="attention-icon-box" style="background:#E0F2FE;color:#0284C7;"><i data-lucide="clock"></i></div>
+              <div class="attention-content">
+                <div class="attention-title">
+                  <span>Trip Ready for Departure — TRIP-9024 (Tomatoes)</span>
+                  <span class="status-badge in-transit">Gate Departure</span>
+                </div>
+                <div class="attention-desc">
+                  Truck MH 15 CP 3391 is done loading at Narayangaon dock. Confirm weighbridge slip & start trip.
+                </div>
+              </div>
+            </div>
+            <div class="attention-action">
+              <button class="btn btn-primary btn-sm" onclick="viewTripDetail('TRIP-9024')"><i data-lucide="navigation"></i> Start Trip</button>
+            </div>
+          </div>
+
+          <!-- Alert 3: Driver Assignment / Insurance Alert -->
+          <div class="attention-item danger">
+            <div class="attention-left">
+              <div class="attention-icon-box"><i data-lucide="alert-triangle"></i></div>
+              <div class="attention-content">
+                <div class="attention-title">
+                  <span>Commercial Insurance Expiring Soon — Truck MH 15 FT 7731</span>
+                  <span class="status-badge delayed">Compliance Alert</span>
+                </div>
+                <div class="attention-desc">
+                  Policy renewal due in 5 days. Upload active endorsement to keep vehicle eligible for interstate loads.
+                </div>
+              </div>
+            </div>
+            <div class="attention-action">
+              <a href="onboarding.html" class="btn btn-secondary btn-sm"><i data-lucide="upload"></i> Upload Policy</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           ACTIVE TRIPS & OPERATIONAL RADAR (2-Column Grid)
            ===================================================================== -->
       <div class="dashboard-grid-2">
         
-        <!-- Live Trips Telemetry Stream -->
+        <!-- Active Trips Column -->
         <div class="card-panel">
           <div class="panel-header">
             <div class="panel-title-wrap">
               <div class="panel-icon-box"><i data-lucide="navigation"></i></div>
               <div>
-                <h2 class="panel-title">Active Trips Telemetry</h2>
-                <div class="panel-subtitle">Real-time GPS tracking, Mandi ETAs & speed monitoring</div>
+                <h2 class="panel-title">Active Highway Trips</h2>
+                <div class="panel-subtitle">Live GPS tracking and mandi delivery progress</div>
               </div>
             </div>
-            <a href="active-trips.html" class="btn btn-secondary btn-sm"><i data-lucide="arrow-right" style="width:14px;height:14px;"></i> View All Trips</a>
+            <a href="active-trips.html" class="btn btn-secondary btn-sm"><i data-lucide="arrow-right"></i> All Trips</a>
           </div>
 
-          <!-- Trip Item 1 -->
+          <!-- Trip Card 1 -->
           <div class="trip-card-active">
             <div class="trip-card-top">
               <div>
                 <span class="trip-id-badge">TRIP-9021</span>
-                <span class="trip-status-badge in-transit">● In Transit (48 km/h)</span>
+                <span class="trip-status-badge delivered">● Arrived at Bay 4 (Vashi APMC)</span>
               </div>
-              <button class="btn btn-outline-green btn-sm" onclick="viewTripDetail('TRIP-9021')"><i data-lucide="eye" style="width:13px;height:13px;"></i> Telemetry</button>
+              <button class="btn btn-amber btn-sm" onclick="viewTripDetail('TRIP-9021')"><i data-lucide="check"></i> Submit POD</button>
             </div>
-            
-            <div style="font-size:15px;font-weight:700;color:var(--text-heading);margin-bottom:6px;">
-              🧅 Red Onions (18.5 MT) — MH 15 EG 4820 (Sanjay Shinde)
+
+            <div style="font-size:14.5px;font-weight:700;color:var(--transporter-text);margin-bottom:8px;">
+              🧅 Red Onions (18.5 MT) — MH 15 EG 4820 (Driver: Sanjay Shinde)
+            </div>
+
+            <!-- Route Timeline -->
+            <div class="route-timeline">
+              <div class="route-point">
+                <span class="route-dot origin"></span>
+                <div class="route-city">Lasalgaon Mandi, Nashik</div>
+                <div class="route-mandi">Loaded: Today, 06:30 AM</div>
+              </div>
+              <div class="route-point">
+                <span class="route-dot dest"></span>
+                <div class="route-city">Vashi APMC, Navi Mumbai</div>
+                <div class="route-mandi">Dock Arrival: 12:45 PM (165 km)</div>
+              </div>
             </div>
 
             <div class="trip-progress-container">
-              <div class="trip-progress-meta">
-                <span><strong>Origin:</strong> Lasalgaon Mandi</span>
-                <span><strong>ETA:</strong> 09:45 PM (Kasara Ghat)</span>
-                <span><strong>Dest:</strong> Vashi APMC</span>
-              </div>
               <div class="trip-progress-track">
-                <div class="trip-progress-fill" style="width:68%;"></div>
+                <div class="trip-progress-fill" style="width:100%;"></div>
               </div>
-              <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted);margin-top:4px;">
-                <span>131 km covered</span>
-                <span>68% Completed</span>
-                <span>61 km remaining</span>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--transporter-muted);margin-top:4px;">
+                <span>165 km covered</span>
+                <span style="font-weight:700;color:var(--transporter-success);">100% Arrived</span>
+                <span>0 km remaining</span>
               </div>
             </div>
           </div>
 
-          <!-- Trip Item 2 -->
+          <!-- Trip Card 2 -->
           <div class="trip-card-active">
             <div class="trip-card-top">
               <div>
                 <span class="trip-id-badge">TRIP-9022</span>
                 <span class="trip-status-badge toll-plaza">● Toll Plaza (Khed-Shivapur)</span>
               </div>
-              <button class="btn btn-outline-green btn-sm" onclick="viewTripDetail('TRIP-9022')"><i data-lucide="eye" style="width:13px;height:13px;"></i> Telemetry</button>
+              <button class="btn btn-secondary btn-sm" onclick="viewTripDetail('TRIP-9022')"><i data-lucide="eye"></i> Telemetry</button>
             </div>
-            
-            <div style="font-size:15px;font-weight:700;color:var(--text-heading);margin-bottom:6px;">
-              🍎 Kashmir Red Apples (14 MT Reefer +2.8°C) — MH 15 BX 1094
+
+            <div style="font-size:14.5px;font-weight:700;color:var(--transporter-text);margin-bottom:8px;">
+              🍎 Kashmir Red Apples (14 MT Reefer +2.8°C) — MH 15 BX 1094 (Driver: Rameshwar Gavit)
+            </div>
+
+            <!-- Route Timeline -->
+            <div class="route-timeline">
+              <div class="route-point">
+                <span class="route-dot origin"></span>
+                <div class="route-city">Sopore Cold Hub (J&K)</div>
+                <div class="route-mandi">In Transit NH-48</div>
+              </div>
+              <div class="route-point">
+                <span class="route-dot dest"></span>
+                <div class="route-city">Pune APMC Cold Chain Hub</div>
+                <div class="route-mandi">ETA: Tonight, 11:15 PM (342 km left)</div>
+              </div>
             </div>
 
             <div class="trip-progress-container">
-              <div class="trip-progress-meta">
-                <span><strong>Origin:</strong> Sopore Hub</span>
-                <span><strong>ETA:</strong> 11:15 PM</span>
-                <span><strong>Dest:</strong> Pune Cold Hub</span>
-              </div>
               <div class="trip-progress-track">
                 <div class="trip-progress-fill" style="width:84%;"></div>
               </div>
-              <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted);margin-top:4px;">
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--transporter-muted);margin-top:4px;">
                 <span>1,798 km covered</span>
-                <span>84% Completed</span>
+                <span style="font-weight:700;color:var(--transporter-primary);">84% Journey Done</span>
                 <span>342 km remaining</span>
               </div>
             </div>
@@ -302,19 +362,20 @@
 
         </div>
 
-        <!-- Live Corridor Radar & FASTag Widget -->
-        <div>
-          <!-- Radar Box -->
-          <div class="card-panel" style="padding-bottom:16px;">
+        <!-- Right Column: Corridor GPS Radar & Today's Earnings -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          
+          <!-- Corridor GPS Radar -->
+          <div class="card-panel" style="padding-bottom:18px;">
             <div class="panel-header" style="margin-bottom:12px;">
               <div class="panel-title-wrap">
                 <div class="panel-icon-box"><i data-lucide="radar"></i></div>
                 <div>
-                  <h3 class="panel-title" style="font-size:16px;">Corridor GPS Radar</h3>
-                  <div class="panel-subtitle">Live highway fleet positions</div>
+                  <h3 class="panel-title" style="font-size:16px;">Live Highway Radar</h3>
+                  <div class="panel-subtitle">14 Fleet Units Connected</div>
                 </div>
               </div>
-              <span class="doc-status-tag valid">● 14 GPS Units Live</span>
+              <span class="status-badge available" style="font-size:11px;">● AIS-140 Live</span>
             </div>
 
             <div class="gps-radar-box">
@@ -322,38 +383,53 @@
               <div class="radar-sweep"></div>
               
               <!-- Simulated Truck Pins -->
-              <div class="radar-truck-pin" style="top:32%;left:35%;" onclick="viewTripDetail('TRIP-9021')">
-                <i data-lucide="truck" style="width:12px;height:12px;"></i> MH-15-EG
+              <div class="radar-truck-pin" style="top:32%;left:36%;" onclick="viewTripDetail('TRIP-9021')">
+                <i data-lucide="truck" style="width:11px;height:11px;"></i> MH-15-EG
               </div>
-              <div class="radar-truck-pin" style="top:62%;left:68%;" onclick="viewTripDetail('TRIP-9022')">
-                <i data-lucide="truck" style="width:12px;height:12px;"></i> MH-15-BX
+              <div class="radar-truck-pin" style="top:62%;left:66%;" onclick="viewTripDetail('TRIP-9022')">
+                <i data-lucide="truck" style="width:11px;height:11px;"></i> MH-15-BX
               </div>
-              <div class="radar-truck-pin" style="top:75%;left:25%;" onclick="viewTripDetail('TRIP-9023')">
-                <i data-lucide="truck" style="width:12px;height:12px;"></i> MH-15-DK
+              <div class="radar-truck-pin" style="top:74%;left:28%;" onclick="viewTripDetail('TRIP-9023')">
+                <i data-lucide="truck" style="width:11px;height:11px;"></i> MH-15-DK
               </div>
 
-              <div style="position:absolute;bottom:10px;right:12px;color:rgba(255,255,255,0.7);font-size:11px;font-family:monospace;">
-                NH-160 / NH-48 / NH-52
+              <div style="position:absolute;bottom:10px;right:12px;color:rgba(255,255,255,0.7);font-size:10.5px;font-family:monospace;">
+                NH-160 · NH-48 · NH-52
               </div>
             </div>
           </div>
 
-          <!-- FASTag & Driver Quick Widget -->
+          <!-- Today's Earnings Compact Summary -->
           <div class="card-panel">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-              <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--amber-pale);color:var(--amber-dark);display:flex;align-items:center;justify-content:center;">
-                  <i data-lucide="credit-card"></i>
-                </div>
+            <div class="panel-header" style="margin-bottom:12px;">
+              <div class="panel-title-wrap">
+                <div class="panel-icon-box" style="background:#E8F7F0;color:#0B6B46;"><i data-lucide="wallet"></i></div>
                 <div>
-                  <div style="font-size:12px;color:var(--text-muted);font-weight:700;">FASTag Fleet Wallet</div>
-                  <div style="font-size:18px;font-weight:800;color:var(--text-heading);">₹14,850</div>
+                  <h3 class="panel-title" style="font-size:16px;">Today's Earnings & Payout</h3>
+                  <div class="panel-subtitle">Instant settlement ready</div>
                 </div>
               </div>
-              <button class="btn btn-secondary btn-sm" onclick="showToast('FASTag Auto-Recharge enabled via HDFC Corporate.')">Auto-Topup: ON</button>
+              <button class="btn btn-amber btn-sm" onclick="openWithdrawModal()"><i data-lucide="arrow-up-right"></i> Withdraw</button>
             </div>
-            <div style="font-size:12px;color:var(--text-secondary);border-top:1px dashed var(--border-subtle);padding-top:10px;">
-              Last Toll Paid: <strong>₹215 at Igatpuri Plaza</strong> (Truck MH 15 EG 4820) at 19:42 PM.
+
+            <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;background:var(--transporter-surface);padding:12px;border-radius:var(--radius-sm);margin-bottom:12px;text-align:center;">
+              <div>
+                <div style="font-size:10.5px;color:var(--transporter-muted);font-weight:700;text-transform:uppercase;">Clear Escrow</div>
+                <div style="font-size:16px;font-weight:800;color:var(--transporter-primary);margin-top:2px;">₹92,500</div>
+              </div>
+              <div>
+                <div style="font-size:10.5px;color:var(--transporter-muted);font-weight:700;text-transform:uppercase;">Pending POD</div>
+                <div style="font-size:16px;font-weight:800;color:var(--transporter-accent-dark);margin-top:2px;">₹34,225</div>
+              </div>
+              <div>
+                <div style="font-size:10.5px;color:var(--transporter-muted);font-weight:700;text-transform:uppercase;">Trips Done</div>
+                <div style="font-size:16px;font-weight:800;color:var(--transporter-text);margin-top:2px;">486</div>
+              </div>
+            </div>
+
+            <div style="font-size:12px;color:var(--transporter-muted);display:flex;justify-content:space-between;align-items:center;">
+              <span>FASTag Balance: <strong>₹14,850</strong> (Auto-Recharge Active)</span>
+              <a href="earnings.html" style="color:var(--transporter-primary);font-weight:700;">View Statement ➔</a>
             </div>
           </div>
 
@@ -362,18 +438,18 @@
       </div>
 
       <!-- =====================================================================
-           URGENT AVAILABLE LOADS (MATCHING FLEET)
+           RECOMMENDED AVAILABLE LOADS
            ===================================================================== -->
-      <div class="card-panel">
+      <section class="card-panel">
         <div class="panel-header">
           <div class="panel-title-wrap">
             <div class="panel-icon-box"><i data-lucide="sparkles"></i></div>
             <div>
-              <h2 class="panel-title">Urgent High-Paying Farm Loads</h2>
-              <div class="panel-subtitle">Verified FPO produce ready for immediate truck dispatch</div>
+              <h2 class="panel-title">Recommended Loads for Your Fleet</h2>
+              <div class="panel-subtitle">Verified FPO produce ready for immediate dispatch on your preferred corridors</div>
             </div>
           </div>
-          <a href="available-loads.html" class="btn btn-primary btn-sm"><i data-lucide="search" style="width:14px;height:14px;"></i> View Full Load Board</a>
+          <a href="available-loads.html" class="btn btn-primary btn-sm"><i data-lucide="search"></i> View All 18 Loads</a>
         </div>
 
         <div class="loads-grid" id="dashboardLoadsGrid">
@@ -381,13 +457,13 @@
           <div class="load-card featured">
             <div>
               <div class="load-card-header">
-                <span class="load-commodity-badge">🧅 Red Onions (Nashik)</span>
-                <div class="load-price-tag">
-                  <div class="load-price-val">₹34,225</div>
-                  <div class="load-price-rate">₹1,850 / MT (18.5 MT)</div>
+                <span class="load-crop-name">🧅 Red Onions (Nashik)</span>
+                <div class="load-price-box">
+                  <div class="load-rate-total">₹34,225</div>
+                  <div class="load-rate-sub">₹1,850 / MT (18.5 MT)</div>
                 </div>
               </div>
-              <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:6px;">
+              <div class="load-fpo-name">
                 <i data-lucide="building" style="width:13px;height:13px;display:inline;vertical-align:middle;"></i> Pimpalgaon Farmer Producer Co.
               </div>
               
@@ -405,15 +481,15 @@
               </div>
 
               <div class="load-specs-row">
-                <span class="spec-chip"><i data-lucide="truck" style="width:13px;height:13px;"></i> 10-Wheeler</span>
-                <span class="spec-chip"><i data-lucide="clock" style="width:13px;height:13px;"></i> High Priority</span>
-                <span class="spec-chip"><i data-lucide="shield" style="width:13px;height:13px;"></i> Escrow Paid</span>
+                <span class="spec-chip"><i data-lucide="truck"></i> 10-Wheeler</span>
+                <span class="spec-chip"><i data-lucide="clock"></i> High Priority</span>
+                <span class="spec-chip"><i data-lucide="shield-check"></i> 100% Escrow</span>
               </div>
             </div>
 
             <div class="load-card-footer">
-              <button class="btn btn-secondary btn-sm" onclick="viewLoadDetail('LD-8042')"><i data-lucide="info" style="width:13px;height:13px;"></i> Details</button>
-              <button class="btn btn-primary btn-sm" onclick="viewLoadDetail('LD-8042')"><i data-lucide="check" style="width:13px;height:13px;"></i> Accept Load</button>
+              <button class="btn btn-secondary btn-sm" onclick="viewLoadDetail('LD-8042')"><i data-lucide="info"></i> Details</button>
+              <button class="btn btn-primary btn-sm" onclick="viewLoadDetail('LD-8042')"><i data-lucide="check"></i> Accept Load</button>
             </div>
           </div>
 
@@ -421,13 +497,13 @@
           <div class="load-card">
             <div>
               <div class="load-card-header">
-                <span class="load-commodity-badge">🥭 Alphonso Mangoes</span>
-                <div class="load-price-tag">
-                  <div class="load-price-val">₹81,600</div>
-                  <div class="load-price-rate">₹6,800 / MT (12 MT)</div>
+                <span class="load-crop-name">🥭 Alphonso Mangoes</span>
+                <div class="load-price-box">
+                  <div class="load-rate-total">₹81,600</div>
+                  <div class="load-rate-sub">₹6,800 / MT (12 MT)</div>
                 </div>
               </div>
-              <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:6px;">
+              <div class="load-fpo-name">
                 <i data-lucide="building" style="width:13px;height:13px;display:inline;vertical-align:middle;"></i> Ratnagiri Konkan Bagayatdar Sangh
               </div>
               
@@ -445,14 +521,14 @@
               </div>
 
               <div class="load-specs-row">
-                <span class="spec-chip"><i data-lucide="thermometer-snowflake" style="width:13px;height:13px;"></i> 32ft Cold Reefer (+13°C)</span>
-                <span class="spec-chip"><i data-lucide="zap" style="width:13px;height:13px;"></i> Express</span>
+                <span class="spec-chip"><i data-lucide="thermometer-snowflake"></i> 32ft Reefer (+13°C)</span>
+                <span class="spec-chip"><i data-lucide="zap"></i> Express</span>
               </div>
             </div>
 
             <div class="load-card-footer">
-              <button class="btn btn-secondary btn-sm" onclick="viewLoadDetail('LD-8043')"><i data-lucide="info" style="width:13px;height:13px;"></i> Details</button>
-              <button class="btn btn-primary btn-sm" onclick="viewLoadDetail('LD-8043')"><i data-lucide="check" style="width:13px;height:13px;"></i> Accept Load</button>
+              <button class="btn btn-secondary btn-sm" onclick="viewLoadDetail('LD-8043')"><i data-lucide="info"></i> Details</button>
+              <button class="btn btn-primary btn-sm" onclick="viewLoadDetail('LD-8043')"><i data-lucide="check"></i> Accept Load</button>
             </div>
           </div>
 
@@ -460,13 +536,13 @@
           <div class="load-card">
             <div>
               <div class="load-card-header">
-                <span class="load-commodity-badge">🌾 Sharbati Wheat (A Grade)</span>
-                <div class="load-price-tag">
-                  <div class="load-price-val">₹55,000</div>
-                  <div class="load-price-rate">₹2,200 / MT (25 MT)</div>
+                <span class="load-crop-name">🌾 Sharbati Wheat (Grade A)</span>
+                <div class="load-price-box">
+                  <div class="load-rate-total">₹55,000</div>
+                  <div class="load-rate-sub">₹2,200 / MT (25 MT)</div>
                 </div>
               </div>
-              <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:6px;">
+              <div class="load-fpo-name">
                 <i data-lucide="building" style="width:13px;height:13px;display:inline;vertical-align:middle;"></i> Malwa Krishi Vikas FPC
               </div>
               
@@ -484,19 +560,18 @@
               </div>
 
               <div class="load-specs-row">
-                <span class="spec-chip"><i data-lucide="truck" style="width:13px;height:13px;"></i> 22ft Multi-Axle</span>
-                <span class="spec-chip"><i data-lucide="shield-check" style="width:13px;height:13px;"></i> Moisture Sealed</span>
+                <span class="spec-chip"><i data-lucide="truck"></i> 22ft Multi-Axle</span>
+                <span class="spec-chip"><i data-lucide="shield-check"></i> Moisture Sealed</span>
               </div>
             </div>
 
             <div class="load-card-footer">
-              <button class="btn btn-secondary btn-sm" onclick="viewLoadDetail('LD-8044')"><i data-lucide="info" style="width:13px;height:13px;"></i> Details</button>
-              <button class="btn btn-primary btn-sm" onclick="viewLoadDetail('LD-8044')"><i data-lucide="check" style="width:13px;height:13px;"></i> Accept Load</button>
+              <button class="btn btn-secondary btn-sm" onclick="viewLoadDetail('LD-8044')"><i data-lucide="info"></i> Details</button>
+              <button class="btn btn-primary btn-sm" onclick="viewLoadDetail('LD-8044')"><i data-lucide="check"></i> Accept Load</button>
             </div>
           </div>
-
         </div>
-      </div>
+      </section>
 
     </div>
   </main>
@@ -507,9 +582,9 @@
   <footer class="trans-footer">
     <div class="trans-container trans-footer-inner">
       <div style="display:flex;align-items:center;gap:10px;">
-        <span style="font-size:20px;">🌾</span>
+        <span style="font-size:18px;">🌾</span>
         <span style="font-weight:700;color:#FFF;">KrishiShetra Transporter Hub</span>
-        <span style="font-size:12px;color:rgba(255,255,255,0.5);">— Powering India's Agricultural Cold-Chain & Agri-Logistics</span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.6);">— Powering India's Agricultural Cold-Chain & Agri-Logistics</span>
       </div>
       <div>
         <span>© 2026 KrishiShetra Agri-Tech Platform · VAHAN & GST Verified</span>

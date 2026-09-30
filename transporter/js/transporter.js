@@ -1,5 +1,6 @@
 /**
- * KrishiShetra Transporter Portal - Core Interactive Logic & Controller
+ * KrishiShetra Transporter Portal - Core Controller & Modal Engine
+ * Unified Production-Grade Agri-Logistics Experience
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,20 +9,47 @@ document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
   }
 
-  // Check URL Hash for deep links like #loads/LD-8042 or #active-trips/TRIP-9021
+  // Handle URL Hash for deep links (e.g. #loads/LD-8042 or #active-trips/TRIP-9021)
   handleHashNavigation();
   window.addEventListener('hashchange', handleHashNavigation);
 
-  // Initialize page-specific scripts
+  // Initialize shared header navigation and user profile
   initCommonHeader();
+
+  // Dynamic time-based greeting for dashboard
+  initDashboardGreeting();
 });
+
+function initDashboardGreeting() {
+  const greetingEl = document.getElementById('dashboardGreeting');
+  if (greetingEl) {
+    const hour = new Date().getHours();
+    let timeGreeting = 'Good morning';
+    if (hour >= 12 && hour < 17) {
+      timeGreeting = 'Good afternoon';
+    } else if (hour >= 17) {
+      timeGreeting = 'Good evening';
+    }
+    const nameEl = document.getElementById('transHeaderName');
+    const name = nameEl?.textContent || 'Vijay More';
+    greetingEl.innerHTML = `${timeGreeting}, <em>${name}</em> 👋`;
+  }
+}
 
 function initCommonHeader() {
   const hamburger = document.getElementById('transHamburger');
   const navMenu = document.getElementById('transNavMenu');
   if (hamburger && navMenu) {
-    hamburger.addEventListener('click', () => {
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation();
       navMenu.classList.toggle('mobile-open');
+    });
+
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+        navMenu.classList.remove('mobile-open');
+      }
     });
   }
 
@@ -107,8 +135,9 @@ function showToast(message, type = 'info') {
 
   const toast = document.createElement('div');
   toast.className = 'toast';
+  const icon = type === 'success' ? 'check-circle' : (type === 'warning' ? 'alert-triangle' : 'info');
   toast.innerHTML = `
-    <i data-lucide="check-circle" style="width:18px;height:18px;color:#C8963E;"></i>
+    <i data-lucide="${icon}" style="width:18px;height:18px;color:#C8963E;flex-shrink:0;"></i>
     <span>${message}</span>
   `;
   container.appendChild(toast);
@@ -140,7 +169,7 @@ function closeModal(modalId) {
   }
 }
 
-// Handle Hash-based deep link routing (e.g. #loads/LD-8042 or #active-trips/TRIP-9021)
+// Handle Hash deep link routing
 function handleHashNavigation() {
   const hash = window.location.hash.replace('#', '');
   if (!hash) return;
@@ -155,7 +184,7 @@ function handleHashNavigation() {
 }
 
 // =========================================================================
-// LOAD DETAIL MODAL & BIDDING ENGINE (:loadid)
+// LOAD DETAIL & BIDDING MODAL (:loadId)
 // =========================================================================
 function viewLoadDetail(loadId) {
   const load = TransporterData.availableLoads.find(l => l.id === loadId) || TransporterData.availableLoads[0];
@@ -163,63 +192,73 @@ function viewLoadDetail(loadId) {
 
   const modalHtml = `
     <div class="modal-overlay show" id="loadDetailModal" onclick="if(event.target===this)closeModal('loadDetailModal')">
-      <div class="modal-container" style="max-width:760px;">
+      <div class="modal-container" style="max-width:740px;">
         <div class="modal-header">
           <div>
-            <span class="badge-tag" style="background:var(--amber-pale);color:var(--amber-dark);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700;">${load.id}</span>
-            <h3 class="modal-title" style="margin-top:4px;">${load.commodity}</h3>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="trip-id-badge">${load.id}</span>
+              <span class="badge-tag status-badge available">● Open for Acceptance</span>
+            </div>
+            <h3 class="modal-title" style="margin-top:6px;">${load.commodity}</h3>
           </div>
-          <button class="modal-close-btn" onclick="closeModal('loadDetailModal')">&times;</button>
+          <button class="modal-close-btn" onclick="closeModal('loadDetailModal')" aria-label="Close modal">&times;</button>
         </div>
         <div class="modal-body">
-          <div style="background:var(--bg-surface);padding:16px;border-radius:var(--radius-md);margin-bottom:20px;border:1px solid var(--border-subtle);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-              <span style="font-size:13px;font-weight:700;color:var(--text-secondary);"><i data-lucide="building" style="width:15px;height:15px;vertical-align:middle;"></i> Posted by: ${load.fpoName}</span>
-              <span style="font-size:12px;color:var(--status-success-text);background:var(--status-success-bg);padding:2px 8px;border-radius:var(--radius-full);font-weight:700;">Verified FPO ✓</span>
+          
+          <!-- Shipper & Origin-Destination Route -->
+          <div style="background:var(--transporter-surface-warm);padding:16px;border-radius:var(--radius-md);margin-bottom:18px;border:1px solid var(--transporter-border-subtle);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+              <span style="font-size:13px;font-weight:700;color:var(--transporter-text);display:inline-flex;align-items:center;gap:6px;">
+                <i data-lucide="building-2" style="width:15px;height:15px;color:var(--transporter-primary);"></i> Posted by: ${load.fpoName}
+              </span>
+              <span class="status-badge available" style="font-size:11.5px;">100% Escrow Backed ✓</span>
             </div>
             
-            <div class="route-timeline" style="margin-left:8px;">
+            <div class="route-timeline" style="margin-left:6px;">
               <div class="route-point">
                 <span class="route-dot origin"></span>
-                <div class="route-city">Pickup: ${load.origin}</div>
-                <div class="route-mandi">Loading Date: ${load.pickupDate}</div>
+                <div class="route-city">${load.origin}</div>
+                <div class="route-mandi">Loading Schedule: <strong>${load.pickupDate}</strong></div>
               </div>
               <div class="route-point">
                 <span class="route-dot dest"></span>
-                <div class="route-city">Destination: ${load.destination}</div>
-                <div class="route-mandi">Est. Transit: ${load.transitEst} (${load.distance})</div>
+                <div class="route-city">${load.destination}</div>
+                <div class="route-mandi">Est. Highway Transit: ~${load.transitEst} (${load.distance})</div>
               </div>
             </div>
           </div>
 
-          <div class="form-grid-2" style="margin-bottom:20px;">
-            <div style="background:var(--bg-input);padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border-light);">
-              <div style="font-size:12px;color:var(--text-muted);font-weight:600;">CARGO WEIGHT & VEHICLE</div>
-              <div style="font-size:16px;font-weight:800;color:var(--text-heading);margin-top:4px;">${load.weightMT} Metric Tons</div>
-              <div style="font-size:12.5px;color:var(--green-mid);font-weight:600;margin-top:2px;">Req: ${load.truckRequired}</div>
+          <!-- Specs Grid -->
+          <div class="form-grid-2" style="margin-bottom:18px;">
+            <div style="background:var(--transporter-surface);padding:14px;border-radius:var(--radius-sm);border:1px solid var(--transporter-border);">
+              <div style="font-size:11px;color:var(--transporter-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">CARGO WEIGHT & REQUIRED VEHICLE</div>
+              <div style="font-size:16px;font-weight:800;color:var(--transporter-text);margin-top:4px;">${load.weightMT} Metric Tons</div>
+              <div style="font-size:12px;color:var(--transporter-primary);font-weight:600;margin-top:2px;">${load.truckRequired}</div>
             </div>
-            <div style="background:var(--bg-input);padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border-light);">
-              <div style="font-size:12px;color:var(--text-muted);font-weight:600;">PERISHABILITY & COLD-CHAIN</div>
-              <div style="font-size:16px;font-weight:800;color:var(--text-heading);margin-top:4px;">${load.perishability}</div>
-              <div style="font-size:12.5px;color:var(--amber-dark);font-weight:600;margin-top:2px;">Req Temp: ${load.tempRequired}</div>
+            <div style="background:var(--transporter-surface);padding:14px;border-radius:var(--radius-sm);border:1px solid var(--transporter-border);">
+              <div style="font-size:11px;color:var(--transporter-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">PERISHABILITY & TEMPERATURE</div>
+              <div style="font-size:16px;font-weight:800;color:var(--transporter-text);margin-top:4px;">${load.perishability}</div>
+              <div style="font-size:12px;color:var(--transporter-accent-dark);font-weight:600;margin-top:2px;">Temp: ${load.tempRequired}</div>
             </div>
           </div>
 
-          <div style="background:#FFF8ED;border:1px solid var(--amber-light);border-radius:var(--radius-md);padding:16px;margin-bottom:20px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
+          <!-- Offered Freight Box -->
+          <div style="background:#FFFBF3;border:1px solid #F4DFB0;border-radius:var(--radius-md);padding:16px;margin-bottom:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
               <div>
-                <span style="font-size:12px;font-weight:700;color:#8A6010;text-transform:uppercase;">Offered Freight Payout</span>
-                <div style="font-size:24px;font-weight:800;color:var(--green-primary);font-family:var(--font-display);">₹${load.totalPayout.toLocaleString()}</div>
+                <span style="font-size:11px;font-weight:700;color:#8A6010;text-transform:uppercase;letter-spacing:0.05em;">Offered Freight Payout</span>
+                <div style="font-size:26px;font-weight:800;color:var(--transporter-primary);font-family:var(--font-display);">₹${load.totalPayout.toLocaleString()}</div>
                 <span style="font-size:12px;color:#8A6010;">(₹${load.ratePerMT} / MT · ${load.paymentTerms})</span>
               </div>
-              <div style="text-align:right;">
-                <span class="badge-tag" style="background:#DCF3E5;color:#1E6B40;padding:4px 10px;border-radius:4px;font-size:12px;font-weight:700;">Zero TDS Escrow</span>
+              <div>
+                <span class="status-badge available" style="padding:5px 12px;font-size:12px;">Zero TDS Escrow</span>
               </div>
             </div>
           </div>
 
-          <div class="form-group" style="margin-bottom:16px;">
-            <label class="form-label" style="font-weight:700;">Assign Truck from Your Fleet</label>
+          <!-- Dispatch Assignments -->
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Assign Available Vehicle from Fleet</label>
             <select class="form-select" id="bidSelectedTruck">
               ${TransporterData.fleet.map(f => `<option value="${f.regNo}">${f.regNo} — ${f.type} (${f.capacity}) [${f.status}]</option>`).join('')}
             </select>
@@ -227,11 +266,11 @@ function viewLoadDetail(loadId) {
 
           <div class="form-grid-2">
             <div class="form-group">
-              <label class="form-label" style="font-weight:700;">Your Quote (₹ Total)</label>
+              <label class="form-label">Confirmed Freight Rate (₹ Total)</label>
               <input type="number" class="form-input" id="bidAmountInput" value="${load.totalPayout}">
             </div>
             <div class="form-group">
-              <label class="form-label" style="font-weight:700;">Select Driver</label>
+              <label class="form-label">Assign Certified Driver</label>
               <select class="form-select" id="bidSelectedDriver">
                 ${TransporterData.drivers.map(d => `<option value="${d.name}">${d.name} (${d.dlType})</option>`).join('')}
               </select>
@@ -241,13 +280,12 @@ function viewLoadDetail(loadId) {
 
         <div class="modal-footer">
           <button class="btn btn-secondary" onclick="closeModal('loadDetailModal')">Cancel</button>
-          <button class="btn btn-primary" onclick="submitBidAction('${load.id}')"><i data-lucide="check" style="width:16px;height:16px;"></i> Confirm & Accept Load</button>
+          <button class="btn btn-primary" onclick="submitBidAction('${load.id}')"><i data-lucide="check" style="width:16px;height:16px;"></i> Accept Load</button>
         </div>
       </div>
     </div>
   `;
 
-  // Remove existing modal if any
   const existing = document.getElementById('loadDetailModal');
   if (existing) existing.remove();
 
@@ -256,12 +294,12 @@ function viewLoadDetail(loadId) {
 }
 
 function submitBidAction(loadId) {
-  const truck = document.getElementById('bidSelectedTruck')?.value;
-  const driver = document.getElementById('bidSelectedDriver')?.value;
-  const amount = document.getElementById('bidAmountInput')?.value;
+  const truck = document.getElementById('bidSelectedTruck')?.value || 'MH 15 EG 4820';
+  const driver = document.getElementById('bidSelectedDriver')?.value || 'Vijay More';
+  const amount = document.getElementById('bidAmountInput')?.value || 34225;
 
   closeModal('loadDetailModal');
-  showToast(`✅ Load ${loadId} accepted successfully! Assigned to ${truck} (${driver}) for ₹${Number(amount).toLocaleString()}.`, 'success');
+  showToast(`✅ Load ${loadId} accepted! Assigned to ${truck} (${driver}) for ₹${Number(amount).toLocaleString()}.`, 'success');
 }
 
 // =========================================================================
@@ -280,26 +318,50 @@ function viewTripDetail(tripId) {
               <span class="trip-id-badge">${trip.id}</span>
               <span class="trip-status-badge ${trip.statusBadgeClass}">● ${trip.status}</span>
             </div>
-            <h3 class="modal-title" style="margin-top:4px;">${trip.commodity}</h3>
+            <h3 class="modal-title" style="margin-top:6px;">${trip.commodity}</h3>
           </div>
-          <button class="modal-close-btn" onclick="closeModal('tripDetailModal')">&times;</button>
+          <button class="modal-close-btn" onclick="closeModal('tripDetailModal')" aria-label="Close modal">&times;</button>
         </div>
         
         <div class="modal-body">
-          <!-- Live Radar Simulation Box -->
-          <div class="gps-radar-box" style="height:240px;margin-bottom:20px;">
+          <!-- Live Radar Simulation -->
+          <div class="gps-radar-box" style="height:220px;margin-bottom:18px;">
             <div class="radar-grid-bg"></div>
             <div class="radar-sweep"></div>
-            <div class="radar-truck-pin" style="top:45%;left:52%;">
-              <i data-lucide="truck" style="width:14px;height:14px;"></i>
+            <div class="radar-truck-pin" style="top:44%;left:52%;">
+              <i data-lucide="truck" style="width:13px;height:13px;"></i>
               <span>${trip.vehicleNo} · ${trip.speedKmh}</span>
             </div>
-            <div style="position:absolute;bottom:12px;left:16px;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);padding:6px 12px;border-radius:var(--radius-sm);color:#FFF;font-size:12px;font-family:monospace;border:1px solid rgba(255,255,255,0.2);">
-              <i data-lucide="map-pin" style="width:13px;height:13px;display:inline;vertical-align:middle;color:var(--amber);"></i> Live GPS: ${trip.currentLocation}
+            <div style="position:absolute;bottom:10px;left:14px;background:rgba(7,38,30,0.85);backdrop-filter:blur(4px);padding:5px 12px;border-radius:var(--radius-sm);color:#FFF;font-size:11.5px;font-family:monospace;border:1px solid rgba(255,255,255,0.2);">
+              <i data-lucide="map-pin" style="width:12px;height:12px;display:inline;vertical-align:middle;color:var(--transporter-accent);"></i> Current Location: ${trip.currentLocation}
             </div>
           </div>
 
-          <!-- Trip Progress Bar -->
+          <!-- Milestone Timeline -->
+          <div class="milestone-stepper">
+            <div class="milestone-node completed">
+              <div class="milestone-dot"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+              <div class="milestone-label">Booked</div>
+            </div>
+            <div class="milestone-node completed">
+              <div class="milestone-dot"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+              <div class="milestone-label">Pickup</div>
+            </div>
+            <div class="milestone-node ${trip.status === 'Delivered' ? 'completed' : 'current'}">
+              <div class="milestone-dot">${trip.status === 'Delivered' ? '<i data-lucide="check" style="width:14px;height:14px;"></i>' : '3'}</div>
+              <div class="milestone-label">In Transit</div>
+            </div>
+            <div class="milestone-node ${trip.status === 'Delivered' ? 'completed' : ''}">
+              <div class="milestone-dot">${trip.status === 'Delivered' ? '<i data-lucide="check" style="width:14px;height:14px;"></i>' : '4'}</div>
+              <div class="milestone-label">Arrived</div>
+            </div>
+            <div class="milestone-node ${trip.status === 'Delivered' ? 'current' : ''}">
+              <div class="milestone-dot">${trip.status === 'Delivered' ? '✓' : '5'}</div>
+              <div class="milestone-label">Delivered</div>
+            </div>
+          </div>
+
+          <!-- Trip Progress Route Bar -->
           <div class="trip-progress-container">
             <div class="trip-progress-meta">
               <span><strong>Origin:</strong> ${trip.origin}</span>
@@ -309,43 +371,46 @@ function viewTripDetail(tripId) {
             <div class="trip-progress-track">
               <div class="trip-progress-fill" style="width:${trip.progressPct}%;"></div>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-muted);margin-top:4px;">
+            <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--transporter-muted);margin-top:4px;">
               <span>${trip.completedDistance} completed</span>
-              <span>${trip.progressPct}% Journey Done</span>
+              <span style="font-weight:700;color:var(--transporter-primary);">${trip.progressPct}% Journey Completed</span>
               <span>${trip.totalDistance} total</span>
             </div>
           </div>
 
-          <!-- Telemetry Specs -->
-          <div class="dashboard-grid-3" style="gap:12px;margin:20px 0;">
-            <div style="background:var(--bg-input);padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border-light);">
-              <div style="font-size:11px;color:var(--text-muted);font-weight:700;">ASSIGNED DRIVER</div>
-              <div style="font-size:13.5px;font-weight:700;color:var(--text-heading);margin-top:2px;">${trip.driverName}</div>
-              <a href="tel:${trip.driverPhone}" style="font-size:12px;color:var(--green-mid);font-weight:600;"><i data-lucide="phone-call" style="width:12px;height:12px;display:inline;"></i> ${trip.driverPhone}</a>
+          <!-- Telemetry Specs Grid -->
+          <div class="dashboard-grid-3" style="gap:10px;margin:18px 0;">
+            <div style="background:var(--transporter-surface);padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--transporter-border-subtle);">
+              <div style="font-size:10.5px;color:var(--transporter-muted);font-weight:700;text-transform:uppercase;">DRIVER & CONTACT</div>
+              <div style="font-size:13.5px;font-weight:700;color:var(--transporter-text);margin-top:2px;">${trip.driverName}</div>
+              <a href="tel:${trip.driverPhone}" style="font-size:12px;color:var(--transporter-primary);font-weight:600;"><i data-lucide="phone" style="width:12px;height:12px;display:inline;"></i> ${trip.driverPhone}</a>
             </div>
 
-            <div style="background:var(--bg-input);padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border-light);">
-              <div style="font-size:11px;color:var(--text-muted);font-weight:700;">E-WAY BILL & FASTAG</div>
-              <div style="font-size:13px;font-weight:700;color:var(--text-heading);margin-top:2px;">${trip.eWayBill}</div>
-              <div style="font-size:11.5px;color:var(--amber-dark);">${trip.tollCrossed}</div>
+            <div style="background:var(--transporter-surface);padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--transporter-border-subtle);">
+              <div style="font-size:10.5px;color:var(--transporter-muted);font-weight:700;text-transform:uppercase;">E-WAY BILL & TOLLS</div>
+              <div style="font-size:13px;font-weight:700;color:var(--transporter-text);margin-top:2px;font-family:monospace;">${trip.eWayBill}</div>
+              <div style="font-size:11.5px;color:var(--transporter-accent-dark);">${trip.tollCrossed}</div>
             </div>
 
-            <div style="background:var(--bg-input);padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border-light);">
-              <div style="font-size:11px;color:var(--text-muted);font-weight:700;">COLD CHAIN / SENSORS</div>
-              <div style="font-size:13.5px;font-weight:700;color:var(--text-heading);margin-top:2px;">${trip.reeferTemp}</div>
-              <div style="font-size:11.5px;color:var(--status-success-text);">Telemetry: Live Synchronized</div>
+            <div style="background:var(--transporter-surface);padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--transporter-border-subtle);">
+              <div style="font-size:10.5px;color:var(--transporter-muted);font-weight:700;text-transform:uppercase;">COLD CHAIN / SENSORS</div>
+              <div style="font-size:13.5px;font-weight:700;color:var(--transporter-text);margin-top:2px;">${trip.reeferTemp}</div>
+              <div style="font-size:11.5px;color:var(--transporter-success);font-weight:600;">AIS-140 GPS Synchronized</div>
             </div>
           </div>
 
-          <!-- POD & Actions -->
-          <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;">
-            <h4 style="font-size:14px;font-weight:700;margin-bottom:8px;"><i data-lucide="file-check" style="width:16px;height:16px;vertical-align:middle;color:var(--green-mid);"></i> Digital Proof of Delivery (POD)</h4>
-            <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:12px;">Upon mandi gate arrival, ask the receiver to provide the 4-digit OTP or upload stamped weighbridge slip for instant 100% freight clearance.</p>
+          <!-- Digital POD Verification Box -->
+          <div style="background:var(--transporter-surface-warm);border:1px solid var(--transporter-border);border-radius:var(--radius-md);padding:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <i data-lucide="file-check-2" style="width:18px;height:18px;color:var(--transporter-primary);"></i>
+              <h4 style="font-size:14px;font-weight:800;color:var(--transporter-text);">Digital Proof of Delivery (POD) & Instant Settlement</h4>
+            </div>
+            <p style="font-size:12px;color:var(--transporter-muted);margin-bottom:12px;">Upon arrival at mandi dock, input the 4-digit receiver OTP to release 100% freight payout directly to your escrow wallet.</p>
             
             <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <input type="text" class="form-input" id="podOtpInput" placeholder="Enter Receiver 4-Digit OTP" style="max-width:240px;">
-              <button class="btn btn-amber btn-sm" onclick="verifyPodOtp('${trip.id}')"><i data-lucide="check" style="width:14px;height:14px;"></i> Verify POD OTP</button>
-              <button class="btn btn-secondary btn-sm" onclick="showToast('Driver location ping sent via SMS & WhatsApp.')"><i data-lucide="send" style="width:14px;height:14px;"></i> Ping Driver</button>
+              <input type="text" class="form-input" id="podOtpInput" placeholder="Enter Receiver 4-Digit OTP" style="max-width:240px;font-weight:700;letter-spacing:0.1em;">
+              <button class="btn btn-amber btn-sm" onclick="verifyPodOtp('${trip.id}')"><i data-lucide="check-circle" style="width:14px;height:14px;"></i> Verify POD OTP</button>
+              <button class="btn btn-secondary btn-sm" onclick="showToast('Driver pinged via automated SMS & WhatsApp notification.')"><i data-lucide="send" style="width:14px;height:14px;"></i> Ping Driver</button>
             </div>
           </div>
         </div>
@@ -372,19 +437,21 @@ function verifyPodOtp(tripId) {
     return;
   }
   closeModal('tripDetailModal');
-  showToast(`🎉 POD OTP verified successfully for ${tripId}! Escrow freight payout ₹34,225 released to your wallet.`, 'success');
+  showToast(`🎉 POD OTP verified for ${tripId}! Escrow freight payout ₹34,225 released to your wallet.`, 'success');
 }
 
 // =========================================================================
-// ONBOARDING & VERIFICATION STEPPER CONTROLLER
+// ONBOARDING & COMPLIANCE STEPPER CONTROLLER
 // =========================================================================
 let currentStep = 1;
 
 function goToStep(stepNumber) {
   currentStep = stepNumber;
+  const nodes = document.querySelectorAll('.step-node');
+  const totalSteps = nodes.length || 5;
   
   // Update step nodes
-  document.querySelectorAll('.step-node').forEach(node => {
+  nodes.forEach(node => {
     const step = parseInt(node.getAttribute('data-step'));
     node.classList.remove('active', 'completed');
     if (step === currentStep) {
@@ -397,7 +464,7 @@ function goToStep(stepNumber) {
   // Update progress line
   const progressLine = document.getElementById('stepperProgressLine');
   if (progressLine) {
-    const pct = ((currentStep - 1) / 3) * 100;
+    const pct = ((currentStep - 1) / (totalSteps - 1)) * 100;
     progressLine.style.width = `${pct}%`;
   }
 
@@ -415,10 +482,11 @@ function goToStep(stepNumber) {
 }
 
 function nextStep() {
-  if (currentStep < 4) {
+  const totalSteps = document.querySelectorAll('.step-node').length || 5;
+  if (currentStep < totalSteps) {
     goToStep(currentStep + 1);
   } else {
-    showToast('🎉 Onboarding & Verification documents submitted! AI Verification status: APPROVED (Gold Carrier Badge Granted).', 'success');
+    showToast('🎉 Verification complete! Government VAHAN / Sarathi match confirmed. Gold Carrier status active.', 'success');
     setTimeout(() => {
       window.location.href = 'dashboard.html';
     }, 1800);
@@ -434,24 +502,24 @@ function prevStep() {
 function simulateDocUpload(inputId, statusTargetId) {
   const statusEl = document.getElementById(statusTargetId);
   if (statusEl) {
-    statusEl.innerHTML = `<span style="color:var(--amber-dark);font-size:12px;font-weight:700;"><i data-lucide="loader" style="width:14px;height:14px;display:inline;animation:spin 1s linear infinite;"></i> AI Verifying OCR...</span>`;
+    statusEl.innerHTML = `<span style="color:var(--transporter-accent-dark);font-size:12px;font-weight:700;"><i data-lucide="loader" style="width:14px;height:14px;display:inline;animation:spin 1s linear infinite;"></i> AI OCR Verifying with VAHAN Database...</span>`;
     if (window.lucide) lucide.createIcons();
     setTimeout(() => {
-      statusEl.innerHTML = `<span style="color:var(--status-success-text);font-size:12px;font-weight:700;"><i data-lucide="check-circle" style="width:14px;height:14px;display:inline;"></i> Verified ✓ (Govt VAHAN / Sarathi Match)</span>`;
+      statusEl.innerHTML = `<span style="color:var(--transporter-success);font-size:12px;font-weight:700;"><i data-lucide="check-circle-2" style="width:14px;height:14px;display:inline;"></i> Verified ✓ (Ministry of Road Transport Match)</span>`;
       if (window.lucide) lucide.createIcons();
-      showToast('Document verified with Ministry of Road Transport & Highways database!', 'success');
+      showToast('Document verified with Ministry of Road Transport database!', 'success');
     }, 1200);
   }
 }
 
-// Add Truck Modal Controller
+// Add Vehicle Modal
 function openAddVehicleModal() {
   const modalHtml = `
     <div class="modal-overlay show" id="addVehicleModal" onclick="if(event.target===this)closeModal('addVehicleModal')">
       <div class="modal-container">
         <div class="modal-header">
           <h3 class="modal-title">Register New Fleet Truck</h3>
-          <button class="modal-close-btn" onclick="closeModal('addVehicleModal')">&times;</button>
+          <button class="modal-close-btn" onclick="closeModal('addVehicleModal')" aria-label="Close">&times;</button>
         </div>
         <div class="modal-body">
           <div class="form-grid-2">
@@ -481,11 +549,11 @@ function openAddVehicleModal() {
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Upload RC Smart Card / Document</label>
+            <label class="form-label">Upload RC Smart Card Document</label>
             <div class="upload-dropzone" onclick="showToast('RC file attached successfully!')">
               <div class="upload-icon"><i data-lucide="upload-cloud"></i></div>
-              <div style="font-size:13.5px;font-weight:700;">Drag & Drop or Click to browse RC Document</div>
-              <div style="font-size:12px;color:var(--text-muted);">PDF, JPG, PNG up to 10MB</div>
+              <div style="font-size:13.5px;font-weight:700;">Click to upload RC Smart Card photo or PDF</div>
+              <div style="font-size:12px;color:var(--transporter-muted);">Instant VAHAN validation check</div>
             </div>
           </div>
         </div>
@@ -522,18 +590,18 @@ function submitNewVehicle() {
   });
 
   closeModal('addVehicleModal');
-  showToast(`🚛 Vehicle ${reg} onboarded successfully!`, 'success');
+  showToast(`🚛 Vehicle ${reg} registered successfully!`, 'success');
   if (typeof renderFleetTable === 'function') renderFleetTable();
 }
 
-// Add Driver Modal Controller
+// Add Driver Modal
 function openAddDriverModal() {
   const modalHtml = `
     <div class="modal-overlay show" id="addDriverModal" onclick="if(event.target===this)closeModal('addDriverModal')">
       <div class="modal-container">
         <div class="modal-header">
           <h3 class="modal-title">Onboard New Driver</h3>
-          <button class="modal-close-btn" onclick="closeModal('addDriverModal')">&times;</button>
+          <button class="modal-close-btn" onclick="closeModal('addDriverModal')" aria-label="Close">&times;</button>
         </div>
         <div class="modal-body">
           <div class="form-grid-2">
@@ -561,11 +629,11 @@ function openAddDriverModal() {
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Upload Driver License Scan</label>
-            <div class="upload-dropzone" onclick="showToast('DL scan attached and SARATHI verified!')">
+            <label class="form-label">Upload Driving License Scan</label>
+            <div class="upload-dropzone" onclick="showToast('DL scan attached and Sarathi verified!')">
               <div class="upload-icon"><i data-lucide="id-card"></i></div>
               <div style="font-size:13.5px;font-weight:700;">Upload Front & Back Photo of Driving License</div>
-              <div style="font-size:12px;color:var(--text-muted);">Instant Sarathi AI verification check</div>
+              <div style="font-size:12px;color:var(--transporter-muted);">Automatic Sarathi commercial verification</div>
             </div>
           </div>
         </div>
@@ -607,31 +675,31 @@ function submitNewDriver() {
   if (typeof renderDriversTable === 'function') renderDriversTable();
 }
 
-// Withdraw Payout Modal Controller
+// Withdraw Modal
 function openWithdrawModal() {
   const modalHtml = `
     <div class="modal-overlay show" id="withdrawModal" onclick="if(event.target===this)closeModal('withdrawModal')">
       <div class="modal-container">
         <div class="modal-header">
           <h3 class="modal-title">Instant Settlement Withdrawal</h3>
-          <button class="modal-close-btn" onclick="closeModal('withdrawModal')">&times;</button>
+          <button class="modal-close-btn" onclick="closeModal('withdrawModal')" aria-label="Close">&times;</button>
         </div>
         <div class="modal-body">
-          <div style="background:#EDFAF2;border:1px solid #A8DEC0;border-radius:var(--radius-md);padding:16px;margin-bottom:20px;">
-            <div style="font-size:12px;font-weight:700;color:var(--status-success-text);text-transform:uppercase;">Available Clear Balance</div>
-            <div style="font-size:28px;font-weight:800;color:var(--green-primary);font-family:var(--font-display);">₹${TransporterData.earnings.walletBalance.toLocaleString()}</div>
-            <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Transfers via Instant IMPS / UPI within 15 minutes.</div>
+          <div style="background:#E8F7F0;border:1px solid #BCE7D2;border-radius:var(--radius-md);padding:16px;margin-bottom:18px;">
+            <div style="font-size:11px;font-weight:700;color:var(--transporter-success);text-transform:uppercase;">Available Escrow Clear Balance</div>
+            <div style="font-size:26px;font-weight:800;color:var(--transporter-primary);font-family:var(--font-display);">₹${TransporterData.earnings.walletBalance.toLocaleString()}</div>
+            <div style="font-size:12px;color:var(--transporter-muted);margin-top:2px;">Transfers via Instant IMPS / UPI within 15 minutes.</div>
           </div>
-          <div class="form-group" style="margin-bottom:16px;">
+          <div class="form-group" style="margin-bottom:14px;">
             <label class="form-label">Withdrawal Amount (₹)</label>
             <input type="number" class="form-input" id="withdrawAmount" value="${TransporterData.earnings.walletBalance}" max="${TransporterData.earnings.walletBalance}">
           </div>
-          <div class="form-group" style="margin-bottom:16px;">
-            <label class="form-label">Receiving Bank Account / UPI</label>
-            <div style="padding:12px 14px;background:var(--bg-input);border:1px solid var(--border-light);border-radius:var(--radius-sm);">
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Receiving Bank Account / UPI VPA</label>
+            <div style="padding:12px 14px;background:var(--transporter-surface);border:1px solid var(--transporter-border);border-radius:var(--radius-sm);">
               <div style="font-weight:700;font-size:13.5px;">${TransporterData.profile.bankDetails.accountName}</div>
-              <div style="font-size:12px;color:var(--text-secondary);">${TransporterData.profile.bankDetails.bankName} · A/C: ${TransporterData.profile.bankDetails.accountNumber}</div>
-              <div style="font-size:12px;color:var(--green-mid);font-weight:600;">IFSC: ${TransporterData.profile.bankDetails.ifsc} · UPI: ${TransporterData.profile.bankDetails.upiId}</div>
+              <div style="font-size:12px;color:var(--transporter-muted);">${TransporterData.profile.bankDetails.bankName} · A/C: ${TransporterData.profile.bankDetails.accountNumber}</div>
+              <div style="font-size:12px;color:var(--transporter-primary);font-weight:600;">IFSC: ${TransporterData.profile.bankDetails.ifsc} · UPI: ${TransporterData.profile.bankDetails.upiId}</div>
             </div>
           </div>
         </div>
