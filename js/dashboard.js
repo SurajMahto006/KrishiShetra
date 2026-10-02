@@ -424,10 +424,78 @@ const krishiStore = new KrishiStore();
 // 3. AI MARKET FORECAST SERVICE (Dynamic Prediction Engine)
 // ═════════════════════════════════════════════════════════════════════
 
+
+async function hydrateGovPrices() {
+  try {
+    const res = await (window.api?.market?.getMandiPrices
+      ? window.api.market.getMandiPrices({ limit: 100 })
+      : fetch('/api/market/mandi-prices?limit=100').then(r => r.json()));
+
+    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      CROPS_DATA.forEach(c => {
+        const matches = res.data.filter(r => (r.crop || r.commodity || '').toLowerCase() === c.name.toLowerCase() && (r.modalPrice > 0));
+        if (matches.length > 0) {
+          const best = matches[0];
+          c.price = best.modalPrice;
+          c.market = best.market ? (best.market + ' APMC') : (best.mandi || c.market);
+          c.reportDate = best.reportDate || best.arrivalDate || 'Recent';
+          c.source = best.source || 'Government of India / AGMARKNET';
+          c.status = best.status || (res.sourceStatus === 'live' ? 'LIVE' : 'CACHED');
+          c.hasGovPrice = true;
+          c.minPrice = best.minPrice;
+          c.maxPrice = best.maxPrice;
+        } else {
+          c.hasGovPrice = false;
+        }
+      });
+
+      // Update Dashboard Hero & Quick Glance Mandi Stats
+      const bestOverall = [...res.data].filter(r => r.modalPrice > 0).sort((a,b) => b.modalPrice - a.modalPrice)[0];
+      if (bestOverall) {
+        const lblAction1 = document.getElementById('lbl-best-mandi-price-val');
+        const statBestVal = document.getElementById('stat-best-val');
+        const statBestSub = document.querySelector('#stat-best-price .dash-stat__sub');
+        const oppRecPrice = document.getElementById('opp-rec-price');
+
+        if (lblAction1) lblAction1.textContent = '₹' + bestOverall.modalPrice.toLocaleString('en-IN') + '/q';
+        if (statBestVal) statBestVal.textContent = '₹' + bestOverall.modalPrice.toLocaleString('en-IN') + '/q';
+        if (statBestSub) statBestSub.textContent = (bestOverall.market || bestOverall.mandi) + ' · Net ₹' + Math.max(0, bestOverall.modalPrice - 200).toLocaleString('en-IN') + '/q';
+        if (oppRecPrice) oppRecPrice.innerHTML = '₹' + bestOverall.modalPrice.toLocaleString('en-IN') + ' <small>/q</small>';
+      }
+
+      renderMarketGrid();
+      renderFarmerListings();
+    }
+  } catch (e) {
+    // Government data temporarily unavailable
+  }
+}
+
 const forecastService = {
   generate(cropId, mandiName, days = 7) {
     const crop = CROPS_DATA.find(c => c.id === cropId) || CROPS_DATA[0];
-    const basePrice = crop.price;
+    const basePrice = (crop.hasGovPrice && crop.price > 0) ? crop.price : null;
+
+    if (!basePrice) {
+      return {
+        cropId: crop.id,
+        cropName: crop.name,
+        mandi: mandiName,
+        days: days,
+        currentPrice: null,
+        currentPriceText: 'Price currently unavailable',
+        expectedPrice: null,
+        changeAmount: 0,
+        changePct: '0.0%',
+        isUp: true,
+        confidence: 0,
+        recommendation: 'PRICE UNAVAILABLE',
+        actionBadge: 'NO DATA',
+        reason: 'No recent government-reported mandi price available for ' + crop.name + ' in ' + mandiName + '.',
+        variety: crop.variety,
+        reportDate: null
+      };
+    }
 
     // Deterministic realistic variance based on crop and days
     const multiplier = 1 + (crop.change > 0 ? (days * 0.006) : -(days * 0.003));
@@ -594,9 +662,10 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
           </div>
           <div class="dash-crop-card__price-row">
             <div class="dash-crop-card__price">
-              <span class="dash-crop-card__price-value">₹${c.price.toLocaleString('en-IN')}</span>
-              <span class="dash-crop-card__price-unit">${c.unit}</span>
+              <span class="dash-crop-card__price-value">${c.hasGovPrice && c.price ? ('₹' + c.price.toLocaleString('en-IN')) : 'Price unavailable'}</span>
+              <span class="dash-crop-card__price-unit">${c.hasGovPrice && c.price ? c.unit : ''}</span>
             </div>
+            ${c.hasGovPrice && c.reportDate ? '<div style="font-size:11px; color:var(--ks-text-muted); margin-top:2px;">Reported: ' + c.reportDate + '</div>' : ''}
             <div class="dash-crop-card__change dash-crop-card__change--${c.dir}">
               ${c.dir === 'up' ? '↑' : '↓'} ${c.change}%
             </div>
@@ -1211,23 +1280,31 @@ function openCropDetails(cropId) {
   document.getElementById('crop-modal-change').textContent = `${crop.dir === 'up' ? '↑' : '↓'} ${crop.change}% from last week`;
   document.getElementById('crop-modal-change').className = `dash-crop-modal__price-change dash-crop-modal__price-change--${crop.dir}`;
 
-  // Mandis
+  // Mandis with genuine government reporting
   const mandisContainer = document.getElementById('crop-modal-mandis');
   if (mandisContainer) {
-    const list = MANDIS_LIST.slice(0, 4);
-    mandisContainer.innerHTML = list.map((m, idx) => {
-      const variance = (idx * 30) - 20;
-      const mPrice = crop.price + variance;
-      return `
-        <div class="dash-crop-modal__mandi-row">
-          <div>
-            <strong>${m.name}</strong>
-            <span style="font-size:11px; color:var(--ks-text-muted); display:block;">${m.dist}</span>
+    mandisContainer.innerHTML = '<div style="text-align:center; padding:12px; color:var(--ks-text-muted); font-size:12px;">Fetching government mandi prices...</div>';
+    fetch('/api/market/mandi-prices?commodity=' + encodeURIComponent(crop.name))
+      .then(r => r.json())
+      .then(res => {
+        const records = (res && res.success && Array.isArray(res.data)) ? res.data.filter(r => r.modalPrice > 0) : [];
+        if (!records.length) {
+          mandisContainer.innerHTML = '<div style="text-align:center; padding:12px; color:var(--ks-text-muted); font-size:12px;">Price currently unavailable — No recent government reports.</div>';
+          return;
+        }
+        mandisContainer.innerHTML = records.slice(0, 4).map(r => `
+          <div class="dash-crop-modal__mandi-row">
+            <div>
+              <strong>${r.mandi || r.market}</strong>
+              <span style="font-size:11px; color:var(--ks-text-muted); display:block;">Reported: ${r.reportDate || 'Recent'}</span>
+            </div>
+            <div style="font-weight:700; color:var(--ks-evergreen);">₹${r.modalPrice.toLocaleString('en-IN')}/q</div>
           </div>
-          <div style="font-weight:700; color:var(--ks-evergreen);">₹${mPrice.toLocaleString('en-IN')}/q</div>
-        </div>
-      `;
-    }).join('');
+        `).join('');
+      })
+      .catch(() => {
+        mandisContainer.innerHTML = '<div style="text-align:center; padding:12px; color:var(--ks-text-muted); font-size:12px;">Price currently unavailable</div>';
+      });
   }
 
   // Buyers
@@ -2308,35 +2385,80 @@ function initPriceTrendChart() {
   const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
   const getCropName = (id, fb) => (window.KrishiI18n ? window.KrishiI18n.getCropName(id) : (fb || id));
 
-  function updateChart(cropId, range) {
+  async function updateChart(cropId, range) {
     const crop = CROPS_DATA.find(c => c.id === cropId) || CROPS_DATA[0];
     const cropDisp = getCropName(crop.id, crop.name);
-    const base = crop.price;
 
     const elCurrent = document.getElementById('chart-stat-current');
     const elHigh = document.getElementById('chart-stat-high');
     const elLow = document.getElementById('chart-stat-low');
     const elAvg = document.getElementById('chart-stat-avg');
     const elTitle = document.getElementById('chart-title');
+    const elInsight = document.getElementById('chart-insight');
 
-    if (elCurrent) elCurrent.textContent = `₹${base.toLocaleString('en-IN')}`;
-    if (elHigh) elHigh.textContent = `₹${(base + 80).toLocaleString('en-IN')}`;
-    if (elLow) elLow.textContent = `₹${(base - 180).toLocaleString('en-IN')}`;
-    if (elAvg) elAvg.textContent = `₹${(base - 40).toLocaleString('en-IN')}`;
-    if (elTitle) elTitle.textContent = `${cropDisp} ${t('market.historicalModalPrice', 'Price Trend')} (${range}D)`;
+    let records = [];
+    try {
+      const res = await fetch('/api/market/mandi-prices?commodity=' + encodeURIComponent(crop.name) + '&limit=30').then(r => r.json());
+      if (res && res.success && Array.isArray(res.data)) {
+        records = res.data.filter(r => r.modalPrice > 0);
+      }
+    } catch (e) {}
 
-    // Simple smooth curve coordinates
-    const points = [
-      [80, 180], [180, 150], [280, 170], [380, 130],
-      [480, 150], [580, 110], [680, 85], [780, 95], [880, 70]
-    ];
-    let d = `M ${points[0][0]} ${points[0][1]}`;
-    for (let i = 1; i < points.length; i++) {
-      d += ` L ${points[i][0]} ${points[i][1]}`;
+    if (!records.length) {
+      if (elCurrent) elCurrent.textContent = 'Unavailable';
+      if (elHigh) elHigh.textContent = '—';
+      if (elLow) elLow.textContent = '—';
+      if (elAvg) elAvg.textContent = '—';
+      if (elTitle) elTitle.textContent = cropDisp + ' Price Trend';
+      if (elInsight) elInsight.textContent = 'Price trend unavailable — insufficient government-reported data.';
+      if (linePath) linePath.setAttribute('d', '');
+      if (areaPath) areaPath.setAttribute('d', '');
+      return;
     }
 
-    if (linePath) linePath.setAttribute('d', d);
-    if (areaPath) areaPath.setAttribute('d', `${d} L 880 220 L 80 220 Z`);
+    const prices = records.map(r => r.modalPrice);
+    const maxP = Math.max(...prices);
+    const minP = Math.min(...prices);
+    const avgP = Math.round(prices.reduce((s, p) => s + p, 0) / prices.length);
+    const curP = prices[0];
+
+    if (elCurrent) elCurrent.textContent = '₹' + curP.toLocaleString('en-IN');
+    if (elHigh) elHigh.textContent = '₹' + maxP.toLocaleString('en-IN');
+    if (elLow) elLow.textContent = '₹' + minP.toLocaleString('en-IN');
+    if (elAvg) elAvg.textContent = '₹' + avgP.toLocaleString('en-IN');
+    if (elTitle) elTitle.textContent = cropDisp + ' ' + t('market.historicalModalPrice', 'Government Price Trend') + ' (' + range + 'D)';
+    if (elInsight) elInsight.textContent = 'Government-reported price range for ' + cropDisp + ': ₹' + minP.toLocaleString('en-IN') + ' – ₹' + maxP.toLocaleString('en-IN') + '/q across reporting mandis.';
+
+    // PART 8 rule:
+    // If distinct historical report dates >= 3, plot authentic curve. Otherwise show unavailable.
+    const dateMap = new Map();
+    records.forEach(r => {
+      const d = r.reportDate || r.arrivalDate;
+      if (d && !dateMap.has(d)) dateMap.set(d, r.modalPrice);
+    });
+
+    if (dateMap.size >= 3) {
+      const pts = Array.from(dateMap.entries()).slice(0, 9);
+      const rP = maxP - minP || 1;
+      const stepX = 800 / (pts.length - 1);
+      const coords = pts.map((entry, i) => {
+        const x = 80 + (i * stepX);
+        const y = 180 - Math.round(((entry[1] - minP) / rP) * 120);
+        return [x, y];
+      });
+
+      let d = 'M ' + coords[0][0] + ' ' + coords[0][1];
+      for (let i = 1; i < coords.length; i++) {
+        d += ' L ' + coords[i][0] + ' ' + coords[i][1];
+      }
+
+      if (linePath) linePath.setAttribute('d', d);
+      if (areaPath) areaPath.setAttribute('d', d + ' L ' + coords[coords.length - 1][0] + ' 220 L 80 220 Z');
+    } else {
+      if (linePath) linePath.setAttribute('d', '');
+      if (areaPath) areaPath.setAttribute('d', '');
+      if (elInsight) elInsight.textContent = 'Price trend unavailable — insufficient government-reported data.';
+    }
   }
 
   tabs.forEach(tab => {
@@ -2530,7 +2652,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     dateEl.innerHTML = `<i data-lucide="calendar"></i> ${new Date().toLocaleDateString('en-IN', opts)}`;
   }
 
-  // 2. Render all dynamic panels
+  // 2. Hydrate genuine Government of India Mandi Prices & Render
+  await hydrateGovPrices();
   renderMarketGrid();
   renderFarmerListings();
   renderLotsPanel();

@@ -36,260 +36,284 @@ var MPC_DATA = [
   {
     id: 'pune', name: 'Pune APMC', state: 'Maharashtra', city: 'Pune', lat: 18.4901, lng: 73.8679, dist: 12, arrivals: 1420, buyers: 84, lastUpdated: 'Today, 8:30 AM',
     weather: { temp: 28, condition: 'Clear', icon: 'sun', rain: '0%' },
-    prices: { rice: 2850, wheat: 2620, onion: 2850, tomato: 2400, maize: 2280, soybean: 4550, potato: 1800, chilli: 8350, groundnut: 6450, cotton: 6750, sugarcane: 3150, mango: 5500, banana: 1850, grapes: 6200, pulses: 7400 },
+    prices: {},
     demand: { rice: 'high', wheat: 'medium', onion: 'high', tomato: 'medium', maize: 'medium', soybean: 'medium', potato: 'low', chilli: 'medium', groundnut: 'high', cotton: 'medium', sugarcane: 'high', mango: 'high', banana: 'medium', grapes: 'high', pulses: 'medium' }
   },
   {
     id: 'mumbai', name: 'Mumbai APMC (Vashi)', state: 'Maharashtra', city: 'Navi Mumbai', lat: 19.0734, lng: 73.0039, dist: 140, arrivals: 2650, buyers: 142, lastUpdated: 'Today, 9:00 AM',
     weather: { temp: 31, condition: 'Humid', icon: 'cloud-sun', rain: '10%' },
-    prices: { rice: 2920, wheat: 2700, onion: 2950, tomato: 2550, maize: 2350, soybean: 4700, potato: 1900, chilli: 8600, groundnut: 6600, cotton: 6900, sugarcane: 3200, mango: 6200, banana: 1950, grapes: 6600, pulses: 7650 },
+    prices: {},
     demand: { rice: 'high', wheat: 'high', onion: 'high', tomato: 'high', maize: 'medium', soybean: 'high', potato: 'medium', chilli: 'high', groundnut: 'high', cotton: 'medium', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'high', pulses: 'high' }
   },
   {
     id: 'nashik', name: 'Nashik APMC', state: 'Maharashtra', city: 'Nashik', lat: 20.0125, lng: 73.7915, dist: 180, arrivals: 1850, buyers: 96, lastUpdated: 'Today, 8:00 AM',
     weather: { temp: 26, condition: 'Partly Cloudy', icon: 'cloud-sun', rain: '20%' },
-    prices: { rice: 2760, wheat: 2580, onion: 2980, tomato: 2300, maize: 2250, soybean: 4480, potato: 1750, chilli: 8200, groundnut: 6350, cotton: 6680, sugarcane: 3100, mango: 5100, banana: 1750, grapes: 6800, pulses: 7250 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'medium', onion: 'high', tomato: 'low', maize: 'low', soybean: 'medium', potato: 'low', chilli: 'medium', groundnut: 'medium', cotton: 'low', sugarcane: 'medium', mango: 'medium', banana: 'low', grapes: 'high', pulses: 'medium' }
   },
   {
     id: 'nagpur', name: 'Nagpur APMC', state: 'Maharashtra', city: 'Nagpur', lat: 21.1685, lng: 79.1288, dist: 450, arrivals: 1620, buyers: 78, lastUpdated: 'Today, 7:45 AM',
     weather: { temp: 33, condition: 'Sunny', icon: 'sun', rain: '0%' },
-    prices: { rice: 2800, wheat: 2660, onion: 2720, tomato: 2380, maize: 2320, soybean: 4620, potato: 1820, chilli: 8450, groundnut: 6500, cotton: 6820, sugarcane: 3080, mango: 4900, banana: 1800, grapes: 5900, pulses: 7550 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'high', onion: 'medium', tomato: 'medium', maize: 'high', soybean: 'high', potato: 'medium', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'low', mango: 'medium', banana: 'medium', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'solapur', name: 'Solapur APMC', state: 'Maharashtra', city: 'Solapur', lat: 17.6715, lng: 75.9104, dist: 220, arrivals: 980, buyers: 52, lastUpdated: 'Today, 9:15 AM',
     weather: { temp: 32, condition: 'Sunny', icon: 'sun', rain: '0%' },
-    prices: { rice: 2780, wheat: 2590, onion: 2800, tomato: 2450, maize: 2260, soybean: 4500, potato: 1780, chilli: 8300, groundnut: 6420, cotton: 6700, sugarcane: 3250, mango: 4800, banana: 1900, grapes: 6300, pulses: 7450 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'medium', onion: 'medium', tomato: 'high', maize: 'medium', soybean: 'medium', potato: 'medium', chilli: 'medium', groundnut: 'medium', cotton: 'medium', sugarcane: 'high', mango: 'low', banana: 'high', grapes: 'high', pulses: 'high' }
   },
   {
     id: 'kolhapur', name: 'Kolhapur APMC', state: 'Maharashtra', city: 'Kolhapur', lat: 16.6956, lng: 74.2317, dist: 270, arrivals: 890, buyers: 46, lastUpdated: 'Today, 8:45 AM',
     weather: { temp: 29, condition: 'Pleasant', icon: 'cloud-sun', rain: '15%' },
-    prices: { rice: 2810, wheat: 2600, onion: 2830, tomato: 2420, maize: 2270, soybean: 4520, potato: 1790, chilli: 8280, groundnut: 6400, cotton: 6720, sugarcane: 3400, mango: 5200, banana: 1820, grapes: 6100, pulses: 7350 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'low', onion: 'medium', tomato: 'medium', maize: 'low', soybean: 'low', potato: 'low', chilli: 'low', groundnut: 'medium', cotton: 'low', sugarcane: 'high', mango: 'medium', banana: 'medium', grapes: 'medium', pulses: 'medium' }
   },
   {
     id: 'latur', name: 'Latur APMC', state: 'Maharashtra', city: 'Latur', lat: 18.4088, lng: 76.5604, dist: 340, arrivals: 1560, buyers: 88, lastUpdated: 'Today, 8:20 AM',
     weather: { temp: 31, condition: 'Clear', icon: 'sun', rain: '0%' },
-    prices: { rice: 2770, wheat: 2630, onion: 2740, tomato: 2380, maize: 2290, soybean: 4720, potato: 1790, chilli: 8460, groundnut: 6540, cotton: 6800, sugarcane: 3180, mango: 5100, banana: 1830, grapes: 5900, pulses: 7750 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'medium', onion: 'low', tomato: 'low', maize: 'medium', soybean: 'high', potato: 'low', chilli: 'medium', groundnut: 'high', cotton: 'medium', sugarcane: 'medium', mango: 'low', banana: 'low', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'aurangabad', name: 'Sambhajinagar APMC', state: 'Maharashtra', city: 'Sambhajinagar', lat: 19.8824, lng: 75.3522, dist: 210, arrivals: 1140, buyers: 64, lastUpdated: 'Today, 9:30 AM',
     weather: { temp: 29, condition: 'Partly Cloudy', icon: 'cloud-sun', rain: '10%' },
-    prices: { rice: 2790, wheat: 2640, onion: 2770, tomato: 2360, maize: 2300, soybean: 4580, potato: 1810, chilli: 8380, groundnut: 6480, cotton: 6780, sugarcane: 3120, mango: 5300, banana: 1840, grapes: 6050, pulses: 7480 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'medium', onion: 'medium', tomato: 'low', maize: 'medium', soybean: 'medium', potato: 'low', chilli: 'medium', groundnut: 'medium', cotton: 'medium', sugarcane: 'medium', mango: 'medium', banana: 'medium', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'indore', name: 'Indore Mandi', state: 'Madhya Pradesh', city: 'Indore', lat: 22.7196, lng: 75.8577, dist: 520, arrivals: 2850, buyers: 135, lastUpdated: 'Today, 7:30 AM',
     weather: { temp: 27, condition: 'Clear', icon: 'sun', rain: '0%' },
-    prices: { rice: 2750, wheat: 2680, onion: 2790, tomato: 2320, maize: 2340, soybean: 4780, potato: 1780, chilli: 8400, groundnut: 6560, cotton: 6850, sugarcane: 2950, mango: 5300, banana: 1840, grapes: 6100, pulses: 7600 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'high', onion: 'medium', tomato: 'low', maize: 'high', soybean: 'high', potato: 'low', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'low', mango: 'medium', banana: 'medium', grapes: 'medium', pulses: 'high' }
   },
   {
     id: 'bhopal', name: 'Bhopal Mandi', state: 'Madhya Pradesh', city: 'Bhopal', lat: 23.2599, lng: 77.4126, dist: 580, arrivals: 1750, buyers: 82, lastUpdated: 'Today, 8:10 AM',
     weather: { temp: 28, condition: 'Sunny', icon: 'sun', rain: '0%' },
-    prices: { rice: 2730, wheat: 2650, onion: 2760, tomato: 2350, maize: 2310, soybean: 4680, potato: 1760, chilli: 8320, groundnut: 6490, cotton: 6790, sugarcane: 2980, mango: 5200, banana: 1820, grapes: 6000, pulses: 7540 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'high', onion: 'medium', tomato: 'medium', maize: 'medium', soybean: 'high', potato: 'medium', chilli: 'medium', groundnut: 'medium', cotton: 'medium', sugarcane: 'low', mango: 'medium', banana: 'medium', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'ujjain', name: 'Ujjain Mandi', state: 'Madhya Pradesh', city: 'Ujjain', lat: 23.1765, lng: 75.7885, dist: 560, arrivals: 1420, buyers: 68, lastUpdated: 'Today, 8:50 AM',
     weather: { temp: 28, condition: 'Sunny', icon: 'sun', rain: '0%' },
-    prices: { rice: 2720, wheat: 2670, onion: 2780, tomato: 2300, maize: 2300, soybean: 4730, potato: 1740, chilli: 8300, groundnut: 6510, cotton: 6810, sugarcane: 2920, mango: 5150, banana: 1800, grapes: 5950, pulses: 7510 },
+    prices: {},
     demand: { rice: 'low', wheat: 'high', onion: 'medium', tomato: 'low', maize: 'medium', soybean: 'high', potato: 'low', chilli: 'medium', groundnut: 'high', cotton: 'medium', sugarcane: 'low', mango: 'low', banana: 'low', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'gwalior', name: 'Gwalior Mandi', state: 'Madhya Pradesh', city: 'Gwalior', lat: 26.2183, lng: 78.1828, dist: 720, arrivals: 1380, buyers: 66, lastUpdated: 'Today, 9:00 AM',
     weather: { temp: 30, condition: 'Hazy Sun', icon: 'sun', rain: '0%' },
-    prices: { rice: 2790, wheat: 2710, onion: 2730, tomato: 2370, maize: 2300, soybean: 4620, potato: 1880, chilli: 8290, groundnut: 6460, cotton: 6770, sugarcane: 3050, mango: 5250, banana: 1830, grapes: 5900, pulses: 7520 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'high', onion: 'low', tomato: 'medium', maize: 'medium', soybean: 'medium', potato: 'high', chilli: 'low', groundnut: 'medium', cotton: 'low', sugarcane: 'low', mango: 'medium', banana: 'medium', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'ahmedabad', name: 'Ahmedabad APMC', state: 'Gujarat', city: 'Ahmedabad', lat: 23.0225, lng: 72.5714, dist: 490, arrivals: 2350, buyers: 118, lastUpdated: 'Today, 8:00 AM',
     weather: { temp: 32, condition: 'Clear', icon: 'sun', rain: '0%' },
-    prices: { rice: 2870, wheat: 2660, onion: 2880, tomato: 2470, maize: 2320, soybean: 4630, potato: 1860, chilli: 8500, groundnut: 6680, cotton: 7040, sugarcane: 3120, mango: 5900, banana: 1910, grapes: 6450, pulses: 7520 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'medium', onion: 'high', tomato: 'high', maize: 'medium', soybean: 'medium', potato: 'high', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'medium', mango: 'high', banana: 'high', grapes: 'high', pulses: 'medium' }
   },
   {
     id: 'rajkot', name: 'Rajkot APMC', state: 'Gujarat', city: 'Rajkot', lat: 22.3039, lng: 70.8022, dist: 650, arrivals: 2150, buyers: 112, lastUpdated: 'Today, 7:50 AM',
     weather: { temp: 31, condition: 'Breezy', icon: 'wind', rain: '0%' },
-    prices: { rice: 2740, wheat: 2630, onion: 2840, tomato: 2410, maize: 2290, soybean: 4610, potato: 1830, chilli: 8520, groundnut: 6780, cotton: 7180, sugarcane: 3000, mango: 5600, banana: 1840, grapes: 6100, pulses: 7460 },
+    prices: {},
     demand: { rice: 'low', wheat: 'medium', onion: 'high', tomato: 'medium', maize: 'medium', soybean: 'medium', potato: 'medium', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'low', mango: 'medium', banana: 'medium', grapes: 'medium', pulses: 'medium' }
   },
   {
     id: 'surat', name: 'Surat APMC', state: 'Gujarat', city: 'Surat', lat: 21.1702, lng: 72.8311, dist: 280, arrivals: 1880, buyers: 94, lastUpdated: 'Today, 9:20 AM',
     weather: { temp: 30, condition: 'Partly Cloudy', icon: 'cloud-sun', rain: '10%' },
-    prices: { rice: 2860, wheat: 2670, onion: 2890, tomato: 2480, maize: 2330, soybean: 4640, potato: 1870, chilli: 8480, groundnut: 6640, cotton: 7010, sugarcane: 3280, mango: 6100, banana: 1940, grapes: 6500, pulses: 7550 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'medium', onion: 'high', tomato: 'high', maize: 'medium', soybean: 'medium', potato: 'medium', chilli: 'medium', groundnut: 'high', cotton: 'medium', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'high', pulses: 'medium' }
   },
   {
     id: 'khanna', name: 'Khanna Mandi', state: 'Punjab', city: 'Khanna', lat: 30.7071, lng: 76.2167, dist: 1580, arrivals: 4200, buyers: 186, lastUpdated: 'Today, 6:30 AM',
     weather: { temp: 24, condition: 'Mist / Cool', icon: 'cloud', rain: '5%' },
-    prices: { rice: 2980, wheat: 2750, onion: 2710, tomato: 2340, maize: 2380, soybean: 4510, potato: 1790, chilli: 8250, groundnut: 6380, cotton: 7050, sugarcane: 3380, mango: 5100, banana: 1800, grapes: 5900, pulses: 7580 },
+    prices: {},
     demand: { rice: 'high', wheat: 'high', onion: 'low', tomato: 'low', maize: 'high', soybean: 'low', potato: 'medium', chilli: 'low', groundnut: 'low', cotton: 'high', sugarcane: 'high', mango: 'low', banana: 'low', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'ludhiana', name: 'Ludhiana Mandi', state: 'Punjab', city: 'Ludhiana', lat: 30.9010, lng: 75.8573, dist: 1560, arrivals: 3100, buyers: 145, lastUpdated: 'Today, 7:00 AM',
     weather: { temp: 25, condition: 'Partly Cloudy', icon: 'cloud-sun', rain: '10%' },
-    prices: { rice: 2960, wheat: 2740, onion: 2730, tomato: 2360, maize: 2370, soybean: 4520, potato: 1810, chilli: 8280, groundnut: 6400, cotton: 7020, sugarcane: 3350, mango: 5200, banana: 1820, grapes: 6000, pulses: 7560 },
+    prices: {},
     demand: { rice: 'high', wheat: 'high', onion: 'medium', tomato: 'low', maize: 'high', soybean: 'low', potato: 'medium', chilli: 'low', groundnut: 'low', cotton: 'high', sugarcane: 'high', mango: 'medium', banana: 'medium', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'amritsar', name: 'Amritsar Mandi', state: 'Punjab', city: 'Amritsar', lat: 31.6340, lng: 74.8723, dist: 1610, arrivals: 2750, buyers: 120, lastUpdated: 'Today, 7:15 AM',
     weather: { temp: 23, condition: 'Clear', icon: 'sun', rain: '0%' },
-    prices: { rice: 3020, wheat: 2730, onion: 2700, tomato: 2350, maize: 2350, soybean: 4490, potato: 1800, chilli: 8220, groundnut: 6360, cotton: 6980, sugarcane: 3320, mango: 5150, banana: 1790, grapes: 5950, pulses: 7520 },
+    prices: {},
     demand: { rice: 'high', wheat: 'high', onion: 'low', tomato: 'low', maize: 'medium', soybean: 'low', potato: 'medium', chilli: 'low', groundnut: 'low', cotton: 'medium', sugarcane: 'high', mango: 'low', banana: 'low', grapes: 'low', pulses: 'medium' }
   },
   {
     id: 'karnal', name: 'Karnal APMC', state: 'Haryana', city: 'Karnal', lat: 29.6857, lng: 76.9905, dist: 1490, arrivals: 3200, buyers: 148, lastUpdated: 'Today, 6:45 AM',
     weather: { temp: 26, condition: 'Sunny', icon: 'sun', rain: '0%' },
-    prices: { rice: 3050, wheat: 2730, onion: 2740, tomato: 2370, maize: 2360, soybean: 4540, potato: 1830, chilli: 8310, groundnut: 6420, cotton: 6990, sugarcane: 3370, mango: 5250, banana: 1830, grapes: 6050, pulses: 7570 },
+    prices: {},
     demand: { rice: 'high', wheat: 'high', onion: 'medium', tomato: 'low', maize: 'medium', soybean: 'low', potato: 'medium', chilli: 'low', groundnut: 'low', cotton: 'medium', sugarcane: 'high', mango: 'medium', banana: 'medium', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'hisar', name: 'Hisar Mandi', state: 'Haryana', city: 'Hisar', lat: 29.1492, lng: 75.7217, dist: 1440, arrivals: 2150, buyers: 96, lastUpdated: 'Today, 7:30 AM',
     weather: { temp: 27, condition: 'Clear', icon: 'sun', rain: '0%' },
-    prices: { rice: 2890, wheat: 2710, onion: 2710, tomato: 2330, maize: 2330, soybean: 4490, potato: 1790, chilli: 8250, groundnut: 6390, cotton: 7140, sugarcane: 3280, mango: 5050, banana: 1800, grapes: 5850, pulses: 7510 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'high', onion: 'low', tomato: 'low', maize: 'medium', soybean: 'low', potato: 'low', chilli: 'low', groundnut: 'low', cotton: 'high', sugarcane: 'medium', mango: 'low', banana: 'low', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'lucknow', name: 'Lucknow Mandi', state: 'Uttar Pradesh', city: 'Lucknow', lat: 26.8467, lng: 80.9462, dist: 890, arrivals: 2550, buyers: 124, lastUpdated: 'Today, 8:30 AM',
     weather: { temp: 29, condition: 'Clear', icon: 'sun', rain: '5%' },
-    prices: { rice: 2860, wheat: 2710, onion: 2790, tomato: 2440, maize: 2320, soybean: 4580, potato: 1910, chilli: 8410, groundnut: 6490, cotton: 6820, sugarcane: 3300, mango: 6400, banana: 1890, grapes: 6350, pulses: 7620 },
+    prices: {},
     demand: { rice: 'high', wheat: 'high', onion: 'medium', tomato: 'medium', maize: 'medium', soybean: 'low', potato: 'high', chilli: 'medium', groundnut: 'medium', cotton: 'low', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'medium', pulses: 'high' }
   },
   {
     id: 'agra', name: 'Agra Mandi', state: 'Uttar Pradesh', city: 'Agra', lat: 27.1767, lng: 78.0081, dist: 1100, arrivals: 2950, buyers: 138, lastUpdated: 'Today, 8:00 AM',
     weather: { temp: 31, condition: 'Sunny', icon: 'sun', rain: '0%' },
-    prices: { rice: 2820, wheat: 2690, onion: 2760, tomato: 2410, maize: 2310, soybean: 4560, potato: 1980, chilli: 8340, groundnut: 6460, cotton: 6810, sugarcane: 3240, mango: 5400, banana: 1850, grapes: 6150, pulses: 7570 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'high', onion: 'medium', tomato: 'medium', maize: 'medium', soybean: 'low', potato: 'high', chilli: 'medium', groundnut: 'low', cotton: 'low', sugarcane: 'medium', mango: 'medium', banana: 'medium', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'varanasi', name: 'Varanasi Mandi', state: 'Uttar Pradesh', city: 'Varanasi', lat: 25.3176, lng: 82.9739, dist: 1050, arrivals: 1850, buyers: 88, lastUpdated: 'Today, 8:45 AM',
     weather: { temp: 30, condition: 'Partly Cloudy', icon: 'cloud-sun', rain: '10%' },
-    prices: { rice: 2880, wheat: 2680, onion: 2810, tomato: 2460, maize: 2310, soybean: 4540, potato: 1890, chilli: 8450, groundnut: 6440, cotton: 6780, sugarcane: 3280, mango: 5800, banana: 1920, grapes: 6300, pulses: 7640 },
+    prices: {},
     demand: { rice: 'high', wheat: 'medium', onion: 'medium', tomato: 'high', maize: 'medium', soybean: 'low', potato: 'high', chilli: 'medium', groundnut: 'low', cotton: 'low', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'medium', pulses: 'high' }
   },
   {
     id: 'patna', name: 'Patna Mandi', state: 'Bihar', city: 'Patna', lat: 25.5941, lng: 85.1376, dist: 1300, arrivals: 2150, buyers: 96, lastUpdated: 'Today, 8:15 AM',
     weather: { temp: 30, condition: 'Humid', icon: 'cloud-sun', rain: '15%' },
-    prices: { rice: 2890, wheat: 2660, onion: 2840, tomato: 2490, maize: 2350, soybean: 4500, potato: 1900, chilli: 8550, groundnut: 6420, cotton: 6720, sugarcane: 3200, mango: 5800, banana: 1980, grapes: 6300, pulses: 7650 },
+    prices: {},
     demand: { rice: 'high', wheat: 'medium', onion: 'high', tomato: 'high', maize: 'high', soybean: 'low', potato: 'high', chilli: 'high', groundnut: 'low', cotton: 'low', sugarcane: 'medium', mango: 'high', banana: 'high', grapes: 'medium', pulses: 'high' }
   },
   {
     id: 'jaipur', name: 'Jaipur Mandi', state: 'Rajasthan', city: 'Jaipur', lat: 26.9124, lng: 75.7873, dist: 760, arrivals: 2480, buyers: 122, lastUpdated: 'Today, 8:00 AM',
     weather: { temp: 30, condition: 'Clear', icon: 'sun', rain: '0%' },
-    prices: { rice: 2810, wheat: 2680, onion: 2820, tomato: 2460, maize: 2320, soybean: 4620, potato: 1840, chilli: 8420, groundnut: 6590, cotton: 6890, sugarcane: 3050, mango: 5500, banana: 1870, grapes: 6300, pulses: 7560 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'medium', onion: 'high', tomato: 'high', maize: 'medium', soybean: 'medium', potato: 'medium', chilli: 'medium', groundnut: 'high', cotton: 'medium', sugarcane: 'low', mango: 'medium', banana: 'medium', grapes: 'medium', pulses: 'high' }
   },
   {
     id: 'kota', name: 'Kota Mandi', state: 'Rajasthan', city: 'Kota', lat: 25.2138, lng: 75.8648, dist: 690, arrivals: 2650, buyers: 130, lastUpdated: 'Today, 9:00 AM',
     weather: { temp: 29, condition: 'Sunny', icon: 'sun', rain: '0%' },
-    prices: { rice: 2790, wheat: 2670, onion: 2750, tomato: 2330, maize: 2360, soybean: 4740, potato: 1770, chilli: 8370, groundnut: 6520, cotton: 6920, sugarcane: 3120, mango: 5200, banana: 1810, grapes: 5950, pulses: 7620 },
+    prices: {},
     demand: { rice: 'low', wheat: 'high', onion: 'low', tomato: 'low', maize: 'high', soybean: 'high', potato: 'low', chilli: 'medium', groundnut: 'high', cotton: 'high', sugarcane: 'low', mango: 'low', banana: 'low', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'jodhpur', name: 'Jodhpur Mandi', state: 'Rajasthan', city: 'Jodhpur', lat: 26.2389, lng: 73.0243, dist: 810, arrivals: 1520, buyers: 74, lastUpdated: 'Today, 8:30 AM',
     weather: { temp: 33, condition: 'Hot & Dry', icon: 'sun', rain: '0%' },
-    prices: { rice: 2750, wheat: 2660, onion: 2810, tomato: 2380, maize: 2280, soybean: 4560, potato: 1810, chilli: 8650, groundnut: 6680, cotton: 6940, sugarcane: 2900, mango: 5300, banana: 1830, grapes: 6100, pulses: 7680 },
+    prices: {},
     demand: { rice: 'low', wheat: 'medium', onion: 'medium', tomato: 'low', maize: 'low', soybean: 'medium', potato: 'low', chilli: 'high', groundnut: 'high', cotton: 'medium', sugarcane: 'low', mango: 'low', banana: 'low', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'bengaluru', name: 'Bengaluru APMC', state: 'Karnataka', city: 'Bengaluru', lat: 13.0189, lng: 77.5456, dist: 840, arrivals: 2890, buyers: 146, lastUpdated: 'Today, 7:45 AM',
     weather: { temp: 25, condition: 'Pleasant', icon: 'cloud-sun', rain: '20%' },
-    prices: { rice: 2940, wheat: 2690, onion: 2910, tomato: 2580, maize: 2380, soybean: 4620, potato: 1890, chilli: 8590, groundnut: 6640, cotton: 6860, sugarcane: 3250, mango: 6500, banana: 1980, grapes: 6800, pulses: 7680 },
+    prices: {},
     demand: { rice: 'high', wheat: 'medium', onion: 'high', tomato: 'high', maize: 'high', soybean: 'medium', potato: 'high', chilli: 'high', groundnut: 'high', cotton: 'low', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'high', pulses: 'high' }
   },
   {
     id: 'hubballi', name: 'Hubballi APMC', state: 'Karnataka', city: 'Hubballi', lat: 15.3647, lng: 75.1240, dist: 500, arrivals: 1840, buyers: 92, lastUpdated: 'Today, 8:30 AM',
     weather: { temp: 28, condition: 'Partly Cloudy', icon: 'cloud-sun', rain: '10%' },
-    prices: { rice: 2850, wheat: 2640, onion: 2870, tomato: 2460, maize: 2350, soybean: 4590, potato: 1820, chilli: 8640, groundnut: 6580, cotton: 7010, sugarcane: 3310, mango: 5700, banana: 1870, grapes: 6300, pulses: 7540 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'medium', onion: 'high', tomato: 'medium', maize: 'high', soybean: 'medium', potato: 'low', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'high', mango: 'medium', banana: 'medium', grapes: 'high', pulses: 'medium' }
   },
   {
     id: 'hyderabad', name: 'Hyderabad APMC', state: 'Telangana', city: 'Hyderabad', lat: 17.3850, lng: 78.4867, dist: 560, arrivals: 2750, buyers: 140, lastUpdated: 'Today, 8:00 AM',
     weather: { temp: 29, condition: 'Partly Cloudy', icon: 'cloud-sun', rain: '10%' },
-    prices: { rice: 2920, wheat: 2680, onion: 2890, tomato: 2540, maize: 2380, soybean: 4610, potato: 1880, chilli: 8750, groundnut: 6650, cotton: 7020, sugarcane: 3200, mango: 6300, banana: 1950, grapes: 6600, pulses: 7680 },
+    prices: {},
     demand: { rice: 'high', wheat: 'medium', onion: 'high', tomato: 'high', maize: 'high', soybean: 'medium', potato: 'high', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'medium', mango: 'high', banana: 'high', grapes: 'high', pulses: 'high' }
   },
   {
     id: 'warangal', name: 'Warangal APMC', state: 'Telangana', city: 'Warangal', lat: 17.9689, lng: 79.5941, dist: 610, arrivals: 2450, buyers: 118, lastUpdated: 'Today, 8:15 AM',
     weather: { temp: 31, condition: 'Sunny', icon: 'sun', rain: '5%' },
-    prices: { rice: 2890, wheat: 2600, onion: 2820, tomato: 2460, maize: 2390, soybean: 4560, potato: 1810, chilli: 8820, groundnut: 6610, cotton: 7120, sugarcane: 3150, mango: 5800, banana: 1880, grapes: 6100, pulses: 7620 },
+    prices: {},
     demand: { rice: 'high', wheat: 'low', onion: 'medium', tomato: 'medium', maize: 'high', soybean: 'medium', potato: 'low', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'low', mango: 'medium', banana: 'medium', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'guntur', name: 'Guntur APMC', state: 'Andhra Pradesh', city: 'Guntur', lat: 16.3067, lng: 80.4365, dist: 720, arrivals: 3600, buyers: 175, lastUpdated: 'Today, 7:30 AM',
     weather: { temp: 32, condition: 'Sunny & Humid', icon: 'sun', rain: '10%' },
-    prices: { rice: 2900, wheat: 2600, onion: 2840, tomato: 2480, maize: 2390, soybean: 4530, potato: 1820, chilli: 8950, groundnut: 6650, cotton: 7150, sugarcane: 3300, mango: 6100, banana: 1920, grapes: 6200, pulses: 7650 },
+    prices: {},
     demand: { rice: 'high', wheat: 'low', onion: 'medium', tomato: 'high', maize: 'high', soybean: 'low', potato: 'low', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'vijayawada', name: 'Vijayawada APMC', state: 'Andhra Pradesh', city: 'Vijayawada', lat: 16.5062, lng: 80.6480, dist: 680, arrivals: 2200, buyers: 110, lastUpdated: 'Today, 8:00 AM',
     weather: { temp: 32, condition: 'Humid', icon: 'cloud-sun', rain: '15%' },
-    prices: { rice: 2930, wheat: 2620, onion: 2860, tomato: 2510, maize: 2380, soybean: 4540, potato: 1850, chilli: 8780, groundnut: 6620, cotton: 7040, sugarcane: 3350, mango: 6400, banana: 1960, grapes: 6400, pulses: 7660 },
+    prices: {},
     demand: { rice: 'high', wheat: 'low', onion: 'high', tomato: 'high', maize: 'high', soybean: 'low', potato: 'medium', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'medium', pulses: 'high' }
   },
   {
     id: 'chennai', name: 'Chennai Koyambedu', state: 'Tamil Nadu', city: 'Chennai', lat: 13.0694, lng: 80.1948, dist: 1300, arrivals: 3400, buyers: 165, lastUpdated: 'Today, 7:00 AM',
     weather: { temp: 33, condition: 'Humid', icon: 'sun', rain: '10%' },
-    prices: { rice: 2970, wheat: 2710, onion: 2960, tomato: 2620, maize: 2410, soybean: 4620, potato: 1940, chilli: 8720, groundnut: 6720, cotton: 6950, sugarcane: 3400, mango: 6600, banana: 2050, grapes: 6700, pulses: 7720 },
+    prices: {},
     demand: { rice: 'high', wheat: 'medium', onion: 'high', tomato: 'high', maize: 'high', soybean: 'low', potato: 'high', chilli: 'high', groundnut: 'high', cotton: 'low', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'high', pulses: 'high' }
   },
   {
     id: 'coimbatore', name: 'Coimbatore Mandi', state: 'Tamil Nadu', city: 'Coimbatore', lat: 11.0168, lng: 76.9558, dist: 980, arrivals: 2150, buyers: 104, lastUpdated: 'Today, 7:30 AM',
     weather: { temp: 28, condition: 'Pleasant', icon: 'cloud-sun', rain: '15%' },
-    prices: { rice: 2940, wheat: 2670, onion: 2920, tomato: 2560, maize: 2400, soybean: 4570, potato: 1910, chilli: 8680, groundnut: 6680, cotton: 7020, sugarcane: 3420, mango: 6300, banana: 2020, grapes: 6600, pulses: 7670 },
+    prices: {},
     demand: { rice: 'high', wheat: 'low', onion: 'high', tomato: 'high', maize: 'high', soybean: 'low', potato: 'high', chilli: 'high', groundnut: 'high', cotton: 'high', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'high', pulses: 'high' }
   },
   {
     id: 'madurai', name: 'Madurai Mandi', state: 'Tamil Nadu', city: 'Madurai', lat: 9.9252, lng: 78.1198, dist: 1120, arrivals: 1890, buyers: 92, lastUpdated: 'Today, 8:00 AM',
     weather: { temp: 34, condition: 'Sunny', icon: 'sun', rain: '5%' },
-    prices: { rice: 2950, wheat: 2640, onion: 2910, tomato: 2550, maize: 2380, soybean: 4520, potato: 1900, chilli: 8690, groundnut: 6670, cotton: 6980, sugarcane: 3380, mango: 6200, banana: 2010, grapes: 6550, pulses: 7660 },
+    prices: {},
     demand: { rice: 'high', wheat: 'low', onion: 'high', tomato: 'high', maize: 'high', soybean: 'low', potato: 'high', chilli: 'high', groundnut: 'high', cotton: 'medium', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'high', pulses: 'high' }
   },
   {
     id: 'kolkata', name: 'Kolkata Mandi', state: 'West Bengal', city: 'Kolkata', lat: 22.5726, lng: 88.3639, dist: 1780, arrivals: 2950, buyers: 148, lastUpdated: 'Today, 7:00 AM',
     weather: { temp: 30, condition: 'Humid', icon: 'cloud-sun', rain: '25%' },
-    prices: { rice: 2940, wheat: 2720, onion: 2930, tomato: 2520, maize: 2360, soybean: 4590, potato: 1960, chilli: 8620, groundnut: 6580, cotton: 6780, sugarcane: 3150, mango: 6300, banana: 1940, grapes: 6500, pulses: 7700 },
+    prices: {},
     demand: { rice: 'high', wheat: 'high', onion: 'high', tomato: 'high', maize: 'medium', soybean: 'low', potato: 'high', chilli: 'high', groundnut: 'medium', cotton: 'low', sugarcane: 'medium', mango: 'high', banana: 'high', grapes: 'high', pulses: 'high' }
   },
   {
     id: 'bhubaneswar', name: 'Bhubaneswar Mandi', state: 'Odisha', city: 'Bhubaneswar', lat: 20.2961, lng: 85.8245, dist: 1290, arrivals: 1850, buyers: 88, lastUpdated: 'Today, 7:30 AM',
     weather: { temp: 31, condition: 'Partly Cloudy', icon: 'cloud-sun', rain: '20%' },
-    prices: { rice: 2900, wheat: 2680, onion: 2880, tomato: 2480, maize: 2340, soybean: 4540, potato: 1920, chilli: 8550, groundnut: 6560, cotton: 6750, sugarcane: 3200, mango: 5900, banana: 1920, grapes: 6350, pulses: 7620 },
+    prices: {},
     demand: { rice: 'high', wheat: 'medium', onion: 'high', tomato: 'high', maize: 'medium', soybean: 'low', potato: 'high', chilli: 'high', groundnut: 'medium', cotton: 'low', sugarcane: 'medium', mango: 'high', banana: 'high', grapes: 'medium', pulses: 'high' }
   },
   {
     id: 'raipur', name: 'Raipur Mandi', state: 'Chhattisgarh', city: 'Raipur', lat: 21.2514, lng: 81.6296, dist: 950, arrivals: 2450, buyers: 120, lastUpdated: 'Today, 8:30 AM',
     weather: { temp: 31, condition: 'Sunny', icon: 'sun', rain: '5%' },
-    prices: { rice: 2960, wheat: 2660, onion: 2840, tomato: 2440, maize: 2360, soybean: 4580, potato: 1890, chilli: 8480, groundnut: 6540, cotton: 6760, sugarcane: 3250, mango: 5700, banana: 1890, grapes: 6250, pulses: 7600 },
+    prices: {},
     demand: { rice: 'high', wheat: 'medium', onion: 'medium', tomato: 'medium', maize: 'high', soybean: 'medium', potato: 'medium', chilli: 'medium', groundnut: 'medium', cotton: 'low', sugarcane: 'high', mango: 'medium', banana: 'medium', grapes: 'low', pulses: 'high' }
   },
   {
     id: 'kochi', name: 'Kochi Mandi', state: 'Kerala', city: 'Kochi', lat: 9.9312, lng: 76.2673, dist: 1040, arrivals: 1820, buyers: 94, lastUpdated: 'Today, 7:15 AM',
     weather: { temp: 29, condition: 'Light Rain', icon: 'cloud-rain', rain: '60%' },
-    prices: { rice: 2980, wheat: 2750, onion: 2980, tomato: 2650, maize: 2420, soybean: 4620, potato: 1970, chilli: 8790, groundnut: 6720, cotton: 6850, sugarcane: 3400, mango: 6700, banana: 2150, grapes: 6850, pulses: 7750 },
+    prices: {},
     demand: { rice: 'high', wheat: 'medium', onion: 'high', tomato: 'high', maize: 'high', soybean: 'low', potato: 'high', chilli: 'high', groundnut: 'high', cotton: 'low', sugarcane: 'high', mango: 'high', banana: 'high', grapes: 'high', pulses: 'high' }
   },
   {
     id: 'guwahati', name: 'Guwahati Mandi', state: 'Assam', city: 'Guwahati', lat: 26.1445, lng: 91.7362, dist: 1760, arrivals: 1520, buyers: 78, lastUpdated: 'Today, 7:00 AM',
     weather: { temp: 27, condition: 'Overcast', icon: 'cloud', rain: '30%' },
-    prices: { rice: 2950, wheat: 2740, onion: 2920, tomato: 2540, maize: 2390, soybean: 4560, potato: 1950, chilli: 8650, groundnut: 6550, cotton: 6710, sugarcane: 3150, mango: 6200, banana: 2050, grapes: 6450, pulses: 7680 },
+    prices: {},
     demand: { rice: 'high', wheat: 'high', onion: 'high', tomato: 'high', maize: 'high', soybean: 'low', potato: 'high', chilli: 'high', groundnut: 'low', cotton: 'low', sugarcane: 'low', mango: 'high', banana: 'high', grapes: 'medium', pulses: 'high' }
   },
   {
     id: 'shimla', name: 'Shimla Mandi', state: 'Himachal Pradesh', city: 'Shimla', lat: 31.1048, lng: 77.1734, dist: 1410, arrivals: 1250, buyers: 68, lastUpdated: 'Today, 8:00 AM',
     weather: { temp: 18, condition: 'Cool & Clear', icon: 'sun', rain: '5%' },
-    prices: { rice: 2920, wheat: 2760, onion: 2880, tomato: 2580, maize: 2370, soybean: 4520, potato: 1990, chilli: 8450, groundnut: 6480, cotton: 6820, sugarcane: 3200, mango: 5900, banana: 1920, grapes: 6400, pulses: 7650 },
+    prices: {},
     demand: { rice: 'medium', wheat: 'high', onion: 'high', tomato: 'high', maize: 'medium', soybean: 'low', potato: 'high', chilli: 'medium', groundnut: 'low', cotton: 'low', sugarcane: 'low', mango: 'medium', banana: 'medium', grapes: 'medium', pulses: 'high' }
   },
   {
     id: 'jammu', name: 'Jammu Mandi', state: 'Jammu & Kashmir', city: 'Jammu', lat: 32.7266, lng: 74.8570, dist: 1540, arrivals: 1650, buyers: 84, lastUpdated: 'Today, 7:30 AM',
     weather: { temp: 22, condition: 'Clear', icon: 'sun', rain: '0%' },
-    prices: { rice: 3020, wheat: 2780, onion: 2890, tomato: 2540, maize: 2380, soybean: 4540, potato: 1960, chilli: 8420, groundnut: 6500, cotton: 6850, sugarcane: 3220, mango: 5850, banana: 1910, grapes: 6450, pulses: 7680 },
+    prices: {},
     demand: { rice: 'high', wheat: 'high', onion: 'high', tomato: 'high', maize: 'medium', soybean: 'low', potato: 'high', chilli: 'medium', groundnut: 'low', cotton: 'low', sugarcane: 'low', mango: 'medium', banana: 'medium', grapes: 'medium', pulses: 'high' }
+  },
+  {
+    id: 'chandigarh', name: 'Chandigarh APMC', state: 'Punjab', city: 'Chandigarh', lat: 30.7333, lng: 76.7794, dist: 1520, arrivals: 1800, buyers: 95, lastUpdated: 'Today',
+    weather: { temp: 26, condition: 'Clear', icon: 'sun', rain: '0%' },
+    prices: {},
+    demand: { onion: 'high', wheat: 'high', rice: 'high', tomato: 'medium' }
+  },
+  {
+    id: 'chandwad', name: 'APMC Chandwad', state: 'Maharashtra', city: 'Chandwad', lat: 20.3283, lng: 74.2422, dist: 220, arrivals: 1200, buyers: 72, lastUpdated: 'Today',
+    weather: { temp: 26, condition: 'Clear', icon: 'sun', rain: '0%' },
+    prices: {},
+    demand: { onion: 'high', tomato: 'medium', soybean: 'medium', maize: 'medium' }
+  },
+  {
+    id: 'lasalgaon', name: 'Lasalgaon APMC', state: 'Maharashtra', city: 'Lasalgaon', lat: 20.1472, lng: 74.2253, dist: 205, arrivals: 3100, buyers: 160, lastUpdated: 'Today',
+    weather: { temp: 26, condition: 'Partly Cloudy', icon: 'cloud-sun', rain: '0%' },
+    prices: {},
+    demand: { onion: 'high', tomato: 'medium', soybean: 'medium', maize: 'medium' }
+  },
+  {
+    id: 'chandrapur', name: 'Chandrapur APMC', state: 'Maharashtra', city: 'Chandrapur', lat: 19.9615, lng: 79.2961, dist: 710, arrivals: 1100, buyers: 58, lastUpdated: 'Today',
+    weather: { temp: 31, condition: 'Sunny', icon: 'sun', rain: '0%' },
+    prices: {},
+    demand: { onion: 'medium', cotton: 'high', soybean: 'high', rice: 'medium' }
   }
 ];
 
@@ -623,6 +647,12 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
         btn.disabled = false;
       }
 
+      // Reset existing price states
+      MPC_DATA.forEach(function (m) {
+        m.prices = {};
+        delete m._govData;
+      });
+
       if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
         var isLive = res.sourceStatus === 'live' || (!res.stale && !res.cached);
         self.govDataStatus = isLive ? 'success' : 'stale';
@@ -643,19 +673,39 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
           tsEl.textContent = 'Last updated: ' + updateLabel;
         }
 
-        // Match records against MPC_DATA
+        // Match records strictly against MPC_DATA with exact disambiguation
         res.data.forEach(function (rec) {
-          var recMkt = (rec.market || '').toLowerCase();
-          var recDist = (rec.district || '').toLowerCase();
-          var recState = (rec.state || '').toLowerCase();
+          var recMkt = (rec.market || '').toLowerCase().trim();
+          var recDist = (rec.district || '').toLowerCase().trim();
+          var recState = (rec.state || '').toLowerCase().trim();
 
           MPC_DATA.forEach(function (m) {
-            var mName = m.name.toLowerCase();
-            var mCity = m.city.toLowerCase();
-            var mState = m.state.toLowerCase();
+            var mName = m.name.toLowerCase().trim();
+            var mCity = m.city.toLowerCase().trim();
+            var mState = m.state.toLowerCase().trim();
 
-            var matches = (mCity === recMkt || mName.indexOf(recMkt) !== -1 || recMkt.indexOf(mCity) !== -1 || (recDist && mCity === recDist)) &&
-                          (!recState || mState.indexOf(recState) !== -1 || recState.indexOf(mState) !== -1);
+            // Strict anti-collision for Chandigarh vs Chandwad vs Chandrapur vs Lasalgaon
+            var isMChandigarh = m.id === 'chandigarh' || mCity === 'chandigarh' || mName.indexOf('chandigarh') !== -1;
+            var isRecChandigarh = recMkt.indexOf('chandigarh') !== -1;
+            if (isMChandigarh !== isRecChandigarh) return;
+
+            var isMChandwad = m.id === 'chandwad' || mCity === 'chandwad' || mName.indexOf('chandwad') !== -1;
+            var isRecChandwad = recMkt.indexOf('chandwad') !== -1;
+            if (isMChandwad !== isRecChandwad) return;
+
+            var isMChandrapur = m.id === 'chandrapur' || mCity === 'chandrapur' || mName.indexOf('chandrapur') !== -1;
+            var isRecChandrapur = recMkt.indexOf('chandrapur') !== -1;
+            if (isMChandrapur !== isRecChandrapur) return;
+
+            var isMLasalgaon = m.id === 'lasalgaon' || mCity === 'lasalgaon' || mName.indexOf('lasalgaon') !== -1;
+            var isRecLasalgaon = recMkt.indexOf('lasalgaon') !== -1;
+            if (isMLasalgaon !== isRecLasalgaon) return;
+
+            if (recState && mState && mState !== recState && mState.indexOf(recState) === -1 && recState.indexOf(mState) === -1) {
+              return;
+            }
+
+            var matches = (mCity === recMkt || mName.indexOf(recMkt) !== -1 || recMkt.indexOf(mCity) !== -1 || (recDist && (mCity === recDist || mName.indexOf(recDist) !== -1)));
 
             if (matches && rec.modalPrice > 0) {
               m.prices[crop] = rec.modalPrice;
@@ -663,15 +713,18 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
                 minPrice: rec.minPrice,
                 maxPrice: rec.maxPrice,
                 modalPrice: rec.modalPrice,
-                arrivalDate: rec.arrivalDate,
-                arrivalVolume: rec.arrivalVolume, // only if present in API
+                arrivalDate: rec.reportDate || rec.arrivalDate,
+                reportDate: rec.reportDate || rec.arrivalDate,
+                arrivalVolume: rec.arrivalVolume,
                 commodity: rec.commodity,
                 market: rec.market,
                 state: rec.state,
                 isGov: true,
-                stale: !isLive
+                stale: !isLive,
+                source: rec.source || 'Government of India / AGMARKNET',
+                status: rec.status || (isLive ? 'LIVE' : 'CACHED')
               };
-              m.lastUpdated = rec.arrivalDate ? 'Gov Data · ' + rec.arrivalDate : 'Gov Data · ' + updateLabel;
+              m.lastUpdated = 'Reported: ' + (rec.reportDate || rec.arrivalDate || updateLabel);
             }
           });
         });
@@ -720,7 +773,6 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
     });
 };
 
-// ── Refresh Simulation ───────────────────────────────────────────────────────
 MandiCompare.prototype.triggerRefresh = function () {
   this.fetchGovernmentPrices(true);
 };
@@ -778,73 +830,108 @@ MandiCompare.prototype.loadUserCrops = function () {
 MandiCompare.prototype.getProcessedList = function () {
   var self = this, crop = this.crop, qty = this.qty, gradeF = mpcGradeFactor(this.grade);
 
-  var list = MPC_DATA.filter(function (m) {
-    return m.prices && m.prices[crop] > 0;
-  });
-
-  // Calculate metrics for each mandi
-  list.forEach(function (m) {
-    var rawPrice = m.prices[crop];
-    var adjPrice = Math.round(rawPrice * gradeF);
-    var transportPerQ = mpcTransportRatePerQ(m.dist);
-    var netPerQ = adjPrice - transportPerQ;
-    var grossTotal = adjPrice * qty;
-    var transportTotal = transportPerQ * qty;
-    var netTotal = netPerQ * qty;
-
-    m._rawPrice = rawPrice;
-    m._adjPrice = adjPrice;
-    m._transportPerQ = transportPerQ;
-    m._netPerQ = netPerQ;
-    m._grossTotal = grossTotal;
-    m._transportTotal = transportTotal;
-    m._netTotal = netTotal;
-  });
-
-  // Min/Max for composite score
-  var netPrices = list.map(function (m) { return m._netPerQ; });
-  var dists = list.map(function (m) { return m.dist; });
-  var maxNet = Math.max.apply(null, netPrices), minNet = Math.min.apply(null, netPrices), rNet = maxNet - minNet || 1;
-  var maxD = Math.max.apply(null, dists), minD = Math.min.apply(null, dists), rD = maxD - minD || 1;
-
-  list.forEach(function (m) {
-    var netNorm = (m._netPerQ - minNet) / rNet;
-    var distNorm = 1 - ((m.dist - minD) / rD);
-    var demandNorm = mpcDemandScore(m.demand[crop] || 'medium');
-    m._compositeScore = (netNorm * 0.55) + (distNorm * 0.30) + (demandNorm * 0.15);
-  });
-
-  // Filters
-  if (self.stateFilter !== 'all') {
-    list = list.filter(function (m) { return m.state.toLowerCase() === self.stateFilter.toLowerCase(); });
-  }
-
-  if (self.distFilter === '100') {
-    list = list.filter(function (m) { return m.dist <= 100; });
-  } else if (self.distFilter === '300') {
-    list = list.filter(function (m) { return m.dist <= 300; });
-  } else if (self.distFilter === '500') {
-    list = list.filter(function (m) { return m.dist <= 500; });
-  }
-
-  if (self.demandFilter !== 'all') {
-    if (self.demandFilter === 'high') {
-      list = list.filter(function (m) { return (m.demand[crop] || 'medium') === 'high'; });
-    } else if (self.demandFilter === 'medium') {
-      list = list.filter(function (m) { return (m.demand[crop] || 'medium') !== 'low'; });
-    }
-  }
-
-  if (self.searchQ) {
-    list = list.filter(function (m) {
-      return m.name.toLowerCase().indexOf(self.searchQ) !== -1 ||
-        m.city.toLowerCase().indexOf(self.searchQ) !== -1 ||
-        m.state.toLowerCase().indexOf(self.searchQ) !== -1;
+  var list;
+  if (self.selected && self.selected.length > 0) {
+    // When specific mandis are selected/pinned (e.g. Compare Chandigarh, Nashik, Lasalgaon),
+    // ALWAYS preserve those exact mandis without substituting, even if price is unavailable!
+    list = MPC_DATA.filter(function (m) {
+      return self.selected.indexOf(m.id) !== -1;
+    });
+  } else if (self.searchQ) {
+    var q = self.searchQ.toLowerCase();
+    list = MPC_DATA.filter(function (m) {
+      return m.name.toLowerCase().indexOf(q) !== -1 ||
+        m.city.toLowerCase().indexOf(q) !== -1 ||
+        m.state.toLowerCase().indexOf(q) !== -1;
+    });
+  } else {
+    // Normal ranking: only mandis with valid government reported prices
+    list = MPC_DATA.filter(function (m) {
+      return m.prices && m.prices[crop] > 0;
     });
   }
 
-  // Sorting
+  // Calculate metrics for each mandi
+  list.forEach(function (m) {
+    var rawPrice = (m.prices && m.prices[crop] > 0) ? m.prices[crop] : null;
+    var hasPrice = (typeof rawPrice === 'number' && rawPrice > 0);
+    m._hasPrice = hasPrice;
+
+    var transportPerQ = mpcTransportRatePerQ(m.dist);
+    m._transportPerQ = transportPerQ;
+    m._transportTotal = transportPerQ * qty;
+
+    if (hasPrice) {
+      var adjPrice = Math.round(rawPrice * gradeF);
+      var netPerQ = adjPrice - transportPerQ;
+      var grossTotal = adjPrice * qty;
+      var netTotal = netPerQ * qty;
+
+      m._rawPrice = rawPrice;
+      m._adjPrice = adjPrice;
+      m._netPerQ = netPerQ;
+      m._grossTotal = grossTotal;
+      m._netTotal = netTotal;
+    } else {
+      m._rawPrice = null;
+      m._adjPrice = null;
+      m._netPerQ = -999999;
+      m._grossTotal = null;
+      m._netTotal = null;
+    }
+  });
+
+  // Min/Max for composite score (only considering mandis with prices)
+  var pricedList = list.filter(function(m){ return m._hasPrice; });
+  if (pricedList.length > 0) {
+    var netPrices = pricedList.map(function (m) { return m._netPerQ; });
+    var dists = pricedList.map(function (m) { return m.dist; });
+    var maxNet = Math.max.apply(null, netPrices), minNet = Math.min.apply(null, netPrices), rNet = maxNet - minNet || 1;
+    var maxD = Math.max.apply(null, dists), minD = Math.min.apply(null, dists), rD = maxD - minD || 1;
+
+    list.forEach(function (m) {
+      if (m._hasPrice) {
+        var netNorm = (m._netPerQ - minNet) / rNet;
+        var distNorm = 1 - ((m.dist - minD) / rD);
+        var demandNorm = mpcDemandScore(m.demand[crop] || 'medium');
+        m._compositeScore = (netNorm * 0.55) + (distNorm * 0.30) + (demandNorm * 0.15);
+      } else {
+        m._compositeScore = -1;
+      }
+    });
+  } else {
+    list.forEach(function(m) { m._compositeScore = -1; });
+  }
+
+  // Filters (if not explicitly pinned)
+  if (!self.selected || !self.selected.length) {
+    if (self.stateFilter !== 'all') {
+      list = list.filter(function (m) { return m.state.toLowerCase() === self.stateFilter.toLowerCase(); });
+    }
+
+    if (self.distFilter === '100') {
+      list = list.filter(function (m) { return m.dist <= 100; });
+    } else if (self.distFilter === '300') {
+      list = list.filter(function (m) { return m.dist <= 300; });
+    } else if (self.distFilter === '500') {
+      list = list.filter(function (m) { return m.dist <= 500; });
+    }
+
+    if (self.demandFilter !== 'all') {
+      if (self.demandFilter === 'high') {
+        list = list.filter(function (m) { return (m.demand[crop] || 'medium') === 'high'; });
+      } else if (self.demandFilter === 'medium') {
+        list = list.filter(function (m) { return (m.demand[crop] || 'medium') !== 'low'; });
+      }
+    }
+  }
+
+  // Sorting: mandis with government prices always rank above unavailable ones
   list.sort(function (a, b) {
+    if (a._hasPrice && !b._hasPrice) return -1;
+    if (!a._hasPrice && b._hasPrice) return 1;
+    if (!a._hasPrice && !b._hasPrice) return a.dist - b.dist;
+
     if (self.sortBy === 'price') return b._adjPrice - a._adjPrice;
     if (self.sortBy === 'dist') return a.dist - b.dist;
     if (self.sortBy === 'transport') return a._transportPerQ - b._transportPerQ;
@@ -856,7 +943,6 @@ MandiCompare.prototype.getProcessedList = function () {
   return list;
 };
 
-// ── Full Render ──────────────────────────────────────────────────────────────
 MandiCompare.prototype.render = function () {
   this.renderKPIs();
   this.renderRecommendation();
@@ -873,34 +959,29 @@ MandiCompare.prototype.render = function () {
 MandiCompare.prototype.renderKPIs = function () {
   var crop = this.crop, qty = this.qty;
   var allList = this.getProcessedList().slice();
-  if (!allList.length) return;
-
-  var gradeF = mpcGradeFactor(this.grade);
-  allList.forEach(function (m) {
-    m._adjPrice = Math.round(m.prices[crop] * gradeF);
-    m._transportPerQ = mpcTransportRatePerQ(m.dist);
-    m._netPerQ = m._adjPrice - m._transportPerQ;
-    m._netTotal = m._netPerQ * qty;
-  });
-
-  var bestNet = allList.slice().sort(function (a, b) { return b._netPerQ - a._netPerQ; })[0];
-  var lowestTr = allList.slice().sort(function (a, b) { return a._transportPerQ - b._transportPerQ; })[0];
-  var closest = allList.slice().sort(function (a, b) { return a.dist - b.dist; })[0];
-
-  // Composite best
-  var netPrices = allList.map(function (m) { return m._netPerQ; });
-  var dists = allList.map(function (m) { return m.dist; });
-  var maxNet = Math.max.apply(null, netPrices), minNet = Math.min.apply(null, netPrices), rNet = maxNet - minNet || 1;
-  var maxD = Math.max.apply(null, dists), minD = Math.min.apply(null, dists), rD = maxD - minD || 1;
-  allList.forEach(function (m) {
-    var netNorm = (m._netPerQ - minNet) / rNet;
-    var distNorm = 1 - ((m.dist - minD) / rD);
-    var demandNorm = mpcDemandScore(m.demand[crop] || 'medium');
-    m._compositeScore = (netNorm * 0.55) + (distNorm * 0.30) + (demandNorm * 0.15);
-  });
-  var bestOverall = allList.slice().sort(function (a, b) { return b._compositeScore - a._compositeScore; })[0];
-
+  var pricedList = allList.filter(function(m){ return m._hasPrice; });
   function set(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+
+  if (!pricedList.length) {
+    set('kpi-best-net-val', 'Price unavailable');
+    set('kpi-best-net-name', 'No report');
+    set('kpi-best-net-sub', 'No government report');
+    set('kpi-lowest-tr-val', '—');
+    set('kpi-lowest-tr-name', '—');
+    set('kpi-lowest-tr-sub', '—');
+    set('kpi-closest-val', '—');
+    set('kpi-closest-name', '—');
+    set('kpi-closest-sub', '—');
+    set('kpi-best-overall-val', 'Price unavailable');
+    set('kpi-best-overall-name', 'No recent government data');
+    set('kpi-best-overall-sub', '—');
+    return;
+  }
+
+  var bestNet = pricedList.slice().sort(function (a, b) { return b._netPerQ - a._netPerQ; })[0];
+  var lowestTr = pricedList.slice().sort(function (a, b) { return a._transportPerQ - b._transportPerQ; })[0];
+  var closest = pricedList.slice().sort(function (a, b) { return a.dist - b.dist; })[0];
+  var bestOverall = pricedList.slice().sort(function (a, b) { return b._compositeScore - a._compositeScore; })[0];
 
   set('kpi-best-net-val', mpcFmtINR(bestNet._netPerQ) + ' /q');
   set('kpi-best-net-name', bestNet.name);
@@ -919,71 +1000,59 @@ MandiCompare.prototype.renderKPIs = function () {
   set('kpi-best-overall-sub', mpcFmtINR(bestOverall._netPerQ) + '/q net · ' + bestOverall.dist + ' km');
 };
 
-// ── Prominent Recommendation Hero Panel ─────────────────────────────────────
 MandiCompare.prototype.renderRecommendation = function () {
   var el = document.getElementById('mpc-recommendation');
   if (!el) return;
 
   var crop = this.crop, qty = this.qty;
   var list = this.getProcessedList();
-  if (!list.length) {
+  var pricedList = list.filter(function(m){ return m._hasPrice; });
+
+  if (!pricedList.length) {
     el.innerHTML = '<div class="mpc-rec-card mpc-rec-card--empty">'
       + '<div class="mpc-rec-card__empty-text">'
-      + '<strong>Unable to determine the best mandi</strong><br>'
-      + 'No mandis match your active filter criteria. Try expanding search distance.'
+      + '<strong>Government price report currently unavailable</strong><br>'
+      + 'No recent Government of India / AGMARKNET reports available for ' + (crop.charAt(0).toUpperCase() + crop.slice(1)) + '.'
       + '</div></div>';
     return;
   }
 
-  var best = list[0]; // sorted by active sort/net
-  var avgNet = Math.round(list.reduce(function (s, m) { return s + m._netPerQ; }, 0) / list.length);
+  var best = pricedList[0];
+  var avgNet = Math.round(pricedList.reduce(function (s, m) { return s + m._netPerQ; }, 0) / pricedList.length);
   var diffVsAvg = best._netPerQ - avgNet;
   var totalGain = diffVsAvg * qty;
-  var meta = MPC_CROP_META[crop] || { emoji: '🌾', name: crop };
 
   var reasons = [];
   reasons.push('Realizes top net price of <strong>' + mpcFmtINR(best._netPerQ) + '/q</strong> after freight deduction');
   reasons.push('Generates <strong>+' + mpcFmtINR(Math.max(0, totalGain)) + ' extra net profit</strong> vs market average for ' + qty + 'q batch');
   reasons.push('Located at <strong>' + best.dist + ' km</strong> with estimated logistics cost of <strong>' + mpcFmtINR(best._transportPerQ) + '/q</strong>');
-  reasons.push('Buyer Demand: <strong style="text-transform:capitalize;color:var(--kl-mint);">' + (best.demand[crop] || 'Medium') + '</strong> (' + (best.buyers || 50) + '+ active institutional buyers)');
+  reasons.push('Source: <strong>' + (best._govData ? best._govData.source : 'Government of India / AGMARKNET') + '</strong> (Reported: ' + (best._govData ? (best._govData.reportDate || best._govData.arrivalDate || 'Recent') : 'Recent') + ')');
 
   el.innerHTML = '<div class="mpc-rec-card">'
-    + '<div class="mpc-rec-card__left">'
-    + '  <div class="mpc-rec-card__badge-row">'
-    + '    <span class="mpc-badge mpc-badge--gold"><i data-lucide="award"></i> Top AI Recommendation</span>'
-    + '    <span class="mpc-badge mpc-badge--green">Optimal Profitability</span>'
-    + '  </div>'
-    + '  <h2 class="mpc-rec-card__title">' + best.name + ' <small>(' + best.city + ', ' + best.state + ')</small></h2>'
-    + '  <p class="mpc-rec-card__tagline">' + meta.emoji + ' Highest estimated net realization for your <strong>' + meta.name + '</strong> harvest.</p>'
-    + '  <div class="mpc-rec-card__reasons">'
-    + reasons.map(function (r) { return '<div class="mpc-rec-card__reason"><span class="mpc-rec-card__dot"></span><span>' + r + '</span></div>'; }).join('')
-    + '  </div>'
+    + '<div class="mpc-rec-card__badge"><i data-lucide="award"></i> Recommended Optimal Mandi</div>'
+    + '<div class="mpc-rec-card__title">' + best.name + ' (' + best.city + ', ' + best.state + ')</div>'
+    + '<div class="mpc-rec-card__metrics">'
+    + '  <div><span class="lbl">Reported Price:</span> <strong>' + mpcFmtINR(best._adjPrice) + '/q</strong></div>'
+    + '  <div><span class="lbl">Net Realization:</span> <strong style="color:var(--kl-mint);">' + mpcFmtINR(best._netPerQ) + '/q</strong></div>'
+    + '  <div><span class="lbl">Est. Freight:</span> <strong>' + mpcFmtINR(best._transportPerQ) + '/q</strong></div>'
+    + '  <div><span class="lbl">Distance:</span> <strong>' + best.dist + ' km</strong></div>'
     + '</div>'
-    + '<div class="mpc-rec-card__right">'
-    + '  <div class="mpc-rec-card__stat-box">'
-    + '    <div class="mpc-rec-card__stat-lbl">Expected Net Realization</div>'
-    + '    <div class="mpc-rec-card__stat-val">' + mpcFmtINR(best._netPerQ) + '<span class="mpc-rec-card__stat-unit">/q</span></div>'
-    + '    <div class="mpc-rec-card__stat-sub">Batch Total: <strong>' + mpcFmtINR(best._netTotal) + '</strong> for ' + qty + 'q</div>'
-    + '  </div>'
-    + '  <div class="mpc-rec-card__actions">'
-    + '    <button class="btn btn--primary" onclick="mpcEngine.toggleMandiSelection(\'' + best.id + '\', true)"><i data-lucide="check-circle-2"></i> Compare in Matrix</button>'
-    + '    <a class="btn btn--outline" href="https://www.google.com/maps/search/' + encodeURIComponent(best.name + ' ' + best.city) + '" target="_blank" rel="noopener"><i data-lucide="navigation"></i> Transit Route</a>'
-    + '  </div>'
-    + '</div>'
+    + '<ul class="mpc-rec-card__reasons">'
+    + reasons.map(function (r) { return '<li><i data-lucide="check-circle-2"></i> ' + r + '</li>'; }).join('')
+    + '</ul>'
     + '</div>';
 };
 
-// ── Interactive Net Realization Calculation Card ────────────────────────────
 MandiCompare.prototype.renderFormulaCard = function () {
-  var el = document.getElementById('mpc-formula-breakdown');
+  var el = document.getElementById('mpc-formula-card');
   if (!el) return;
 
   var crop = this.crop, qty = this.qty;
-  var list = this.getProcessedList();
-  if (!list.length) { el.innerHTML = ''; return; }
+  var pricedList = this.getProcessedList().filter(function(m){ return m._hasPrice; });
+  if (!pricedList.length) { el.innerHTML = ''; return; }
 
-  var best = list[0];
-  var second = list[1] || best;
+  var best = pricedList[0];
+  var second = pricedList[1] || best;
 
   el.innerHTML = '<div class="mpc-formula-grid">'
     + '<div class="mpc-formula-box">'
@@ -1015,7 +1084,6 @@ MandiCompare.prototype.renderFormulaCard = function () {
     + '</div>';
 };
 
-// ── Multi-Mandi Chip Selector Bar ───────────────────────────────────────────
 MandiCompare.prototype.renderChips = function () {
   var self = this;
   var wrap = document.getElementById('mpc-selected-chips');
@@ -1059,28 +1127,54 @@ MandiCompare.prototype.renderTable = function () {
     return;
   }
 
-  var maxPrice = Math.max.apply(null, list.map(function (m) { return m._adjPrice; }));
+  var pricedList = list.filter(function(m){ return m._hasPrice; });
+  var maxPrice = pricedList.length ? Math.max.apply(null, pricedList.map(function (m) { return m._adjPrice; })) : 0;
   var minDist = Math.min.apply(null, list.map(function (m) { return m.dist; }));
-  var maxNet = Math.max.apply(null, list.map(function (m) { return m._netPerQ; }));
+  var maxNet = pricedList.length ? Math.max.apply(null, pricedList.map(function (m) { return m._netPerQ; })) : 0;
 
   var rowsHtml = list.map(function (m, idx) {
     var isSelected = self.selected.indexOf(m.id) !== -1;
-    var isTop = idx === 0;
-    var isBestValue = m._netPerQ === maxNet;
+    var isTop = idx === 0 && m._hasPrice;
+    var isBestValue = m._hasPrice && m._netPerQ === maxNet;
 
     // Badges
     var badge = '';
-    if (isBestValue) badge = '<span class="mpc-badge mpc-badge--green">⭐ BEST VALUE</span>';
-    else if (m._adjPrice === maxPrice) badge = '<span class="mpc-badge mpc-badge--gold">🏆 HIGH PRICE</span>';
-    else if (m.dist === minDist) badge = '<span class="mpc-badge mpc-badge--blue">📍 CLOSEST</span>';
-    else if ((m.demand[self.crop] || '') === 'high') badge = '<span class="mpc-badge mpc-badge--orange">🔥 HIGH DEMAND</span>';
-    else badge = '<span class="mpc-badge mpc-badge--neutral">GOOD</span>';
-
-    var trendMeta = MPC_CROP_META[self.crop] || { trend: 2.5 };
-    var trendPct = (trendMeta.trend + (idx % 2 === 0 ? 0.4 : -0.3)).toFixed(1);
-    var trendUp = trendPct >= 0;
+    if (!m._hasPrice) {
+      badge = '<span class="mpc-badge mpc-badge--neutral">UNAVAILABLE</span>';
+    } else if (isBestValue) {
+      badge = '<span class="mpc-badge mpc-badge--green">⭐ BEST VALUE</span>';
+    } else if (m._adjPrice === maxPrice) {
+      badge = '<span class="mpc-badge mpc-badge--gold">🏆 HIGH PRICE</span>';
+    } else if (m.dist === minDist) {
+      badge = '<span class="mpc-badge mpc-badge--blue">📍 CLOSEST</span>';
+    } else if ((m.demand[self.crop] || '') === 'high') {
+      badge = '<span class="mpc-badge mpc-badge--orange">🔥 HIGH DEMAND</span>';
+    } else {
+      badge = '<span class="mpc-badge mpc-badge--neutral">GOOD</span>';
+    }
 
     var w = m.weather || { temp: 28, condition: 'Clear', icon: 'sun' };
+
+    var priceCellHtml = '';
+    var grossCellHtml = '';
+    var netCellHtml = '';
+    var dateCellHtml = '';
+
+    if (m._hasPrice) {
+      priceCellHtml = '  <strong>' + mpcFmtINR(m._adjPrice) + '</strong><span class="mpc-unit">/q</span>'
+        + (m._govData ? '  <div style="font-size:10px; color:#5B9A72; font-weight:600;">₹' + (m._govData.minPrice ? m._govData.minPrice.toLocaleString('en-IN') : '') + ' – ₹' + (m._govData.maxPrice ? m._govData.maxPrice.toLocaleString('en-IN') : '') + '</div>' : '');
+      grossCellHtml = mpcFmtINR(m._grossTotal);
+      netCellHtml = '  <div class="mpc-net-val">' + mpcFmtINR(m._netPerQ) + '<span class="mpc-unit">/q</span></div>'
+        + '  <div class="mpc-net-sub">' + mpcFmtINR(m._netTotal) + ' net</div>';
+      dateCellHtml = (m._govData ? 'Reported: ' + (m._govData.reportDate || m._govData.arrivalDate || 'Recent') : 'Latest available');
+    } else {
+      priceCellHtml = '  <strong style="color:#92400E; font-size:12px;">Price unavailable</strong>'
+        + '  <div style="font-size:10px; color:#78350F;">No recent report</div>';
+      grossCellHtml = '—';
+      netCellHtml = '  <div class="mpc-net-val" style="color:#888;">—</div>'
+        + '  <div class="mpc-net-sub">Unavailable</div>';
+      dateCellHtml = '<span style="color:#888;">No recent report</span>';
+    }
 
     return '<tr class="mpc-table-row' + (isBestValue ? ' mpc-table-row--highlight' : '') + (isSelected ? ' mpc-table-row--selected' : '') + '" id="mandi-row-' + m.id + '">'
       + '<td class="mpc-td-mandi">'
@@ -1093,18 +1187,12 @@ MandiCompare.prototype.renderTable = function () {
       + '    </div>'
       + '  </div>'
       + '</td>'
-      + '<td class="mpc-td-num mpc-td-price">'
-      + '  <strong>' + mpcFmtINR(m._adjPrice) + '</strong><span class="mpc-unit">/q</span>'
-      + (m._govData ? '  <div style="font-size:10px; color:#5B9A72; font-weight:600;">₹' + m._govData.minPrice.toLocaleString('en-IN') + ' – ₹' + m._govData.maxPrice.toLocaleString('en-IN') + '</div>' : '')
-      + '</td>'
+      + '<td class="mpc-td-num mpc-td-price">' + priceCellHtml + '</td>'
       + '<td class="mpc-td-num">' + m.dist + ' km</td>'
       + '<td class="mpc-td-num mpc-td-transport">' + mpcFmtINR(m._transportPerQ) + '<span class="mpc-unit">/q</span></td>'
-      + '<td class="mpc-td-num">' + mpcFmtINR(m._grossTotal) + '</td>'
+      + '<td class="mpc-td-num">' + grossCellHtml + '</td>'
       + '<td class="mpc-td-num mpc-text-muted">' + mpcFmtINR(m._transportTotal) + '</td>'
-      + '<td class="mpc-td-num mpc-td-net">'
-      + '  <div class="mpc-net-val">' + mpcFmtINR(m._netPerQ) + '<span class="mpc-unit">/q</span></div>'
-      + '  <div class="mpc-net-sub">' + mpcFmtINR(m._netTotal) + ' net</div>'
-      + '</td>'
+      + '<td class="mpc-td-num mpc-td-net">' + netCellHtml + '</td>'
       + '<td class="mpc-td-center">' + (m._govData ? (m._govData.arrivalVolume ? m._govData.arrivalVolume.toLocaleString('en-IN') + ' t' : '<span style="color:#888; font-size:11px;">Unavailable</span>') : m.arrivals.toLocaleString('en-IN') + ' t') + '</td>'
       + '<td class="mpc-td-center"><span class="mpc-demand-pill mpc-demand-pill--' + (m.demand[self.crop] || 'medium') + '">' + (m.demand[self.crop] || 'medium').toUpperCase() + '</span></td>'
       + '<td class="mpc-td-center">'
@@ -1112,9 +1200,7 @@ MandiCompare.prototype.renderTable = function () {
       + '    <i data-lucide="' + (w.icon || 'sun') + '"></i> ' + w.temp + '°C'
       + '  </div>'
       + '</td>'
-      + '<td class="mpc-td-center" style="font-size:11.5px; color:#555;">'
-      + (m._govData ? (m._govData.arrivalDate ? 'Updated ' + m._govData.arrivalDate : (self.govUpdatedAt ? 'Updated ' + self.govUpdatedAt.split('T')[0] : 'Latest available')) : '<span style="color:#888;">Historical estimate</span>')
-      + '</td>'
+      + '<td class="mpc-td-center" style="font-size:11.5px; color:#555;">' + dateCellHtml + '</td>'
       + '<td class="mpc-td-center">' + badge + '</td>'
       + '</tr>';
   }).join('');
@@ -1122,7 +1208,6 @@ MandiCompare.prototype.renderTable = function () {
   tableBody.innerHTML = rowsHtml;
 };
 
-// ── Mandi Cards Grid (Compact Detail Cards) ──────────────────────────────────
 MandiCompare.prototype.renderCards = function () {
   var self = this;
   var grid = document.getElementById('mpc-cards-grid');
@@ -1137,24 +1222,43 @@ MandiCompare.prototype.renderCards = function () {
     return;
   }
 
-  var maxPrice = Math.max.apply(null, list.map(function (m) { return m._adjPrice; }));
-  var maxNet = Math.max.apply(null, list.map(function (m) { return m._netPerQ; }));
+  var pricedList = list.filter(function(m){ return m._hasPrice; });
+  var maxPrice = pricedList.length ? Math.max.apply(null, pricedList.map(function (m) { return m._adjPrice; })) : 0;
+  var maxNet = pricedList.length ? Math.max.apply(null, pricedList.map(function (m) { return m._netPerQ; })) : 0;
   var minDist = Math.min.apply(null, list.map(function (m) { return m.dist; }));
 
   var cardsHtml = list.map(function (m) {
     var isSelected = self.selected.indexOf(m.id) !== -1;
-    var isBestNet = m._netPerQ === maxNet;
-    var isMaxPrice = m._adjPrice === maxPrice;
+    var isBestNet = m._hasPrice && m._netPerQ === maxNet;
+    var isMaxPrice = m._hasPrice && m._adjPrice === maxPrice;
     var isClosest = m.dist === minDist;
 
     var badge = '';
-    if (isBestNet) badge = '<span class="mpc-badge mpc-badge--green">⭐ BEST VALUE</span>';
-    else if (isMaxPrice) badge = '<span class="mpc-badge mpc-badge--gold">🏆 TOP PRICE</span>';
-    else if (isClosest) badge = '<span class="mpc-badge mpc-badge--blue">📍 NEAREST</span>';
-    else if ((m.demand[self.crop] || '') === 'high') badge = '<span class="mpc-badge mpc-badge--orange">🔥 HIGH DEMAND</span>';
-    else badge = '<span class="mpc-badge mpc-badge--neutral">AVAILABLE</span>';
+    if (!m._hasPrice) {
+      badge = '<span class="mpc-badge mpc-badge--neutral">UNAVAILABLE</span>';
+    } else if (isBestNet) {
+      badge = '<span class="mpc-badge mpc-badge--green">⭐ BEST VALUE</span>';
+    } else if (isMaxPrice) {
+      badge = '<span class="mpc-badge mpc-badge--gold">🏆 TOP PRICE</span>';
+    } else if (isClosest) {
+      badge = '<span class="mpc-badge mpc-badge--blue">📍 NEAREST</span>';
+    } else if ((m.demand[self.crop] || '') === 'high') {
+      badge = '<span class="mpc-badge mpc-badge--orange">🔥 HIGH DEMAND</span>';
+    } else {
+      badge = '<span class="mpc-badge mpc-badge--neutral">AVAILABLE</span>';
+    }
 
     var w = m.weather || { temp: 28, condition: 'Clear', icon: 'sun' };
+
+    var priceBlockHtml = '';
+    if (m._hasPrice) {
+      priceBlockHtml = '    <div class="mpc-mandi-card__price">' + mpcFmtINR(m._adjPrice) + '</div>'
+        + '    <div class="mpc-mandi-card__price-unit">Modal Price / quintal</div>'
+        + (m._govData ? '    <div style="font-size:11px; color:#5B9A72; font-weight:600; margin-top:2px;">Range: ₹' + (m._govData.minPrice ? m._govData.minPrice.toLocaleString('en-IN') : '') + ' – ₹' + (m._govData.maxPrice ? m._govData.maxPrice.toLocaleString('en-IN') : '') + '/q</div><div style="font-size:10.5px; color:#6F7F75; margin-top:1px;">Reported: ' + (m._govData.reportDate || m._govData.arrivalDate || 'Recent') + '</div>' : '');
+    } else {
+      priceBlockHtml = '    <div class="mpc-mandi-card__price" style="font-size:16px; color:#92400E;">Price unavailable</div>'
+        + '    <div class="mpc-mandi-card__price-unit" style="color:#78350F;">No recent government report</div>';
+    }
 
     return '<div class="mpc-mandi-card' + (isBestNet ? ' mpc-mandi-card--best-value' : '') + (isSelected ? ' mpc-mandi-card--selected' : '') + '" id="mandi-card-' + m.id + '">'
       + '<div class="mpc-mandi-card__top">'
@@ -1170,9 +1274,7 @@ MandiCompare.prototype.renderCards = function () {
       + '    <div class="mpc-mandi-card__location"><i data-lucide="map-pin"></i> ' + m.city + ', ' + m.state + '</div>'
       + '  </div>'
       + '  <div class="mpc-mandi-card__price-block">'
-      + '    <div class="mpc-mandi-card__price">' + mpcFmtINR(m._adjPrice) + '</div>'
-      + '    <div class="mpc-mandi-card__price-unit">Modal Price / quintal</div>'
-      + (m._govData ? '    <div style="font-size:11px; color:#5B9A72; font-weight:600; margin-top:2px;">Range: ₹' + m._govData.minPrice.toLocaleString('en-IN') + ' – ₹' + m._govData.maxPrice.toLocaleString('en-IN') + '/q</div><div style="font-size:10.5px; color:#6F7F75; margin-top:1px;">Updated: ' + (m._govData.arrivalDate || 'Latest available') + '</div>' : '')
+      + priceBlockHtml
       + '  </div>'
       + '</div>'
       + '<div class="mpc-mandi-card__metrics">'
@@ -1186,17 +1288,16 @@ MandiCompare.prototype.renderCards = function () {
       + '  </div>'
       + '  <div class="mpc-mandi-card__metric mpc-mandi-card__metric--net">'
       + '    <span class="mpc-mandi-card__m-lbl">Net Realization</span>'
-      + '    <span class="mpc-mandi-card__m-val">' + mpcFmtINR(m._netPerQ) + '/q</span>'
+      + '    <span class="mpc-mandi-card__m-val">' + (m._hasPrice ? (mpcFmtINR(m._netPerQ) + '/q') : '—') + '</span>'
       + '  </div>'
       + '</div>'
-      + '<div class="mpc-mandi-card__footer">'
-      + '  <div class="mpc-mandi-card__total">Batch Net (' + self.qty + 'q): <strong>' + mpcFmtINR(m._netTotal) + '</strong></div>'
-      + '  <div class="mpc-mandi-card__actions">'
-      + '    <button class="btn btn--sm ' + (isSelected ? 'btn--primary' : 'btn--secondary') + '" onclick="mpcEngine.toggleMandiSelection(\'' + m.id + '\', ' + (!isSelected) + ')">'
-      + (isSelected ? '✓ Selected' : '+ Compare')
-      + '    </button>'
-      + '    <a class="btn btn--sm btn--icon" href="https://www.google.com/maps/search/' + encodeURIComponent(m.name + ' ' + m.city) + '" target="_blank" rel="noopener" title="Transit Map"><i data-lucide="navigation"></i></a>'
-      + '  </div>'
+      + '<div class="mpc-mandi-card__actions">'
+      + '  <button class="btn btn--sm ' + (isSelected ? 'btn--secondary' : 'btn--primary') + '" onclick="mpcEngine.toggleMandiSelection(\'' + m.id + '\', ' + (!isSelected) + ')">'
+      + (isSelected ? 'Remove Comparison' : 'Pin to Compare')
+      + '  </button>'
+      + '  <a href="https://www.google.com/maps/dir/?api=1&destination=' + m.lat + ',' + m.lng + '" target="_blank" class="btn btn--outline btn--sm" rel="noopener">'
+      + '    <i data-lucide="navigation"></i> Route'
+      + '  </a>'
       + '</div>'
       + '</div>';
   }).join('');
@@ -1204,7 +1305,6 @@ MandiCompare.prototype.renderCards = function () {
   grid.innerHTML = cardsHtml;
 };
 
-// ── Chart.js Visual Comparison (Bar & Distance vs Profitability Scatter) ─────
 MandiCompare.prototype.renderChart = function () {
   var self = this;
   var canvas = document.getElementById('mpc-chart');
@@ -1469,6 +1569,25 @@ var mpcEngine = null;
 
 document.addEventListener('DOMContentLoaded', function () {
   mpcEngine = new MandiCompare();
+
+  // Read mandis from URL params if present (e.g. Compare Chandigarh, Nashik and Lasalgaon)
+  var params = new URLSearchParams(window.location.search);
+  var urlMandis = params.get('mandis') || params.get('mandi');
+  if (urlMandis) {
+    var rawList = urlMandis.split(',').map(function(s){ return s.trim().toLowerCase(); });
+    var matched = [];
+    rawList.forEach(function(req) {
+      var found = MPC_DATA.find(function(m) {
+        return m.id.toLowerCase() === req || m.name.toLowerCase().indexOf(req) !== -1 || m.city.toLowerCase() === req;
+      });
+      if (found && matched.indexOf(found.id) === -1) {
+        matched.push(found.id);
+      }
+    });
+    if (matched.length) {
+      mpcEngine.selected = matched;
+    }
+  }
 
   // Read crop & origin from URL params if present
   var params = new URLSearchParams(window.location.search);

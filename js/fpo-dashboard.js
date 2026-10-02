@@ -459,11 +459,11 @@ function initCharts() {
     marketChartInstance = new Chart(ctxMarket, {
       type: 'line',
       data: {
-        labels: ['Mon (24 Aug)', 'Tue (25 Aug)', 'Wed (26 Aug)', 'Thu (27 Aug)', 'Fri (28 Aug)', 'Sat (29 Aug)', 'Today (30 Aug)'],
+        labels: [],
         datasets: [
           {
-            label: 'KrishiShetra FPO Realization (₹/q)',
-            data: [2650, 2670, 2710, 2730, 2780, 2800, 2820],
+            label: 'Government Mandi Rate (₹/q)',
+            data: [],
             borderColor: '#5B9A72',
             backgroundColor: 'rgba(91, 154, 114, 0.1)',
             fill: true,
@@ -472,16 +472,6 @@ function initCharts() {
             pointRadius: 4,
             pointBackgroundColor: '#5B9A72',
             pointBorderColor: '#FFFFFF'
-          },
-          {
-            label: 'Nashik APMC Mandi Rate (₹/q)',
-            data: [2580, 2600, 2610, 2615, 2630, 2625, 2620],
-            borderColor: '#D6A84F',
-            borderDash: [5, 5],
-            borderWidth: 2.2,
-            pointRadius: 3,
-            pointBackgroundColor: '#D6A84F',
-            tension: 0.35
           }
         ]
       },
@@ -520,6 +510,7 @@ function initCharts() {
         }
       }
     });
+    fetchFpoMandiData('wheat');
   }
 
   // Chart 2: Monthly Aggregation Volume & Revenue (Smooth Line Chart)
@@ -638,22 +629,83 @@ function initCharts() {
   }
 }
 
-// Update Market Chart on Dropdown Select
-function updateMarketChart(crop) {
-  if (!marketChartInstance) return;
+// Dynamic Government Mandi Rates & APMC Price Trends for FPO
+async function fetchFpoMandiData(crop = 'wheat') {
+  const chartCanvas = document.getElementById('marketPriceChart');
+  const chartFallback = document.getElementById('marketPriceChartFallback');
+  const dateEl = document.getElementById('fpo-mandi-report-date');
 
-  if (crop === 'wheat') {
-    marketChartInstance.data.datasets[0].data = [2650, 2670, 2710, 2730, 2780, 2800, 2820];
-    marketChartInstance.data.datasets[1].data = [2580, 2600, 2610, 2615, 2630, 2625, 2620];
-  } else if (crop === 'onion') {
-    marketChartInstance.data.datasets[0].data = [2700, 2740, 2790, 2830, 2870, 2900, 2920];
-    marketChartInstance.data.datasets[1].data = [2600, 2620, 2650, 2680, 2710, 2700, 2720];
-  } else if (crop === 'tomato') {
-    marketChartInstance.data.datasets[0].data = [2950, 3000, 3050, 3100, 3180, 3250, 3280];
-    marketChartInstance.data.datasets[1].data = [2800, 2850, 2880, 2920, 2950, 2980, 3000];
+  const elNashik = document.getElementById('fpo-bench-nashik');
+  const elPune = document.getElementById('fpo-bench-pune');
+  const elVashi = document.getElementById('fpo-bench-vashi');
+  const elPimpalgaon = document.getElementById('fpo-bench-pimpalgaon');
+
+  try {
+    const resp = await fetch(`/api/market/mandi-prices?commodity=${encodeURIComponent(crop)}&state=Maharashtra`);
+    const json = await resp.json();
+    const records = (json.success && Array.isArray(json.data)) ? json.data : [];
+
+    const findMandi = (name) => records.find(r => (r.mandi || r.market || '').toLowerCase().includes(name.toLowerCase()));
+
+    const rNashik = findMandi('Nashik');
+    const rPune = findMandi('Pune');
+    const rVashi = findMandi('Vashi') || findMandi('Mumbai');
+    const rPimpalgaon = findMandi('Pimpalgaon');
+
+    if (elNashik) elNashik.textContent = rNashik && rNashik.modalPrice ? `₹${rNashik.modalPrice.toLocaleString('en-IN')}/q` : 'Price unavailable';
+    if (elPune) elPune.textContent = rPune && rPune.modalPrice ? `₹${rPune.modalPrice.toLocaleString('en-IN')}/q` : 'Price unavailable';
+    if (elVashi) elVashi.textContent = rVashi && rVashi.modalPrice ? `₹${rVashi.modalPrice.toLocaleString('en-IN')}/q` : 'Price unavailable';
+    if (elPimpalgaon) elPimpalgaon.textContent = rPimpalgaon && rPimpalgaon.modalPrice ? `₹${rPimpalgaon.modalPrice.toLocaleString('en-IN')}/q` : 'Price unavailable';
+
+    const latestRec = rNashik || rPune || rVashi || rPimpalgaon || records[0];
+    if (dateEl && latestRec && latestRec.reportDate) {
+      dateEl.textContent = `Reported: ${latestRec.reportDate}`;
+    }
+
+    // Historical records check for trend chart
+    const dateMap = new Map();
+    records.forEach(r => {
+      const d = r.reportDate || r.arrivalDate;
+      if (d && r.modalPrice && !dateMap.has(d)) {
+        dateMap.set(d, r.modalPrice);
+      }
+    });
+
+    const uniqueDates = Array.from(dateMap.keys());
+
+    if (uniqueDates.length >= 3) {
+      if (chartCanvas) chartCanvas.style.display = 'block';
+      if (chartFallback) chartFallback.style.display = 'none';
+
+      const labels = uniqueDates;
+      const dataPoints = uniqueDates.map(d => dateMap.get(d));
+
+      if (marketChartInstance) {
+        marketChartInstance.data.labels = labels;
+        marketChartInstance.data.datasets[0].data = dataPoints;
+        marketChartInstance.data.datasets[0].label = `Govt Modal Rate (${crop.toUpperCase()})`;
+        marketChartInstance.update();
+      }
+    } else {
+      if (chartCanvas) chartCanvas.style.display = 'none';
+      if (chartFallback) chartFallback.style.display = 'block';
+    }
+
+  } catch (err) {
+    console.error('Failed to load FPO mandi data:', err);
+    if (chartCanvas) chartCanvas.style.display = 'none';
+    if (chartFallback) chartFallback.style.display = 'block';
+    if (elNashik) elNashik.textContent = 'Price unavailable';
+    if (elPune) elPune.textContent = 'Price unavailable';
+    if (elVashi) elVashi.textContent = 'Price unavailable';
+    if (elPimpalgaon) elPimpalgaon.textContent = 'Price unavailable';
   }
-  marketChartInstance.update();
-  showToast(`Updated market price trends for ${crop.toUpperCase()}`);
+}
+
+// Update Market Chart on Dropdown Select
+async function updateMarketChart(crop) {
+  await fetchFpoMandiData(crop);
+  showToast(`Updated government mandi prices for ${crop.toUpperCase()}`);
 }
 
 // Header Sticky Scroll Effect

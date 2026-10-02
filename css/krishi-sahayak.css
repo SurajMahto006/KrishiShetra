@@ -163,7 +163,7 @@
     width: 100%;
     height: 88vh;
     height: 88dvh;
-    max-height: calc(100dvh - 30px);
+    max-height: calc(100dvh - 20px);
     border-radius: 20px 20px 0 0;
     transform-origin: bottom center;
   }
@@ -172,7 +172,43 @@
     right: 14px;
   }
   .ks-chat__input {
-    font-size: 16px !important;
+    font-size: 15px !important;
+    padding: 10px 84px 10px 12px;
+  }
+  .ks-chat__send-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+  .ks-chat__voice-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .ks-quick-btn {
+    font-size: 12px;
+    padding: 8px 12px;
+    min-height: 38px;
+  }
+  .ks-msg__bubble {
+    max-width: 90%;
+  }
+}
+
+/* Small mobile screens (320px - 360px) */
+@media (max-width: 360px) {
+  .ks-chat__header {
+    padding: 12px 14px;
+    gap: 8px;
+  }
+  .ks-chat__header-name {
+    font-size: 14px;
+  }
+  .ks-voice-lang-select {
+    padding-right: 14px;
+    font-size: 10px;
+  }
+  .ks-quick-actions {
+    gap: 5px;
   }
 }
 
@@ -428,6 +464,66 @@
 @keyframes ks-typing-bounce {
   0%, 100% { transform: translateY(0); opacity: 0.5; }
   50% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ── Welcome Text ── */
+.ks-welcome-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #12372A;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* ── Closing Question Box (Phase 1 & Phase 6) ── */
+.ks-closing-box {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: #F4F8F5;
+  border: 1px dashed #B8D8C2;
+  border-radius: 12px;
+}
+
+.ks-closing-box__q {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #12372A;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.ks-closing-box__btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ks-btn-yes {
+  background: #EAF6ED !important;
+  border-color: #2D6A4F !important;
+  color: #12372A !important;
+  font-weight: 700 !important;
+  min-height: 38px;
+  padding: 8px 14px !important;
+}
+
+.ks-btn-yes:hover {
+  background: #2D6A4F !important;
+  color: #FFFFFF !important;
+}
+
+.ks-btn-no {
+  background: #FFFFFF !important;
+  border-color: #D2E4D6 !important;
+  color: #556B5D !important;
+  min-height: 38px;
+  padding: 8px 14px !important;
+}
+
+.ks-btn-no:hover {
+  background: #F5F4ED !important;
+  border-color: #A3B8AB !important;
+  color: #12372A !important;
 }
 
 /* ── Quick Actions (initial pills) ── */
@@ -1232,3 +1328,213 @@
   outline: 2px solid #5B9A72;
   outline-offset: 2px;
 }
+
+/* ── Dynamic Suggestion Chips Bar ── */
+.ks-suggestion-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 14px 6px;
+  background: #FAF8F2;
+  border-top: 1px solid #ECE8DF;
+  max-height: 110px;
+  overflow-y: auto;
+  align-items: center;
+}
+
+.ks-suggestion-chips .ks-quick-btn {
+  background: #FFFFFF;
+  border: 1.5px solid #D2E4D6;
+  border-radius: 18px;
+  padding: 5px 11px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #12372A;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.ks-suggestion-chips .ks-quick-btn:hover {
+  background: #E8F5E9;
+  border-color: #2E7D32;
+  color: #12372A;
+  transform: translateY(-1px);
+}
+
+.ks-suggestion-chips .ks-quick-btn__icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* ── Official Government Mandi Price Card ── */
+.ks-gov-price-card {
+  background: #FFFFFF;
+  border: 1.5px solid #D2E4D6;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 8px 0;
+  box-shadow: 0 2px 8px rgba(18, 55, 42, 0.06);
+}
+
+.ks-gov-price-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ECE8DF;
+  margin-bottom: 10px;
+}
+
+.ks-gov-price-card__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #12372A;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ks-gov-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #12372A;
+  background: #E5F0E7;
+  border: 1px solid #8FCB9B;
+  padding: 2px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.ks-gov-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 12.5px;
+}
+
+.ks-gov-label {
+  color: #556B5F;
+  font-weight: 500;
+}
+
+.ks-gov-val {
+  font-weight: 700;
+  color: #17221D;
+  font-size: 13px;
+}
+
+.ks-gov-val--modal {
+  font-size: 17px;
+  color: #12372A;
+  font-weight: 800;
+}
+
+.ks-gov-price-card__footer {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #D2E4D6;
+  font-size: 11px;
+  color: #556B5F;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ks-gov-price-card__footer a {
+  color: #12372A;
+  text-decoration: underline;
+}
+
+/* ── Simplified Krishi Sahayak UI Rules ── */
+#ks-context-bar,
+.ks-chat__context-bar,
+.ks-voice-status,
+.ks-chat__input-hint {
+  display: none !important;
+}
+
+.ks-chat__header {
+  padding: 12px 16px;
+  min-height: 58px;
+}
+
+.ks-chat__header-avatar {
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+}
+
+.ks-compact-price-card {
+  background: #F5F4ED;
+  border: 1.5px solid #E2E0D5;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 8px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.ks-compact-price-card--unavailable {
+  background: #FFFBEB;
+  border-color: #FCD34D;
+}
+
+.ks-compact-price-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.ks-compact-price-card__mandi {
+  font-size: 14px;
+  font-weight: 700;
+  color: #12372A;
+}
+
+.ks-compact-price-card__crop {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6F7F75;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ks-compact-price-card__price {
+  font-size: 22px;
+  font-weight: 800;
+  color: #12372A;
+  margin: 4px 0 2px 0;
+  line-height: 1.2;
+}
+
+.ks-compact-price-card__range {
+  font-size: 12px;
+  color: #555555;
+  margin-bottom: 6px;
+}
+
+.ks-compact-price-card__footer {
+  font-size: 11px;
+  color: #065F46;
+  font-weight: 600;
+  border-top: 1px solid #E2E0D5;
+  padding-top: 6px;
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+

@@ -735,8 +735,13 @@
             <span class="badge badge-success">+5.8% FPO Premium</span>
           </div>
 
-          <div class="chart-container">
+          <div class="chart-container" id="marketPriceChartContainer" style="position:relative; min-height:220px;">
             <canvas id="marketPriceChart"></canvas>
+            <div id="marketPriceChartFallback" style="display:none; text-align:center; padding:50px 20px; color:var(--text-muted-sage);">
+              <i data-lucide="info" style="width:28px;height:28px;display:block;margin:0 auto 10px;color:var(--warm-amber, #D6A84F);"></i>
+              <strong style="display:block; font-size:15px; color:var(--deep-forest, #12372A);">Price trend unavailable — insufficient government-reported data.</strong>
+              <p style="font-size:12.5px; margin-top:6px; color:#6F7F75;">Daily continuous historical records are required to plot verified price trends.</p>
+            </div>
           </div>
 
           <!-- Nearby Mandi Benchmarks -->
@@ -744,23 +749,27 @@
             <div class="mandi-item">
               <span class="mandi-name"><i data-lucide="map-pin"
                   style="width:14px;height:14px;color:var(--sage-green);"></i> Nashik APMC (Local)</span>
-              <span><span class="mandi-price">₹2,620/q</span> <span class="mandi-diff-pos">(Base)</span></span>
+              <span><span class="mandi-price" id="fpo-bench-nashik">Loading...</span> <span class="mandi-diff-pos" id="fpo-bench-nashik-tag">(Base)</span></span>
             </div>
             <div class="mandi-item">
               <span class="mandi-name"><i data-lucide="map-pin"
                   style="width:14px;height:14px;color:var(--warm-amber);"></i> Pune APMC (180 km)</span>
-              <span><span class="mandi-price">₹2,820/q</span> <span class="mandi-diff-pos">+₹200/q premium</span></span>
+              <span><span class="mandi-price" id="fpo-bench-pune">Loading...</span></span>
             </div>
             <div class="mandi-item">
               <span class="mandi-name"><i data-lucide="map-pin" style="width:14px;height:14px;color:#1E5C99;"></i> Vashi
                 Mumbai APMC (165 km)</span>
-              <span><span class="mandi-price">₹2,890/q</span> <span class="mandi-diff-pos">+₹270/q premium</span></span>
+              <span><span class="mandi-price" id="fpo-bench-vashi">Loading...</span></span>
             </div>
             <div class="mandi-item">
               <span class="mandi-name"><i data-lucide="map-pin"
                   style="width:14px;height:14px;color:var(--text-muted-sage);"></i> Pimpalgaon APMC (25 km)</span>
-              <span><span class="mandi-price">₹2,645/q</span> <span class="mandi-diff-pos">+₹25/q</span></span>
+              <span><span class="mandi-price" id="fpo-bench-pimpalgaon">Loading...</span></span>
             </div>
+          </div>
+          <div style="font-size:11.5px; color:#6F7F75; margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
+            <span>🏛️ Source: Government of India / AGMARKNET</span>
+            <span id="fpo-mandi-report-date">Reported: Recent</span>
           </div>
         </div>
 

@@ -282,25 +282,35 @@ function matchesQueryFilter(rec, { commodity, state, district, market }) {
     if (!stateMatched) return false;
   }
 
-  // 3. Market filter (Handles Vashi / Navi Mumbai / Mumbai APMC naming)
+  // 3. Market filter (Handles Vashi / Navi Mumbai / Mumbai APMC naming and strict anti-collision)
   if (market && market !== 'all') {
-    const reqMarket = market.toLowerCase().trim();
+    const reqMarkets = Array.isArray(market) ? market : (typeof market === 'string' && market.includes(',') ? market.split(',').map(s => s.trim()) : [market]);
     const recMarket = rec.market.toLowerCase().trim();
     const recDistrict = rec.district.toLowerCase().trim();
 
-    const isVashiQuery = reqMarket.includes('vashi') || reqMarket.includes('navi mumbai');
-    if (isVashiQuery) {
-      const isVashiRecord = recMarket.includes('vashi') ||
-        recMarket.includes('mumbai') ||
-        recDistrict.includes('navi mumbai') ||
-        recDistrict.includes('mumbai');
-      if (!isVashiRecord) return false;
-    } else {
-      const marketMatched = recMarket.includes(reqMarket) ||
+    const matchesAny = reqMarkets.some(m => {
+      const reqMarket = m.toLowerCase().trim();
+      if (!reqMarket) return false;
+
+      // Strict anti-collision for distinct similar-sounding mandis
+      if (reqMarket.includes('chandigarh') && (recMarket.includes('chandwad') || recMarket.includes('chandrapur'))) return false;
+      if (reqMarket.includes('chandwad') && (recMarket.includes('chandigarh') || recMarket.includes('chandrapur'))) return false;
+      if (reqMarket.includes('chandrapur') && (recMarket.includes('chandigarh') || recMarket.includes('chandwad'))) return false;
+
+      const isVashiQuery = reqMarket.includes('vashi') || reqMarket.includes('navi mumbai');
+      if (isVashiQuery) {
+        return recMarket.includes('vashi') ||
+          recMarket.includes('mumbai') ||
+          recDistrict.includes('navi mumbai') ||
+          recDistrict.includes('mumbai');
+      }
+
+      return recMarket.includes(reqMarket) ||
         reqMarket.includes(recMarket) ||
         recDistrict.includes(reqMarket);
-      if (!marketMatched) return false;
-    }
+    });
+
+    if (!matchesAny) return false;
   }
 
   // 4. District filter
@@ -402,9 +412,60 @@ function fetchGovDataWithTimeout(url, timeoutMs = 8000) {
   });
 }
 
+// Configurable maximum cache age threshold (default 720 hours / 30 days)
+const PRICE_CACHE_MAX_AGE_HOURS = parseInt(process.env.PRICE_CACHE_MAX_AGE_HOURS, 10) || 720;
+
+/**
+ * Safely parse arrival date string (e.g. "20/09/2026" or ISO) into Date
+ */
+function parseReportDate(dateStr) {
+  if (!dateStr) return null;
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+    const [d, m, y] = dateStr.split('/').map(Number);
+    return new Date(Date.UTC(y, m - 1, d));
+  }
+  const d = new Date(dateStr);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+/**
+ * Check if a government record falls within the acceptable freshness threshold
+ */
+function isRecordFresh(rec, maxAgeHours) {
+  const recDate = parseReportDate(rec.arrivalDate);
+  if (!recDate) return true;
+  const ageHours = (Date.now() - recDate.getTime()) / (1000 * 60 * 60);
+  return ageHours <= maxAgeHours;
+}
+
+/**
+ * Formats a government record adhering strictly to the KrishiShetra normalized contract
+ */
+function formatRecordContract(rec, isLive, fetchedAt) {
+  return {
+    crop: rec.commodity,
+    commodity: rec.commodity,
+    mandi: rec.market,
+    market: rec.market,
+    state: rec.state,
+    district: rec.district,
+    variety: rec.variety || 'Standard',
+    grade: rec.grade || 'FAQ',
+    minPrice: rec.minPrice,
+    maxPrice: rec.maxPrice,
+    modalPrice: rec.modalPrice,
+    unit: '₹/qtl',
+    reportDate: rec.arrivalDate,
+    arrivalDate: rec.arrivalDate,
+    source: 'Government of India / AGMARKNET',
+    status: isLive ? 'LIVE' : 'CACHED',
+    fetchedAt: fetchedAt || rec.fetchedAt || new Date().toISOString()
+  };
+}
+
 /**
  * Get Government of India Mandi Prices
- * Production Priority: 1. data.gov.in live -> 2. last successful cache -> 3. clean unavailable state
+ * Production Priority: 1. data.gov.in live -> 2. validated cache (freshness checked) -> 3. clean unavailable state
  */
 async function getGovernmentMandiPrices(params = {}) {
   const apiKey = (process.env.DATA_GOV_API_KEY || process.env.DATAGOV_API_KEY || process.env.GOV_MANDI_API_KEY || '').trim();
@@ -413,7 +474,7 @@ async function getGovernmentMandiPrices(params = {}) {
   const rawCommodity = params.commodity || params.crop || '';
   const rawState = params.state || params.location || '';
   const rawDistrict = params.district || '';
-  const rawMarket = params.market || '';
+  const rawMarket = params.market || params.mandi || params.mandis || '';
   const limit = Math.min(Math.max(parseInt(params.limit, 10) || 50, 1), 250);
 
   const commodity = normalizeCommodity(rawCommodity);
@@ -427,7 +488,7 @@ async function getGovernmentMandiPrices(params = {}) {
   if (memoryHit && (now - memoryHit.timestamp < CACHE_TTL_MS)) {
     return {
       success: true,
-      source: 'data.gov.in',
+      source: 'Government of India / AGMARKNET',
       sourceStatus: 'live',
       fetchedAt: memoryHit.fetchedAt,
       updatedAt: memoryHit.fetchedAt,
@@ -447,7 +508,7 @@ async function getGovernmentMandiPrices(params = {}) {
         'api-key': apiKey,
         format: 'json',
         offset: '0',
-        limit: '250' // Fetch broad records and filter accurately on normalized attributes
+        limit: '250'
       });
 
       if (commodity) {
@@ -468,12 +529,12 @@ async function getGovernmentMandiPrices(params = {}) {
 
         // Update persistent memory and disk cache
         lastKnownGoodGovData = {
-          source: 'data.gov.in',
+          source: 'Government of India / AGMARKNET',
           fetchedAt,
           records: mergedRecords
         };
 
-        // Apply query filters
+        // Apply query filters and format contract
         const filtered = normalizedAll
           .filter(rec => matchesQueryFilter(rec, {
             commodity: rawCommodity,
@@ -481,7 +542,8 @@ async function getGovernmentMandiPrices(params = {}) {
             district: rawDistrict,
             market: rawMarket
           }))
-          .slice(0, limit);
+          .slice(0, limit)
+          .map(r => formatRecordContract(r, true, fetchedAt));
 
         // Cache this specific query in memory
         memoryCache.set(cacheKey, {
@@ -492,7 +554,7 @@ async function getGovernmentMandiPrices(params = {}) {
 
         return {
           success: true,
-          source: 'data.gov.in',
+          source: 'Government of India / AGMARKNET',
           sourceStatus: 'live',
           fetchedAt,
           updatedAt: fetchedAt,
@@ -508,7 +570,7 @@ async function getGovernmentMandiPrices(params = {}) {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // STEP B: FALLBACK TO LAST SUCCESSFUL CACHE (Memory or Disk)
+  // STEP B: FALLBACK TO LAST SUCCESSFUL CACHE (Memory or Disk) WITH FRESHNESS CHECK
   // ─────────────────────────────────────────────────────────────────────────
   let cachedPayload = lastKnownGoodGovData;
   if (!cachedPayload || !Array.isArray(cachedPayload.records) || cachedPayload.records.length === 0) {
@@ -519,6 +581,9 @@ async function getGovernmentMandiPrices(params = {}) {
   }
 
   if (cachedPayload && Array.isArray(cachedPayload.records) && cachedPayload.records.length > 0) {
+    const fetchedAt = cachedPayload.fetchedAt;
+
+    // Filter matching records that are within the allowed freshness window
     const filtered = cachedPayload.records
       .filter(rec => matchesQueryFilter(rec, {
         commodity: rawCommodity,
@@ -526,49 +591,34 @@ async function getGovernmentMandiPrices(params = {}) {
         district: rawDistrict,
         market: rawMarket
       }))
-      .slice(0, limit);
+      .filter(rec => isRecordFresh(rec, PRICE_CACHE_MAX_AGE_HOURS))
+      .slice(0, limit)
+      .map(r => formatRecordContract(r, false, fetchedAt));
 
-    return {
-      success: true,
-      source: 'data.gov.in',
-      sourceStatus: 'cached',
-      fetchedAt: cachedPayload.fetchedAt,
-      updatedAt: cachedPayload.fetchedAt,
-      cached: true,
-      stale: true,
-      message: 'Government source temporarily unavailable. Showing the latest successfully retrieved data.',
-      count: filtered.length,
-      data: filtered
-    };
+    if (filtered.length > 0) {
+      return {
+        success: true,
+        source: 'Government of India / AGMARKNET',
+        sourceStatus: 'cached',
+        fetchedAt,
+        updatedAt: fetchedAt,
+        cached: true,
+        stale: true,
+        message: 'Government source temporarily unavailable. Showing cached government data.',
+        count: filtered.length,
+        data: filtered
+      };
+    }
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // STEP C: CLEAN UNAVAILABLE STATE (Production) vs DEMO STATE (Local Dev Only)
+  // STEP C: CLEAN UNAVAILABLE STATE (No fake/mock numbers ever)
   // ─────────────────────────────────────────────────────────────────────────
-  const isProduction = process.env.NODE_ENV === 'production';
-
-  // In production, NEVER silently display demo prices.
-  if (isProduction) {
-    return {
-      success: false,
-      source: 'data.gov.in',
-      sourceStatus: 'unavailable',
-      message: 'Current government data is temporarily unavailable.',
-      fetchedAt: null,
-      updatedAt: null,
-      cached: false,
-      stale: false,
-      count: 0,
-      data: []
-    };
-  }
-
-  // Local development only fallback if no cache and no live data exists
   return {
     success: false,
-    source: 'data.gov.in',
+    source: 'Government of India / AGMARKNET',
     sourceStatus: 'unavailable',
-    message: 'Current government data is temporarily unavailable. Configure DATA_GOV_API_KEY in .env for live fetch.',
+    message: 'Price currently unavailable. No recent government report available.',
     fetchedAt: null,
     updatedAt: null,
     cached: false,
