@@ -513,35 +513,22 @@ MandiCompare.prototype.bindControls = function () {
   // Multi-Mandi Chip Helper Actions
   var selectTop5Btn = document.getElementById('mpc-chip-top5');
   if (selectTop5Btn) selectTop5Btn.addEventListener('click', function () {
-    var list = self.getProcessedList();
+    var list = self.getProcessedList(true);
     self.selected = list.slice(0, 5).map(function (m) { return m.id; });
-    self.renderChips();
-    self.renderTable();
-    self.renderCards();
-    self.renderChart();
-    self.renderWeatherStrip();
+    self.render();
   });
 
   var selectNearbyBtn = document.getElementById('mpc-chip-nearby');
   if (selectNearbyBtn) selectNearbyBtn.addEventListener('click', function () {
-    var list = self.getProcessedList().filter(function (m) { return m.dist <= 250; });
+    var list = self.getProcessedList(true).filter(function (m) { return m.dist <= 250; });
     self.selected = list.slice(0, 6).map(function (m) { return m.id; });
-    if (!self.selected.length && MPC_DATA.length) self.selected = [MPC_DATA[0].id];
-    self.renderChips();
-    self.renderTable();
-    self.renderCards();
-    self.renderChart();
-    self.renderWeatherStrip();
+    self.render();
   });
 
   var clearChipsBtn = document.getElementById('mpc-chip-clear');
   if (clearChipsBtn) clearChipsBtn.addEventListener('click', function () {
     self.selected = [];
-    self.renderChips();
-    self.renderTable();
-    self.renderCards();
-    self.renderChart();
-    self.renderWeatherStrip();
+    self.render();
   });
 
   // Chart Mode Toggles
@@ -616,12 +603,28 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
     ? window.api.market.getMandiPrices(params)
     : fetch('/api/market/mandi-prices?' + new URLSearchParams(params).toString()).then(function (r) { return r.json(); });
 
+  // Parse "dd/mm/yyyy" or ISO report dates so the newest report wins
+  var reportTime = function (s) {
+    if (!s) return 0;
+    var p = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s);
+    if (p) return Date.UTC(+p[3], +p[2] - 1, +p[1]);
+    var t = new Date(s).getTime();
+    return isNaN(t) ? 0 : t;
+  };
+
   apiPromise
     .then(function (res) {
       if (btn) {
         btn.classList.remove('loading');
         btn.disabled = false;
       }
+
+      // Clear previously loaded prices for this crop so stale values never linger
+      MPC_DATA.forEach(function (m) {
+        if (m.prices) delete m.prices[crop];
+        delete m._govData;
+        delete m._govTime;
+      });
 
       if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
         var isLive = res.sourceStatus === 'live' || (!res.stale && !res.cached);
@@ -657,7 +660,9 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
             var matches = (mCity === recMkt || mName.indexOf(recMkt) !== -1 || recMkt.indexOf(mCity) !== -1 || (recDist && mCity === recDist)) &&
                           (!recState || mState.indexOf(recState) !== -1 || recState.indexOf(mState) !== -1);
 
-            if (matches && rec.modalPrice > 0) {
+            var recTime = reportTime(rec.reportDate || rec.arrivalDate);
+            if (matches && rec.modalPrice > 0 && !(m._govTime > recTime)) {
+              m._govTime = recTime;
               m.prices[crop] = rec.modalPrice;
               m._govData = {
                 minPrice: rec.minPrice,
@@ -702,6 +707,9 @@ MandiCompare.prototype.fetchGovernmentPrices = function (isRefresh) {
         btn.classList.remove('loading');
         btn.disabled = false;
       }
+      MPC_DATA.forEach(function (m) {
+        if (m.prices) delete m.prices[crop];
+      });
       self.govDataStatus = 'error';
       var errMsg = t('market.connectionError', 'Unable to connect to live market price server. Please check your connection.');
       if (statusTitle) statusTitle.textContent = t('market.marketMandi', 'Government Mandi Data');
@@ -775,12 +783,17 @@ MandiCompare.prototype.loadUserCrops = function () {
 };
 
 // ── Process & Calculate Mandi Metrics ────────────────────────────────────────
-MandiCompare.prototype.getProcessedList = function () {
+MandiCompare.prototype.getProcessedList = function (ignoreSelection) {
   var self = this, crop = this.crop, qty = this.qty, gradeF = mpcGradeFactor(this.grade);
 
   var list = MPC_DATA.filter(function (m) {
     return m.prices && m.prices[crop] > 0;
   });
+
+  // When mandis are pinned, compare only those
+  if (!ignoreSelection && self.selected.length) {
+    list = list.filter(function (m) { return self.selected.indexOf(m.id) !== -1; });
+  }
 
   // Calculate metrics for each mandi
   list.forEach(function (m) {
@@ -935,7 +948,13 @@ MandiCompare.prototype.renderRecommendation = function () {
     return;
   }
 
+  // Recommend relative to the selected Origin: prefer mandis within a practical
+  // 500 km haul unless the farmer chose a radius or pinned specific mandis.
   var best = list[0]; // sorted by active sort/net
+  if (this.distFilter === 'all' && !this.selected.length) {
+    var nearby = list.filter(function (m) { return m.dist <= 500; });
+    if (nearby.length) best = nearby[0];
+  }
   var avgNet = Math.round(list.reduce(function (s, m) { return s + m._netPerQ; }, 0) / list.length);
   var diffVsAvg = best._netPerQ - avgNet;
   var totalGain = diffVsAvg * qty;
@@ -1432,11 +1451,7 @@ MandiCompare.prototype.toggleMandiSelection = function (id, isAdd) {
   } else if (!isAdd && idx !== -1) {
     this.selected.splice(idx, 1);
   }
-  this.renderChips();
-  this.renderTable();
-  this.renderCards();
-  this.renderWeatherStrip();
-  if (window.lucide) lucide.createIcons();
+  this.render(); // keep recommendation, table and chips in sync with the selection
 };
 
 // ── Reset Filters ───────────────────────────────────────────────────────────
