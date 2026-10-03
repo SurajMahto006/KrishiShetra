@@ -297,9 +297,99 @@ const getMandiPrices = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get latest real mandi prices via CEDA Agmarknet.
+ *          CEDA allows only 40 requests/hour, so: one request per crop covering the last
+ *          7 days (latest reported day is kept), a 3-hour cache persisted to disk,
+ *          max 3 concurrent CEDA calls, and a 1-hour pause after a 429 rate-limit response.
+ * @route   GET /api/market/live-prices?commodity=Onion&state=Maharashtra
+ * @access  Public
+ */
+const fs = require('fs');
+const path = require('path');
+
+const CEDA_COMMODITY_NAMES = { soybean: 'Soyabean' };
+const LIVE_CACHE_FILE = path.join(__dirname, '..', 'data', 'ceda_live_cache.json');
+const LIVE_TTL_MS = 3 * 60 * 60 * 1000;
+const LOOKBACK_DAYS = 7;
+
+let liveCache = {};
+try { liveCache = JSON.parse(fs.readFileSync(LIVE_CACHE_FILE, 'utf8')) || {}; } catch (e) { liveCache = {}; }
+let cedaBlockedUntil = 0;
+const liveInflight = new Map();
+let cedaActive = 0;
+const cedaWaiters = [];
+
+async function withCedaSlot(fn) {
+  if (cedaActive >= 3) await new Promise(resolve => cedaWaiters.push(resolve));
+  cedaActive++;
+  try {
+    return await fn();
+  } finally {
+    cedaActive--;
+    const next = cedaWaiters.shift();
+    if (next) next();
+  }
+}
+
+async function fetchCedaLatest(commodity, state) {
+  const { marketPriceService, getIndiaTodayDate } = require('../services/marketPrice.service');
+  const today = getIndiaTodayDate();
+  const fromDate = new Date(Date.parse(today) - LOOKBACK_DAYS * 86400000).toISOString().slice(0, 10);
+  const result = await marketPriceService.cedaProvider.getMarketPrices({ commodity, state, date: today, fromDate });
+
+  const records = (result && Array.isArray(result.data)) ? result.data.filter(r => r.modalPrice > 0) : [];
+  const latestDate = records.reduce((max, r) => (r.reportDate > max ? r.reportDate : max), '');
+  const latest = records.filter(r => r.reportDate === latestDate);
+
+  return {
+    success: latest.length > 0,
+    provider: 'ceda',
+    source: 'CEDA Agmarknet API (Ashoka University)',
+    commodity,
+    date: latestDate || null,
+    count: latest.length,
+    data: latest
+  };
+}
+
+const getLivePrices = async (req, res) => {
+  const raw = String(req.query.commodity || req.query.crop || '').trim();
+  const commodity = CEDA_COMMODITY_NAMES[raw.toLowerCase()] || raw;
+  const state = req.query.state || 'Maharashtra';
+  const key = `${commodity.toLowerCase()}_${state.toLowerCase()}`;
+  const cached = liveCache[key];
+  const empty = { success: false, commodity, data: [], message: 'No recent price report available.' };
+
+  if (!commodity) return res.status(200).json(empty);
+  if (cached && Date.now() - cached.t < LIVE_TTL_MS) return res.status(200).json(cached.payload);
+  if (Date.now() < cedaBlockedUntil) return res.status(200).json(cached ? cached.payload : empty);
+
+  try {
+    if (!liveInflight.has(key)) {
+      liveInflight.set(key, withCedaSlot(() => fetchCedaLatest(commodity, state)).finally(() => liveInflight.delete(key)));
+    }
+    const payload = await liveInflight.get(key);
+
+    // Keep the last good prices if CEDA has nothing new for this crop
+    if (payload.success || !cached) {
+      liveCache[key] = { t: Date.now(), payload };
+      fs.writeFile(LIVE_CACHE_FILE, JSON.stringify(liveCache), () => {});
+    }
+    return res.status(200).json(payload.success ? payload : (cached ? cached.payload : payload));
+  } catch (error) {
+    if (error && error.statusCode === 429) {
+      cedaBlockedUntil = Date.now() + 60 * 60 * 1000;
+      console.warn('⚠️ CEDA rate limit reached (40/hour). Serving cached prices for 1 hour.');
+    }
+    return res.status(200).json(cached ? cached.payload : empty);
+  }
+};
+
 module.exports = {
   getMarketLots,
   getSinglePublicLot,
-  getMandiPrices
+  getMandiPrices,
+  getLivePrices
 };
 

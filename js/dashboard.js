@@ -24,7 +24,21 @@ const CROPS_DATA = [
   { id: 'sugarcane', name: 'Sugarcane', iconName: 'tree-pine', price: 350, unit: '₹/q', change: 1.2, dir: 'up', market: 'Kolhapur APMC', demand: 'medium', image: 'assets/images/crop-sugarcane.jpg', variety: 'Co 86032' },
   { id: 'mango', name: 'Mango', iconName: 'sun', price: 4500, unit: '₹/q', change: 3.5, dir: 'up', market: 'Ratnagiri', demand: 'high', image: 'assets/images/crop-mango.jpg', variety: 'Alphonso / Kesar' },
   { id: 'banana', name: 'Banana', iconName: 'leaf', price: 2200, unit: '₹/q', change: 2.1, dir: 'down', market: 'Jalgaon APMC', demand: 'low', image: 'assets/images/crop-banana.jpg', variety: 'Grand Naine (G9)' },
-  { id: 'grapes', name: 'Grapes', iconName: 'sparkles', price: 6200, unit: '₹/q', change: 4.1, dir: 'up', market: 'Nashik APMC', demand: 'high', image: 'assets/images/crop-grapes.jpg', variety: 'Thompson Seedless' }
+  { id: 'grapes', name: 'Grapes', iconName: 'sparkles', price: 6200, unit: '₹/q', change: 4.1, dir: 'up', market: 'Nashik APMC', demand: 'high', image: 'assets/images/crop-grapes.jpg', variety: 'Thompson Seedless' },
+  // Additional crops — shown only when a real reported price is available
+  { id: 'cabbage', name: 'Cabbage', iconName: 'leaf', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Green Cabbage' },
+  { id: 'cauliflower', name: 'Cauliflower', iconName: 'leaf', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Snowball' },
+  { id: 'brinjal', name: 'Brinjal', iconName: 'leaf', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Round / Long' },
+  { id: 'bhindi', name: 'Bhindi', iconName: 'leaf', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Ladies Finger' },
+  { id: 'carrot', name: 'Carrot', iconName: 'leaf', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Red / Orange' },
+  { id: 'garlic', name: 'Garlic', iconName: 'sprout', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Desi' },
+  { id: 'ginger', name: 'Ginger', iconName: 'sprout', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Green Ginger' },
+  { id: 'pomegranate', name: 'Pomegranate', iconName: 'sun', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Bhagwa' },
+  { id: 'lemon', name: 'Lemon', iconName: 'sun', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Kagzi' },
+  { id: 'bajra', name: 'Bajra', iconName: 'wheat', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Pearl Millet' },
+  { id: 'jowar', name: 'Jowar', iconName: 'wheat', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/market.jpg', variety: 'Sorghum' },
+  { id: 'papaya', name: 'Papaya', iconName: 'sun', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/crop-papaya.jpg', variety: 'Red Lady' },
+  { id: 'coriander', name: 'Coriander', iconName: 'leaf', unit: '₹/q', market: '', demand: 'medium', image: 'assets/images/crop-coriander.jpg', variety: 'Coriander Leaves' }
 ];
 
 const MANDIS_LIST = [
@@ -425,32 +439,55 @@ const krishiStore = new KrishiStore();
 // ═════════════════════════════════════════════════════════════════════
 
 
+// Parse government report dates ("dd/mm/yyyy" or ISO) for picking the latest record
+function parseGovReportDate(str) {
+  if (!str) return 0;
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(str);
+  if (m) return Date.UTC(+m[3], +m[2] - 1, +m[1]);
+  const t = new Date(str).getTime();
+  return isNaN(t) ? 0 : t;
+}
+
+// Fetch real prices per crop: CEDA Agmarknet first, then the government mandi-prices endpoint
 async function hydrateGovPrices() {
   try {
-    const res = await (window.api?.market?.getMandiPrices
-      ? window.api.market.getMandiPrices({ limit: 100 })
-      : fetch('/api/market/mandi-prices?limit=100').then(r => r.json()));
+    const getJson = (url) => fetch(url).then(r => r.json()).catch(() => null);
+    const hasData = (r) => r && r.success && Array.isArray(r.data) && r.data.some(x => x.modalPrice > 0);
 
-    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-      CROPS_DATA.forEach(c => {
-        const matches = res.data.filter(r => (r.crop || r.commodity || '').toLowerCase() === c.name.toLowerCase() && (r.modalPrice > 0));
-        if (matches.length > 0) {
-          const best = matches[0];
-          c.price = best.modalPrice;
-          c.market = best.market ? (best.market + ' APMC') : (best.mandi || c.market);
-          c.reportDate = best.reportDate || best.arrivalDate || 'Recent';
-          c.source = best.source || 'Government of India / AGMARKNET';
-          c.status = best.status || (res.sourceStatus === 'live' ? 'LIVE' : 'CACHED');
-          c.hasGovPrice = true;
-          c.minPrice = best.minPrice;
-          c.maxPrice = best.maxPrice;
-        } else {
-          c.hasGovPrice = false;
-        }
-      });
+    const fetchCrop = async (c) => {
+      const live = await getJson('/api/market/live-prices?commodity=' + encodeURIComponent(c.name));
+      if (hasData(live)) return live;
+      return getJson('/api/market/mandi-prices?commodity=' + encodeURIComponent(c.id) + '&limit=50');
+    };
 
+    const results = await Promise.all(CROPS_DATA.map(fetchCrop));
+    const allRecords = [];
+
+    CROPS_DATA.forEach((c, i) => {
+      const res = results[i];
+      const records = (res && res.success && Array.isArray(res.data)) ? res.data.filter(r => r.modalPrice > 0) : [];
+      if (!records.length) {
+        c.hasGovPrice = false;
+        return;
+      }
+      // Most recent government report first
+      records.sort((a, b) => parseGovReportDate(b.reportDate || b.arrivalDate) - parseGovReportDate(a.reportDate || a.arrivalDate));
+      const best = records[0];
+      allRecords.push(best);
+
+      c.price = best.modalPrice;
+      c.market = best.market ? (best.market + ' APMC') : (best.mandi || c.market);
+      c.reportDate = best.reportDate || best.arrivalDate || 'Recent';
+      c.source = best.source || 'Government of India / AGMARKNET';
+      c.status = best.status || (res.sourceStatus === 'live' ? 'LIVE' : 'CACHED');
+      c.hasGovPrice = true;
+      c.minPrice = best.minPrice;
+      c.maxPrice = best.maxPrice;
+    });
+
+    if (allRecords.length > 0) {
       // Update Dashboard Hero & Quick Glance Mandi Stats
-      const bestOverall = [...res.data].filter(r => r.modalPrice > 0).sort((a,b) => b.modalPrice - a.modalPrice)[0];
+      const bestOverall = [...allRecords].sort((a,b) => b.modalPrice - a.modalPrice)[0];
       if (bestOverall) {
         const lblAction1 = document.getElementById('lbl-best-mandi-price-val');
         const statBestVal = document.getElementById('stat-best-val');
@@ -608,7 +645,8 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
   const t = (k, fb) => (window.KrishiI18n ? window.KrishiI18n.t(k, fb) : fb);
   const getCropName = (id, fb) => (window.KrishiI18n ? window.KrishiI18n.getCropName(id) : (fb || id));
 
-  let crops = CROPS_DATA;
+  // Only show crops that have a real reported price (never "Price unavailable")
+  let crops = CROPS_DATA.filter(c => c.hasGovPrice && c.price > 0);
 
   if (filterText) {
     const q = filterText.toLowerCase();
@@ -658,17 +696,15 @@ function renderMarketGrid(filterText = '', cropFilter = 'all', locationFilter = 
             <div class="dash-crop-card__title-row">
               <span class="dash-crop-card__name">${cropDisp}</span>
             </div>
-            <span class="dash-crop-card__market">${c.market}</span>
           </div>
           <div class="dash-crop-card__price-row">
             <div class="dash-crop-card__price">
-              <span class="dash-crop-card__price-value">${c.hasGovPrice && c.price ? ('₹' + c.price.toLocaleString('en-IN')) : 'Price unavailable'}</span>
-              <span class="dash-crop-card__price-unit">${c.hasGovPrice && c.price ? c.unit : ''}</span>
+              <span class="dash-crop-card__price-value">₹${c.price.toLocaleString('en-IN')}</span>
+              <span class="dash-crop-card__price-unit">${c.unit}</span>
             </div>
-            ${c.hasGovPrice && c.reportDate ? '<div style="font-size:11px; color:var(--ks-text-muted); margin-top:2px;">Reported: ' + c.reportDate + '</div>' : ''}
-            <div class="dash-crop-card__change dash-crop-card__change--${c.dir}">
+            ${c.change !== undefined ? `<div class="dash-crop-card__change dash-crop-card__change--${c.dir}">
               ${c.dir === 'up' ? '↑' : '↓'} ${c.change}%
-            </div>
+            </div>` : ''}
           </div>
           <button class="btn btn--secondary dash-crop-card__btn" onclick="event.stopPropagation(); openCropDetails('${c.id}')">
             ${t('common.viewDetails', 'View Details')}
@@ -1277,7 +1313,7 @@ function openCropDetails(cropId) {
   document.getElementById('crop-modal-market').textContent = `${crop.market} · ${liveDataWord}`;
   document.getElementById('crop-modal-img').src = crop.image;
   document.getElementById('crop-modal-price').textContent = `₹${crop.price.toLocaleString('en-IN')}/q`;
-  document.getElementById('crop-modal-change').textContent = `${crop.dir === 'up' ? '↑' : '↓'} ${crop.change}% from last week`;
+  document.getElementById('crop-modal-change').textContent = crop.change !== undefined ? `${crop.dir === 'up' ? '↑' : '↓'} ${crop.change}% from last week` : '';
   document.getElementById('crop-modal-change').className = `dash-crop-modal__price-change dash-crop-modal__price-change--${crop.dir}`;
 
   // Mandis with genuine government reporting

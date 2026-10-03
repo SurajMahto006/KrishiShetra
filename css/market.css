@@ -1,0 +1,221 @@
+/* ═════════════════════════════════════════════════════════════════════
+   KRISHISHETRA — MARKET.HTML COMPACT PRICE CARDS STYLING
+   Minimal, farmer-friendly government mandi rates UI.
+   Each card: Image → Crop Name → Price + ↑/↓ → View Details
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Responsive 4 / 3 / 2 / 1 Column Layout */
+.dash-market__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+@media (max-width: 1200px) {
+  .dash-market__grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+}
+@media (max-width: 860px) {
+  .dash-market__grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+}
+@media (max-width: 520px) {
+  .dash-market__grid { grid-template-columns: 1fr; gap: 12px; }
+}
+
+/* ── CROP CARD ── */
+.dash-crop-card {
+  background: #FFFFFF;
+  border: 1px solid var(--ks-border, #EAE6DF);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.18s ease;
+  box-shadow: 0 2px 8px rgba(18, 55, 42, 0.05);
+}
+
+.dash-crop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(18, 55, 42, 0.10);
+  border-color: #B5C9BC;
+}
+
+/* ── IMAGE ── */
+.dash-crop-card__image-wrap {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  background: #F5F4ED;
+  flex-shrink: 0;
+}
+
+.dash-crop-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.32s ease;
+}
+
+.dash-crop-card:hover .dash-crop-card__img {
+  transform: scale(1.05);
+}
+
+.dash-crop-card__fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  background: linear-gradient(135deg, #F5F4ED 0%, #EAE6DF 100%);
+}
+
+/* ── BODY ── */
+.dash-crop-card__body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+/* ── CROP NAME ── */
+.dash-crop-card__name {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ks-evergreen, #12372A);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* ── PRICE ROW ── */
+.dash-crop-card__price-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.dash-crop-card__price-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.dash-crop-card__price-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.dash-crop-card__price-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ks-evergreen, #12372A);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.dash-crop-card__price-unit {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ks-text-muted, #6F7F75);
+  letter-spacing: 0;
+}
+
+/* ── GENUINE CHANGE BADGE ── */
+.dash-crop-card__change-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dash-crop-card__change-badge--up {
+  background: #DDFADF;
+  color: #1A7A2D;
+}
+
+.dash-crop-card__change-badge--down {
+  background: #FEEBEB;
+  color: #B02020;
+}
+
+/* ── UNAVAILABLE STATE ── */
+.dash-crop-card__unavail-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #9AA89A;
+}
+
+/* ── LOADING SKELETON ── */
+.dash-crop-card__price-loading {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+}
+
+.dash-crop-card__skeleton-val {
+  width: 120px;
+  height: 28px;
+  background: linear-gradient(90deg, #F0EFEA 25%, #E4E3DC 50%, #F0EFEA 75%);
+  background-size: 200% 100%;
+  animation: marketShimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+@keyframes marketShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── VIEW DETAILS BUTTON ── */
+.dash-crop-card__btn {
+  width: 100%;
+  height: 42px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 9px;
+  background: var(--ks-evergreen, #12372A);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.dash-crop-card__btn:hover {
+  background: var(--ks-sage, #5B9A72);
+  transform: translateY(-1px);
+}
+
+/* ── ABSOLUTELY SUPPRESS LEGACY BADGES / LABELS ── */
+.dash-crop-card__demand-badge,
+.dash-crop-card__change,
+.dash-crop-card__market,
+.dash-crop-card__source-line,
+.dash-crop-card__gov-badge,
+.dash-crop-card__source-text,
+.dash-crop-card__unavail-neutral,
+.dash-crop-card__meta-row,
+.dash-crop-card__header,
+.dash-crop-card__title-row,
+.dash-crop-card__report-date,
+.dash-crop-card__loading-text {
+  display: none !important;
+}

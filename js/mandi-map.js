@@ -153,6 +153,57 @@ MandiMapEngine.prototype.fetchGovPrices = function(crop) {
     }
   }).catch(function() {
     // Government data temporarily unavailable
+  }).then(function() {
+    self.applyPriceSnapshot(crop);
+  });
+};
+
+// All-commodity price list for one mandi (live price if loaded, else saved AGMARKNET snapshot)
+MandiMapEngine.prototype.allCommodityPricesHtml = function(mandi) {
+  var self = this;
+  var snapAll = (window.MANDI_PRICE_SNAPSHOT && window.MANDI_PRICE_SNAPSHOT.prices) || {};
+  var getName = function(c) { return window.KrishiI18n ? window.KrishiI18n.getCropName(c) : (c.charAt(0).toUpperCase() + c.slice(1)); };
+
+  var rows = Object.keys(CROP_CHANGE_PCT).map(function(crop) {
+    var live = self.mandiGovPrices[crop] && self.mandiGovPrices[crop][mandi.id];
+    var p = (live && live.modalPrice > 0) ? live : (snapAll[crop] && snapAll[crop][mandi.id]);
+    var isCurrent = crop === self.crop;
+    var note = !p ? 'No government report'
+      : p.via ? ('Nearest: ' + p.via + ' · ' + p.viaKm + ' km · ' + (p.reportDate || ''))
+      : ('Reported: ' + (p.reportDate || 'Recent'));
+    return '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid #ECEAE3;' + (isCurrent ? 'background:#EAF6ED;' : '') + '">'
+      + '<div style="min-width:0;"><div style="font-size:13px;font-weight:700;color:#12372A;">' + getName(crop) + '</div>'
+      + '<div style="font-size:11px;color:#6F7F75;">' + note + '</div></div>'
+      + '<div style="font-size:14px;font-weight:800;white-space:nowrap;color:' + (p ? '#12372A' : '#9CA3AF') + ';">'
+      + (p ? ('₹' + p.modalPrice.toLocaleString('en-IN') + '<span style="font-size:11px;font-weight:500;color:#6F7F75;"> /q</span>') : '—')
+      + '</div></div>';
+  }).join('');
+
+  return '<div style="margin-top:4px;">'
+    + '<div style="font-size:12px;font-weight:700;color:#6F7F75;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">All Commodity Prices</div>'
+    + '<div style="border:1px solid #E2E0D5;border-radius:10px;max-height:320px;overflow-y:auto;background:#fff;">' + rows + '</div>'
+    + '<div style="font-size:11px;color:#6F7F75;margin-top:6px;">Source: Government of India / AGMARKNET</div>'
+    + '</div>';
+};
+
+// Fill mandis that have no live price with the saved real AGMARKNET snapshot (js/mandi-price-snapshot.js)
+MandiMapEngine.prototype.applyPriceSnapshot = function(crop) {
+  var snap = window.MANDI_PRICE_SNAPSHOT && window.MANDI_PRICE_SNAPSHOT.prices && window.MANDI_PRICE_SNAPSHOT.prices[crop];
+  if (!snap) return;
+  var prices = this.mandiGovPrices[crop];
+  Object.keys(snap).forEach(function(id) {
+    if (prices[id] && prices[id].modalPrice > 0) return;
+    var s = snap[id];
+    prices[id] = {
+      modalPrice: s.modalPrice,
+      minPrice: s.minPrice,
+      maxPrice: s.maxPrice,
+      reportDate: s.reportDate,
+      status: 'SNAPSHOT',
+      source: 'Government of India / AGMARKNET',
+      via: s.via || null,
+      viaKm: s.viaKm || null
+    };
   });
 };
 
@@ -341,6 +392,7 @@ MandiMapEngine.prototype.showPopup = function(mandi) {
       + '<div style="font-size:11px;color:#065F46;font-weight:600;margin-top:4px;">'
       + '<span>📅 Reported: ' + (gov.reportDate || 'Recent') + '</span><br>'
       + '<span>🏛️ ' + (gov.status === 'LIVE' ? 'Government live price' : 'Government-reported price') + '</span>'
+      + (gov.via ? '<br><span style="color:#6F7F75;font-weight:500;">📍 Nearest report: ' + gov.via + ' (' + gov.viaKm + ' km)</span>' : '')
       + '</div>'
       + '</div>';
   } else {
@@ -403,6 +455,7 @@ MandiMapEngine.prototype.openDetails = function(id) {
       + '<span>\u00b7</span>'
       + '<span>📅 Reported: ' + (gov.reportDate || 'Recent') + '</span>'
       + '</div>'
+      + (gov.via ? '<div style="font-size:12px;color:#6F7F75;margin-top:6px;">📍 No report from this mandi — showing the nearest reporting market: <b>' + gov.via + '</b> (' + gov.viaKm + ' km)</div>' : '')
       + '</div>';
   } else {
     priceDetailHtml = '<div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:10px;padding:16px;margin-bottom:20px;">'
@@ -417,6 +470,7 @@ MandiMapEngine.prototype.openDetails = function(id) {
     + '<div style="background:#EAF6ED;padding:12px;border-radius:8px;text-align:center;"><div style="font-size:11px;color:#6F7F75;">Status</div><div style="font-size:14px;font-weight:700;color:#5B9A72;">\uD83D\uDFE2 Open</div></div>'
     + '</div>'
     + priceDetailHtml
+    + self.allCommodityPricesHtml(mandi)
     + '<div style="display:flex;gap:10px;margin-top:20px;">'
     + '<button class="btn btn--primary" onclick="mandiMapEngine.getNav('+mandi.lat+','+mandi.lng+',\''+mandi.name.replace(/'/g,"\\'")+'\')">\uD83D\uDCCD Start Navigation (Google Maps)</button>'
     + '<button class="btn btn--secondary" onclick="document.getElementById(\'mandi-details-modal-overlay\').classList.remove(\'active\')">Close</button>'
