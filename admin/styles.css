@@ -385,6 +385,39 @@ button, input, select, textarea {
   font-weight: 500;
 }
 
+/* Admin Logout Button */
+.admin-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+  background: rgba(201, 109, 91, 0.15);
+  border: 1px solid rgba(201, 109, 91, 0.35);
+  color: #FFA494;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  font-family: inherit;
+}
+
+.admin-logout-btn:hover {
+  background: rgba(201, 109, 91, 0.3);
+  border-color: rgba(201, 109, 91, 0.65);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* Hamburger Toggle */
 .admin-hamburger {
   display: none;

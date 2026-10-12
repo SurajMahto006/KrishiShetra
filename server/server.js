@@ -128,11 +128,50 @@ const path = require('path');
 
 const rootDir = path.join(__dirname, '..');
 
-// Serve root static files (HTML, CSS, JS, Assets)
-app.use(express.static(rootDir));
+// Serve root static files (HTML, CSS, JS, Assets) with extension resolution
+app.use(express.static(rootDir, { extensions: ['html', 'htm'] }));
 
 // Support /KrishiShetra and /krishishetra path aliases so requests with folder prefix work seamlessly
-app.use(['/KrishiShetra', '/krishishetra'], express.static(rootDir));
+app.use(['/KrishiShetra', '/krishishetra'], express.static(rootDir, { extensions: ['html', 'htm'] }));
+
+// Explicit Admin Portal sign-in routes and aliases to prevent 404s
+const adminSignInRoutes = [
+  '/admin',
+  '/admin/',
+  '/admin/login',
+  '/admin/login.html',
+  '/admin-login',
+  '/admin-signin',
+  '/admin/signin',
+  '/KrishiShetra/admin',
+  '/KrishiShetra/admin/',
+  '/KrishiShetra/admin/login',
+  '/KrishiShetra/admin/login.html',
+  '/KrishiShetra/admin-login',
+  '/krishishetra/admin',
+  '/krishishetra/admin/',
+  '/krishishetra/admin/login',
+  '/krishishetra/admin/login.html',
+  '/krishishetra/admin-login'
+];
+
+app.get(adminSignInRoutes, (req, res) => {
+  res.sendFile(path.join(rootDir, 'admin', 'index.html'));
+});
+
+// Explicit Admin Dashboard clean routes
+const adminDashboardRoutes = [
+  '/admin/dashboard',
+  '/admin/dashboard.html',
+  '/KrishiShetra/admin/dashboard',
+  '/KrishiShetra/admin/dashboard.html',
+  '/krishishetra/admin/dashboard',
+  '/krishishetra/admin/dashboard.html'
+];
+
+app.get(adminDashboardRoutes, (req, res) => {
+  res.sendFile(path.join(rootDir, 'admin', 'dashboard.html'));
+});
 
 // Fallback for API health if accessed directly
 app.get('/api', (req, res) => {

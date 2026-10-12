@@ -164,10 +164,14 @@ const Auth = {
   /**
    * Perform logout and redirect to login
    */
-  logout() {
+  logout(customRedirect) {
     this.clearSession();
+    if (customRedirect) {
+      window.location.href = customRedirect;
+      return;
+    }
     const path = window.location.pathname.toLowerCase();
-    const loginTarget = path.includes('/transporter/') || path.includes('/admin/') ? '../login.html' : 'login.html';
+    const loginTarget = path.includes('/admin/') ? 'index.html' : (path.includes('/transporter/') ? '../login.html' : 'login.html');
     window.location.href = loginTarget;
   },
 
@@ -238,7 +242,7 @@ const Auth = {
   requireAuth() {
     if (!this.isLoggedIn()) {
       const path = window.location.pathname.toLowerCase();
-      const loginTarget = path.includes('/transporter/') || path.includes('/admin/') ? '../login.html' : 'login.html';
+      const loginTarget = path.includes('/admin/') ? 'index.html' : (path.includes('/transporter/') ? '../login.html' : 'login.html');
       window.location.href = loginTarget;
       return false;
     }
@@ -253,6 +257,17 @@ const Auth = {
     if (!this.requireAuth()) return false;
 
     const currentRole = this.getRole();
+    if (expectedRole.toLowerCase() === 'admin') {
+      if (currentRole === 'admin') return true;
+      if (this.isLocalEnv() && localStorage.getItem(this.DEV_SESSION_KEY)) {
+        this.setDevSession('admin');
+        return true;
+      }
+      console.warn(`[PageGuard] Role mismatch. Expected: 'admin', Current: '${currentRole}'. Redirecting...`);
+      this.redirectUserByRole();
+      return false;
+    }
+
     if (currentRole === 'admin') return true;
 
     if (currentRole !== expectedRole.toLowerCase()) {

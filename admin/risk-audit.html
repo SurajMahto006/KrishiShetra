@@ -255,6 +255,11 @@
             <span class="admin-header-user-role">Risk Supervisor</span>
           </div>
         </div>
+
+        <button class="admin-logout-btn" id="adminLogoutBtn" title="Sign Out" onclick="handleAdminLogout()">
+          <i data-lucide="log-out" style="width:15px;height:15px;"></i>
+          <span>Logout</span>
+        </button>
       </div>
     </div>
   </header>
@@ -321,6 +326,15 @@
   <script src="../js/page-guard.js"></script>
 
   <script>
+    function handleAdminLogout() {
+      if (window.Auth) {
+        window.Auth.logout('index.html');
+      } else {
+        localStorage.clear();
+        window.location.href = 'index.html';
+      }
+    }
+
     const API_BASE = (window.location.origin && !window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1'))
       ? `${window.location.origin}/api`
       : 'http://127.0.0.1:5000/api';

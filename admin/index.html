@@ -85,17 +85,100 @@
 
   <div class="toast-container" id="toastContainer"></div>
 
+  <script src="../js/auth.js"></script>
   <script>
-    function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('adminEmail').value;
-      const password = document.getElementById('adminPassword').value;
+    // If already logged in as administrator, automatically redirect to dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.Auth && window.Auth.isLoggedIn() && window.Auth.getRole() === 'admin') {
+        window.location.href = 'dashboard.html';
+      }
+    });
 
-      if (email && password) {
-        showToast('Login successful! Redirecting to dashboard...', 'success');
-        setTimeout(() => {
-          window.location.href = 'dashboard.html';
-        }, 1200);
+    async function handleLogin(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('adminEmail');
+      const passwordInput = document.getElementById('adminPassword');
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showToast('Please enter both email and password.', 'error');
+        return;
+      }
+
+      const originalBtnHtml = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width:18px;height:18px;"></i> Signing In...';
+      lucide.createIcons();
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.success) {
+          const role = (data.user && data.user.role ? data.user.role : '').toLowerCase();
+
+          if (role !== 'admin') {
+            showToast('Access denied: Administrator privileges required.', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+            lucide.createIcons();
+            return;
+          }
+
+          if (window.Auth) {
+            window.Auth.setToken(data.token);
+            window.Auth.setUser(data.user);
+          }
+
+          showToast('Login successful! Redirecting to dashboard...', 'success');
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 800);
+          return;
+        }
+
+        // Server returned an error
+        if (response.status === 401) {
+          showToast(data.message || 'Invalid administrator email or password.', 'error');
+        } else if (response.status === 403) {
+          showToast(data.message || 'Access restricted. Please verify account permissions.', 'error');
+        } else if (response.status === 503 && window.Auth && window.Auth.isLocalEnv()) {
+          // Development offline fallback
+          console.warn('[Admin Auth] Database offline in local dev. Activating dev session.');
+          window.Auth.setDevSession('admin');
+          showToast('Development Admin session activated. Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 800);
+          return;
+        } else {
+          showToast(data.message || 'Sign in failed. Please try again.', 'error');
+        }
+      } catch (networkErr) {
+        console.warn('[Admin Auth Network Error]', networkErr);
+        if (window.Auth && window.Auth.isLocalEnv()) {
+          console.info('[Admin Auth] Local environment fallback active.');
+          window.Auth.setDevSession('admin');
+          showToast('Local developer session started. Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 800);
+          return;
+        }
+        showToast('Unable to connect to server. Please verify backend is running.', 'error');
+      } finally {
+        if (!submitBtn.disabled) {
+          submitBtn.innerHTML = originalBtnHtml;
+          lucide.createIcons();
+        }
       }
     }
 
@@ -115,7 +198,7 @@
       setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 400);
-      }, 3000);
+      }, 3500);
     }
 
     lucide.createIcons();

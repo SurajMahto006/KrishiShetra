@@ -6,7 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "start": "node server/server.js",
-    "dev": "nodemon server/server.js"
+    "dev": "nodemon server/server.js",
+    "seed:admin": "node server/seedAdminDev.js"
   },
   "dependencies": {
     "@getbrevo/brevo": "^6.0.3",

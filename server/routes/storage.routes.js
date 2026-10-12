@@ -46,9 +46,9 @@ router.post('/pledge-financing', optionalAuth, storageController.createPledgeFin
 router.get('/pledge-financing/my', optionalAuth, storageController.getMyPledgeFinancingRequests);
 router.get('/pledge-financing', optionalAuth, storageController.getMyPledgeFinancingRequests);
 
-// --- ADMIN ROUTES ---
-router.get('/admin/all', optionalAuth, storageController.adminGetAllFacilities);
-router.post('/facilities', optionalAuth, storageController.adminCreateFacility);
-router.put('/facilities/:id', optionalAuth, storageController.adminUpdateFacility);
+// --- ADMIN ROUTES (Protected & Authorized for Admin role only) ---
+router.get('/admin/all', protect, authorize('admin'), storageController.adminGetAllFacilities);
+router.post('/facilities', protect, authorize('admin'), storageController.adminCreateFacility);
+router.put('/facilities/:id', protect, authorize('admin'), storageController.adminUpdateFacility);
 
 module.exports = router;
