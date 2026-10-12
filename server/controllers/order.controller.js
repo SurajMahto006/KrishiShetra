@@ -4,6 +4,7 @@ const Inquiry = require('../models/Inquiry');
 const ProduceLot = require('../models/ProduceLot');
 const { createNotification } = require('../services/notification.service');
 const { logActivity } = require('../services/activity.service');
+const { queueAuditJob } = require('../services/evmAuditService');
 
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 const PINCODE_REGEX = /^[1-9][0-9]{5}$/;
@@ -12,6 +13,7 @@ const DEMO_ORDER_ID = 'KS-ORD-DEMO-001';
 
 // Seed demo order state for continuous farmer journey
 let demoOrderState = {
+  _id: '660000000000000000000000',
   orderId: DEMO_ORDER_ID,
   cropName: 'Tomato',
   variety: 'Hybrid Abhinav',
@@ -25,6 +27,8 @@ let demoOrderState = {
   paymentMethod: 'escrow',
   farmerName: 'Rajesh Patil (Nashik Farmer)',
   buyerName: 'ABC Foods Pvt Ltd',
+  farmer: '660000000000000000000001',
+  buyer: '660000000000000000000002',
   deliveryAddress: {
     name: 'ABC Foods Warehouse',
     phone: '+91 98230 45678',
@@ -366,6 +370,9 @@ const createOrder = async (req, res) => {
       metadata: { orderId: order.orderId, totalAmount: order.totalAmount },
       ipAddress: req.ip
     });
+
+    // Asynchronous tamper-evident audit outbox hook (non-blocking)
+    queueAuditJob(order, 'ORDER_CREATED');
 
     return res.status(201).json({
       success: true,
@@ -748,6 +755,9 @@ const updateOrderStatus = async (req, res) => {
       ipAddress: req.ip
     });
 
+    // Asynchronous tamper-evident audit outbox hook (non-blocking)
+    queueAuditJob(order, 'STATUS_UPDATED');
+
     return res.status(200).json({
       success: true,
       message: `Order status updated to ${newStatus}`,
@@ -842,6 +852,9 @@ const cancelOrder = async (req, res) => {
       ipAddress: req.ip
     });
 
+    // Asynchronous tamper-evident audit outbox hook (non-blocking)
+    queueAuditJob(order, 'CANCELLED');
+
     return res.status(200).json({
       success: true,
       message: 'Order cancelled successfully',
@@ -927,6 +940,9 @@ const updatePaymentStatus = async (req, res) => {
       ipAddress: req.ip
     });
 
+    // Asynchronous tamper-evident audit outbox hook (non-blocking)
+    queueAuditJob(order, 'PAYMENT_UPDATED');
+
     return res.status(200).json({
       success: true,
       message: `Payment status updated to ${paymentStatus}`,
@@ -951,5 +967,7 @@ module.exports = {
   getSingleOrder,
   updateOrderStatus,
   cancelOrder,
-  updatePaymentStatus
+  updatePaymentStatus,
+  DEMO_ORDER_ID,
+  demoOrderState
 };

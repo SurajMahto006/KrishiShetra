@@ -20,8 +20,10 @@ const storageRoutes = require('./routes/storage.routes');
 const decisionRoutes = require('./routes/decision.routes');
 const disputeRoutes = require('./routes/dispute.routes');
 const qualityRoutes = require('./routes/quality.routes');
+const auditRoutes = require('./routes/audit.routes');
 const connectDB = require('./config/db');
 const { seedInitialFacilities } = require('./controllers/storage.controller');
+const { startOutboxWorker } = require('./services/evmAuditService');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,6 +31,7 @@ const PORT = process.env.PORT || 5000;
 // Connect to MongoDB & Seed initial storage facilities
 connectDB().then(() => {
   seedInitialFacilities();
+  startOutboxWorker();
 }).catch(() => {
   seedInitialFacilities();
 });
@@ -116,6 +119,7 @@ app.use('/api/storage', storageRoutes);
 app.use('/api/decision', decisionRoutes);
 app.use('/api/disputes', disputeRoutes);
 app.use('/api/quality', qualityRoutes);
+app.use('/api/audit', auditRoutes);
 app.use('/api/test', testRoutes);
 
 
