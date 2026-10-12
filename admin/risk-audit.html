@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiShetra — AI Risk & Blockchain Audit</title>
+  <meta name="description" content="KrishiShetra Admin — Explainable transaction risk monitor and tamper-evident blockchain audit ledger.">
+  <meta name="required-role" content="admin">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Scoped styles for Transaction Risk & Audit Ledger View */
+    .audit-container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .health-strip {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .health-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 9999px;
+    }
+    .health-pill.active {
+      background: rgba(46, 125, 50, 0.12);
+      color: #2e7d32;
+      border: 1px solid rgba(46, 125, 50, 0.25);
+    }
+    .health-pill.neutral {
+      background: rgba(100, 116, 139, 0.12);
+      color: #475569;
+      border: 1px solid rgba(100, 116, 139, 0.25);
+    }
+    .health-pill.warning {
+      background: rgba(217, 119, 6, 0.12);
+      color: #b45309;
+      border: 1px solid rgba(217, 119, 6, 0.25);
+    }
+
+    .search-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    }
+
+    .search-form {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 260px;
+      padding: 0.75rem 1rem;
+      border: 1px solid #D0D7D3;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: #2E5A44;
+      box-shadow: 0 0 0 3px rgba(46, 90, 68, 0.15);
+    }
+
+    .audit-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 992px) {
+      .audit-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .card-panel {
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      border-bottom: 1px solid #EEF2F0;
+      padding-bottom: 1rem;
+    }
+
+    .score-meter-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1rem;
+      background: #F8FAF9;
+      border-radius: 12px;
+      border: 1px solid #E6ECE9;
+    }
+
+    .score-circle {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 22px;
+      color: #FFFFFF;
+      flex-shrink: 0;
+    }
+    .score-circle.low { background: #2E7D32; }
+    .score-circle.medium { background: #D97706; }
+    .score-circle.high { background: #C53030; }
+
+    .honest-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      background: #E8F0FE;
+      color: #1967D2;
+      border: 1px solid #D2E3FC;
+    }
+
+    .factor-item {
+      padding: 0.85rem;
+      border-radius: 10px;
+      background: #F9FBFA;
+      border-left: 4px solid #CBD5E1;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .factor-item.increases {
+      border-left-color: #E53E3E;
+      background: #FFF5F5;
+    }
+    .factor-item.decreases {
+      border-left-color: #38A169;
+      background: #F0FFF4;
+    }
+    .factor-item.neutral {
+      border-left-color: #718096;
+      background: #F7FAFC;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .badge-pill.confirmed { background: #DEF7EC; color: #03543F; }
+    .badge-pill.pending { background: #FEF08A; color: #854D0E; }
+    .badge-pill.mismatch { background: #FDE8E8; color: #9B1C1C; }
+    .badge-pill.unconfigured { background: #F1F5F9; color: #475569; }
+    .badge-pill.failed { background: #FEE2E2; color: #991B1B; }
+
+    .hash-display {
+      font-family: monospace;
+      font-size: 12px;
+      background: #F1F5F9;
+      padding: 6px 10px;
+      border-radius: 6px;
+      word-break: break-all;
+      color: #334155;
+      border: 1px solid #E2E8F0;
+    }
+
+    .state-box {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: #64748B;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body data-require-role="admin">
+
+  <!-- TOP HEADER -->
+  <header class="admin-header" id="adminHeader">
+    <div class="admin-header-inner">
+      <a href="index.html" class="admin-brand">
+        <span class="brand-icon">🌾</span>
+        <span class="brand-text">KrishiShetra</span>
+        <span class="brand-badge">Admin</span>
+      </a>
+
+      <nav>
+        <ul class="admin-nav-menu" id="adminNavMenu">
+          <li><a href="dashboard.html" class="admin-nav-link"><i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard</a></li>
+          <li><a href="users.html" class="admin-nav-link"><i data-lucide="users" style="width:16px;height:16px;"></i> Users</a></li>
+          <li><a href="farmers.html" class="admin-nav-link"><i data-lucide="user-check" style="width:16px;height:16px;"></i> Farmers</a></li>
+          <li><a href="storage.html" class="admin-nav-link"><i data-lucide="warehouse" style="width:16px;height:16px;"></i> Storage Hub</a></li>
+          <li><a href="../disputes.html" class="admin-nav-link"><i data-lucide="shield-alert" style="width:16px;height:16px;"></i> Disputes</a></li>
+          <li><a href="risk-audit.html" class="admin-nav-link active"><i data-lucide="shield-check" style="width:16px;height:16px;"></i> Risk & Audit</a></li>
+          <li><a href="reports.html" class="admin-nav-link"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Reports</a></li>
+          <li><a href="settings.html" class="admin-nav-link"><i data-lucide="settings" style="width:16px;height:16px;"></i> Settings</a></li>
+        </ul>
+      </nav>
+
+      <div class="admin-header-actions">
+        <a href="dashboard.html" class="portal-switch-btn" title="Back to Admin Dashboard" style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:9999px;color:#F5F2EB;font-size:12.5px;font-weight:600;text-decoration:none;">
+          <i data-lucide="arrow-left" style="width:14px;height:14px;color:#E8B96A;"></i> Dashboard
+        </a>
+
+        <div class="admin-header-user">
+          <div class="admin-header-avatar">AD</div>
+          <div class="admin-header-user-info">
+            <span class="admin-header-user-name">Admin Officer</span>
+            <span class="admin-header-user-role">Risk Supervisor</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW -->
+  <main class="audit-container">
+
+    <!-- PAGE HERO -->
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <h1 style="font-size:1.75rem;font-weight:700;color:#1A3A28;margin:0 0 0.25rem;">Transaction Risk & Blockchain Audit Ledger</h1>
+        <p style="color:#556B5F;font-size:14px;margin:0;">Explainable heuristic anomaly monitor coupled with tamper-evident Ethereum Sepolia audit anchoring.</p>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="loadAuditHealth()" id="btnRefreshHealth" title="Refresh health status">
+        <i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Refresh Node Health
+      </button>
+    </div>
+
+    <!-- HEALTH STRIP -->
+    <div class="health-strip" id="healthStrip">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <i data-lucide="cpu" style="width:18px;height:18px;color:#2E5A44;"></i>
+        <span style="font-size:13px;font-weight:600;color:#1A3A28;">Audit Relayer Network:</span>
+        <span class="health-pill active" id="networkPill"><i data-lucide="globe" style="width:12px;height:12px;"></i> Ethereum Sepolia (11155111)</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;" id="healthDetails">
+        <span class="health-pill neutral" id="rpcPill">RPC: Checking...</span>
+        <span class="health-pill neutral" id="contractPill">Contract: Checking...</span>
+        <span class="health-pill neutral" id="signerPill">Signer: Checking...</span>
+      </div>
+    </div>
+
+    <!-- SEARCH PANEL -->
+    <div class="search-card">
+      <form class="search-form" onsubmit="handleSearch(event)">
+        <input
+          type="text"
+          id="orderIdInput"
+          class="search-input"
+          placeholder="Enter Order ID (e.g. KS-ORD-2026-000001)"
+          value="KS-ORD-2026-000001"
+          required
+        />
+        <button type="submit" class="btn btn-primary" id="btnSearch" style="display:flex;align-items:center;gap:6px;padding:0.75rem 1.25rem;">
+          <i data-lucide="search" style="width:16px;height:16px;"></i> Evaluate & Verify
+        </button>
+      </form>
+    </div>
+
+    <!-- DYNAMIC AUDIT CONTENT -->
+    <div id="auditContent">
+      <div class="state-box">
+        <i data-lucide="search" style="width:48px;height:48px;margin-bottom:12px;opacity:0.4;"></i>
+        <p>Enter an Order ID above to inspect explainable risk telemetry and cryptographic audit proofs.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- AUTH & PAGE GUARDS -->
+  <script src="../js/auth.js"></script>
+  <script src="../js/page-guard.js"></script>
+
+  <script>
+    const API_BASE = (window.location.origin && !window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1'))
+      ? `${window.location.origin}/api`
+      : 'http://127.0.0.1:5000/api';
+
+    /**
+     * Strict HTML entity escaping for untrusted input and dynamic API strings
+     */
+    function escapeHtml(value) {
+      if (value === null || value === undefined) return '';
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getAuthHeaders() {
+      const token = window.Auth ? window.Auth.getToken() : localStorage.getItem('krishi_token');
+      return {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      };
+    }
+
+    // ── Toast Notification ──
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      const iconName = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info';
+      const iconColor = type === 'success' ? '#2E7D32' : type === 'error' ? '#C53030' : '#D97706';
+      toast.innerHTML = `
+        <i data-lucide="${iconName}" style="width:16px;height:16px;color:${iconColor};flex-shrink:0;"></i>
+        <span>${escapeHtml(message)}</span>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => toast.classList.add('show'), 50);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, 3500);
+    }
+
+    // ── Diagnostic Health ──
+    async function loadAuditHealth() {
+      if (window.Auth && typeof window.Auth.requireRole === 'function') {
+        if (!window.Auth.requireRole('admin')) return;
+      }
+
+      const rpcPill = document.getElementById('rpcPill');
+      const contractPill = document.getElementById('contractPill');
+      const signerPill = document.getElementById('signerPill');
+
+      try {
+        const res = await fetch(`${API_BASE}/audit/health`, { headers: getAuthHeaders() });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          rpcPill.className = data.rpcConfigured ? 'health-pill active' : 'health-pill warning';
+          rpcPill.textContent = data.rpcConfigured ? 'RPC: Connected' : 'RPC: Unconfigured';
+
+          contractPill.className = data.contractConfigured ? 'health-pill active' : 'health-pill warning';
+          contractPill.textContent = data.contractConfigured && data.contractAddress ? `Contract: ${String(data.contractAddress).slice(0, 8)}...` : 'Contract: Not Deployed';
+
+          signerPill.className = data.signerConfigured ? 'health-pill active' : 'health-pill warning';
+          signerPill.textContent = data.signerConfigured ? 'Signer: Ready' : 'Signer: Read-Only';
+        }
+      } catch (e) {
+        rpcPill.className = 'health-pill warning';
+        rpcPill.textContent = 'Health RPC Offline';
+      }
+      lucide.createIcons();
+    }
+
+    // ── Search & Evaluate Action ──
+    async function handleSearch(e) {
+      if (e) e.preventDefault();
+      if (window.Auth && typeof window.Auth.requireRole === 'function') {
+        if (!window.Auth.requireRole('admin')) return;
+      }
+
+      const orderId = document.getElementById('orderIdInput').value.trim();
+      if (!orderId) return;
+
+      const content = document.getElementById('auditContent');
+      content.innerHTML = `
+        <div class="state-box">
+          <i data-lucide="loader-2" class="spin" style="width:40px;height:40px;margin-bottom:12px;color:#2E5A44;"></i>
+          <p>Querying explainable risk engine and verifying on-chain ledger state...</p>
+        </div>
+      `;
+      lucide.createIcons();
+
+      try {
+        const [explainRes, verifyRes] = await Promise.all([
+          fetch(`${API_BASE}/audit/order/${encodeURIComponent(orderId)}/explain`, { headers: getAuthHeaders() }),
+          fetch(`${API_BASE}/audit/order/${encodeURIComponent(orderId)}/verify`, { headers: getAuthHeaders() })
+        ]);
+
+        const explainData = await explainRes.json();
+        const verifyData = await verifyRes.json();
+
+        if (!explainRes.ok || !explainData.success) {
+          const isNotFound = explainRes.status === 404 || explainData.code === 'ORDER_NOT_FOUND';
+          content.innerHTML = `
+            <div class="state-box" style="color:#C53030;">
+              <i data-lucide="alert-octagon" style="width:44px;height:44px;margin-bottom:12px;"></i>
+              <p style="font-weight:600;font-size:15px;margin-bottom:6px;">${escapeHtml(explainData.message || 'Order not found in database.')}</p>
+              ${isNotFound ? `<p style="font-size:13px;color:#64748B;max-width:520px;margin:0 auto 12px;">No order matching ID <strong>${escapeHtml(orderId)}</strong> exists in the database. Please verify the Order ID or test with an existing order like <code>KS-ORD-2026-000001</code>.</p>` : ''}
+              ${!isNotFound ? `<button class="btn btn-secondary btn-sm" onclick="handleSearch()" style="margin-top:10px;">Retry Request</button>` : ''}
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        renderAuditDashboard(orderId, explainData, verifyData);
+      } catch (err) {
+        content.innerHTML = `
+          <div class="state-box" style="color:#C53030;">
+            <i data-lucide="wifi-off" style="width:44px;height:44px;margin-bottom:12px;"></i>
+            <p style="font-weight:600;">Network communication error connecting to audit backend.</p>
+            <button class="btn btn-secondary btn-sm" onclick="handleSearch()" style="margin-top:10px;">Retry Request</button>
+          </div>
+        `;
+        lucide.createIcons();
+      }
+    }
+
+    // ── Render Dashboard Cards ──
+    function renderAuditDashboard(orderId, explainData, verifyData) {
+      const content = document.getElementById('auditContent');
+      const assessment = explainData.assessment;
+      const report = verifyData.report || {};
+
+      const safeOrderId = escapeHtml(orderId);
+
+      if (!assessment) {
+        content.innerHTML = `
+          <div class="state-box">
+            <i data-lucide="clock" style="width:44px;height:44px;margin-bottom:12px;opacity:0.5;"></i>
+            <p style="font-weight:600;">No risk assessment logged yet for order ${safeOrderId}.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      const score = Number(assessment.score) || 0;
+      const level = assessment.level || 'LOW';
+      const safeLevel = escapeHtml(level);
+      const safeScoreClass = ['low', 'medium', 'high'].includes(String(level).toLowerCase())
+        ? String(level).toLowerCase()
+        : 'low';
+
+      // On-chain status badge mapping with strict allowlist
+      const onChainStatus = String(report.status || explainData.status || 'UNCONFIGURED');
+      let statusBadgeClass = 'unconfigured';
+      let statusLabel = 'SEPOLIA UNCONFIGURED (LOCAL ONLY)';
+
+      if (onChainStatus === 'CONFIRMED_ON_CHAIN') {
+        statusBadgeClass = 'confirmed';
+        statusLabel = 'CONFIRMED ON SEPOLIA';
+      } else if (onChainStatus === 'PENDING') {
+        statusBadgeClass = 'pending';
+        statusLabel = 'PENDING MINING';
+      } else if (onChainStatus === 'MISMATCH') {
+        statusBadgeClass = 'mismatch';
+        statusLabel = 'TAMPER DETECTED / MISMATCH';
+      } else if (onChainStatus === 'FAILED') {
+        statusBadgeClass = 'failed';
+        statusLabel = 'OUTBOX FAILED';
+      } else if (onChainStatus === 'UNAVAILABLE' || onChainStatus === 'SKIPPED_UNCONFIGURED') {
+        statusBadgeClass = 'unconfigured';
+        statusLabel = 'SEPOLIA UNCONFIGURED (LOCAL ONLY)';
+      } else {
+        statusBadgeClass = 'unconfigured';
+        statusLabel = escapeHtml(onChainStatus);
+      }
+
+      const factorsHtml = (assessment.factors || []).map(f => {
+        const impactClass = f.impact === 'INCREASES_RISK' ? 'increases' : f.impact === 'DECREASES_RISK' ? 'decreases' : 'neutral';
+        const impactSign = f.weight > 0 ? `+${f.weight}` : `${f.weight}`;
+        const safeCode = escapeHtml(f.code ? String(f.code).replace(/_/g, ' ') : '');
+        const safeDesc = escapeHtml(f.description);
+        const safeSign = escapeHtml(impactSign);
+        return `
+          <div class="factor-item ${impactClass}">
+            <div style="display:flex;justify-content:space-between;font-weight:600;margin-bottom:4px;">
+              <span>${safeCode}</span>
+              <span style="font-size:12px;">${safeSign} pts</span>
+            </div>
+            <div>${safeDesc}</div>
+          </div>
+        `;
+      }).join('');
+
+      const safeCrop = escapeHtml((assessment.auditMetadata && assessment.auditMetadata.cropName) || 'N/A');
+      const safeQty = escapeHtml(assessment.auditMetadata ? assessment.auditMetadata.quantity : 0);
+      const safeQtyUnit = escapeHtml((assessment.auditMetadata && assessment.auditMetadata.quantityUnit) || '');
+      const safeTotal = Number((assessment.auditMetadata && assessment.auditMetadata.totalAmount) || 0).toLocaleString('en-IN');
+      const safeOrderStatus = escapeHtml((assessment.auditMetadata && assessment.auditMetadata.orderStatus) || 'pending');
+      const safeRiskHash = escapeHtml(assessment.riskHash || '');
+      const safePayloadHash = escapeHtml(assessment.canonicalPayloadHash || '');
+      const safeRecordKey = escapeHtml(report.records && report.records[0] ? report.records[0].recordKey : 'Derived from Order ID + Event + Payload');
+      const safeContract = escapeHtml(report.contractAddress || 'UNCONFIGURED (Awaiting deployment approval)');
+      const safeOutboxStatus = escapeHtml(explainData.status || '');
+
+      const firstRecord = (report.records && report.records[0]) || null;
+      const onChainProof = (firstRecord && firstRecord.onChainProof) || null;
+      const safeTxHash = onChainProof && onChainProof.txHash ? escapeHtml(onChainProof.txHash) : '';
+      const safeBlockNumber = onChainProof && onChainProof.blockNumber ? escapeHtml(onChainProof.blockNumber) : '';
+
+      content.innerHTML = `
+        <div class="audit-grid">
+
+          <!-- 1. EXPLAINABLE RISK ASSESSMENT -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <div>
+                <h2 style="font-size:1.15rem;font-weight:700;color:#1A3A28;margin:0 0 4px;">Explainable Risk Monitor</h2>
+                <span class="honest-badge"><i data-lucide="info" style="width:12px;height:12px;"></i> Rules-based Heuristic Baseline</span>
+              </div>
+              <span class="badge-pill" style="background:#EEF2F0;color:#1A3A28;">Order: ${safeOrderId}</span>
+            </div>
+
+            <!-- Score Visualizer -->
+            <div class="score-meter-wrap">
+              <div class="score-circle ${safeScoreClass}">
+                ${score}
+                <span style="font-size:10px;font-weight:600;text-transform:uppercase;">/ 100</span>
+              </div>
+              <div>
+                <div style="font-size:1.1rem;font-weight:700;color:#1A3A28;">Risk Level: ${safeLevel}</div>
+                <div style="font-size:12.5px;color:#556B5F;margin-top:2px;">
+                  Score determined via commodity benchmark deviation, arithmetic consistency, and payment modality.
+                </div>
+              </div>
+            </div>
+
+            <!-- Metadata parameters evaluated -->
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;background:#F8FAF9;padding:12px;border-radius:10px;font-size:12.5px;">
+              <div><strong>Commodity:</strong> ${safeCrop}</div>
+              <div><strong>Quantity:</strong> ${safeQty} ${safeQtyUnit}</div>
+              <div><strong>Total Amount:</strong> ₹${safeTotal}</div>
+              <div><strong>Lifecycle Status:</strong> ${safeOrderStatus}</div>
+            </div>
+
+            <!-- Factors -->
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#1A3A28;margin-bottom:8px;">Decision Factor Attribution (${assessment.factors.length}):</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                ${factorsHtml || '<p style="color:#64748B;font-size:13px;">No anomalies detected.</p>'}
+              </div>
+            </div>
+
+            <!-- Risk Hash -->
+            <div>
+              <div style="font-size:11.5px;font-weight:600;color:#64748B;margin-bottom:4px;">Risk Assessment Fingerprint (SHA-256):</div>
+              <div class="hash-display">${safeRiskHash}</div>
+            </div>
+          </div>
+
+          <!-- 2. BLOCKCHAIN AUDIT LEDGER PROOF -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <div>
+                <h2 style="font-size:1.15rem;font-weight:700;color:#1A3A28;margin:0 0 4px;">Blockchain Tamper-Evident Ledger</h2>
+                <div style="font-size:12px;color:#556B5F;">Anchor Network: Ethereum Sepolia Testnet</div>
+              </div>
+              <span class="badge-pill ${statusBadgeClass}">${statusLabel}</span>
+            </div>
+
+            <!-- Status Notice -->
+            <div style="padding:1rem;background:#F8FAF9;border-radius:12px;border:1px solid #E6ECE9;font-size:13px;line-height:1.5;">
+              ${onChainStatus === 'CONFIRMED_ON_CHAIN'
+                ? '<strong style="color:#03543F;">✓ Cryptographically Verified on Sepolia:</strong> The canonical transaction state and explainability hash strictly match the smart contract state.'
+                : onChainStatus === 'MISMATCH'
+                ? '<strong style="color:#9B1C1C;">⚠ Tamper Detected:</strong> The on-chain hash recorded on Sepolia diverges from the current local order state!'
+                : onChainStatus === 'PENDING'
+                ? '<strong style="color:#854D0E;">⏳ Pending On-Chain Mining:</strong> Entry queued in the durable outbox worker awaiting testnet confirmation.'
+                : '<strong style="color:#475569;">ℹ Testnet Credentials Unconfigured:</strong> Live Sepolia testnet environment variables are not set. Displaying local tamper-evident hash trail.'}
+            </div>
+
+            <!-- Cryptographic Proof Details -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <div style="font-size:11.5px;font-weight:600;color:#64748B;margin-bottom:4px;">Canonical Payload Commitment (SHA-256):</div>
+                <div class="hash-display">${safePayloadHash}</div>
+              </div>
+
+              <div>
+                <div style="font-size:11.5px;font-weight:600;color:#64748B;margin-bottom:4px;">Contract Audit Record Key (Keccak-256):</div>
+                <div class="hash-display">${safeRecordKey}</div>
+              </div>
+
+              ${safeTxHash
+                ? `
+                  <div>
+                    <div style="font-size:11.5px;font-weight:600;color:#64748B;margin-bottom:4px;">Sepolia Transaction Hash:</div>
+                    <div class="hash-display">${safeTxHash}</div>
+                  </div>
+                `
+                : ''}
+
+              ${safeBlockNumber
+                ? `
+                  <div>
+                    <div style="font-size:11.5px;font-weight:600;color:#64748B;margin-bottom:4px;">Block Number:</div>
+                    <div class="hash-display">${safeBlockNumber}</div>
+                  </div>
+                `
+                : ''}
+
+              <div>
+                <div style="font-size:11.5px;font-weight:600;color:#64748B;margin-bottom:4px;">Target Smart Contract Address:</div>
+                <div class="hash-display">${safeContract}</div>
+              </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div style="margin-top:auto;padding-top:1rem;border-top:1px solid #EEF2F0;display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;color:#64748B;">Audit Outbox Status: <strong>${safeOutboxStatus}</strong></span>
+              <button class="btn btn-secondary btn-sm" onclick="handleSearch()">
+                <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Re-verify On-Chain
+              </button>
+            </div>
+          </div>
+
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    // ── Init on Page Load with Explicit Admin Guard ──
+    document.addEventListener('DOMContentLoaded', () => {
+      // Programmatic role enforcement (redirects unauthorized users)
+      if (window.Auth && typeof window.Auth.requireRole === 'function') {
+        if (!window.Auth.requireRole('admin')) {
+          return;
+        }
+      }
+
+      loadAuditHealth();
+      lucide.createIcons();
+
+      // Check URL query parameters for orderId
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlOrderId = urlParams.get('orderId');
+      if (urlOrderId) {
+        document.getElementById('orderIdInput').value = urlOrderId.trim();
+      }
+
+      // Pre-run search for existing order
+      handleSearch();
+    });
+  </script>
+</body>
+</html>
