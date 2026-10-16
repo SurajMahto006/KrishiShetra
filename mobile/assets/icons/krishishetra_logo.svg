@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+
+  <!-- Outer cream background -->
+  <circle cx="200" cy="200" r="196" fill="#F5F0E0"/>
+
+  <!-- Dark green thick outer ring -->
+  <circle cx="200" cy="200" r="194" fill="none" stroke="#2D5A1B" stroke-width="28"/>
+
+  <!-- Inner light background -->
+  <circle cx="200" cy="200" r="180" fill="#F2ECD8"/>
+
+  <!-- ── Rolling hills / farmland ── -->
+  <!-- Back hill -->
+  <ellipse cx="200" cy="248" rx="148" ry="52" fill="#5B9A3A" opacity="0.45"/>
+  <!-- Mid hill -->
+  <path d="M52,262 Q110,208 172,226 Q210,238 268,220 Q318,208 350,252 L350,308 L52,308 Z" fill="#4A8A2E"/>
+  <!-- Front ground -->
+  <path d="M48,278 Q120,258 200,268 Q278,278 352,260 L352,316 L48,316 Z" fill="#3A7022"/>
+
+  <!-- ── Farm field rows ── -->
+  <g stroke="#5BAF3A" stroke-width="1.5" opacity="0.55">
+    <path d="M85,293 Q128,285 168,290"/>
+    <path d="M78,301 Q135,292 178,298"/>
+    <path d="M222,291 Q260,284 298,289"/>
+    <path d="M226,300 Q265,292 308,298"/>
+  </g>
+
+  <!-- ── Sun ── -->
+  <circle cx="200" cy="148" r="22" fill="#E8B84B" opacity="0.92"/>
+  <g stroke="#E8B84B" stroke-width="3" opacity="0.65" stroke-linecap="round">
+    <line x1="200" y1="118" x2="200" y2="108"/>
+    <line x1="221" y1="127" x2="228" y2="120"/>
+    <line x1="230" y1="148" x2="242" y2="148"/>
+    <line x1="221" y1="169" x2="228" y2="176"/>
+    <line x1="179" y1="127" x2="172" y2="120"/>
+    <line x1="170" y1="148" x2="158" y2="148"/>
+    <line x1="179" y1="169" x2="172" y2="176"/>
+  </g>
+
+  <!-- ── Ox 1 (left) ── -->
+  <g transform="translate(102,222)">
+    <ellipse cx="0" cy="16" rx="30" ry="14" fill="#2A1A08"/>
+    <ellipse cx="-26" cy="9" rx="13" ry="10" fill="#2A1A08"/>
+    <path d="M-36,3 Q-44,-5 -38,-11" stroke="#8B6914" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M-20,1 Q-16,-9 -12,-11" stroke="#8B6914" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="-38" cy="11" rx="4" ry="3" fill="#3A2510"/>
+    <rect x="-12" y="27" width="5" height="16" rx="2" fill="#221508"/>
+    <rect x="2"  y="27" width="5" height="16" rx="2" fill="#221508"/>
+    <rect x="14" y="27" width="5" height="16" rx="2" fill="#221508"/>
+    <rect x="22" y="25" width="5" height="16" rx="2" fill="#221508"/>
+    <path d="M28,14 Q40,6 38,-2" stroke="#2A1A08" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- ── Ox 2 (right) ── -->
+  <g transform="translate(150,224)">
+    <ellipse cx="0" cy="15" rx="28" ry="13" fill="#221508"/>
+    <ellipse cx="-24" cy="9" rx="12" ry="9" fill="#221508"/>
+    <path d="M-33,3 Q-41,-4 -35,-10" stroke="#8B6914" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M-18,1 Q-14,-8 -10,-10" stroke="#8B6914" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <rect x="-10" y="25" width="5" height="15" rx="2" fill="#1A1206"/>
+    <rect x="2"  y="25" width="5" height="15" rx="2" fill="#1A1206"/>
+    <rect x="12" y="24" width="5" height="15" rx="2" fill="#1A1206"/>
+    <rect x="20" y="24" width="5" height="15" rx="2" fill="#1A1206"/>
+  </g>
+
+  <!-- ── Cart ── -->
+  <g transform="translate(200,212)">
+    <!-- Shaft to oxen -->
+    <line x1="-10" y1="20" x2="-52" y2="20" stroke="#6B4C1A" stroke-width="5" stroke-linecap="round"/>
+    <!-- Cart bed -->
+    <rect x="-10" y="10" width="62" height="20" rx="4" fill="#6B4C1A"/>
+    <rect x="-10" y="8"  width="62" height="6"  rx="2" fill="#8B6425"/>
+    <!-- Crop mound -->
+    <ellipse cx="20" cy="7"  rx="26" ry="11" fill="#C8A832" opacity="0.9"/>
+    <ellipse cx="20" cy="3"  rx="20" ry="8"  fill="#D4B040"/>
+    <!-- Wheat on cart -->
+    <g stroke="#7A5C10" stroke-width="2" stroke-linecap="round">
+      <line x1="8"  y1="2"  x2="6"  y2="-12"/>
+      <line x1="16" y1="0"  x2="15" y2="-14"/>
+      <line x1="24" y1="0"  x2="23" y2="-15"/>
+      <line x1="32" y1="1"  x2="31" y2="-13"/>
+    </g>
+    <!-- Wheel left -->
+    <circle cx="2"  cy="32" r="13" fill="none" stroke="#3A2510" stroke-width="5"/>
+    <circle cx="2"  cy="32" r="3"  fill="#3A2510"/>
+    <line x1="2"  y1="19" x2="2"  y2="45" stroke="#3A2510" stroke-width="2"/>
+    <line x1="-11" y1="32" x2="15" y2="32" stroke="#3A2510" stroke-width="2"/>
+    <!-- Wheel right -->
+    <circle cx="50" cy="32" r="13" fill="none" stroke="#3A2510" stroke-width="5"/>
+    <circle cx="50" cy="32" r="3"  fill="#3A2510"/>
+    <line x1="50" y1="19" x2="50" y2="45" stroke="#3A2510" stroke-width="2"/>
+    <line x1="37" y1="32" x2="63" y2="32" stroke="#3A2510" stroke-width="2"/>
+  </g>
+
+  <!-- ── Farmer ── -->
+  <g transform="translate(244,186)">
+    <rect x="-7" y="10" width="15" height="24" rx="4" fill="#2D5A1B"/>
+    <circle cx="0" cy="4" r="9" fill="#C4956A"/>
+    <!-- Turban -->
+    <ellipse cx="0" cy="-3" rx="11" ry="5" fill="#D4A843"/>
+    <rect x="-11" y="-4" width="22" height="4" fill="#D4A843"/>
+    <!-- Arms with reins -->
+    <path d="M-7,17 Q-18,14 -32,19" stroke="#2D5A1B" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M7,17 Q15,13 26,15"    stroke="#2D5A1B" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <!-- Legs -->
+    <rect x="-5" y="32" width="7" height="14" rx="3" fill="#1A2E10"/>
+    <rect x="3"  y="32" width="7" height="14" rx="3" fill="#1A2E10"/>
+  </g>
+
+  <!-- ── Reins ── -->
+  <path d="M226,206 Q198,212 185,220" stroke="#8B6914" stroke-width="1.8" fill="none" stroke-dasharray="4,3" opacity="0.85"/>
+
+  <!-- ── Left wheat cluster ── -->
+  <g transform="translate(60,155)">
+    <line x1="6"  y1="88" x2="6"  y2="5"  stroke="#9A7018" stroke-width="2.5"/>
+    <line x1="18" y1="90" x2="17" y2="8"  stroke="#9A7018" stroke-width="2.5"/>
+    <ellipse cx="2"  cy="8"  rx="5" ry="8" fill="#D4A843" transform="rotate(-22,2,8)"/>
+    <ellipse cx="10" cy="10" rx="5" ry="8" fill="#C8A030" transform="rotate(22,10,10)"/>
+    <ellipse cx="6"  cy="3"  rx="4" ry="7" fill="#E0B840"/>
+    <ellipse cx="1"  cy="22" rx="4" ry="7" fill="#D4A843" transform="rotate(-20,1,22)"/>
+    <ellipse cx="11" cy="22" rx="4" ry="7" fill="#C8A030" transform="rotate(20,11,22)"/>
+    <ellipse cx="2"  cy="36" rx="4" ry="6" fill="#D4A843" transform="rotate(-15,2,36)"/>
+    <ellipse cx="10" cy="36" rx="4" ry="6" fill="#C8A030" transform="rotate(15,10,36)"/>
+    <ellipse cx="14" cy="10" rx="4" ry="7" fill="#D4A843" transform="rotate(-18,14,10)"/>
+    <ellipse cx="22" cy="12" rx="4" ry="7" fill="#C8A030" transform="rotate(18,22,12)"/>
+    <ellipse cx="13" cy="26" rx="4" ry="6" fill="#D4A843" transform="rotate(-14,13,26)"/>
+    <ellipse cx="21" cy="26" rx="4" ry="6" fill="#C8A030" transform="rotate(14,21,26)"/>
+  </g>
+
+  <!-- ── Right wheat cluster ── -->
+  <g transform="translate(302,155)">
+    <line x1="14" y1="88" x2="14" y2="5"  stroke="#9A7018" stroke-width="2.5"/>
+    <line x1="2"  y1="90" x2="3"  y2="8"  stroke="#9A7018" stroke-width="2.5"/>
+    <ellipse cx="10" cy="8"  rx="5" ry="8" fill="#D4A843" transform="rotate(-22,10,8)"/>
+    <ellipse cx="18" cy="10" rx="5" ry="8" fill="#C8A030" transform="rotate(22,18,10)"/>
+    <ellipse cx="14" cy="3"  rx="4" ry="7" fill="#E0B840"/>
+    <ellipse cx="9"  cy="22" rx="4" ry="7" fill="#D4A843" transform="rotate(-20,9,22)"/>
+    <ellipse cx="19" cy="22" rx="4" ry="7" fill="#C8A030" transform="rotate(20,19,22)"/>
+    <ellipse cx="10" cy="36" rx="4" ry="6" fill="#D4A843" transform="rotate(-15,10,36)"/>
+    <ellipse cx="18" cy="36" rx="4" ry="6" fill="#C8A030" transform="rotate(15,18,36)"/>
+    <ellipse cx="-2" cy="10" rx="4" ry="7" fill="#D4A843" transform="rotate(-18,-2,10)"/>
+    <ellipse cx="6"  cy="12" rx="4" ry="7" fill="#C8A030" transform="rotate(18,6,12)"/>
+    <ellipse cx="-1" cy="26" rx="4" ry="6" fill="#D4A843" transform="rotate(-14,-1,26)"/>
+    <ellipse cx="7"  cy="26" rx="4" ry="6" fill="#C8A030" transform="rotate(14,7,26)"/>
+  </g>
+
+  <!-- ── Inner dashed decorative ring ── -->
+  <circle cx="200" cy="200" r="180" fill="none" stroke="#2D5A1B" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.35"/>
+
+  <!-- ══════════════════════════════════════════
+       TEXT — using plain <text> (no textPath)
+       so flutter_svg renders it correctly
+  ══════════════════════════════════════════ -->
+
+  <!-- Top brand name — arched manually with individual letters -->
+  <!-- We approximate the arc with a single centered text at top -->
+  <text
+    x="200" y="76"
+    font-family="Georgia, serif"
+    font-size="30"
+    font-weight="bold"
+    fill="#1A3A0F"
+    text-anchor="middle"
+    letter-spacing="3">KrishiShetra</text>
+
+  <!-- Small decorative rule lines flanking top text -->
+  <line x1="68"  y1="68" x2="108" y2="60" stroke="#2D5A1B" stroke-width="1.2" opacity="0.5"/>
+  <line x1="332" y1="68" x2="292" y2="60" stroke="#2D5A1B" stroke-width="1.2" opacity="0.5"/>
+
+  <!-- Bottom tagline -->
+  <text
+    x="200" y="348"
+    font-family="Georgia, serif"
+    font-size="13"
+    font-style="italic"
+    fill="#2D5A1B"
+    text-anchor="middle"
+    letter-spacing="0.5">Cultivating Future, Sustaining Life</text>
+
+  <!-- Small leaf accents flanking tagline -->
+  <path d="M64,342 Q74,334 82,344 Q74,348 64,342Z" fill="#4A8A2E"/>
+  <path d="M336,342 Q326,334 318,344 Q326,348 336,342Z" fill="#4A8A2E"/>
+
+  <!-- ── Gold accent dots on outer ring ── -->
+  <circle cx="200" cy="17"  r="4" fill="#D4A843"/>
+  <circle cx="200" cy="383" r="4" fill="#D4A843"/>
+  <circle cx="17"  cy="200" r="4" fill="#D4A843"/>
+  <circle cx="383" cy="200" r="4" fill="#D4A843"/>
+
+</svg>

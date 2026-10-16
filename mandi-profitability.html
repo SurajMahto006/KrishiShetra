@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mandi Profitability & Selling Decision — KrishiShetra</title>
+  <meta name="description" content="AI-Powered Mandi Profitability & Selling Decision Engine for Farmers. Compare nearby buyers and distant APMC mandis to maximize expected net profit.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/mandi-profitability.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="dashboard-body" data-require-role="farmer">
+
+  <!-- AMBIENT SUNLIGHT BACKGROUND -->
+  <div class="dash-ambient-bg" aria-hidden="true">
+    <div class="dash-ambient-bg__img"></div>
+    <div class="dash-ambient-bg__overlay"></div>
+    <div class="dash-ambient-bg__sunlight-glow"></div>
+  </div>
+
+  <!-- HEADER / NAVBAR -->
+  <header class="dash-header" id="dash-header">
+    <div class="dash-header__inner">
+      <!-- Brand Logo -->
+      <a href="mandi-profitability.html" class="dash-header__logo" id="dash-logo">
+        <span class="dash-header__logo-icon"><i data-lucide="sprout"></i></span>
+        <span class="dash-header__logo-text">KrishiShetra</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="dash-header__nav" id="dash-nav">
+        <a href="mandi-profitability.html" class="dash-header__link dash-header__link--active" id="nav-mandi-profit">
+          <i data-lucide="calculator" class="dash-header__link-icon"></i> Mandi Profit Engine (v2)
+        </a>
+      </nav>
+
+      <!-- Right Actions -->
+      <div class="dash-header__actions">
+        <span style="font-size: 12px; font-weight: 700; color: #2E7246; background: #E8F5EC; padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #2E7246; display: inline-block;"></span>
+          AI ML Engine Active
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="mandi-profit-container">
+
+    <!-- HERO HEADER -->
+    <div class="mandi-hero">
+      <div class="mandi-hero__badge">
+        <i data-lucide="trending-up"></i>
+        <span>AI-Powered Decision Engine • ML Price Forecast + Deterministic Profit</span>
+      </div>
+      <h1 class="mandi-hero__title">Mandi Profitability & Selling Decision</h1>
+      <p class="mandi-hero__subtitle">
+        A higher mandi price doesn't always mean more money in your pocket. Enter your crop details and nearby buyer offer to evaluate real travel, labour, and mandi expenses across all APMCs — and discover where you make the <strong>maximum net profit</strong>.
+      </p>
+    </div>
+
+    <!-- MAIN GRID LAYOUT -->
+    <div class="mandi-layout-grid">
+
+      <!-- LEFT COLUMN: FARMER INPUTS -->
+      <div class="mandi-card">
+        <div class="mandi-card__header">
+          <div class="mandi-card__title">
+            <span class="mandi-card__icon"><i data-lucide="sliders"></i></span>
+            <span>Crop & Selling Parameters</span>
+          </div>
+        </div>
+
+        <form id="mandi-analysis-form">
+          <!-- Crop Selection -->
+          <div class="mandi-form-group">
+            <label class="mandi-form-label" for="input-crop">Select Crop <span class="req">*</span></label>
+            <select class="mandi-form-select" id="input-crop" required>
+              <option value="onion" selected>🧅 कांदा (Onion)</option>
+              <option value="tomato">🍅 टोमॅटो (Tomato)</option>
+              <option value="soybean">🌱 सोयाबीन (Soybean)</option>
+              <option value="wheat">🌾 गहू (Wheat)</option>
+              <option value="potato">🥔 बटाटा (Potato)</option>
+            </select>
+          </div>
+
+          <!-- Quantity -->
+          <div class="mandi-form-group">
+            <label class="mandi-form-label" for="input-quantity">Total Quantity (in Quintals) <span class="req">*</span></label>
+            <input type="number" step="0.1" min="0.5" class="mandi-form-input" id="input-quantity" value="100" placeholder="e.g. 100" required>
+          </div>
+
+          <!-- Farm Location -->
+          <div class="mandi-form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <label class="mandi-form-label" style="margin-bottom:0;">Farm Location (Coordinates) <span class="req">*</span></label>
+              <button type="button" class="mandi-btn-geo" id="btn-get-location">
+                <i data-lucide="map-pin"></i> <span>Use GPS</span>
+              </button>
+            </div>
+            <div class="mandi-input-split">
+              <div>
+                <input type="number" step="0.0001" class="mandi-form-input" id="input-lat" value="18.5204" placeholder="Latitude" required>
+              </div>
+              <div>
+                <input type="number" step="0.0001" class="mandi-form-input" id="input-lon" value="73.8567" placeholder="Longitude" required>
+              </div>
+            </div>
+            <span style="font-size:11.5px; color:var(--ks-text-muted); margin-top:4px; display:block;">Default: Pune District (Maharashtra)</span>
+          </div>
+
+          <!-- Target Selling Date -->
+          <div class="mandi-form-group">
+            <label class="mandi-form-label" for="input-date">Expected Selling Date <span class="req">*</span></label>
+            <input type="date" class="mandi-form-input" id="input-date" required>
+          </div>
+
+          <!-- FIRST CLASS NEARBY BUYER CALLOUT -->
+          <div class="mandi-buyer-callout">
+            <div class="mandi-buyer-callout__title">
+              <i data-lucide="store"></i>
+              <span>Local / Nearby Buyer Offer (Comparison Option)</span>
+            </div>
+            <p style="font-size:12px; color:#5D420F; margin-bottom:10px; line-height:1.4;">
+              If a local buyer or trader offered to purchase at your farmgate, enter their offer price to see if travelling to distant mandis is actually worth the extra transport and labour.
+            </p>
+            <label class="mandi-form-label" for="input-nearby-price" style="color:#5D420F;">Nearby Buyer Price (₹ / Quintal)</label>
+            <input type="number" min="0" step="10" class="mandi-form-input" id="input-nearby-price" value="2900" placeholder="e.g. 2900">
+          </div>
+
+          <!-- COLLAPSIBLE ADVANCED EXPENSE OVERRIDES -->
+          <div class="mandi-accordion">
+            <button type="button" class="mandi-accordion__toggle" id="toggle-advanced">
+              <span>🛠️ Advanced Transportation & Expense Overrides</span>
+              <i data-lucide="chevron-down" class="mandi-accordion__arrow"></i>
+            </button>
+            <div class="mandi-accordion__content" id="advanced-content">
+              <p class="mandi-accordion-hint">
+                Leave empty to use configured APMC & government standards. Custom values will override default calculations.
+              </p>
+
+              <div class="mandi-form-group">
+                <label class="mandi-form-label" for="input-vehicle-type">Vehicle Type</label>
+                <select class="mandi-form-select" id="input-vehicle-type">
+                  <option value="truck" selected>Standard Truck (Capacity: 50 qtl)</option>
+                  <option value="tractor_trolley">Tractor Trolley (Capacity: 25 qtl)</option>
+                  <option value="mini_truck">Mini Truck / Pick-up (Capacity: 35 qtl)</option>
+                  <option value="large_truck">Large Multi-Axle Truck (Capacity: 100 qtl)</option>
+                </select>
+              </div>
+
+              <div class="mandi-input-split">
+                <div class="mandi-form-group">
+                  <label class="mandi-form-label" for="input-vehicle-capacity">Custom Capacity (qtl)</label>
+                  <input type="number" min="1" class="mandi-form-input" id="input-vehicle-capacity" placeholder="Default by type">
+                </div>
+                <div class="mandi-form-group">
+                  <label class="mandi-form-label" for="input-transport-rate">Transport Rate (₹/km)</label>
+                  <input type="number" min="0" class="mandi-form-input" id="input-transport-rate" placeholder="Default: ₹60/km">
+                </div>
+              </div>
+
+              <div class="mandi-input-split">
+                <div class="mandi-form-group">
+                  <label class="mandi-form-label" for="input-labour-cost">Total Labour Cost (₹)</label>
+                  <input type="number" min="0" class="mandi-form-input" id="input-labour-cost" placeholder="Default: Configured">
+                </div>
+                <div class="mandi-form-group">
+                  <label class="mandi-form-label" for="input-loading-cost">Loading Cost (₹)</label>
+                  <input type="number" min="0" class="mandi-form-input" id="input-loading-cost" placeholder="Default: ₹20/qtl">
+                </div>
+              </div>
+
+              <div class="mandi-input-split">
+                <div class="mandi-form-group">
+                  <label class="mandi-form-label" for="input-unloading-cost">Unloading Cost (₹)</label>
+                  <input type="number" min="0" class="mandi-form-input" id="input-unloading-cost" placeholder="Default: ₹15/qtl">
+                </div>
+                <div class="mandi-form-group">
+                  <label class="mandi-form-label" for="input-packaging-cost">Packaging Cost (₹)</label>
+                  <input type="number" min="0" class="mandi-form-input" id="input-packaging-cost" placeholder="e.g. Gunny bags">
+                </div>
+              </div>
+
+              <div class="mandi-form-group" style="margin-bottom:0;">
+                <label class="mandi-form-label" for="input-other-cost">Other Incidental Costs (₹)</label>
+                <input type="number" min="0" class="mandi-form-input" id="input-other-cost" placeholder="e.g. Tolls, tea/meals">
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="mandi-submit-btn" id="btn-analyze-submit">
+            <i data-lucide="sparkles"></i>
+            <span>Find Most Profitable Option</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- RIGHT COLUMN: RESULTS DISPLAY -->
+      <div id="results-wrapper">
+
+        <!-- Initial Placeholder State -->
+        <div class="mandi-placeholder" id="results-placeholder">
+          <div class="mandi-placeholder__icon">
+            <i data-lucide="calculator"></i>
+          </div>
+          <h2 class="mandi-placeholder__title">Ready to Calculate Maximum Net Profit</h2>
+          <p class="mandi-placeholder__text">
+            Enter your crop quantity and farm location on the left, then click <strong>"Find Most Profitable Option"</strong> to run the AI price forecasting and complete transportation cost analysis across candidate mandis.
+          </p>
+        </div>
+
+        <!-- Rendered Results Container -->
+        <div id="results-deck" style="display:none;"></div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- SCRIPTS -->
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/page-guard.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/mandi-profitability.js"></script>
+</body>
+</html>
